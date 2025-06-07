@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { PlayIcon, PauseIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
-import "./Timer.css"; // Import the new Timer.css file
+import type { CSSProperties } from "react";
 
 interface TimerProps {
     onDistraction: () => void;
@@ -46,74 +46,164 @@ const Timer: React.FC<TimerProps> = ({ onDistraction }) => {
             .padStart(2, "0")}`;
     };
 
+    const containerStyle: CSSProperties = {
+        backgroundColor: "var(--color-white)",
+        borderRadius: "1rem",
+        boxShadow: "var(--shadow-soft)",
+        padding: "2rem",
+        borderLeft: "4px solid var(--color-primary-400)",
+        transform:
+            "translate(0, 0) rotate(0deg) skewX(0deg) skewY(0deg) scaleX(1) scaleY(1)",
+        transition: "all 300ms ease-in-out",
+    };
+
+    const circleWrapperStyle: CSSProperties = {
+        position: "relative",
+        width: "16rem",
+        height: "16rem",
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: "2rem",
+    };
+
+    const circleBgStyle: CSSProperties = {
+        position: "absolute",
+        inset: 0,
+        borderRadius: "9999px",
+        border: "8px solid var(--color-gray-100)",
+    };
+
+    const circleProgressStyle: CSSProperties = {
+        position: "absolute",
+        inset: 0,
+        borderRadius: "9999px",
+        border: "8px solid transparent",
+        borderTopColor: isBreak
+            ? "var(--color-secondary-500)"
+            : "var(--color-primary-500)",
+        borderRightColor: isBreak
+            ? "var(--color-secondary-500)"
+            : "var(--color-primary-500)",
+        transform: `rotate(${progress * 3.6}deg)`,
+        transition: "transform 1s linear",
+    };
+
+    const displayWrapperStyle: CSSProperties = {
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+    };
+
+    const statusStyle: CSSProperties = {
+        fontSize: "1.25rem",
+        fontWeight: 600,
+        transition: "colors 300ms ease-in-out",
+        color: isBreak
+            ? "var(--color-secondary-600)"
+            : "var(--color-primary-600)",
+    };
+
+    const timeStyle: CSSProperties = {
+        fontSize: "3rem",
+        fontFamily: "monospace",
+        fontWeight: 700,
+        transition: "colors 300ms ease-in-out",
+        color: isBreak
+            ? "var(--color-secondary-500)"
+            : "var(--color-primary-500)",
+    };
+
+    const buttonsWrapperStyle: CSSProperties = {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        width: "100%",
+        maxWidth: "20rem",
+        marginLeft: "auto",
+        marginRight: "auto",
+    };
+
+    const getButtonStyle = (
+        type: "primary" | "secondary" | "reset" | "distraction"
+    ): CSSProperties => ({
+        padding: "1rem",
+        borderRadius: "0.75rem",
+        color: "var(--color-white)",
+        transition: "all 300ms ease-in-out",
+        boxShadow: "var(--shadow-lg)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+        transform:
+            "translate(0, 0) rotate(0deg) skewX(0deg) skewY(0deg) scaleX(1) scaleY(1)",
+        backgroundColor:
+            type === "primary"
+                ? "var(--color-primary-500)"
+                : type === "secondary"
+                ? "var(--color-secondary-500)"
+                : type === "reset"
+                ? "var(--color-gray-100)"
+                : "var(--color-red-500)",
+        cursor: "pointer",
+        border: "none",
+    });
+
     return (
-        <div className="timer-container">
-            <div className="timer-circle-wrapper">
-                {/* Circular Progress Background */}
-                <div className="timer-circle-bg"></div>
-
-                {/* Circular Progress Indicator */}
-                <div
-                    className="timer-circle-progress"
-                    style={{
-                        borderTopColor: isBreak
-                            ? "var(--color-secondary-500)"
-                            : "var(--color-primary-500)",
-                        borderRightColor: isBreak
-                            ? "var(--color-secondary-500)"
-                            : "var(--color-primary-500)",
-                        transform: `rotate(${progress * 3.6}deg)`,
-                        transition: "transform 1s linear",
-                    }}
-                ></div>
-
-                {/* Timer Display */}
-                <div className="timer-display-wrapper">
-                    <div
-                        className={`timer-status ${
-                            isBreak ? "break-time" : "focus-time"
-                        }`}
-                    >
+        <div style={containerStyle}>
+            <div style={circleWrapperStyle}>
+                <div style={circleBgStyle}></div>
+                <div style={circleProgressStyle}></div>
+                <div style={displayWrapperStyle}>
+                    <div style={statusStyle}>
                         {isBreak ? "Break Time" : "Focus Time"}
                     </div>
-                    <div
-                        className={`timer-time ${
-                            isBreak ? "break-time" : "focus-time"
-                        }`}
-                    >
-                        {formatTime(timeLeft)}
-                    </div>
+                    <div style={timeStyle}>{formatTime(timeLeft)}</div>
                 </div>
             </div>
 
-            <div className="timer-buttons-wrapper">
+            <div style={buttonsWrapperStyle}>
                 <button
                     onClick={toggleTimer}
-                    className={`timer-button ${
-                        isBreak ? "secondary" : "primary"
-                    }`}
+                    style={getButtonStyle(isBreak ? "secondary" : "primary")}
                 >
                     {isRunning ? (
                         <>
-                            <PauseIcon />
-                            <span>Pause Timer</span>
+                            <PauseIcon
+                                style={{ height: "1.25rem", width: "1.25rem" }}
+                            />
+                            <span style={{ fontWeight: 500 }}>Pause Timer</span>
                         </>
                     ) : (
                         <>
-                            <PlayIcon />
-                            <span>Start Timer</span>
+                            <PlayIcon
+                                style={{ height: "1.25rem", width: "1.25rem" }}
+                            />
+                            <span style={{ fontWeight: 500 }}>Start Timer</span>
                         </>
                     )}
                 </button>
-                <button onClick={resetTimer} className="timer-button reset">
-                    <ArrowPathIcon />
-                    <span>Reset Timer</span>
+                <button onClick={resetTimer} style={getButtonStyle("reset")}>
+                    <ArrowPathIcon
+                        style={{ height: "1.25rem", width: "1.25rem" }}
+                    />
+                    <span
+                        style={{
+                            fontWeight: 500,
+                            color: "var(--color-gray-600)",
+                        }}
+                    >
+                        Reset Timer
+                    </span>
                 </button>
                 <button
                     onClick={onDistraction}
-                    className="timer-button distraction"
+                    style={getButtonStyle("distraction")}
                 >
-                    <span>Log Distraction</span>
+                    <span style={{ fontWeight: 500 }}>Log Distraction</span>
                 </button>
             </div>
         </div>

@@ -125,13 +125,30 @@
 }
 
 .app-content {
-    display: flex;
+    display: grid;
     flex: 1 1 0%;
     min-height: 0;
+    /* Default to expanded on larger screens, adjust for mobile */
+    grid-template-columns: 16rem 1fr; /* Default: Navbar expanded for desktop */
+}
+
+.app-content.collapsed-navbar {
+    grid-template-columns: 4rem 1fr; /* Navbar collapsed */
+}
+
+@media (max-width: 767px) {
+    .app-content {
+        /* On smaller screens, navbar should be collapsed by default or handle responsiveness differently */
+        grid-template-columns: 4rem 1fr; /* Default: Navbar collapsed for mobile */
+    }
+
+    .app-content.expanded-navbar {
+        grid-template-columns: 16rem 1fr; /* Navbar expanded for mobile */
+    }
 }
 
 .main-content {
-    flex: 1 1 0%;
+    /* No margin-left here; grid handles positioning */
     padding: 2rem;
     max-width: 84rem;
     margin-left: auto;

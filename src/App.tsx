@@ -6,6 +6,11 @@ import Stats from "./components/Stats";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./App.css";
+import {
+    ChartBarIcon,
+    ClockIcon,
+    CheckCircleIcon,
+} from "@heroicons/react/24/outline";
 
 interface Distraction {
     id: string;
@@ -19,6 +24,7 @@ function App() {
         return saved ? JSON.parse(saved) : [];
     });
     const [isLoggerOpen, setIsLoggerOpen] = useState(false);
+    const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
 
     useEffect(() => {
         localStorage.setItem("distractions", JSON.stringify(distractions));
@@ -35,8 +41,15 @@ function App() {
     return (
         <div className="app-container">
             <Header />
-            <div className="app-content">
-                <Navbar />
+            <div
+                className={`app-content ${
+                    isNavbarCollapsed ? "collapsed-navbar" : "expanded-navbar"
+                }`}
+            >
+                <Navbar
+                    isCollapsed={isNavbarCollapsed}
+                    setIsCollapsed={setIsNavbarCollapsed}
+                />
                 <main className="main-content">
                     {/* Welcome Section */}
                     <div className="welcome-section">
@@ -51,23 +64,32 @@ function App() {
 
                     {/* Quick Stats */}
                     <div className="quick-stats-grid">
-                        <div className="stat-card stat-card-primary">
-                            <h3 className="stat-card-heading">
-                                Total Focus Time
-                            </h3>
-                            <p className="stat-card-value">2h 30m</p>
+                        <div className="stat-card">
+                            <div className="stat-icon">
+                                <ChartBarIcon className="h-6 w-6" />
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-title">Focus Time</h3>
+                                <p className="stat-value">2h 30m</p>
+                            </div>
                         </div>
-                        <div className="stat-card stat-card-secondary">
-                            <h3 className="stat-card-heading">
-                                Distractions Today
-                            </h3>
-                            <p className="stat-card-value">
-                                {distractions.length}
-                            </p>
+                        <div className="stat-card">
+                            <div className="stat-icon">
+                                <ClockIcon className="h-6 w-6" />
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-title">Sessions</h3>
+                                <p className="stat-value">4</p>
+                            </div>
                         </div>
-                        <div className="stat-card stat-card-cyan">
-                            <h3 className="stat-card-heading">Focus Streak</h3>
-                            <p className="stat-card-value">3 days</p>
+                        <div className="stat-card">
+                            <div className="stat-icon">
+                                <CheckCircleIcon className="h-6 w-6" />
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-title">Tasks Completed</h3>
+                                <p className="stat-value">12</p>
+                            </div>
                         </div>
                     </div>
 
