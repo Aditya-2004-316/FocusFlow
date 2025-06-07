@@ -6,6 +6,8 @@ interface Distraction {
     id: string;
     timestamp: string;
     note: string;
+    type: string;
+    time: string;
 }
 
 interface DistractionLoggerProps {
@@ -42,6 +44,8 @@ const DistractionLogger: React.FC<DistractionLoggerProps> = ({
             onLog({
                 timestamp: new Date().toISOString(),
                 note: note.trim(),
+                type: selectedQuickOption || "Other",
+                time: new Date().toLocaleTimeString(),
             });
             setTimeout(() => {
                 setNote("");

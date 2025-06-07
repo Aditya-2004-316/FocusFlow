@@ -28,17 +28,21 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
     ];
 
     const containerStyle: CSSProperties = {
-        height: "calc(100vh - 4rem)", // Subtract header height
+        height: "calc(100vh - 4rem)",
         background:
             "linear-gradient(to bottom, var(--color-primary-50), var(--color-primary-100))",
         borderRight: "4px solid var(--color-primary-200)",
-        padding: "1.5rem 0.75rem",
+        borderBottom: "4px solid var(--color-primary-200)",
+        borderRadius: "0.5rem",
+        padding: "1rem 0.75rem",
         display: "flex",
         flexDirection: "column",
-        gap: "2rem",
+        gap: "1.5rem",
         overflowY: "auto",
         position: "sticky",
-        top: "4rem", // Header height
+        top: "4.5rem",
+        width: isCollapsed ? "5rem" : "16rem",
+        transition: "width 0.3s ease-in-out",
     };
 
     const collapseButtonWrapperStyle: CSSProperties = {
@@ -57,34 +61,56 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
         cursor: "pointer",
     };
 
-    const navStyle: CSSProperties = {
-        flex: "1 1 0%",
-        padding: "1rem 0.5rem",
+    const navItemsStyle: CSSProperties = {
         display: "flex",
         flexDirection: "column",
-        gap: "0.25rem",
+        gap: "0.5rem",
+        marginTop: "-0.5rem",
+        flex: 1,
     };
 
-    const navItemStyle: CSSProperties = {
+    const linkStyle: CSSProperties = {
         display: "flex",
         alignItems: "center",
-        gap: "0.75rem",
-        padding: "0.5rem 0.75rem",
+        gap: "1rem",
+        padding: "0.75rem",
         borderRadius: "0.5rem",
-        transition: "all 150ms ease-in-out",
-        color: "var(--color-primary-700)",
-        fontWeight: 600,
-        position: "relative",
         textDecoration: "none",
-        cursor: "pointer",
+        color: "var(--color-gray-700)",
+        transition: "all 0.2s ease-in-out",
+        width: "100%",
+        justifyContent: isCollapsed ? "center" : "flex-start",
+    };
+
+    const iconStyle: CSSProperties = {
+        height: isCollapsed ? "1.5rem" : "1.25rem",
+        width: isCollapsed ? "1.5rem" : "1.25rem",
+        color: "var(--color-primary-600)",
+        flexShrink: 0,
+        opacity: 1,
+    };
+
+    const textStyle: CSSProperties = {
+        fontSize: "0.9375rem",
+        fontWeight: 500,
+        color: "var(--color-gray-700)",
+        whiteSpace: "nowrap",
+        opacity: isCollapsed ? 0 : 1,
+        transition: "opacity 0.2s ease-in-out",
     };
 
     const navItemLabelStyle: CSSProperties = {
-        fontSize: "0.875rem",
+        fontSize: "0.9375rem",
+        fontWeight: 500,
+        color: "var(--color-gray-700)",
+        whiteSpace: "nowrap",
+        opacity: isCollapsed ? 0 : 1,
+        transition: "opacity 0.2s ease-in-out",
     };
 
     const helpSectionStyle: CSSProperties = {
-        padding: "1rem",
+        marginTop: "auto",
+        paddingTop: "1rem",
         borderTop: "1px solid var(--color-primary-200)",
     };
 
@@ -136,37 +162,28 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
             </div>
 
             {/* Navigation Links */}
-            <nav style={navStyle}>
+            <div style={navItemsStyle}>
                 {menuItems.map((item) => (
                     <a
                         key={item.label}
                         href={item.href}
-                        style={navItemStyle}
+                        style={linkStyle}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor =
-                                "var(--color-primary-200)";
-                            e.currentTarget.style.color =
-                                "var(--color-primary-800)";
+                                "var(--color-primary-100)";
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = "";
-                            e.currentTarget.style.color =
-                                "var(--color-primary-700)";
+                            e.currentTarget.style.backgroundColor =
+                                "transparent";
                         }}
                     >
-                        <item.icon
-                            style={{
-                                height: "1rem",
-                                width: "1rem",
-                                color: "var(--color-primary-400)",
-                            }}
-                        />
+                        <item.icon style={iconStyle} />
                         {!isCollapsed && (
-                            <span style={navItemLabelStyle}>{item.label}</span>
+                            <span style={textStyle}>{item.label}</span>
                         )}
                     </a>
                 ))}
-            </nav>
+            </div>
 
             {/* Help Section */}
             <div style={helpSectionStyle}>
@@ -175,25 +192,15 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
                     style={helpLinkStyle}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor =
-                            "var(--color-primary-200)";
-                        e.currentTarget.style.color =
-                            "var(--color-primary-800)";
+                            "var(--color-primary-100)";
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "";
-                        e.currentTarget.style.color =
-                            "var(--color-primary-700)";
+                        e.currentTarget.style.backgroundColor = "transparent";
                     }}
                 >
-                    <QuestionMarkCircleIcon
-                        style={{
-                            height: "1rem",
-                            width: "1rem",
-                            color: "var(--color-primary-400)",
-                        }}
-                    />
+                    <QuestionMarkCircleIcon style={iconStyle} />
                     {!isCollapsed && (
-                        <span style={helpLinkLabelStyle}>Help & Support</span>
+                        <span style={textStyle}>Help & Support</span>
                     )}
                 </a>
             </div>

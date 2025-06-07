@@ -1,33 +1,39 @@
 import { useState, useEffect } from "react";
-import { PlayIcon, PauseIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
-import type { CSSProperties } from "react";
+import {
+    PlayIcon,
+    PauseIcon,
+    ArrowPathIcon,
+    BellAlertIcon,
+    ClockIcon,
+    StopIcon,
+} from "@heroicons/react/24/outline";
 
 interface TimerProps {
     onDistraction: () => void;
 }
 
-const Timer: React.FC<TimerProps> = ({ onDistraction }) => {
-    const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes in seconds
+export default function Timer({ onDistraction }: TimerProps) {
+    const [time, setTime] = useState(15 * 60); // 15 minutes in seconds
     const [isRunning, setIsRunning] = useState(false);
     const [isBreak, setIsBreak] = useState(false);
-    const totalTime = isBreak ? 5 * 60 : 25 * 60;
-    const progress = ((totalTime - timeLeft) / totalTime) * 100;
+    const [sessionDuration, setSessionDuration] = useState(15); // minutes
+    const [customTime, setCustomTime] = useState("");
 
     useEffect(() => {
-        let interval: number | undefined;
+        let interval: number;
 
-        if (isRunning && timeLeft > 0) {
+        if (isRunning && time > 0) {
             interval = setInterval(() => {
-                setTimeLeft((time) => time - 1);
+                setTime((prev) => prev - 1);
             }, 1000);
-        } else if (timeLeft === 0) {
+        } else if (time === 0) {
             setIsRunning(false);
             setIsBreak(!isBreak);
-            setTimeLeft(isBreak ? 25 * 60 : 5 * 60);
+            setTime(isBreak ? sessionDuration * 60 : 5 * 60);
         }
 
         return () => clearInterval(interval);
-    }, [isRunning, timeLeft, isBreak]);
+    }, [isRunning, time, isBreak, sessionDuration]);
 
     const toggleTimer = () => {
         setIsRunning(!isRunning);
@@ -35,179 +41,149 @@ const Timer: React.FC<TimerProps> = ({ onDistraction }) => {
 
     const resetTimer = () => {
         setIsRunning(false);
-        setTimeLeft(isBreak ? 5 * 60 : 25 * 60);
+        setTime(sessionDuration * 60);
+        setIsBreak(false);
+    };
+
+    const adjustTime = (minutes: number) => {
+        if (!isRunning) {
+            setSessionDuration(minutes);
+            setTime(minutes * 60);
+            setCustomTime(""); // Clear custom time when selecting preset
+        }
+    };
+
+    const handleCustomTime = (e: React.FormEvent) => {
+        e.preventDefault();
+        const minutes = parseInt(customTime);
+        if (minutes > 0 && minutes <= 120 && !isRunning) {
+            setSessionDuration(minutes);
+            setTime(minutes * 60);
+        }
+        setCustomTime("");
     };
 
     const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, "0")}:${secs
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
             .toString()
             .padStart(2, "0")}`;
     };
 
-    const containerStyle: CSSProperties = {
-        backgroundColor: "var(--color-white)",
-        borderRadius: "1rem",
-        boxShadow: "var(--shadow-soft)",
-        padding: "2rem",
-        borderLeft: "4px solid var(--color-primary-400)",
-        transform:
-            "translate(0, 0) rotate(0deg) skewX(0deg) skewY(0deg) scaleX(1) scaleY(1)",
-        transition: "all 300ms ease-in-out",
-    };
-
-    const circleWrapperStyle: CSSProperties = {
-        position: "relative",
-        width: "16rem",
-        height: "16rem",
-        marginLeft: "auto",
-        marginRight: "auto",
-        marginBottom: "2rem",
-    };
-
-    const circleBgStyle: CSSProperties = {
-        position: "absolute",
-        inset: 0,
-        borderRadius: "9999px",
-        border: "8px solid var(--color-gray-100)",
-    };
-
-    const circleProgressStyle: CSSProperties = {
-        position: "absolute",
-        inset: 0,
-        borderRadius: "9999px",
-        border: "8px solid transparent",
-        borderTopColor: isBreak
-            ? "var(--color-secondary-500)"
-            : "var(--color-primary-500)",
-        borderRightColor: isBreak
-            ? "var(--color-secondary-500)"
-            : "var(--color-primary-500)",
-        transform: `rotate(${progress * 3.6}deg)`,
-        transition: "transform 1s linear",
-    };
-
-    const displayWrapperStyle: CSSProperties = {
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-    };
-
-    const statusStyle: CSSProperties = {
-        fontSize: "1.25rem",
-        fontWeight: 600,
-        transition: "colors 300ms ease-in-out",
-        color: isBreak
-            ? "var(--color-secondary-600)"
-            : "var(--color-primary-600)",
-    };
-
-    const timeStyle: CSSProperties = {
-        fontSize: "3rem",
-        fontFamily: "monospace",
-        fontWeight: 700,
-        transition: "colors 300ms ease-in-out",
-        color: isBreak
-            ? "var(--color-secondary-500)"
-            : "var(--color-primary-500)",
-    };
-
-    const buttonsWrapperStyle: CSSProperties = {
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        width: "100%",
-        maxWidth: "20rem",
-        marginLeft: "auto",
-        marginRight: "auto",
-    };
-
-    const getButtonStyle = (
-        type: "primary" | "secondary" | "reset" | "distraction"
-    ): CSSProperties => ({
-        padding: "1rem",
-        borderRadius: "0.75rem",
-        color: "var(--color-white)",
-        transition: "all 300ms ease-in-out",
-        boxShadow: "var(--shadow-lg)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0.5rem",
-        transform:
-            "translate(0, 0) rotate(0deg) skewX(0deg) skewY(0deg) scaleX(1) scaleY(1)",
-        backgroundColor:
-            type === "primary"
-                ? "var(--color-primary-500)"
-                : type === "secondary"
-                ? "var(--color-secondary-500)"
-                : type === "reset"
-                ? "var(--color-gray-100)"
-                : "var(--color-red-500)",
-        cursor: "pointer",
-        border: "none",
-    });
-
     return (
-        <div style={containerStyle}>
-            <div style={circleWrapperStyle}>
-                <div style={circleBgStyle}></div>
-                <div style={circleProgressStyle}></div>
-                <div style={displayWrapperStyle}>
-                    <div style={statusStyle}>
-                        {isBreak ? "Break Time" : "Focus Time"}
+        <div className="timer-container">
+            <div className="timer-header">
+                <h2 className="timer-title">
+                    {isBreak ? "Break Time" : "Focus Session"}
+                </h2>
+                <p className="timer-subtitle">
+                    {isBreak
+                        ? "Take a short break to recharge"
+                        : "Stay focused and track your progress"}
+                </p>
+            </div>
+
+            {!isBreak && !isRunning && (
+                <>
+                    <div className="timer-duration-controls">
+                        <button
+                            className={`timer-duration-btn ${
+                                sessionDuration === 15 ? "active" : ""
+                            }`}
+                            onClick={() => adjustTime(15)}
+                        >
+                            15m
+                        </button>
+                        <button
+                            className={`timer-duration-btn ${
+                                sessionDuration === 30 ? "active" : ""
+                            }`}
+                            onClick={() => adjustTime(30)}
+                        >
+                            30m
+                        </button>
+                        <button
+                            className={`timer-duration-btn ${
+                                sessionDuration === 45 ? "active" : ""
+                            }`}
+                            onClick={() => adjustTime(45)}
+                        >
+                            45m
+                        </button>
+                        <button
+                            className={`timer-duration-btn ${
+                                sessionDuration === 60 ? "active" : ""
+                            }`}
+                            onClick={() => adjustTime(60)}
+                        >
+                            60m
+                        </button>
                     </div>
-                    <div style={timeStyle}>{formatTime(timeLeft)}</div>
+                    <form
+                        onSubmit={handleCustomTime}
+                        className="custom-time-form"
+                    >
+                        <input
+                            type="number"
+                            value={customTime}
+                            onChange={(e) => setCustomTime(e.target.value)}
+                            placeholder="Enter custom time in minutes (1-180)"
+                            min="1"
+                            max="180"
+                            className="custom-time-input"
+                        />
+                        <button type="submit" className="custom-time-submit">
+                            Set
+                        </button>
+                    </form>
+                </>
+            )}
+
+            <div className="timer-display">
+                <div className="timer-circle">
+                    <div className="timer-time">{formatTime(time)}</div>
+                    <div className="timer-label">
+                        {isBreak ? "Break" : "Focus"}
+                    </div>
                 </div>
             </div>
 
-            <div style={buttonsWrapperStyle}>
-                <button
-                    onClick={toggleTimer}
-                    style={getButtonStyle(isBreak ? "secondary" : "primary")}
-                >
+            <div className="timer-controls">
+                <button className="timer-button primary" onClick={toggleTimer}>
                     {isRunning ? (
                         <>
-                            <PauseIcon
-                                style={{ height: "1.25rem", width: "1.25rem" }}
-                            />
-                            <span style={{ fontWeight: 500 }}>Pause Timer</span>
+                            <PauseIcon className="h-5 w-5" />
+                            <span>Pause</span>
                         </>
                     ) : (
                         <>
-                            <PlayIcon
-                                style={{ height: "1.25rem", width: "1.25rem" }}
-                            />
-                            <span style={{ fontWeight: 500 }}>Start Timer</span>
+                            <PlayIcon className="h-5 w-5" />
+                            <span>Start</span>
                         </>
                     )}
                 </button>
-                <button onClick={resetTimer} style={getButtonStyle("reset")}>
-                    <ArrowPathIcon
-                        style={{ height: "1.25rem", width: "1.25rem" }}
-                    />
-                    <span
-                        style={{
-                            fontWeight: 500,
-                            color: "var(--color-gray-600)",
-                        }}
-                    >
-                        Reset Timer
-                    </span>
+                <button className="timer-button secondary" onClick={resetTimer}>
+                    <ArrowPathIcon className="h-5 w-5" />
+                    <span>Reset</span>
                 </button>
-                <button
-                    onClick={onDistraction}
-                    style={getButtonStyle("distraction")}
-                >
-                    <span style={{ fontWeight: 500 }}>Log Distraction</span>
+                <button className="timer-button danger" onClick={onDistraction}>
+                    <BellAlertIcon className="h-5 w-5" />
+                    <span>Log Distraction</span>
                 </button>
+            </div>
+
+            <div className="timer-progress">
+                <div
+                    className="timer-progress-bar"
+                    style={{
+                        width: `${
+                            ((isBreak ? 5 * 60 : sessionDuration * 60) - time) /
+                            (isBreak ? 5 * 60 : sessionDuration * 60)
+                        }%`,
+                    }}
+                />
             </div>
         </div>
     );
-};
-
-export default Timer;
+}
