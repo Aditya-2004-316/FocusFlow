@@ -2,8 +2,10 @@ import {
     EnvelopeIcon,
     PhoneIcon,
     MapPinIcon,
+    ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import type { CSSProperties } from "react";
+import FocusFlowLogo from "../assets/focusflowlogo.png";
 
 const Footer = () => {
     const containerStyle: CSSProperties = {
@@ -38,7 +40,15 @@ const Footer = () => {
     const sectionStyle: CSSProperties = {
         display: "flex",
         flexDirection: "column",
-        gap: "1rem",
+        gap: "1.25rem",
+        padding: "1rem",
+        borderRadius: "0.5rem",
+        transition: "all 0.2s ease-in-out",
+    };
+
+    const sectionHoverStyle: CSSProperties = {
+        background: "rgba(255, 255, 255, 0.5)",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
     };
 
     const sectionHeadingStyle: CSSProperties = {
@@ -47,6 +57,9 @@ const Footer = () => {
         color: "var(--color-gray-900)",
         textTransform: "uppercase",
         letterSpacing: "0.025em",
+        paddingBottom: "0.5rem",
+        borderBottom: "2px solid var(--color-primary-200)",
+        marginBottom: "0.5rem",
     };
 
     const contactHeadingStyle: CSSProperties = {
@@ -61,8 +74,8 @@ const Footer = () => {
     const listStyle: CSSProperties = {
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
-        paddingLeft: "2rem",
+        gap: "0.5rem",
+        paddingLeft: "1.5rem",
         listStyle: "none",
     };
 
@@ -73,11 +86,18 @@ const Footer = () => {
     const listItemMarker: CSSProperties = {
         position: "absolute",
         left: "-1rem",
-        top: "0.5rem",
-        width: "0.5rem",
-        height: "0.5rem",
+        top: "0.75rem",
+        width: "0.375rem",
+        height: "0.375rem",
         borderRadius: "50%",
         backgroundColor: "var(--color-primary-400)",
+        transition: "all 0.2s ease-in-out",
+    };
+
+    const listItemHoverMarker: CSSProperties = {
+        ...listItemMarker,
+        backgroundColor: "var(--color-primary-600)",
+        transform: "scale(1.2)",
     };
 
     const contactListStyle: CSSProperties = {
@@ -92,9 +112,18 @@ const Footer = () => {
     const linkStyle: CSSProperties = {
         color: "var(--color-gray-700)",
         textDecoration: "none",
-        transition: "color 0.15s ease-in-out",
+        transition: "all 0.2s ease-in-out",
         fontSize: "0.875rem",
-        display: "block",
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        padding: "0.5rem 0",
+        position: "relative",
+    };
+
+    const linkHoverStyle: CSSProperties = {
+        color: "var(--color-primary-600)",
+        transform: "translateX(0.25rem)",
     };
 
     const contactItemStyle: CSSProperties = {
@@ -133,8 +162,8 @@ const Footer = () => {
     };
 
     const logoStyle: CSSProperties = {
-        width: "2rem",
-        height: "2rem",
+        width: "2.5rem",
+        height: "2.25rem",
     };
 
     const logoTextStyle: CSSProperties = {
@@ -171,6 +200,30 @@ const Footer = () => {
         }
     `;
 
+    const handleLinkHover = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        const marker = e.currentTarget.previousElementSibling as HTMLDivElement;
+        if (marker) {
+            Object.assign(e.currentTarget.style, linkHoverStyle);
+            Object.assign(marker.style, listItemHoverMarker);
+        }
+    };
+
+    const handleLinkLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        const marker = e.currentTarget.previousElementSibling as HTMLDivElement;
+        if (marker) {
+            Object.assign(e.currentTarget.style, linkStyle);
+            Object.assign(marker.style, listItemMarker);
+        }
+    };
+
+    const handleSectionHover = (e: React.MouseEvent<HTMLDivElement>) => {
+        Object.assign(e.currentTarget.style, sectionHoverStyle);
+    };
+
+    const handleSectionLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+        Object.assign(e.currentTarget.style, sectionStyle);
+    };
+
     return (
         <>
             <style>{mediaQueryStyle}</style>
@@ -179,7 +232,7 @@ const Footer = () => {
                     <div style={footerContentStyle} className="footer-content">
                         <div style={logoContainerStyle}>
                             <img
-                                src="/logo.svg"
+                                src={FocusFlowLogo}
                                 alt="FocusFlow Logo"
                                 style={logoStyle}
                             />
@@ -187,120 +240,260 @@ const Footer = () => {
                         </div>
                         <div style={gridStyle} className="footer-grid">
                             {/* Product Section */}
-                            <div style={sectionStyle}>
+                            <div
+                                style={sectionStyle}
+                                onMouseEnter={handleSectionHover}
+                                onMouseLeave={handleSectionLeave}
+                            >
                                 <h3 style={sectionHeadingStyle}>Product</h3>
                                 <ul style={listStyle}>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/features"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Features
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/pricing"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Pricing
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/faq"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             FAQ
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                 </ul>
                             </div>
 
                             {/* Resources Section */}
-                            <div style={sectionStyle}>
+                            <div
+                                style={sectionStyle}
+                                onMouseEnter={handleSectionHover}
+                                onMouseLeave={handleSectionLeave}
+                            >
                                 <h3 style={sectionHeadingStyle}>Resources</h3>
                                 <ul style={listStyle}>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/blog"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Blog
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/guides"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Guides
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/support"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Support
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                 </ul>
                             </div>
 
                             {/* Company Section */}
-                            <div style={sectionStyle}>
+                            <div
+                                style={sectionStyle}
+                                onMouseEnter={handleSectionHover}
+                                onMouseLeave={handleSectionLeave}
+                            >
                                 <h3 style={sectionHeadingStyle}>Company</h3>
                                 <ul style={listStyle}>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/about"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             About
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/careers"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Careers
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                     <li style={listItemStyle}>
                                         <div style={listItemMarker} />
-                                        <a href="#" style={linkStyle}>
+                                        <a
+                                            href="/contact"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
                                             Contact
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                 </ul>
                             </div>
 
-                            {/* Contact Section */}
-                            <div>
-                                <h3 style={contactHeadingStyle}>Contact Us</h3>
-                                <ul style={contactListStyle}>
-                                    <li>
+                            {/* Legal Section */}
+                            <div
+                                style={sectionStyle}
+                                onMouseEnter={handleSectionHover}
+                                onMouseLeave={handleSectionLeave}
+                            >
+                                <h3 style={sectionHeadingStyle}>Legal</h3>
+                                <ul style={listStyle}>
+                                    <li style={listItemStyle}>
+                                        <div style={listItemMarker} />
                                         <a
-                                            href="mailto:contact@focusflow.com"
+                                            href="/privacy"
                                             style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
                                         >
-                                            <div style={contactItemStyle}>
-                                                <EnvelopeIcon
-                                                    style={{
-                                                        height: "1rem",
-                                                        width: "1rem",
-                                                        color: "var(--color-primary-500)",
-                                                    }}
-                                                />
-                                                <span style={contactTextStyle}>
-                                                    contact@focusflow.com
-                                                </span>
-                                            </div>
+                                            Privacy
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
-                                    <li>
+                                    <li style={listItemStyle}>
+                                        <div style={listItemMarker} />
                                         <a
-                                            href="tel:+1234567890"
+                                            href="/terms"
                                             style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
                                         >
-                                            <div style={contactItemStyle}>
-                                                <PhoneIcon
-                                                    style={{
-                                                        height: "1rem",
-                                                        width: "1rem",
-                                                        color: "var(--color-primary-500)",
-                                                    }}
-                                                />
-                                                <span style={contactTextStyle}>
-                                                    +1 (234) 567-890
-                                                </span>
-                                            </div>
+                                            Terms
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
+                                        </a>
+                                    </li>
+                                    <li style={listItemStyle}>
+                                        <div style={listItemMarker} />
+                                        <a
+                                            href="/cookies"
+                                            style={linkStyle}
+                                            onMouseEnter={handleLinkHover}
+                                            onMouseLeave={handleLinkLeave}
+                                        >
+                                            Cookies
+                                            <ArrowRightIcon
+                                                style={{
+                                                    width: "1rem",
+                                                    height: "1rem",
+                                                    opacity: 0.5,
+                                                }}
+                                            />
                                         </a>
                                     </li>
                                 </ul>
@@ -308,7 +501,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <div style={bottomStyle} className="footer-bottom">
-                        <div>© 2024 FocusFlow. All rights reserved.</div>
+                        <div>© 2025 FocusFlow. All rights reserved.</div>
                         <div
                             style={bottomLinksStyle}
                             className="footer-bottom-links"

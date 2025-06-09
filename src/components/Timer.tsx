@@ -56,7 +56,7 @@ export default function Timer({ onDistraction }: TimerProps) {
     const handleCustomTime = (e: React.FormEvent) => {
         e.preventDefault();
         const minutes = parseInt(customTime);
-        if (minutes > 0 && minutes <= 120 && !isRunning) {
+        if (minutes > 0 && minutes <= 180 && !isRunning) {
             setSessionDuration(minutes);
             setTime(minutes * 60);
         }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
     HomeIcon,
     ChartBarIcon,
@@ -18,10 +19,12 @@ interface NavbarProps {
 }
 
 const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
+    const location = useLocation();
+
     const menuItems = [
-        { icon: HomeIcon, label: "Dashboard", href: "/" },
-        { icon: ClockIcon, label: "Focus Timer", href: "/timer" },
-        { icon: ChartBarIcon, label: "Statistics", href: "/stats" },
+        { icon: HomeIcon, label: "Dashboard", href: "/dashboard" },
+        { icon: ClockIcon, label: "Focus Timer", href: "/focus-timer" },
+        { icon: ChartBarIcon, label: "Statistics", href: "/statistics" },
         { icon: BookOpenIcon, label: "Resources", href: "/resources" },
         { icon: UserGroupIcon, label: "Community", href: "/community" },
         { icon: CogIcon, label: "Settings", href: "/settings" },
@@ -82,6 +85,12 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
         justifyContent: isCollapsed ? "center" : "flex-start",
     };
 
+    const activeLinkStyle: CSSProperties = {
+        ...linkStyle,
+        backgroundColor: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+    };
+
     const iconStyle: CSSProperties = {
         height: isCollapsed ? "1.5rem" : "1.25rem",
         width: isCollapsed ? "1.5rem" : "1.25rem",
@@ -91,15 +100,6 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
     };
 
     const textStyle: CSSProperties = {
-        fontSize: "0.9375rem",
-        fontWeight: 500,
-        color: "var(--color-gray-700)",
-        whiteSpace: "nowrap",
-        opacity: isCollapsed ? 0 : 1,
-        transition: "opacity 0.2s ease-in-out",
-    };
-
-    const navItemLabelStyle: CSSProperties = {
         fontSize: "0.9375rem",
         fontWeight: 500,
         color: "var(--color-gray-700)",
@@ -164,31 +164,39 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
             {/* Navigation Links */}
             <div style={navItemsStyle}>
                 {menuItems.map((item) => (
-                    <a
+                    <Link
                         key={item.label}
-                        href={item.href}
-                        style={linkStyle}
+                        to={item.href}
+                        style={
+                            location.pathname === item.href
+                                ? activeLinkStyle
+                                : linkStyle
+                        }
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "var(--color-primary-100)";
+                            if (location.pathname !== item.href) {
+                                e.currentTarget.style.backgroundColor =
+                                    "var(--color-primary-100)";
+                            }
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "transparent";
+                            if (location.pathname !== item.href) {
+                                e.currentTarget.style.backgroundColor =
+                                    "transparent";
+                            }
                         }}
                     >
                         <item.icon style={iconStyle} />
                         {!isCollapsed && (
                             <span style={textStyle}>{item.label}</span>
                         )}
-                    </a>
+                    </Link>
                 ))}
             </div>
 
             {/* Help Section */}
             <div style={helpSectionStyle}>
-                <a
-                    href="/help"
+                <Link
+                    to="/help-support"
                     style={helpLinkStyle}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor =
@@ -202,7 +210,7 @@ const Navbar = ({ isCollapsed, setIsCollapsed }: NavbarProps) => {
                     {!isCollapsed && (
                         <span style={textStyle}>Help & Support</span>
                     )}
-                </a>
+                </Link>
             </div>
         </aside>
     );
