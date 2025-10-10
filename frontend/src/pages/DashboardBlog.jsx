@@ -186,16 +186,13 @@ const cardHoverStyle = {
 
 const iconWrapperStyle = {
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "center",
     marginTop: "0.2rem",
     flexShrink: 0,
     zIndex: 1,
     padding: "0.5rem",
     width: "3rem", // Fixed width for consistent layout
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
 };
 
 const postContentStyle = {
