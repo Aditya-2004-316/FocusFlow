@@ -36,8 +36,10 @@ const LandingNavbar = () => {
         alignItems: "center",
         justifyContent: "space-between",
         padding: "1rem 2rem",
-        backgroundColor: "white",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "rgba(10, 15, 26, 0.97)", // much darker and less transparent
+        backdropFilter: "blur(10px)",
+        borderBottom: "1px solid #161b22",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
         position: "sticky",
         top: 0,
         zIndex: 50,
@@ -60,7 +62,10 @@ const LandingNavbar = () => {
     const logoTextStyle = {
         fontSize: "1.5rem",
         fontWeight: 700,
-        color: "var(--color-primary-600)",
+        background: "linear-gradient(to right, #a78bfa, #60a5fa)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
         margin: 0,
     };
 
@@ -71,7 +76,7 @@ const LandingNavbar = () => {
     };
 
     const linkStyle = {
-        color: "var(--color-gray-600)",
+        color: "#94a3b8",
         textDecoration: "none",
         fontSize: "0.875rem",
         fontWeight: 500,
@@ -83,12 +88,12 @@ const LandingNavbar = () => {
     };
 
     const linkHoverStyle = {
-        color: "var(--color-primary-600)",
+        color: "#a78bfa",
     };
 
     const activeLinkStyle = {
-        color: "var(--color-primary-700)",
-        borderBottom: "2px solid var(--color-primary-600)",
+        color: "#a78bfa",
+        borderBottom: "2px solid #a78bfa",
         fontWeight: 700,
     };
 
@@ -110,17 +115,18 @@ const LandingNavbar = () => {
     const loginButtonStyle = {
         ...buttonStyle,
         backgroundColor: "transparent",
-        border: "1px solid var(--color-gray-300)",
-        color: "var(--color-gray-700)",
+        border: "1px solid #475569",
+        color: "#94a3b8",
         outline: "none",
     };
 
     const registerButtonStyle = {
         ...buttonStyle,
-        backgroundColor: "var(--color-primary-600)",
+        background: "linear-gradient(to right, #9333ea, #3b82f6)",
         border: "none",
         color: "white",
         outline: "none",
+        boxShadow: "0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06)",
     };
 
     const handleLoginClick = () => {
@@ -275,8 +281,7 @@ const LandingNavbar = () => {
                     onClick={handleLoginClick}
                     style={loginButtonStyle}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                            "var(--color-gray-50)";
+                        e.currentTarget.style.backgroundColor = "#334155";
                     }}
                     onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "transparent";
@@ -289,12 +294,12 @@ const LandingNavbar = () => {
                     onClick={handleRegisterClick}
                     style={registerButtonStyle}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                            "var(--color-primary-700)";
+                        e.currentTarget.style.background = "linear-gradient(to right, #7c3aed, #2563eb)";
+                        e.currentTarget.style.transform = "translateY(-1px)";
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                            "var(--color-primary-600)";
+                        e.currentTarget.style.background = "linear-gradient(to right, #9333ea, #3b82f6)";
+                        e.currentTarget.style.transform = "none";
                     }}
                     tabIndex={-1}
                 >

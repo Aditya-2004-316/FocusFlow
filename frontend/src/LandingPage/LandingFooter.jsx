@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 const LandingFooter = () => {
     const location = useLocation();
     const activeFooterLinkStyle = {
-        color: "var(--color-primary-200)",
+        color: "#a78bfa",
         fontWeight: 700,
         textDecoration: "underline",
         textUnderlineOffset: "0.2em",
@@ -16,12 +16,12 @@ const LandingFooter = () => {
     return (
         <footer
             style={{
-                background:
-                    "linear-gradient(90deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
-                color: "var(--color-gray-200)",
+                background: "linear-gradient(to bottom, #0a0f1a 74%, #131826 100%)",
+                color: "#e2e8f0",
                 padding: "4.5rem 0 2.5rem",
                 marginTop: "auto",
-                boxShadow: "0 -2px 16px rgba(0,0,0,0.08)",
+                boxShadow: "0 -8px 24px rgba(0,0,0,0.44)",
+                borderTop: "1px solid #161b22",
             }}
         >
             <div
@@ -66,7 +66,10 @@ const LandingFooter = () => {
                             />
                             <h3
                                 style={{
-                                    color: "var(--color-white)",
+                                    background: "linear-gradient(to right, #a78bfa, #60a5fa)",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "transparent",
+                                    backgroundClip: "text",
                                     fontSize: "1.35rem",
                                     fontWeight: "700",
                                     margin: 0,
@@ -79,7 +82,7 @@ const LandingFooter = () => {
                             style={{
                                 lineHeight: "1.6",
                                 marginBottom: "1.5rem",
-                                color: "var(--color-gray-200)",
+                                color: "#94a3b8",
                                 fontSize: "1.05rem",
                             }}
                         >
@@ -98,7 +101,7 @@ const LandingFooter = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: "var(--color-gray-200)",
+                                    color: "#94a3b8",
                                     fontSize: "1.3rem",
                                     transition: "color 0.2s",
                                     outline: "none",
@@ -113,7 +116,7 @@ const LandingFooter = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: "var(--color-gray-200)",
+                                    color: "#94a3b8",
                                     fontSize: "1.3rem",
                                     transition: "color 0.2s",
                                     outline: "none",
@@ -126,7 +129,7 @@ const LandingFooter = () => {
                             <a
                                 href="mailto:focusflow@studentproject.com"
                                 style={{
-                                    color: "var(--color-gray-200)",
+                                    color: "#94a3b8",
                                     fontSize: "1.3rem",
                                     transition: "color 0.2s",
                                     outline: "none",
@@ -152,7 +155,7 @@ const LandingFooter = () => {
                             <div>
                                 <h4
                                     style={{
-                                        color: "var(--color-white)",
+                                        color: "#ffffff",
                                         fontSize: "1.08rem",
                                         fontWeight: "600",
                                         marginBottom: "1.3rem",
@@ -166,7 +169,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/features"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, text-decoration 0.2s",
@@ -179,14 +182,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/features"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -197,7 +200,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/updates"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -210,14 +213,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/updates"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -230,7 +233,7 @@ const LandingFooter = () => {
                             <div>
                                 <h4
                                     style={{
-                                        color: "var(--color-white)",
+                                        color: "#ffffff",
                                         fontSize: "1.08rem",
                                         fontWeight: "600",
                                         marginBottom: "1.3rem",
@@ -244,7 +247,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/about"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -257,14 +260,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/about"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -275,7 +278,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/careers"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -288,14 +291,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/careers"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -306,7 +309,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/contact"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -319,14 +322,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/contact"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -339,7 +342,7 @@ const LandingFooter = () => {
                             <div>
                                 <h4
                                     style={{
-                                        color: "var(--color-white)",
+                                        color: "#ffffff",
                                         fontSize: "1.08rem",
                                         fontWeight: "600",
                                         marginBottom: "1.3rem",
@@ -353,7 +356,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/privacy"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -366,14 +369,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/privacy"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -384,7 +387,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/terms"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -397,14 +400,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/terms"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -415,7 +418,7 @@ const LandingFooter = () => {
                                         <a
                                             href="/security"
                                             style={{
-                                                color: "var(--color-gray-200)",
+                                                color: "#94a3b8",
                                                 textDecoration: "none",
                                                 transition:
                                                     "color 0.2s, textDecoration 0.2s",
@@ -428,14 +431,14 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "var(--color-primary-200)")
+                                                    "#a78bfa")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/security"
-                                                        ? "var(--color-primary-200)"
-                                                        : "var(--color-gray-200)")
+                                                        ? "#a78bfa"
+                                                        : "#94a3b8")
                                             }
                                             tabIndex={-1}
                                         >
@@ -449,10 +452,10 @@ const LandingFooter = () => {
                 </div>
                 <div
                     style={{
-                        borderTop: "1px solid var(--color-primary-700)",
+                        borderTop: "1px solid #334155",
                         paddingTop: "2.5rem",
                         textAlign: "center",
-                        color: "var(--color-primary-100)",
+                        color: "#94a3b8",
                         fontSize: "1.08rem",
                         letterSpacing: "0.01em",
                         marginTop: "1.5rem",

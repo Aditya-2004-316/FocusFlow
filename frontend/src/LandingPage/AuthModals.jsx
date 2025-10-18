@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 import { useNavigate } from "react-router-dom";
+import ReactDOM from 'react-dom';
 
 const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     console.log(
@@ -69,7 +70,8 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        backdropFilter: "blur(4px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -79,14 +81,15 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     };
 
     const modalContentStyle = {
-        backgroundColor: "white",
+        backgroundColor: "rgba(30, 41, 59, 0.95)",
+        backdropFilter: "blur(8px)",
+        border: "1px solid #334155",
         padding: "2.5rem",
         borderRadius: "1rem",
         width: "100%",
         maxWidth: "420px",
         position: "relative",
-        boxShadow:
-            "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
         transform: "scale(1)",
         animation: "scaleIn 0.3s ease-out forwards",
     };
@@ -99,7 +102,7 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
         border: "none",
         fontSize: "1.5rem",
         cursor: "pointer",
-        color: "#6b7280",
+        color: "#94a3b8",
         padding: "0.5rem",
         borderRadius: "0.375rem",
         transition: "all 0.2s",
@@ -112,8 +115,8 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     };
 
     const closeButtonHoverStyle = {
-        backgroundColor: "#f3f4f6",
-        color: "#374151",
+        backgroundColor: "#334155",
+        color: "#ffffff",
     };
 
     const formStyle = {
@@ -131,22 +134,22 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     const labelStyle = {
         fontSize: "0.875rem",
         fontWeight: 500,
-        color: "#4a5568",
+        color: "#94a3b8",
     };
 
     const inputStyle = {
         padding: "0.75rem 1rem",
         borderRadius: "0.5rem",
-        border: "1px solid #d1d5db",
+        border: "1px solid #475569",
         fontSize: "1rem",
         transition: "all 0.2s",
-        backgroundColor: "var(--color-gray-200)", // Use theme-matching soft gray
-        color: "var(--color-gray-900)",
+        backgroundColor: "rgba(15, 23, 42, 0.5)",
+        color: "#ffffff",
     };
 
     const inputFocusStyle = {
-        borderColor: "#0ea5e9",
-        boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)",
+        borderColor: "#a78bfa",
+        boxShadow: "0 0 0 3px rgba(167, 139, 250, 0.1)",
         outline: "none",
     };
 
@@ -154,18 +157,20 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
         padding: "0.875rem",
         borderRadius: "0.5rem",
         border: "none",
-        backgroundColor: "#0284c7",
+        background: "linear-gradient(to right, #9333ea, #3b82f6)",
         color: "white",
         fontSize: "1rem",
         fontWeight: 500,
         cursor: "pointer",
         transition: "all 0.2s",
         marginTop: "0.5rem",
+        boxShadow: "0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06)",
     };
 
     const buttonHoverStyle = {
-        backgroundColor: "#0369a1",
+        background: "linear-gradient(to right, #7c3aed, #2563eb)",
         transform: "translateY(-1px)",
+        boxShadow: "0 10px 15px -3px rgba(147, 51, 234, 0.1), 0 4px 6px -2px rgba(147, 51, 234, 0.05)",
     };
 
     const errorStyle = {
@@ -182,16 +187,17 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
         textAlign: "center",
         marginTop: "1.5rem",
         fontSize: "0.875rem",
-        color: "#718096",
+        color: "#94a3b8",
         padding: "1rem",
-        backgroundColor: "#f9fafb",
+        backgroundColor: "rgba(15, 23, 42, 0.3)",
         borderRadius: "0.5rem",
+        border: "1px solid #334155",
     };
 
     const switchButtonStyle = {
         background: "none",
         border: "none",
-        color: "#0284c7",
+        color: "#a78bfa",
         cursor: "pointer",
         fontWeight: 600,
         padding: "0.25rem 0.5rem",
@@ -201,7 +207,7 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     };
 
     const switchButtonHoverStyle = {
-        backgroundColor: "#f0f9ff",
+        backgroundColor: "rgba(167, 139, 250, 0.1)",
     };
 
     const handleClose = (e) => {
@@ -225,274 +231,294 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     }
 
     console.log("AuthModals: Rendering modal");
-    return (
-        <>
-            <style>{`
-                input::placeholder {
-                    color: var(--color-gray-400);
-                    opacity: 1;
-                }
-            `}</style>
-            <div style={modalOverlayStyle} onClick={handleClose}>
-                <div
-                    style={modalContentStyle}
-                    onClick={(e) => {
-                        console.log(
-                            "Modal content clicked, stopping propagation"
+    const modalContent = (
+        <div style={modalOverlayStyle} onClick={handleClose}>
+            <div
+                style={modalContentStyle}
+                onClick={(e) => {
+                    console.log(
+                        "Modal content clicked, stopping propagation"
+                    );
+                    e.stopPropagation();
+                }}
+            >
+                <button
+                    type="button"
+                    onClick={handleClose}
+                    style={closeButtonStyle}
+                    onMouseEnter={(e) => {
+                        Object.assign(
+                            e.currentTarget.style,
+                            closeButtonHoverStyle
                         );
-                        e.stopPropagation();
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "none";
+                        e.currentTarget.style.color = "#94a3b8";
                     }}
                 >
-                    <button
-                        type="button"
-                        onClick={handleClose}
-                        style={closeButtonStyle}
-                        onMouseEnter={(e) => {
-                            Object.assign(
-                                e.currentTarget.style,
-                                closeButtonHoverStyle
-                            );
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "none";
-                            e.currentTarget.style.color = "#6b7280";
-                        }}
-                    >
-                        ×
-                    </button>
+                    ×
+                </button>
 
-                    {isLoginOpen ? (
-                        <form onSubmit={handleLogin} style={formStyle}>
-                            <h2
-                                style={{
-                                    fontSize: "1.5rem",
-                                    fontWeight: 600,
-                                    marginBottom: "1.5rem",
-                                    textAlign: "center",
+                {isLoginOpen ? (
+                    <form onSubmit={handleLogin} style={formStyle}>
+                        <h2
+                            style={{
+                                fontSize: "1.5rem",
+                                fontWeight: 600,
+                                marginBottom: "1.5rem",
+                                textAlign: "center",
+                                color: "#ffffff",
+                            }}
+                        >
+                            Welcome Back
+                        </h2>
+
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                style={inputStyle}
+                                onFocus={(e) => {
+                                    Object.assign(
+                                        e.currentTarget.style,
+                                        inputFocusStyle
+                                    );
                                 }}
-                            >
-                                Welcome Back
-                            </h2>
+                                onBlur={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "#475569";
+                                    e.currentTarget.style.boxShadow =
+                                        "none";
+                                }}
+                                required
+                            />
+                        </div>
 
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Email</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    style={inputStyle}
-                                    onFocus={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            inputFocusStyle
-                                        );
-                                    }}
-                                    onBlur={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            "var(--color-gray-300)";
-                                        e.currentTarget.style.boxShadow =
-                                            "none";
-                                    }}
-                                    required
-                                />
-                            </div>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                }}
+                                style={inputStyle}
+                                onFocus={(e) => {
+                                    Object.assign(
+                                        e.currentTarget.style,
+                                        inputFocusStyle
+                                    );
+                                }}
+                                onBlur={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "#475569";
+                                    e.currentTarget.style.boxShadow =
+                                        "none";
+                                }}
+                                required
+                            />
+                        </div>
 
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Password</label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                    }}
-                                    style={inputStyle}
-                                    onFocus={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            inputFocusStyle
-                                        );
-                                    }}
-                                    onBlur={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            "var(--color-gray-300)";
-                                        e.currentTarget.style.boxShadow =
-                                            "none";
-                                    }}
-                                    required
-                                />
-                            </div>
+                        {error && <div style={errorStyle}>{error}</div>}
 
-                            {error && <div style={errorStyle}>{error}</div>}
+                        <button
+                            type="submit"
+                            style={buttonStyle}
+                            onMouseEnter={(e) => {
+                                Object.assign(
+                                    e.currentTarget.style,
+                                    buttonHoverStyle
+                                );
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background =
+                                    "linear-gradient(to right, #9333ea, #3b82f6)";
+                                e.currentTarget.style.transform = "none";
+                            }}
+                        >
+                            Log In
+                        </button>
 
+                        <div style={switchFormStyle}>
+                            Don't have an account?
                             <button
-                                type="submit"
-                                style={buttonStyle}
+                                type="button"
+                                onClick={handleSwitchToRegister}
+                                style={switchButtonStyle}
                                 onMouseEnter={(e) => {
                                     Object.assign(
                                         e.currentTarget.style,
-                                        buttonHoverStyle
+                                        switchButtonHoverStyle
                                     );
                                 }}
                                 onMouseLeave={(e) => {
                                     e.currentTarget.style.backgroundColor =
-                                        "var(--color-primary-600)";
-                                    e.currentTarget.style.transform = "none";
+                                        "transparent";
                                 }}
                             >
-                                Log In
+                                Sign up
                             </button>
+                        </div>
+                    </form>
+                ) : (
+                    <form onSubmit={handleRegister} style={formStyle}>
+                        <h2
+                            style={{
+                                fontSize: "1.5rem",
+                                fontWeight: 600,
+                                marginBottom: "1.5rem",
+                                textAlign: "center",
+                                color: "#ffffff",
+                            }}
+                        >
+                            Create Account
+                        </h2>
 
-                            <div style={switchFormStyle}>
-                                Don't have an account?
-                                <button
-                                    type="button"
-                                    onClick={handleSwitchToRegister}
-                                    style={switchButtonStyle}
-                                    onMouseEnter={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            switchButtonHoverStyle
-                                        );
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor =
-                                            "transparent";
-                                    }}
-                                >
-                                    Sign up
-                                </button>
-                            </div>
-                        </form>
-                    ) : (
-                        <form onSubmit={handleRegister} style={formStyle}>
-                            <h2
-                                style={{
-                                    fontSize: "1.5rem",
-                                    fontWeight: 600,
-                                    marginBottom: "1.5rem",
-                                    textAlign: "center",
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Full Name</label>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                style={inputStyle}
+                                onFocus={(e) => {
+                                    Object.assign(
+                                        e.currentTarget.style,
+                                        inputFocusStyle
+                                    );
                                 }}
-                            >
-                                Create Account
-                            </h2>
+                                onBlur={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "#475569";
+                                    e.currentTarget.style.boxShadow =
+                                        "none";
+                                }}
+                                required
+                            />
+                        </div>
 
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Full Name</label>
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    style={inputStyle}
-                                    onFocus={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            inputFocusStyle
-                                        );
-                                    }}
-                                    onBlur={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            "var(--color-gray-300)";
-                                        e.currentTarget.style.boxShadow =
-                                            "none";
-                                    }}
-                                    required
-                                />
-                            </div>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                style={inputStyle}
+                                onFocus={(e) => {
+                                    Object.assign(
+                                        e.currentTarget.style,
+                                        inputFocusStyle
+                                    );
+                                }}
+                                onBlur={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "#475569";
+                                    e.currentTarget.style.boxShadow =
+                                        "none";
+                                }}
+                                required
+                            />
+                        </div>
 
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Email</label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    style={inputStyle}
-                                    onFocus={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            inputFocusStyle
-                                        );
-                                    }}
-                                    onBlur={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            "var(--color-gray-300)";
-                                        e.currentTarget.style.boxShadow =
-                                            "none";
-                                    }}
-                                    required
-                                />
-                            </div>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                }}
+                                style={inputStyle}
+                                onFocus={(e) => {
+                                    Object.assign(
+                                        e.currentTarget.style,
+                                        inputFocusStyle
+                                    );
+                                }}
+                                onBlur={(e) => {
+                                    e.currentTarget.style.borderColor =
+                                        "#475569";
+                                    e.currentTarget.style.boxShadow =
+                                        "none";
+                                }}
+                                required
+                            />
+                        </div>
 
-                            <div style={inputGroupStyle}>
-                                <label style={labelStyle}>Password</label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                    }}
-                                    style={inputStyle}
-                                    onFocus={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            inputFocusStyle
-                                        );
-                                    }}
-                                    onBlur={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            "var(--color-gray-300)";
-                                        e.currentTarget.style.boxShadow =
-                                            "none";
-                                    }}
-                                    required
-                                />
-                            </div>
+                        {error && <div style={errorStyle}>{error}</div>}
 
-                            {error && <div style={errorStyle}>{error}</div>}
+                        <button
+                            type="submit"
+                            style={buttonStyle}
+                            onMouseEnter={(e) => {
+                                Object.assign(
+                                    e.currentTarget.style,
+                                    buttonHoverStyle
+                                );
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background =
+                                    "linear-gradient(to right, #9333ea, #3b82f6)";
+                                e.currentTarget.style.transform = "none";
+                            }}
+                        >
+                            Create Account
+                        </button>
 
+                        <div style={switchFormStyle}>
+                            Already have an account?
                             <button
-                                type="submit"
-                                style={buttonStyle}
+                                type="button"
+                                onClick={handleSwitchToLogin}
+                                style={switchButtonStyle}
                                 onMouseEnter={(e) => {
                                     Object.assign(
                                         e.currentTarget.style,
-                                        buttonHoverStyle
+                                        switchButtonHoverStyle
                                     );
                                 }}
                                 onMouseLeave={(e) => {
                                     e.currentTarget.style.backgroundColor =
-                                        "var(--color-primary-600)";
-                                    e.currentTarget.style.transform = "none";
+                                        "transparent";
                                 }}
                             >
-                                Create Account
+                                Log in
                             </button>
-
-                            <div style={switchFormStyle}>
-                                Already have an account?
-                                <button
-                                    type="button"
-                                    onClick={handleSwitchToLogin}
-                                    style={switchButtonStyle}
-                                    onMouseEnter={(e) => {
-                                        Object.assign(
-                                            e.currentTarget.style,
-                                            switchButtonHoverStyle
-                                        );
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor =
-                                            "transparent";
-                                    }}
-                                >
-                                    Log in
-                                </button>
-                            </div>
-                        </form>
-                    )}
-                </div>
+                        </div>
+                    </form>
+                )}
             </div>
-        </>
+        </div>
     );
+
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        return (
+            <>
+                <style>{`
+                    input::placeholder {
+                        color: var(--color-gray-400);
+                        opacity: 1;
+                    }
+                `}</style>
+                {ReactDOM.createPortal(modalContent, document.body)}
+            </>
+        );
+    } else {
+        return (
+            <>
+                <style>{`
+                    input::placeholder {
+                        color: var(--color-gray-400);
+                        opacity: 1;
+                    }
+                `}</style>
+                {modalContent}
+            </>
+        );
+    }
 };
 
 export default AuthModals;

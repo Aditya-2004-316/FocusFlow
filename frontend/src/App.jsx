@@ -939,7 +939,7 @@ function App() {
                         />
                         <Route
                             path="/focusflow-community"
-                            element={<CommunityPageWrapper />}
+                            element={<Community />}
                         />
                         <Route
                             path="/community"

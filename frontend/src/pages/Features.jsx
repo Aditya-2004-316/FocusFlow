@@ -1,7 +1,7 @@
 import React from "react";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
-import "../LandingPage/LandingPage.css";
+import "../styles/CardHover.css";
 
 const Features = () => {
     const features = [
@@ -55,41 +55,87 @@ const Features = () => {
         },
     ];
 
+    const styles = {
+        landingPage: {
+            minHeight: '100vh',
+            background: 'linear-gradient(to bottom, #0f172a, #1e293b, #0f172a)',
+            color: '#ffffff',
+        },
+        featuresSection: {
+            padding: '5rem 2rem',
+            background: 'rgba(15, 23, 42, 0.5)',
+        },
+        featuresContainer: {
+            maxWidth: '1200px',
+            margin: '0 auto',
+        },
+        featuresTitle: {
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            color: '#ffffff',
+            textAlign: 'center',
+            marginBottom: '3rem',
+        },
+        featuresGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '2rem',
+            marginTop: '3rem',
+        },
+        featureCard: {
+            background: 'rgba(30, 41, 59, 0.5)',
+            backdropFilter: 'blur(8px)',
+            padding: '2rem',
+            borderRadius: '1rem',
+            transition: 'all 0.3s ease',
+            border: '1px solid #334155',
+        },
+        featureCardHover: {
+            transform: 'translateY(-4px)',
+            borderColor: 'rgba(167, 139, 250, 0.5)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        },
+        featureTitle: {
+            fontSize: '1.5rem',
+            fontWeight: '600',
+            color: '#a78bfa',
+            marginBottom: '1rem',
+        },
+        featureDescription: {
+            color: '#94a3b8',
+            lineHeight: '1.6',
+        },
+    };
+
     return (
-        <div className="landing-page">
+        <div style={styles.landingPage}>
             <LandingNavbar />
-            <main className="features-section">
-                <div className="features-container">
-                    <h1
-                        className="features-title"
-                        style={{ color: "var(--color-primary-900)" }}
-                    >
+            <main style={styles.featuresSection}>
+                <div style={styles.featuresContainer}>
+                    <h1 style={styles.featuresTitle}>
                         Features
                     </h1>
                     <p
-                        className="hero-subtitle"
                         style={{
                             textAlign: "center",
                             maxWidth: "36rem",
                             margin: "0 auto 3rem",
-                            color: "var(--color-primary-900)",
+                            color: "#94a3b8",
+                            fontSize: "1.25rem",
+                            lineHeight: "1.6",
                         }}
                     >
                         Discover the powerful tools and features designed to
                         help you stay focused, track your progress, and achieve
                         your productivity goals.
                     </p>
-                    <div
-                        className="features-grid"
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(4, 1fr)",
-                            gap: "2rem",
-                            marginTop: "3rem",
-                        }}
-                    >
+                    <div style={styles.featuresGrid}>
                         {features.map((feature, index) => (
-                            <div key={index} className="feature-card">
+                            <div 
+                                key={index} 
+                                className="hover-card"
+                                style={styles.featureCard}
+                            >
                                 <div
                                     style={{
                                         fontSize: "2.5rem",
@@ -98,10 +144,10 @@ const Features = () => {
                                 >
                                     {feature.icon}
                                 </div>
-                                <h3 className="feature-title">
+                                <h3 style={styles.featureTitle}>
                                     {feature.title}
                                 </h3>
-                                <p className="feature-description">
+                                <p style={styles.featureDescription}>
                                     {feature.description}
                                 </p>
                             </div>

@@ -1,29 +1,33 @@
 import React from "react";
 import { FaComments, FaEnvelope, FaGithub, FaUsers } from "react-icons/fa";
+import LandingNavbar from "../LandingPage/LandingNavbar";
+import LandingFooter from "../LandingPage/LandingFooter";
+import "../styles/CardHover.css";
 
 const cardStyle = {
-    background: "var(--color-white)",
+    background: "rgba(30, 41, 59, 0.5)",
+    backdropFilter: "blur(8px)",
     borderRadius: "1rem",
-    boxShadow: "var(--shadow-soft)",
+    border: "1px solid #334155",
     padding: "2rem 1.5rem",
     margin: "1rem 0",
     display: "flex",
     alignItems: "center",
     gap: "1.25rem",
-    transition: "box-shadow 0.2s, transform 0.2s",
+    transition: "all 0.3s ease",
 };
 
 const iconStyle = {
     fontSize: "2.2rem",
-    color: "var(--color-primary-600)",
+    color: "#a78bfa",
     flexShrink: 0,
 };
 
 const headingStyle = {
     fontSize: "2.5rem",
-    fontWeight: 800,
+    fontWeight: 700,
     marginBottom: "1rem",
-    color: "var(--color-primary-900)",
+    color: "#ffffff",
     letterSpacing: "-0.02em",
 };
 
@@ -32,33 +36,33 @@ const heroSubtitleStyle = {
     maxWidth: 600,
     margin: "0 auto",
     lineHeight: 1.6,
-    color: "var(--color-primary-900)",
+    color: "#94a3b8",
 };
 
 const sectionTitleStyle = {
     fontSize: "1.25rem",
-    fontWeight: 700,
+    fontWeight: 600,
     marginBottom: 6,
-    color: "var(--color-gray-900)",
+    color: "#a78bfa",
 };
 
 const textStyle = {
-    color: "var(--color-gray-800)",
+    color: "#94a3b8",
 };
 
 const highlightStyle = {
-    color: "var(--color-primary-600)",
-    fontWeight: 500,
+    color: "#a78bfa",
+    fontWeight: 600,
     background: "none",
 };
 
 const Community = () => (
-    <div style={{ minHeight: "70vh", background: "var(--color-gray-50)" }}>
+    <div style={{ minHeight: "100vh", background: "#0f172a", color: "#ffffff" }}>
+        <LandingNavbar />
         {/* Hero Section */}
         <section
             style={{
-                background: "var(--color-gray-50)",
-                padding: "3rem 1rem 2rem 1rem",
+                padding: "5rem 2rem 2rem 2rem",
                 textAlign: "center",
             }}
         >
@@ -86,7 +90,7 @@ const Community = () => (
                     marginTop: "2rem",
                 }}
             >
-                <div style={cardStyle}>
+                <div className="hover-card" style={cardStyle}>
                     <FaComments style={iconStyle} />
                     <div>
                         <h2 style={sectionTitleStyle}>Discussion Forum</h2>
@@ -97,7 +101,7 @@ const Community = () => (
                         </p>
                     </div>
                 </div>
-                <div style={cardStyle}>
+                <div className="hover-card" style={cardStyle}>
                     <FaEnvelope style={iconStyle} />
                     <div>
                         <h2 style={sectionTitleStyle}>Send Feedback</h2>
@@ -113,7 +117,7 @@ const Community = () => (
                         </p>
                     </div>
                 </div>
-                <div style={cardStyle}>
+                <div className="hover-card" style={cardStyle}>
                     <FaGithub style={iconStyle} />
                     <div>
                         <h2 style={sectionTitleStyle}>Contribute on GitHub</h2>
@@ -132,7 +136,7 @@ const Community = () => (
                         </p>
                     </div>
                 </div>
-                <div style={cardStyle}>
+                <div className="hover-card" style={cardStyle}>
                     <FaUsers style={iconStyle} />
                     <div>
                         <h2 style={sectionTitleStyle}>Meet the Community</h2>
@@ -147,45 +151,46 @@ const Community = () => (
         </section>
 
         {/* Call to Action */}
-        <section style={{ textAlign: "center", margin: "3rem 0 2rem 0" }}>
+        <section style={{ textAlign: "center", margin: "3rem 0 2rem 0", padding: "0 2rem" }}>
             <h2
                 style={{
                     fontSize: "1.5rem",
                     fontWeight: 700,
                     marginBottom: 10,
-                    color: "var(--color-gray-900)",
+                    color: "#ffffff",
                 }}
             >
                 Ready to get involved?
             </h2>
             <p
                 style={{
-                    color: "var(--color-gray-800)",
                     fontSize: "1.1rem",
                     marginBottom: 18,
+                    color: "#94a3b8",
                 }}
             >
-                Whether you’re a new user or a long-time fan, your voice
+                Whether you're a new user or a long-time fan, your voice
                 matters. Join us and help make FocusFlow even better!
             </p>
             <a
                 href="mailto:focusflow@studentproject.com"
                 style={{
-                    background: "var(--color-primary-600)",
-                    color: "#fff",
+                    background: "rgba(167, 139, 250, 0.2)",
+                    color: "#a78bfa",
                     padding: "0.9rem 2.2rem",
                     borderRadius: "0.5rem",
                     fontWeight: 600,
                     fontSize: "1.1rem",
                     textDecoration: "none",
-                    boxShadow: "var(--shadow-md)",
-                    transition: "background 0.2s, transform 0.2s",
+                    border: "1px solid #a78bfa",
+                    transition: "all 0.3s ease",
                     display: "inline-block",
                 }}
             >
                 Contact Us
             </a>
         </section>
+        <LandingFooter />
     </div>
 );
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
 import { FaChevronDown, FaChevronUp, FaQuestionCircle } from "react-icons/fa";
+import "../styles/CardHover.css";
 
 const faqs = [
     {
@@ -46,13 +47,15 @@ const faqs = [
     },
 ];
 
-const cardStyle = {
-    background: "var(--color-white)",
+const glassCardStyle = {
+    background: "rgba(30, 41, 59, 0.5)",
+    backdropFilter: "blur(8px)",
     borderRadius: "1rem",
-    boxShadow: "var(--shadow-soft)",
+    border: "1px solid #334155",
     padding: "1.5rem 1.5rem 1rem 1.5rem",
     marginBottom: "1.5rem",
-    transition: "box-shadow 0.2s, transform 0.2s",
+    transition: "all 0.3s ease",
+    color: "#ffffff"
 };
 
 const questionStyle = {
@@ -61,13 +64,13 @@ const questionStyle = {
     justifyContent: "space-between",
     cursor: "pointer",
     fontSize: "1.15rem",
-    fontWeight: 600,
-    color: "var(--color-primary-700)",
+    fontWeight: 700,
+    color: "#a78bfa",
     marginBottom: 0,
 };
 
 const answerStyle = {
-    color: "var(--color-gray-700)",
+    color: "#94a3b8",
     fontSize: "1.05rem",
     marginTop: "0.75rem",
     lineHeight: 1.6,
@@ -76,13 +79,12 @@ const answerStyle = {
 const FAQ = () => {
     const [openIdx, setOpenIdx] = useState(null);
     return (
-        <div style={{ background: "var(--color-gray-50)", minHeight: "100vh" }}>
+        <div style={{ background: "#0f172a", minHeight: "100vh", color: "#ffffff" }}>
             <LandingNavbar />
             {/* Hero Section */}
             <section
                 style={{
-                    background:
-                        "linear-gradient(90deg, var(--color-primary-400) 0%, var(--color-cyan-300) 100%)",
+                    background: "none",
                     padding: "3.5rem 1rem 2.5rem 1rem",
                     textAlign: "center",
                 }}
@@ -99,16 +101,19 @@ const FAQ = () => {
                     <FaQuestionCircle
                         style={{
                             fontSize: "2.5rem",
-                            color: "var(--color-primary-900)",
+                            color: "#a78bfa",
                         }}
                     />
                     <h1
                         style={{
                             fontSize: "2.2rem",
                             fontWeight: 800,
-                            color: "var(--color-primary-900)",
                             margin: 0,
-                            textShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                            textShadow: "0 4px 16px rgba(130,87,247,0.11)",
+                            background: 'linear-gradient(90deg, #a78bfa 40%, #60a5fa 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
                         }}
                     >
                         Frequently Asked Questions
@@ -116,7 +121,7 @@ const FAQ = () => {
                 </div>
                 <p
                     style={{
-                        color: "var(--color-primary-900)",
+                        color: "#94a3b8",
                         fontSize: "1.15rem",
                         maxWidth: 600,
                         margin: "0 auto",
@@ -135,27 +140,19 @@ const FAQ = () => {
                 }}
             >
                 {faqs.map((faq, idx) => (
-                    <div key={idx} style={cardStyle}>
+                    <div key={idx} className="hover-card" style={glassCardStyle}>
                         <div
                             style={questionStyle}
-                            onClick={() =>
-                                setOpenIdx(openIdx === idx ? null : idx)
-                            }
+                            onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
                         >
                             <span>{faq.question}</span>
                             {openIdx === idx ? (
                                 <FaChevronUp
-                                    style={{
-                                        color: "var(--color-primary-600)",
-                                        fontSize: "1.2rem",
-                                    }}
+                                    style={{ color: "#a78bfa", fontSize: "1.2rem" }}
                                 />
                             ) : (
                                 <FaChevronDown
-                                    style={{
-                                        color: "var(--color-primary-600)",
-                                        fontSize: "1.2rem",
-                                    }}
+                                    style={{ color: "#60a5fa", fontSize: "1.2rem" }}
                                 />
                             )}
                         </div>
@@ -167,11 +164,12 @@ const FAQ = () => {
                 <div
                     style={{
                         marginTop: "2.5rem",
-                        color: "#888",
+                        color: "#94a3b8",
                         fontSize: "1rem",
-                        background: "var(--color-white)",
+                        background: "rgba(30, 41, 59, 0.5)",
+                        backdropFilter: "blur(8px)",
                         borderRadius: "0.75rem",
-                        boxShadow: "var(--shadow-soft)",
+                        border: "1px solid #334155",
                         padding: "1.2rem 1.5rem",
                         textAlign: "center",
                     }}
@@ -180,8 +178,9 @@ const FAQ = () => {
                     <a
                         href="/community"
                         style={{
-                            color: "var(--color-primary-600)",
+                            color: "#a78bfa",
                             fontWeight: 600,
+                            textDecoration: "underline"
                         }}
                     >
                         Visit the Community page
@@ -190,13 +189,12 @@ const FAQ = () => {
                     <a
                         href="mailto:focusflow@studentproject.com"
                         style={{
-                            color: "var(--color-primary-600)",
+                            color: "#60a5fa",
                             fontWeight: 600,
                         }}
                     >
                         focusflow@studentproject.com
-                    </a>
-                    .
+                    </a>.
                 </div>
             </main>
             <LandingFooter />

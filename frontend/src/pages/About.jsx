@@ -1,34 +1,34 @@
 import React from "react";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
+import "../styles/CardHover.css";
 
 const About = () => (
-    <div style={{ background: "var(--color-gray-50)", minHeight: "100vh" }}>
+    <div style={{ background: "#0f172a", minHeight: "100vh", color: "#ffffff" }}>
         <LandingNavbar />
         <section
             style={{
-                background:
-                    "linear-gradient(90deg, var(--color-primary-400) 0%, var(--color-cyan-300) 100%)",
-                padding: "3rem 1rem 2rem 1rem",
+                padding: "5rem 2rem 2rem 2rem",
                 textAlign: "center",
             }}
         >
             <h1
                 style={{
-                    fontSize: "2.2rem",
-                    fontWeight: 800,
-                    color: "var(--color-primary-900)",
-                    marginBottom: "0.7rem",
+                    fontSize: "2.5rem",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    marginBottom: "1rem",
                 }}
             >
                 About FocusFlow
             </h1>
             <p
                 style={{
-                    color: "var(--color-primary-900)",
-                    fontSize: "1.15rem",
+                    color: "#94a3b8",
+                    fontSize: "1.2rem",
                     maxWidth: 600,
                     margin: "0 auto",
+                    lineHeight: 1.6,
                 }}
             >
                 FocusFlow is a student-built productivity platform designed to
@@ -45,18 +45,21 @@ const About = () => (
             }}
         >
             <div
+                className="hover-card"
                 style={{
-                    background: "var(--color-white)",
+                    background: "rgba(30, 41, 59, 0.5)",
+                    backdropFilter: "blur(8px)",
                     borderRadius: "1rem",
-                    boxShadow: "var(--shadow-soft)",
+                    border: "1px solid #334155",
                     padding: "2rem",
                     marginBottom: "2rem",
+                    transition: "all 0.3s ease",
                 }}
             >
                 <h2
                     style={{
-                        color: "var(--color-primary-700)",
-                        fontWeight: 700,
+                        color: "#a78bfa",
+                        fontWeight: 600,
                         fontSize: "1.3rem",
                         marginBottom: 12,
                     }}
@@ -65,7 +68,7 @@ const About = () => (
                 </h2>
                 <p
                     style={{
-                        color: "var(--color-gray-800)",
+                        color: "#94a3b8",
                         fontSize: "1.08rem",
                         lineHeight: 1.7,
                     }}
@@ -78,17 +81,20 @@ const About = () => (
                 </p>
             </div>
             <div
+                className="hover-card"
                 style={{
-                    background: "var(--color-white)",
+                    background: "rgba(30, 41, 59, 0.5)",
+                    backdropFilter: "blur(8px)",
                     borderRadius: "1rem",
-                    boxShadow: "var(--shadow-soft)",
+                    border: "1px solid #334155",
                     padding: "2rem",
+                    transition: "all 0.3s ease",
                 }}
             >
                 <h2
                     style={{
-                        color: "var(--color-primary-700)",
-                        fontWeight: 700,
+                        color: "#a78bfa",
+                        fontWeight: 600,
                         fontSize: "1.3rem",
                         marginBottom: 12,
                     }}
@@ -97,7 +103,7 @@ const About = () => (
                 </h2>
                 <p
                     style={{
-                        color: "var(--color-gray-800)",
+                        color: "#94a3b8",
                         fontSize: "1.08rem",
                         lineHeight: 1.7,
                     }}

@@ -1,6 +1,7 @@
 import React from "react";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
+import "../styles/CardHover.css";
 
 const updates = [
     {
@@ -30,42 +31,42 @@ const updates = [
 ];
 
 const cardStyle = {
-    background: "var(--color-white)",
+    background: "rgba(30, 41, 59, 0.5)",
+    backdropFilter: "blur(8px)",
     borderRadius: "1rem",
-    boxShadow: "var(--shadow-soft)",
+    border: "1px solid #334155",
     padding: "1.5rem 1.5rem 1rem 1.5rem",
     marginBottom: "1.5rem",
-    transition: "box-shadow 0.2s, transform 0.2s",
+    transition: "all 0.3s ease",
 };
 
 const Updates = () => (
-    <div style={{ background: "var(--color-gray-50)", minHeight: "100vh" }}>
+    <div style={{ background: "#0f172a", minHeight: "100vh", color: "#ffffff" }}>
         <LandingNavbar />
         {/* Hero Section */}
         <section
             style={{
-                background:
-                    "linear-gradient(90deg, var(--color-primary-400) 0%, var(--color-cyan-300) 100%)",
-                padding: "3rem 1rem 2rem 1rem",
+                padding: "5rem 2rem 2rem 2rem",
                 textAlign: "center",
             }}
         >
             <h1
                 style={{
-                    fontSize: "2.2rem",
-                    fontWeight: 800,
-                    color: "var(--color-primary-900)",
-                    marginBottom: "0.7rem",
+                    fontSize: "2.5rem",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    marginBottom: "1rem",
                 }}
             >
                 Latest Updates
             </h1>
             <p
                 style={{
-                    color: "var(--color-primary-900)",
-                    fontSize: "1.15rem",
+                    color: "#94a3b8",
+                    fontSize: "1.2rem",
                     maxWidth: 600,
                     margin: "0 auto",
+                    lineHeight: 1.6,
                 }}
             >
                 Stay up to date with the newest features, improvements, and
@@ -80,7 +81,7 @@ const Updates = () => (
             }}
         >
             {updates.map((update, idx) => (
-                <div key={idx} style={cardStyle}>
+                <div key={idx} className="hover-card" style={cardStyle}>
                     <div
                         style={{
                             display: "flex",
@@ -90,8 +91,8 @@ const Updates = () => (
                     >
                         <span
                             style={{
-                                color: "var(--color-primary-600)",
-                                fontWeight: 700,
+                                color: "#a78bfa",
+                                fontWeight: 600,
                                 fontSize: "1.05rem",
                                 marginRight: 16,
                             }}
@@ -100,8 +101,8 @@ const Updates = () => (
                         </span>
                         <span
                             style={{
-                                fontWeight: 700,
-                                color: "var(--color-primary-900)",
+                                fontWeight: 600,
+                                color: "#ffffff",
                                 fontSize: "1.13rem",
                             }}
                         >
@@ -110,7 +111,7 @@ const Updates = () => (
                     </div>
                     <div
                         style={{
-                            color: "var(--color-gray-700)",
+                            color: "#94a3b8",
                             fontSize: "1.05rem",
                         }}
                     >
