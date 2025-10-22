@@ -106,7 +106,7 @@ const Pricing = () => {
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         },
         pricingCardFeatured: {
-            borderColor: '#a78bfa',
+            borderColor: '#38bdf8',
             transform: 'scale(1.05)',
         },
         pricingPlan: {
@@ -118,7 +118,7 @@ const Pricing = () => {
         pricingPrice: {
             fontSize: '3rem',
             fontWeight: '800',
-            color: '#a78bfa',
+            color: '#38bdf8',
             marginBottom: '0.5rem',
         },
         pricingPeriod: {
@@ -139,12 +139,12 @@ const Pricing = () => {
             gap: '0.5rem',
         },
         checkmark: {
-            color: '#a78bfa',
+            color: '#38bdf8',
             fontWeight: 'bold',
             flexShrink: 0,
         },
         pricingBtn: {
-            background: 'linear-gradient(to right, #9333ea, #3b82f6)',
+            background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
             color: '#ffffff',
             padding: '1rem 2rem',
             borderRadius: '9999px',
@@ -154,12 +154,12 @@ const Pricing = () => {
             transition: 'all 0.2s ease',
             width: '100%',
             marginTop: '1rem',
-            boxShadow: '0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06)',
+            boxShadow: '0 4px 6px -1px rgba(14, 165, 233, 0.1), 0 2px 4px -1px rgba(14, 165, 233, 0.06)',
         },
         pricingBtnHover: {
-            background: 'linear-gradient(to right, #7c3aed, #2563eb)',
+            background: 'linear-gradient(to right, #0284c7, #0284c7)',
             transform: 'translateY(-2px)',
-            boxShadow: '0 10px 15px -3px rgba(147, 51, 234, 0.1), 0 4px 6px -2px rgba(147, 51, 234, 0.05)',
+            boxShadow: '0 10px 15px -3px rgba(14, 165, 233, 0.3), 0 4px 6px -2px rgba(14, 165, 233, 0.05)',
         },
     };
 
@@ -199,7 +199,7 @@ const Pricing = () => {
                                             top: "-0.75rem",
                                             left: "50%",
                                             transform: "translateX(-50%)",
-                                            background: "linear-gradient(to right, #9333ea, #3b82f6)",
+                                            background: "linear-gradient(to right, #0ea5e9, #0ea5e9)",
                                             color: "#ffffff",
                                             padding: "0.25rem 1rem",
                                             borderRadius: "1rem",

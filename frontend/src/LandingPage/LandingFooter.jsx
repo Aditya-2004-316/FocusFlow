@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 const LandingFooter = () => {
     const location = useLocation();
     const activeFooterLinkStyle = {
-        color: "#a78bfa",
+        color: "#38bdf8",
         fontWeight: 700,
         textDecoration: "underline",
         textUnderlineOffset: "0.2em",
@@ -66,7 +66,7 @@ const LandingFooter = () => {
                             />
                             <h3
                                 style={{
-                                    background: "linear-gradient(to right, #a78bfa, #60a5fa)",
+                                    background: "linear-gradient(to right, #38bdf8, #60a5fa)",
                                     WebkitBackgroundClip: "text",
                                     WebkitTextFillColor: "transparent",
                                     backgroundClip: "text",
@@ -182,13 +182,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/features"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -213,13 +213,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/updates"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -260,13 +260,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/about"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -291,13 +291,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/careers"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -322,13 +322,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/contact"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -369,13 +369,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/privacy"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -400,13 +400,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/terms"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}
@@ -431,13 +431,13 @@ const LandingFooter = () => {
                                             }}
                                             onMouseOver={(e) =>
                                                 (e.currentTarget.style.color =
-                                                    "#a78bfa")
+                                                    "#38bdf8")
                                             }
                                             onMouseOut={(e) =>
                                                 (e.currentTarget.style.color =
                                                     location.pathname ===
                                                     "/security"
-                                                        ? "#a78bfa"
+                                                        ? "#38bdf8"
                                                         : "#94a3b8")
                                             }
                                             tabIndex={-1}

@@ -36,7 +36,7 @@ const Security = () => (
         </section>
         <main
             style={{
-                maxWidth: 700,
+                maxWidth: 1200,
                 margin: "-2.5rem auto 2rem auto",
                 padding: "1rem",
             }}
@@ -54,7 +54,7 @@ const Security = () => (
             >
                 <h2
                     style={{
-                        color: "#a78bfa",
+                        color: "#38bdf8",
                         fontWeight: 600,
                         fontSize: "1.15rem",
                         marginBottom: 12,
@@ -74,7 +74,7 @@ const Security = () => (
                 </p>
                 <h2
                     style={{
-                        color: "#a78bfa",
+                        color: "#38bdf8",
                         fontWeight: 600,
                         fontSize: "1.15rem",
                         margin: "2rem 0 12px 0",
@@ -95,7 +95,7 @@ const Security = () => (
                 </p>
                 <h2
                     style={{
-                        color: "#a78bfa",
+                        color: "#38bdf8",
                         fontWeight: 600,
                         fontSize: "1.15rem",
                         margin: "2rem 0 12px 0",
@@ -114,7 +114,7 @@ const Security = () => (
                     <a
                         href="mailto:focusflow@studentproject.com"
                         style={{
-                            color: "#a78bfa",
+                            color: "#38bdf8",
                             textDecoration: "underline",
                         }}
                     >

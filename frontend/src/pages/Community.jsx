@@ -19,7 +19,7 @@ const cardStyle = {
 
 const iconStyle = {
     fontSize: "2.2rem",
-    color: "#a78bfa",
+    color: "#38bdf8",
     flexShrink: 0,
 };
 
@@ -43,7 +43,7 @@ const sectionTitleStyle = {
     fontSize: "1.25rem",
     fontWeight: 600,
     marginBottom: 6,
-    color: "#a78bfa",
+    color: "#38bdf8",
 };
 
 const textStyle = {
@@ -51,7 +51,7 @@ const textStyle = {
 };
 
 const highlightStyle = {
-    color: "#a78bfa",
+    color: "#38bdf8",
     fontWeight: 600,
     background: "none",
 };
@@ -72,6 +72,39 @@ const Community = () => (
                 enthusiasts. Share your feedback, join discussions, and help
                 shape the future of FocusFlow!
             </p>
+        </section>
+
+        {/* Community Stats */}
+        <section style={{ maxWidth: 1000, margin: "-1rem auto 3rem auto", padding: "0 1rem" }}>
+            <div style={{
+                background: "rgba(30, 41, 59, 0.5)",
+                backdropFilter: "blur(8px)",
+                borderRadius: "1rem",
+                border: "1px solid #334155",
+                padding: "2rem",
+                textAlign: "center",
+            }}>
+                <h2 style={{ color: "#38bdf8", fontSize: "1.5rem", fontWeight: 700, marginBottom: "2rem" }}>
+                    🌍 Our Growing Community
+                </h2>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem" }}>
+                    {[
+                        { number: "10,000+", label: "Members" },
+                        { number: "50+", label: "Countries" },
+                        { number: "100+", label: "Contributors" },
+                        { number: "1,000+", label: "Feature Suggestions" },
+                    ].map((stat, idx) => (
+                        <div key={idx}>
+                            <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "#38bdf8", marginBottom: "0.5rem" }}>
+                                {stat.number}
+                            </div>
+                            <div style={{ fontSize: "1rem", color: "#94a3b8" }}>
+                                {stat.label}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </section>
 
         {/* Community Actions Section */}
@@ -150,6 +183,43 @@ const Community = () => (
             </div>
         </section>
 
+        {/* Events & Challenges */}
+        <section style={{ maxWidth: 800, margin: "3rem auto", padding: "0 1rem" }}>
+            <div className="hover-card" style={{
+                ...cardStyle,
+                display: "block",
+                textAlign: "center",
+            }}>
+                <h2 style={{ color: "#38bdf8", fontSize: "1.5rem", fontWeight: 700, marginBottom: "2rem" }}>
+                    🎉 Upcoming Events & Challenges
+                </h2>
+                <div style={{ display: "grid", gap: "1.5rem", textAlign: "left" }}>
+                    {[
+                        { title: "Monthly Productivity Challenge", date: "Jan 15-31", desc: "Join 1,000+ users in our 30-day focus challenge" },
+                        { title: "Community Q&A Session", date: "Feb 5, 3 PM EST", desc: "Ask the team anything about FocusFlow" },
+                        { title: "Feature Voting Week", date: "Feb 10-17", desc: "Help us prioritize the next features" },
+                    ].map((event, idx) => (
+                        <div key={idx} style={{
+                            padding: "1rem",
+                            background: "rgba(15, 23, 42, 0.5)",
+                            borderRadius: "0.5rem",
+                            border: "1px solid #334155",
+                        }}>
+                            <h3 style={{ color: "#ffffff", fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem" }}>
+                                {event.title}
+                            </h3>
+                            <p style={{ color: "#38bdf8", fontSize: "0.9rem", marginBottom: "0.5rem" }}>
+                                📅 {event.date}
+                            </p>
+                            <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
+                                {event.desc}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
         {/* Call to Action */}
         <section style={{ textAlign: "center", margin: "3rem 0 2rem 0", padding: "0 2rem" }}>
             <h2
@@ -175,14 +245,14 @@ const Community = () => (
             <a
                 href="mailto:focusflow@studentproject.com"
                 style={{
-                    background: "rgba(167, 139, 250, 0.2)",
-                    color: "#a78bfa",
+                    background: "rgba(50, 189, 248, 0.2)",
+                    color: "#38bdf8",
                     padding: "0.9rem 2.2rem",
                     borderRadius: "0.5rem",
                     fontWeight: 600,
                     fontSize: "1.1rem",
                     textDecoration: "none",
-                    border: "1px solid #a78bfa",
+                    border: "1px solid #38bdf8",
                     transition: "all 0.3s ease",
                     display: "inline-block",
                 }}

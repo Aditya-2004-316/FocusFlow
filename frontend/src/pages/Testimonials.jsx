@@ -19,6 +19,36 @@ const testimonials = [
         author: "Emily Rodriguez",
         role: "Freelance Designer",
     },
+    {
+        quote: "FocusFlow helped me ace my finals! The Pomodoro timer kept me focused during long study sessions.",
+        author: "Alex Martinez",
+        role: "Computer Science Student",
+    },
+    {
+        quote: "Best productivity app I've ever used. Simple, effective, and completely free. What more could you ask for?",
+        author: "David Kim",
+        role: "Marketing Manager",
+    },
+    {
+        quote: "The analytics feature is incredible. I can see exactly where my time goes and optimize my workflow accordingly.",
+        author: "Jessica Lee",
+        role: "Data Analyst",
+    },
+    {
+        quote: "As a remote worker, FocusFlow helps me maintain structure and discipline. It's like having a productivity coach.",
+        author: "Ryan Thompson",
+        role: "Content Writer",
+    },
+    {
+        quote: "I've tried dozens of productivity apps, but FocusFlow is the only one I've stuck with. It just works!",
+        author: "Priya Patel",
+        role: "UX Designer",
+    },
+    {
+        quote: "The distraction logging feature helped me identify my biggest time-wasters. Game changer!",
+        author: "James Wilson",
+        role: "Entrepreneur",
+    },
 ];
 
 const Testimonials = () => {
@@ -70,7 +100,7 @@ const Testimonials = () => {
         },
         testimonialAuthor: {
             fontWeight: '600',
-            color: '#a78bfa',
+            color: '#38bdf8',
             marginBottom: '0.25rem',
         },
         testimonialRole: {
@@ -101,6 +131,41 @@ const Testimonials = () => {
                         people boost their productivity, stay organized, and achieve
                         their goals every day.
                     </p>
+
+                    {/* Rating Statistics */}
+                    <div style={{
+                        background: "rgba(30, 41, 59, 0.5)",
+                        backdropFilter: "blur(8px)",
+                        borderRadius: "1rem",
+                        border: "1px solid #334155",
+                        padding: "2rem",
+                        marginBottom: "3rem",
+                        textAlign: "center",
+                    }}>
+                        <h3 style={{ color: "#38bdf8", fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>
+                            ⭐ User Ratings
+                        </h3>
+                        <div style={{ fontSize: "3rem", fontWeight: 800, color: "#38bdf8", marginBottom: "0.5rem" }}>
+                            4.8/5
+                        </div>
+                        <p style={{ color: "#94a3b8", marginBottom: "2rem" }}>Based on 1,234 reviews</p>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", maxWidth: "800px", margin: "0 auto" }}>
+                            {[
+                                { label: "Ease of Use", rating: 4.9 },
+                                { label: "Features", rating: 4.8 },
+                                { label: "Design", rating: 4.9 },
+                                { label: "Support", rating: 4.7 },
+                            ].map((item, idx) => (
+                                <div key={idx}>
+                                    <div style={{ color: "#ffffff", fontSize: "1rem", marginBottom: "0.5rem" }}>{item.label}</div>
+                                    <div style={{ color: "#38bdf8", fontSize: "1.5rem", fontWeight: 700 }}>
+                                        {"⭐".repeat(Math.floor(item.rating))} {item.rating}/5
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     <div style={styles.testimonialsGrid}>
                         {testimonials.map((testimonial, index) => (
                             <div 

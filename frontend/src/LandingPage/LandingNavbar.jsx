@@ -62,7 +62,7 @@ const LandingNavbar = () => {
     const logoTextStyle = {
         fontSize: "1.5rem",
         fontWeight: 700,
-        background: "linear-gradient(to right, #a78bfa, #60a5fa)",
+        background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
@@ -88,12 +88,12 @@ const LandingNavbar = () => {
     };
 
     const linkHoverStyle = {
-        color: "#a78bfa",
+        color: '#38bdf8',
     };
 
     const activeLinkStyle = {
-        color: "#a78bfa",
-        borderBottom: "2px solid #a78bfa",
+        color: '#38bdf8',
+        borderBottom: '2px solid #38bdf8',
         fontWeight: 700,
     };
 
@@ -122,11 +122,11 @@ const LandingNavbar = () => {
 
     const registerButtonStyle = {
         ...buttonStyle,
-        background: "linear-gradient(to right, #9333ea, #3b82f6)",
+        background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
         border: "none",
         color: "white",
         outline: "none",
-        boxShadow: "0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06)",
+        boxShadow: '0 4px 6px -1px rgba(14, 165, 233, 0.1), 0 2px 4px -1px rgba(14, 165, 233, 0.06)',
     };
 
     const handleLoginClick = () => {
@@ -294,11 +294,11 @@ const LandingNavbar = () => {
                     onClick={handleRegisterClick}
                     style={registerButtonStyle}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "linear-gradient(to right, #7c3aed, #2563eb)";
+                        e.currentTarget.style.background = "linear-gradient(to right, #0284c7, #0284c7)";
                         e.currentTarget.style.transform = "translateY(-1px)";
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "linear-gradient(to right, #9333ea, #3b82f6)";
+                        e.currentTarget.style.background = "linear-gradient(to right, #0ea5e9, #0ea5e9)";
                         e.currentTarget.style.transform = "none";
                     }}
                     tabIndex={-1}

@@ -148,8 +148,8 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     };
 
     const inputFocusStyle = {
-        borderColor: "#a78bfa",
-        boxShadow: "0 0 0 3px rgba(167, 139, 250, 0.1)",
+        borderColor: "#38bdf8",
+        boxShadow: "0 0 0 3px rgba(56, 189, 248, 0.1)",
         outline: "none",
     };
 
@@ -157,20 +157,20 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
         padding: "0.875rem",
         borderRadius: "0.5rem",
         border: "none",
-        background: "linear-gradient(to right, #9333ea, #3b82f6)",
+        background: "linear-gradient(to right, #0ea5e9, #0ea5e9)",
         color: "white",
         fontSize: "1rem",
         fontWeight: 500,
         cursor: "pointer",
         transition: "all 0.2s",
         marginTop: "0.5rem",
-        boxShadow: "0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06)",
+        boxShadow: "0 4px 6px -1px rgba(14, 165, 233, 0.1), 0 2px 4px -1px rgba(14, 165, 233, 0.06)",
     };
 
     const buttonHoverStyle = {
-        background: "linear-gradient(to right, #7c3aed, #2563eb)",
+        background: "linear-gradient(to right, #0284c7, #0284c7)",
         transform: "translateY(-1px)",
-        boxShadow: "0 10px 15px -3px rgba(147, 51, 234, 0.1), 0 4px 6px -2px rgba(147, 51, 234, 0.05)",
+        boxShadow: "0 10px 15px -3px rgba(14, 165, 233, 0.1), 0 4px 6px -2px rgba(14, 165, 233, 0.05)",
     };
 
     const errorStyle = {
@@ -197,7 +197,7 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     const switchButtonStyle = {
         background: "none",
         border: "none",
-        color: "#a78bfa",
+        color: "#38bdf8",
         cursor: "pointer",
         fontWeight: 600,
         padding: "0.25rem 0.5rem",
@@ -207,7 +207,7 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
     };
 
     const switchButtonHoverStyle = {
-        backgroundColor: "rgba(167, 139, 250, 0.1)",
+        backgroundColor: "rgba(56, 189, 248, 0.1)",
     };
 
     const handleClose = (e) => {
@@ -335,7 +335,7 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.background =
-                                    "linear-gradient(to right, #9333ea, #3b82f6)";
+                                    "linear-gradient(to right, #0ea5e9, #0ea5e9)";
                                 e.currentTarget.style.transform = "none";
                             }}
                         >
@@ -461,7 +461,7 @@ const AuthModals = ({ isLoginOpen, isRegisterOpen, onClose }) => {
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.background =
-                                    "linear-gradient(to right, #9333ea, #3b82f6)";
+                                    "linear-gradient(to right, #0ea5e9, #0ea5e9)";
                                 e.currentTarget.style.transform = "none";
                             }}
                         >

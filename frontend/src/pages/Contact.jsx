@@ -51,7 +51,7 @@ const Contact = () => {
     };
 
     const buttonStyle = {
-        background: "#a78bfa",
+        background: "#38bdf8",
         color: "#ffffff",
         padding: "0.75rem 1.5rem",
         fontSize: "1rem",
@@ -105,7 +105,7 @@ const Contact = () => {
                 <div className="hover-card" style={cardStyle}>
                     <h2
                         style={{
-                            color: "#a78bfa",
+                            color: "#38bdf8",
                             fontWeight: 600,
                             fontSize: "1.15rem",
                             marginBottom: 12,
@@ -116,7 +116,7 @@ const Contact = () => {
                     {submitted ? (
                         <div
                             style={{
-                                color: "#a78bfa",
+                                color: "#38bdf8",
                                 fontWeight: 600,
                                 fontSize: "1.1rem",
                                 padding: "2rem 0",
@@ -181,7 +181,7 @@ const Contact = () => {
                 <div className="hover-card" style={cardStyle}>
                     <h2
                         style={{
-                            color: "#a78bfa",
+                            color: "#38bdf8",
                             fontWeight: 600,
                             fontSize: "1.15rem",
                             marginBottom: 12,
@@ -192,7 +192,7 @@ const Contact = () => {
                     <a
                         href="mailto:focusflow@studentproject.com"
                         style={{
-                            color: "#a78bfa",
+                            color: "#38bdf8",
                             fontSize: "1.1rem",
                             textDecoration: "underline",
                         }}

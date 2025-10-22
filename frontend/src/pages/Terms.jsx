@@ -37,7 +37,7 @@ const Terms = () => (
         </section>
         <main
             style={{
-                maxWidth: 700,
+                maxWidth: 1200,
                 margin: "-2.5rem auto 2rem auto",
                 padding: "1rem",
             }}
@@ -55,7 +55,7 @@ const Terms = () => (
             >
                 <h2
                     style={{
-                        color: "#a78bfa",
+                        color: "#38bdf8",
                         fontWeight: 600,
                         fontSize: "1.15rem",
                         marginBottom: 12,
@@ -76,7 +76,7 @@ const Terms = () => (
                 </p>
                 <h2
                     style={{
-                        color: "#a78bfa",
+                        color: "#38bdf8",
                         fontWeight: 600,
                         fontSize: "1.15rem",
                         margin: "2rem 0 12px 0",
@@ -96,7 +96,7 @@ const Terms = () => (
                 </p>
                 <h2
                     style={{
-                        color: "#a78bfa",
+                        color: "#38bdf8",
                         fontWeight: 600,
                         fontSize: "1.15rem",
                         margin: "2rem 0 12px 0",
@@ -115,7 +115,7 @@ const Terms = () => (
                     <a
                         href="mailto:focusflow@studentproject.com"
                         style={{
-                            color: "#a78bfa",
+                            color: "#38bdf8",
                             textDecoration: "underline",
                         }}
                     >

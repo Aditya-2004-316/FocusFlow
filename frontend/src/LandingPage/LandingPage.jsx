@@ -74,7 +74,7 @@ const LandingPage = () => {
             flexWrap: 'wrap',
         },
         heroBtnPrimary: {
-            background: 'linear-gradient(to right, #9333ea, #3b82f6)',
+            background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
             color: '#ffffff',
             padding: '1rem 2rem',
             borderRadius: '9999px',
@@ -85,12 +85,12 @@ const LandingPage = () => {
             transition: 'all 0.2s ease',
             textDecoration: 'none',
             display: 'inline-block',
-            boxShadow: '0 10px 15px -3px rgba(147, 51, 234, 0.1), 0 4px 6px -2px rgba(147, 51, 234, 0.05)',
+            boxShadow: '0 10px 15px -3px rgba(14, 165, 233, 0.1), 0 4px 6px -2px rgba(14, 165, 233, 0.05)',
         },
         heroBtnPrimaryHover: {
-            background: 'linear-gradient(to right, #7c3aed, #2563eb)',
+            background: 'linear-gradient(to right, #0284c7, #0284c7)',
             transform: 'translateY(-2px)',
-            boxShadow: '0 20px 25px -5px rgba(147, 51, 234, 0.3), 0 10px 10px -5px rgba(147, 51, 234, 0.1)',
+            boxShadow: '0 20px 25px -5px rgba(14, 165, 233, 0.3), 0 10px 10px -5px rgba(14, 165, 233, 0.1)',
         },
         featuresSection: {
             padding: '5rem 2rem',
@@ -123,13 +123,13 @@ const LandingPage = () => {
         },
         featureCardHover: {
             transform: 'translateY(-4px)',
-            borderColor: 'rgba(147, 51, 234, 0.5)',
+            borderColor: 'rgba(14, 165, 233, 0.5)',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         },
         featureTitle: {
             fontSize: '1.5rem',
             fontWeight: '600',
-            color: '#a78bfa',
+            color: '#38bdf8',
             marginBottom: '1rem',
         },
         featureDescription: {
@@ -178,7 +178,7 @@ const LandingPage = () => {
         },
         testimonialAuthor: {
             fontWeight: '600',
-            color: '#a78bfa',
+            color: '#38bdf8',
             marginBottom: '0.25rem',
         },
         testimonialRole: {
@@ -187,7 +187,7 @@ const LandingPage = () => {
         },
         ctaSection: {
             padding: '5rem 2rem',
-            background: 'linear-gradient(to right, #9333ea, #3b82f6)',
+            background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
             textAlign: 'center',
         },
         ctaContainer: {
@@ -208,7 +208,7 @@ const LandingPage = () => {
         },
         ctaBtn: {
             background: '#ffffff',
-            color: '#9333ea',
+            color: '#0ea5e9',
             padding: '1.25rem 3rem',
             borderRadius: '9999px',
             fontWeight: '600',
@@ -242,7 +242,7 @@ const LandingPage = () => {
         howItWorksTitle: {
             fontSize: '2rem',
             fontWeight: '700',
-            color: '#a78bfa',
+            color: '#38bdf8',
             marginBottom: '1.5rem',
         },
         howItWorksDescription: {
@@ -269,14 +269,14 @@ const LandingPage = () => {
             gap: '0.5rem',
         },
         checkmark: {
-            color: '#a78bfa',
+            color: '#38bdf8',
             fontSize: '1.2rem',
             fontWeight: 'bold',
             flexShrink: 0,
             marginTop: '0.1rem',
         },
         howItWorksFooter: {
-            color: '#a78bfa',
+            color: '#38bdf8',
             fontWeight: '500',
             fontSize: '1.1rem',
             marginTop: '1.5rem',
@@ -291,7 +291,7 @@ const LandingPage = () => {
                 <h1 style={styles.heroTitle}>
                     Unlock Your Productivity with{" "}
                     <span style={{
-                        background: 'linear-gradient(to right, #a78bfa, #60a5fa)',
+                        background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text'
@@ -309,14 +309,67 @@ const LandingPage = () => {
                         style={styles.heroBtnPrimary}
                         onClick={handleRegisterClick}
                         onMouseEnter={(e) => {
-                            Object.assign(e.target.style, styles.heroBtnPrimaryHover);
+                            Object.assign(e.currentTarget.style, styles.heroBtnPrimaryHover);
                         }}
                         onMouseLeave={(e) => {
-                            Object.assign(e.target.style, styles.heroBtnPrimary);
+                            Object.assign(e.currentTarget.style, styles.heroBtnPrimary);
                         }}
                     >
                         Get Started
                     </button>
+                </div>
+            </section>
+
+            {/* Statistics/Social Proof Section */}
+            <section style={{
+                padding: '4rem 2rem',
+                background: 'rgba(15, 23, 42, 0.5)',
+                textAlign: 'center',
+            }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <h2 style={{
+                        fontSize: '2rem',
+                        fontWeight: '700',
+                        color: '#ffffff',
+                        marginBottom: '3rem',
+                    }}>
+                        Trusted by Productivity Enthusiasts
+                    </h2>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gap: '2rem',
+                    }}>
+                        {[
+                            { number: '10,000+', label: 'Active Users' },
+                            { number: '500,000+', label: 'Focus Sessions Completed' },
+                            { number: '95%', label: 'User Satisfaction Rate' },
+                            { number: '50+', label: 'Countries Worldwide' },
+                        ].map((stat, index) => (
+                            <div key={index} style={{
+                                background: 'rgba(30, 41, 59, 0.5)',
+                                backdropFilter: 'blur(8px)',
+                                padding: '2rem',
+                                borderRadius: '1rem',
+                                border: '1px solid #334155',
+                            }}>
+                                <div style={{
+                                    fontSize: '2.5rem',
+                                    fontWeight: '800',
+                                    color: '#38bdf8',
+                                    marginBottom: '0.5rem',
+                                }}>
+                                    {stat.number}
+                                </div>
+                                <div style={{
+                                    fontSize: '1rem',
+                                    color: '#94a3b8',
+                                }}>
+                                    {stat.label}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -326,7 +379,7 @@ const LandingPage = () => {
                     <h2 style={styles.featuresTitle}>
                         Why Choose{" "}
                         <span style={{
-                            background: 'linear-gradient(to right, #a78bfa, #60a5fa)',
+                            background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
@@ -356,10 +409,10 @@ const LandingPage = () => {
                                 key={index} 
                                 style={styles.featureCard}
                                 onMouseEnter={(e) => {
-                                    Object.assign(e.target.style, {...styles.featureCard, ...styles.featureCardHover});
+                                    Object.assign(e.currentTarget.style, {...styles.featureCard, ...styles.featureCardHover});
                                 }}
                                 onMouseLeave={(e) => {
-                                    Object.assign(e.target.style, styles.featureCard);
+                                    Object.assign(e.currentTarget.style, styles.featureCard);
                                 }}
                             >
                                 <h3 style={styles.featureTitle}>
@@ -374,13 +427,273 @@ const LandingPage = () => {
                 </div>
             </section>
 
+            {/* Use Cases Section */}
+            <section style={{
+                padding: '5rem 2rem',
+                background: 'rgba(15, 23, 42, 0.8)',
+            }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <h2 style={{
+                        fontSize: '2.5rem',
+                        fontWeight: '700',
+                        color: '#ffffff',
+                        textAlign: 'center',
+                        marginBottom: '3rem',
+                    }}>
+                        Perfect For Everyone
+                    </h2>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                        gap: '2rem',
+                    }}>
+                        {[
+                            {
+                                icon: '🎓',
+                                title: 'Students',
+                                description: 'Ace your exams with focused study sessions and track your learning progress.',
+                            },
+                            {
+                                icon: '💼',
+                                title: 'Freelancers',
+                                description: 'Track billable hours accurately and stay productive across multiple projects.',
+                            },
+                            {
+                                icon: '🏠',
+                                title: 'Remote Workers',
+                                description: 'Maintain work-life balance at home with structured focus sessions.',
+                            },
+                            {
+                                icon: '👥',
+                                title: 'Teams',
+                                description: 'Collaborate and stay aligned on projects with shared workspaces.',
+                            },
+                        ].map((useCase, index) => (
+                            <div key={index} style={{
+                                background: 'rgba(30, 41, 59, 0.5)',
+                                backdropFilter: 'blur(8px)',
+                                padding: '2rem',
+                                borderRadius: '1rem',
+                                border: '1px solid #334155',
+                                textAlign: 'center',
+                                transition: 'all 0.3s ease',
+                            }}>
+                                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+                                    {useCase.icon}
+                                </div>
+                                <h3 style={{
+                                    fontSize: '1.5rem',
+                                    fontWeight: '600',
+                                    color: '#38bdf8',
+                                    marginBottom: '1rem',
+                                }}>
+                                    {useCase.title}
+                                </h3>
+                                <p style={{
+                                    color: '#94a3b8',
+                                    lineHeight: '1.6',
+                                }}>
+                                    {useCase.description}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Comparison Section */}
+            <section style={{
+                padding: '5rem 2rem',
+                background: 'rgba(15, 23, 42, 0.5)',
+            }}>
+                <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+                    <h2 style={{
+                        fontSize: '2.5rem',
+                        fontWeight: '700',
+                        color: '#ffffff',
+                        textAlign: 'center',
+                        marginBottom: '3rem',
+                    }}>
+                        Why Choose{' '}
+                        <span style={{
+                            background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}>
+                            FocusFlow?
+                        </span>
+                    </h2>
+                    <div style={{
+                        background: 'rgba(30, 41, 59, 0.5)',
+                        backdropFilter: 'blur(8px)',
+                        borderRadius: '1rem',
+                        border: '1px solid #334155',
+                        overflow: 'hidden',
+                    }}>
+                        <table style={{
+                            width: '100%',
+                            borderCollapse: 'collapse',
+                        }}>
+                            <thead>
+                                <tr style={{ background: 'rgba(56, 189, 248, 0.1)' }}>
+                                    <th style={{
+                                        padding: '1.5rem',
+                                        textAlign: 'left',
+                                        color: '#ffffff',
+                                        fontWeight: '600',
+                                        fontSize: '1.1rem',
+                                    }}>Feature</th>
+                                    <th style={{
+                                        padding: '1.5rem',
+                                        textAlign: 'center',
+                                        color: '#38bdf8',
+                                        fontWeight: '700',
+                                        fontSize: '1.1rem',
+                                    }}>FocusFlow</th>
+                                    <th style={{
+                                        padding: '1.5rem',
+                                        textAlign: 'center',
+                                        color: '#94a3b8',
+                                        fontWeight: '600',
+                                        fontSize: '1.1rem',
+                                    }}>Competitors</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[
+                                    { feature: 'Price', focusflow: 'Free Forever', competitors: '$10-20/month' },
+                                    { feature: 'No Ads', focusflow: '✓', competitors: '✗' },
+                                    { feature: 'Open Source', focusflow: '✓', competitors: '✗' },
+                                    { feature: 'Privacy First', focusflow: '✓', competitors: 'Limited' },
+                                    { feature: 'Unlimited Users', focusflow: '✓', competitors: 'Paid Tier' },
+                                ].map((row, index) => (
+                                    <tr key={index} style={{
+                                        borderTop: '1px solid #334155',
+                                    }}>
+                                        <td style={{
+                                            padding: '1.25rem 1.5rem',
+                                            color: '#d1d5db',
+                                            fontWeight: '500',
+                                        }}>{row.feature}</td>
+                                        <td style={{
+                                            padding: '1.25rem 1.5rem',
+                                            textAlign: 'center',
+                                            color: '#38bdf8',
+                                            fontWeight: '600',
+                                            fontSize: '1.1rem',
+                                        }}>{row.focusflow}</td>
+                                        <td style={{
+                                            padding: '1.25rem 1.5rem',
+                                            textAlign: 'center',
+                                            color: '#94a3b8',
+                                        }}>{row.competitors}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            {/* Quick Start Guide */}
+            <section style={{
+                padding: '5rem 2rem',
+                background: 'rgba(15, 23, 42, 0.8)',
+                textAlign: 'center',
+            }}>
+                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                    <h2 style={{
+                        fontSize: '2.5rem',
+                        fontWeight: '700',
+                        color: '#ffffff',
+                        marginBottom: '1rem',
+                    }}>
+                        Get Started in 3 Simple Steps
+                    </h2>
+                    <p style={{
+                        fontSize: '1.2rem',
+                        color: '#94a3b8',
+                        marginBottom: '3rem',
+                    }}>
+                        Start boosting your productivity in less than a minute
+                    </p>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                        gap: '2rem',
+                    }}>
+                        {[
+                            {
+                                step: '1',
+                                title: 'Sign Up',
+                                description: 'Create your free account in 30 seconds. No credit card required.',
+                            },
+                            {
+                                step: '2',
+                                title: 'Set Your First Session',
+                                description: 'Choose your focus duration and start your first productive session.',
+                            },
+                            {
+                                step: '3',
+                                title: 'Track Your Progress',
+                                description: 'Watch your productivity grow with detailed analytics and insights.',
+                            },
+                        ].map((step, index) => (
+                            <div key={index} style={{
+                                background: 'rgba(30, 41, 59, 0.5)',
+                                backdropFilter: 'blur(8px)',
+                                padding: '2.5rem 2rem',
+                                borderRadius: '1rem',
+                                border: '1px solid #334155',
+                                position: 'relative',
+                            }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-1.5rem',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    width: '3rem',
+                                    height: '3rem',
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '1.5rem',
+                                    fontWeight: '800',
+                                    color: '#ffffff',
+                                }}>
+                                    {step.step}
+                                </div>
+                                <h3 style={{
+                                    fontSize: '1.5rem',
+                                    fontWeight: '600',
+                                    color: '#38bdf8',
+                                    marginTop: '1rem',
+                                    marginBottom: '1rem',
+                                }}>
+                                    {step.title}
+                                </h3>
+                                <p style={{
+                                    color: '#94a3b8',
+                                    lineHeight: '1.6',
+                                }}>
+                                    {step.description}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Testimonials Section */}
             <section style={styles.testimonialsSection}>
                 <div style={styles.testimonialsContainer}>
                     <h2 style={styles.testimonialsTitle}>
                         Loved by Our{" "}
                         <span style={{
-                            background: 'linear-gradient(to right, #a78bfa, #60a5fa)',
+                            background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
@@ -410,10 +723,10 @@ const LandingPage = () => {
                                 key={index} 
                                 style={styles.testimonialCard}
                                 onMouseEnter={(e) => {
-                                    Object.assign(e.target.style, {...styles.testimonialCard, ...styles.testimonialCardHover});
+                                    Object.assign(e.currentTarget.style, {...styles.testimonialCard, ...styles.testimonialCardHover});
                                 }}
                                 onMouseLeave={(e) => {
-                                    Object.assign(e.target.style, styles.testimonialCard);
+                                    Object.assign(e.currentTarget.style, styles.testimonialCard);
                                 }}
                             >
                                 <blockquote style={styles.testimonialQuote}>
@@ -454,10 +767,10 @@ const LandingPage = () => {
                         style={styles.ctaBtn} 
                         onClick={handleRegisterClick}
                         onMouseEnter={(e) => {
-                            Object.assign(e.target.style, {...styles.ctaBtn, ...styles.ctaBtnHover});
+                            Object.assign(e.currentTarget.style, {...styles.ctaBtn, ...styles.ctaBtnHover});
                         }}
                         onMouseLeave={(e) => {
-                            Object.assign(e.target.style, styles.ctaBtn);
+                            Object.assign(e.currentTarget.style, styles.ctaBtn);
                         }}
                     >
                         Get Started
@@ -471,7 +784,7 @@ const LandingPage = () => {
                     <h2 style={styles.howItWorksTitle}>
                         How{" "}
                         <span style={{
-                            background: 'linear-gradient(to right, #a78bfa, #60a5fa)',
+                            background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'

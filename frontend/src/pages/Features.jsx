@@ -98,7 +98,7 @@ const Features = () => {
         featureTitle: {
             fontSize: '1.5rem',
             fontWeight: '600',
-            color: '#a78bfa',
+            color: '#38bdf8',
             marginBottom: '1rem',
         },
         featureDescription: {
