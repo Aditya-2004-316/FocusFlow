@@ -202,7 +202,7 @@ const Testimonials = () => {
                         <a
                             href="mailto:focusflow@studentproject.com"
                             style={{
-                                color: "#a78bfa",
+                                color: "#38bdf8",
                                 fontWeight: 600,
                                 textDecoration: "underline",
                             }}

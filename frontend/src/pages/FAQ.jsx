@@ -8,7 +8,7 @@ const faqCategories = {
     "Getting Started": [
         {
             question: "What is FocusFlow?",
-            answer: "FocusFlow is a student project to help you manage your time and stay productive.",
+            answer: "FocusFlow is a platform to help you manage your time and stay productive.",
         },
         {
             question: "Is FocusFlow free?",
@@ -220,43 +220,23 @@ const FAQ = () => {
                     textAlign: "center",
                 }}
             >
-                <div
+                <h1
                     style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "1rem",
-                        marginBottom: "1.2rem",
+                        fontSize: "2.5rem",
+                        fontWeight: 700,
+                        color: "#ffffff",
+                        marginBottom: "1rem",
                     }}
                 >
-                    <FaQuestionCircle
-                        style={{
-                            fontSize: "2.5rem",
-                            color: "#38bdf8",
-                        }}
-                    />
-                    <h1
-                        style={{
-                            fontSize: "2.2rem",
-                            fontWeight: 800,
-                            margin: 0,
-                            textShadow: "0 4px 16px rgba(130,87,247,0.11)",
-                            background: 'linear-gradient(90deg, #38bdf8 40%, #60a5fa 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text'
-                        }}
-                    >
-                        Frequently Asked Questions
-                    </h1>
-                </div>
+                    Frequently Asked Questions
+                </h1>
                 <p
                     style={{
                         color: "#94a3b8",
-                        fontSize: "1.15rem",
+                        fontSize: "1.2rem",
                         maxWidth: 600,
                         margin: "0 auto",
-                        marginBottom: "2.2rem",
+                        lineHeight: 1.6,
                     }}
                 >
                     Find answers to common questions about FocusFlow,
@@ -284,7 +264,7 @@ const FAQ = () => {
             </section>
             <main
                 style={{
-                    maxWidth: 700,
+                    maxWidth: 1200,
                     margin: "-2.5rem auto 2.5rem auto",
                     padding: "1rem",
                 }}
@@ -298,9 +278,9 @@ const FAQ = () => {
                             style={{
                                 padding: "0.5rem 1rem",
                                 borderRadius: "9999px",
-                                border: selectedCategory === category ? "1px solid #38bdf8" : "1px solid #334155",
-                                background: selectedCategory === category ? "rgba(56, 189, 248, 0.1)" : "rgba(30, 41, 59, 0.5)",
-                                color: selectedCategory === category ? "#38bdf8" : "#94a3b8",
+                                border: "1px solid #334155",
+                                background: selectedCategory === category ? "rgba(56, 189, 248, 0.15)" : "rgba(30, 41, 59, 0.5)",
+                                color: selectedCategory === category ? "#ffffff" : "#94a3b8",
                                 cursor: "pointer",
                                 fontSize: "0.9rem",
                                 fontWeight: selectedCategory === category ? 600 : 400,
