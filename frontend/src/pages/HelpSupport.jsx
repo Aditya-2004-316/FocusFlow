@@ -92,10 +92,10 @@ const HelpSupport = () => {
         width: "100%",
         padding: "0.75rem 1rem",
         borderRadius: "0.5rem",
-        border: "1px solid var(--color-gray-300)",
+        border: "1px solid var(--input-border)",
         fontSize: "1rem",
         color: "var(--color-gray-900)",
-        backgroundColor: "var(--color-white)",
+        backgroundColor: "var(--input-bg)",
     };
 
     const categoriesContainerStyle = {
@@ -109,18 +109,18 @@ const HelpSupport = () => {
         padding: "0.75rem 1.5rem",
         fontSize: "1rem",
         fontWeight: 500,
-        color: "var(--color-gray-600)",
+        color: "var(--color-primary-700)",
         cursor: "pointer",
         borderRadius: "0.5rem",
         transition: "all 0.2s ease-in-out",
         border: "none",
-        background: "none",
+        background: "var(--color-primary-50)",
     };
 
     const activeCategoryButtonStyle = {
         ...categoryButtonStyle,
-        background: "var(--color-primary-50)",
-        color: "var(--color-primary-700)",
+        background: "var(--color-primary-600)",
+        color: "#ffffff",
     };
 
     const faqContainerStyle = {
@@ -128,10 +128,11 @@ const HelpSupport = () => {
     };
 
     const faqItemStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         marginBottom: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
     };
 
@@ -156,10 +157,11 @@ const HelpSupport = () => {
     };
 
     const supportCardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
         textAlign: "center",
         cursor: "pointer",
         transition: "all 0.2s ease-in-out",
@@ -300,7 +302,7 @@ const HelpSupport = () => {
                     <p style={supportDescriptionStyle}>
                         Get help from our support team via email
                     </p>
-                    <a href="/contact" style={supportLinkStyle}>
+                    <a href="mailto:support@focusflow.com" style={supportLinkStyle}>
                         Contact Us{" "}
                         <ArrowRightIcon
                             style={{ width: "1rem", height: "1rem" }}
@@ -325,7 +327,7 @@ const HelpSupport = () => {
                     <p style={supportDescriptionStyle}>
                         Chat with our support team in real-time
                     </p>
-                    <a href="/chat" style={supportLinkStyle}>
+                    <a href="mailto:support@focusflow.com?subject=Live Chat Request" style={supportLinkStyle}>
                         Start Chat{" "}
                         <ArrowRightIcon
                             style={{ width: "1rem", height: "1rem" }}
@@ -350,7 +352,7 @@ const HelpSupport = () => {
                     <p style={supportDescriptionStyle}>
                         Browse our detailed user guides and documentation
                     </p>
-                    <a href="/docs" style={supportLinkStyle}>
+                    <a href="/dashboard/guides" style={supportLinkStyle}>
                         View Docs{" "}
                         <ArrowRightIcon
                             style={{ width: "1rem", height: "1rem" }}
@@ -375,7 +377,7 @@ const HelpSupport = () => {
                     <p style={supportDescriptionStyle}>
                         Watch video guides and tutorials to increase focus
                     </p>
-                    <a href="/tutorials" style={supportLinkStyle}>
+                    <a href="/resources" style={supportLinkStyle}>
                         Watch Videos{" "}
                         <ArrowRightIcon
                             style={{ width: "1rem", height: "1rem" }}

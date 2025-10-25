@@ -26,11 +26,16 @@ const Header = () => {
     const { isAuthenticated } = useAuth();
 
     useEffect(() => {
-        const saved = localStorage.getItem("theme") || "light";
-        const shouldDark = saved === "dark";
+        // Default to dark mode for authenticated users
+        const saved = localStorage.getItem("theme");
+        const shouldDark = saved ? saved === "dark" : true; // Default to dark if no preference saved
         setIsDarkMode(shouldDark);
         document.documentElement.classList.toggle("dark", shouldDark);
         document.body.classList.toggle("dark", shouldDark);
+        // Save the default preference if not set
+        if (!saved) {
+            localStorage.setItem("theme", "dark");
+        }
     }, []);
 
     const toggleTheme = () => {

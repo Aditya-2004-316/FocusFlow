@@ -104,6 +104,92 @@ const Resources = () => {
             tags: ["Workshop", "Habits", "Learning"],
             videoUrl: "https://www.youtube.com/embed/3E7hkPZ-HTk",
         },
+        {
+            id: "7",
+            title: "Mindfulness for Focus",
+            description:
+                "Learn mindfulness techniques to enhance concentration and reduce mental clutter during work sessions.",
+            type: "article",
+            icon: "LightBulbIcon",
+            duration: "12 min read",
+            level: "beginner",
+            tags: ["Mindfulness", "Focus", "Mental Health"],
+            content:
+                "Mindfulness practices can significantly improve your ability to focus. This guide covers breathing exercises, meditation techniques, and practical tips for staying present during work. Learn how to recognize distractions before they derail your focus and develop a sustainable mindfulness practice.",
+            bullets: [
+                "5-minute breathing exercises for instant focus",
+                "Meditation techniques for busy professionals",
+                "Building awareness of distraction patterns",
+            ],
+        },
+        {
+            id: "8",
+            title: "Digital Minimalism Guide",
+            description:
+                "Reduce digital distractions and create a focused digital environment for maximum productivity.",
+            type: "guide",
+            icon: "BookOpenIcon",
+            duration: "18 min read",
+            level: "intermediate",
+            tags: ["Digital Wellness", "Distractions", "Productivity"],
+            content:
+                "Digital minimalism is about intentionally choosing which digital tools add value to your life. This guide helps you audit your digital habits, eliminate unnecessary apps and notifications, and create a distraction-free workspace. Includes practical steps for phone setup, browser extensions, and workspace organization.",
+            bullets: [
+                "App audit and notification management",
+                "Browser extensions for focus",
+                "Creating distraction-free zones",
+            ],
+        },
+        {
+            id: "9",
+            title: "Energy Management Strategies",
+            description:
+                "Optimize your energy levels throughout the day to maintain peak performance and avoid burnout.",
+            type: "article",
+            icon: "AcademicCapIcon",
+            duration: "16 min read",
+            level: "advanced",
+            tags: ["Energy", "Performance", "Health"],
+            content:
+                "Managing energy is more important than managing time. Learn to identify your peak performance hours, structure your day around energy cycles, and use strategic breaks to maintain high performance. Covers sleep optimization, nutrition for focus, and movement practices.",
+            bullets: [
+                "Identifying your chronotype and peak hours",
+                "Strategic break timing and activities",
+                "Nutrition and hydration for sustained energy",
+            ],
+        },
+        {
+            id: "10",
+            title: "Goal Setting Framework",
+            description:
+                "Set and achieve meaningful goals using proven frameworks and tracking systems.",
+            type: "template",
+            icon: "DocumentTextIcon",
+            level: "beginner",
+            tags: ["Goals", "Planning", "Templates"],
+        },
+        {
+            id: "11",
+            title: "Overcoming Procrastination",
+            description:
+                "Understand the psychology of procrastination and learn practical strategies to overcome it.",
+            type: "video",
+            icon: "VideoCameraIcon",
+            duration: "22:15",
+            level: "intermediate",
+            tags: ["Procrastination", "Psychology", "Motivation"],
+            videoUrl: "https://www.youtube.com/embed/arj7oStGLkU",
+        },
+        {
+            id: "12",
+            title: "Weekly Review Template",
+            description:
+                "Downloadable template for conducting effective weekly reviews to stay on track with your goals.",
+            type: "template",
+            icon: "DocumentTextIcon",
+            level: "beginner",
+            tags: ["Templates", "Review", "Planning"],
+        },
     ];
 
     const containerStyle = {
@@ -143,10 +229,10 @@ const Resources = () => {
         width: "100%",
         padding: "0.75rem 1rem",
         borderRadius: "0.5rem",
-        border: "1px solid var(--color-gray-300)",
+        border: "1px solid var(--input-border)",
         fontSize: "1rem",
         color: "var(--color-gray-900)",
-        backgroundColor: "var(--color-white)",
+        backgroundColor: "var(--input-bg)",
     };
 
     const categoriesContainerStyle = {
@@ -160,18 +246,18 @@ const Resources = () => {
         padding: "0.75rem 1.5rem",
         fontSize: "1rem",
         fontWeight: 500,
-        color: "var(--color-gray-600)",
+        color: "var(--color-primary-700)",
         cursor: "pointer",
         borderRadius: "0.5rem",
         transition: "all 0.2s ease-in-out",
         border: "none",
-        background: "none",
+        background: "var(--color-primary-50)",
     };
 
     const activeCategoryStyle = {
         ...categoryButtonStyle,
-        background: "var(--color-primary-50)",
-        color: "var(--color-primary-700)",
+        background: "var(--color-primary-600)",
+        color: "#ffffff",
     };
 
     const resourcesGridStyle = {
@@ -182,10 +268,11 @@ const Resources = () => {
     };
 
     const resourceCardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
         transition: "all 0.2s ease-in-out",
         marginBottom: "1.5rem",
         border: "1px solid var(--color-gray-100)",
@@ -207,8 +294,7 @@ const Resources = () => {
         width: "2.5rem",
         height: "2.5rem",
         borderRadius: "0.5rem",
-        backgroundColor: "var(--color-primary-50)",
-        color: "var(--color-primary-600)",
+        backgroundColor: "transparent",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -369,10 +455,11 @@ const Resources = () => {
     const modalStyle = {
         width: "100%",
         maxWidth: "42rem",
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "1rem",
         padding: "1.5rem",
         boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+        border: "1px solid var(--color-gray-200)",
         maxHeight: "80vh",
         display: "flex",
         flexDirection: "column",

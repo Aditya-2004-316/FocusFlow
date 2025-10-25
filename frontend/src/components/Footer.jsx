@@ -11,8 +11,8 @@ import { Link } from "react-router-dom";
 const Footer = () => {
     const containerStyle = {
         background:
-            "linear-gradient(90deg, var(--color-primary-900) 0%, var(--color-primary-700) 100%)",
-        borderTop: "4px solid var(--color-primary-400)",
+            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
+        borderTop: "4px solid var(--color-primary-600)",
         boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
     };
 

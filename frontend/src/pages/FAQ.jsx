@@ -188,7 +188,7 @@ const questionStyle = {
     cursor: "pointer",
     fontSize: "1.15rem",
     fontWeight: 700,
-    color: "#38bdf8",
+    color: "#ffffff",
     marginBottom: 0,
 };
 

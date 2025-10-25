@@ -14,8 +14,13 @@ import App from "./App.jsx";
             localStorage.setItem("theme", "light");
             return;
         }
-        const saved = localStorage.getItem("theme") || "light";
-        const isDark = saved === "dark";
+        const saved = localStorage.getItem("theme");
+        // Default to dark for authenticated users
+        const isDark = saved ? saved === "dark" : true;
+        // Save default if not set
+        if (!saved) {
+            localStorage.setItem("theme", "dark");
+        }
         document.documentElement.classList.toggle("dark", isDark);
         document.body.classList.toggle("dark", isDark);
     } catch {}

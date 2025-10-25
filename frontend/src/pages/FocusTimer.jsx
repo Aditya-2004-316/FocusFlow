@@ -80,10 +80,7 @@ const FocusTimer = () => {
 
     const handleStop = () => {
         setIsRunning(false);
-        setTimeLeft(settings.focusDuration * 60);
-        setIsBreak(false);
-        setCurrentSession(1);
-        setCompletedSessions(0);
+        // Only stop the timer, don't reset it
     };
 
     const containerStyle = {
@@ -116,10 +113,11 @@ const FocusTimer = () => {
     };
 
     const cardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
         marginBottom: "1.5rem",
     };
 
@@ -149,8 +147,8 @@ const FocusTimer = () => {
     };
     const secondaryButtonStyle = {
         ...timerButtonStyle,
-        background: "var(--color-primary-50)",
-        color: "var(--color-primary-700)",
+        background: "var(--color-primary-600)",
+        color: "#fff",
     };
 
     const featuresGridStyle = {
@@ -192,11 +190,11 @@ const FocusTimer = () => {
                         <PlayIcon className="h-5 w-5" /> Start
                     </button>
                 )}
-                <button style={secondaryButtonStyle} onClick={handleReset}>
-                    <ArrowPathIcon className="h-5 w-5" /> Reset
-                </button>
-                <button style={secondaryButtonStyle} onClick={handleStop}>
+                <button style={primaryButtonStyle} onClick={handleStop}>
                     <StopIcon className="h-5 w-5" /> Stop
+                </button>
+                <button style={primaryButtonStyle} onClick={handleReset}>
+                    <ArrowPathIcon className="h-5 w-5" /> Reset
                 </button>
             </div>
 

@@ -54,7 +54,7 @@
         "Noto Color Emoji";
 
     /* Surfaces and inputs */
-    --panel-bg: var(--color-white);
+    --panel-bg: #f9fafb; /* Light gray for cards in light mode */
     --sidebar-bg: linear-gradient(
         to bottom,
         var(--color-primary-50),
@@ -78,6 +78,13 @@
     --color-gray-100: #1f2937;
     --color-gray-50: #0f172a; /* surfaces */
     --color-white: #0b1220; /* surfaces that used white */
+
+    /* Darker gradient colors for dark mode */
+    --color-primary-500: #0369a1; /* Darker blue */
+    --color-primary-600: #075985; /* Even darker */
+    --color-cyan-400: #0891b2; /* Darker cyan */
+    --color-primary-200: #0c4a6e; /* Much darker for active sidebar items */
+    --color-primary-700: #38bdf8; /* Bright cyan for active text */
 
     --panel-bg: #0f172a; /* card/panel background */
     --sidebar-bg: #111827; /* darker than panel, not as dark as body */

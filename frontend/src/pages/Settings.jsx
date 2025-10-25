@@ -103,10 +103,11 @@ const Settings = () => {
     };
 
     const sectionStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         marginBottom: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
     };
 
@@ -188,9 +189,9 @@ const Settings = () => {
     const selectStyle = {
         padding: "0.75rem 1rem",
         borderRadius: "0.5rem",
-        border: "1px solid var(--color-gray-300)",
-        backgroundColor: "var(--color-white)",
-        color: "var(--color-gray-700)",
+        border: "1px solid var(--input-border)",
+        backgroundColor: "var(--input-bg)",
+        color: "var(--color-gray-900)",
         fontSize: "0.95rem",
         cursor: "pointer",
         minWidth: "14rem",
@@ -199,9 +200,9 @@ const Settings = () => {
     const textInputStyle = {
         padding: "0.75rem 1rem",
         borderRadius: "0.5rem",
-        border: "1px solid var(--color-gray-300)",
-        backgroundColor: "var(--color-white)",
-        color: "var(--color-gray-700)",
+        border: "1px solid var(--input-border)",
+        backgroundColor: "var(--input-bg)",
+        color: "var(--color-gray-900)",
         fontSize: "0.95rem",
         minWidth: "20rem",
     };

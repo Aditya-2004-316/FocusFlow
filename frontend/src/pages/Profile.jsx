@@ -78,10 +78,11 @@ const Profile = () => {
     };
 
     const profileCardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "1rem",
         padding: "2rem",
         marginBottom: "2rem",
+        border: "1px solid var(--color-gray-200)",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
     };
 
@@ -188,10 +189,11 @@ const Profile = () => {
     };
 
     const settingCardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
     };
 
     const settingHeaderStyle = {

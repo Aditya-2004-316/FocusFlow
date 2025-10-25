@@ -85,11 +85,12 @@ const Statistics = () => {
     };
 
     const metricCardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
         marginBottom: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
     };
 
     const metricHeaderStyle = {
@@ -103,12 +104,11 @@ const Statistics = () => {
         width: "2.5rem",
         height: "2.5rem",
         borderRadius: "0.5rem",
-        backgroundColor: "var(--color-primary-50)",
-        color: "var(--color-primary-600)",
+        backgroundColor: "transparent",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "1.5rem",
+        fontSize: "2rem",
     };
 
     const metricTitleStyle = {
@@ -150,26 +150,27 @@ const Statistics = () => {
         padding: "0.75rem 1.5rem",
         fontSize: "1rem",
         fontWeight: 500,
-        color: "var(--color-gray-600)",
+        color: "var(--color-primary-700)",
         cursor: "pointer",
         borderRadius: "0.5rem",
         transition: "all 0.2s ease-in-out",
         border: "none",
-        background: "none",
+        background: "var(--color-primary-50)",
     };
 
     const activeTimeRangeStyle = {
         ...timeRangeButtonStyle,
-        background: "var(--color-primary-50)",
-        color: "var(--color-primary-700)",
+        background: "var(--color-primary-600)",
+        color: "#ffffff",
     };
 
     const chartContainerStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
         marginBottom: "2rem",
+        border: "1px solid var(--color-gray-200)",
     };
 
     const chartHeaderStyle = {

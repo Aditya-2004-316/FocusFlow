@@ -282,16 +282,18 @@ function Dashboard() {
         padding: "0.75rem 1.5rem",
         fontSize: "1rem",
         fontWeight: 500,
-        color: "var(--color-gray-600)",
+        color: "var(--color-primary-700)",
         cursor: "pointer",
         borderRadius: "0.5rem",
         transition: "all 0.2s ease-in-out",
+        background: "var(--color-primary-50)",
+        border: "none",
     };
 
     const activeTabStyle = {
         ...tabStyle,
-        background: "var(--color-primary-50)",
-        color: "var(--color-primary-700)",
+        background: "var(--color-primary-600)",
+        color: "#ffffff",
     };
 
     const quickStatsGridStyle = {
@@ -302,10 +304,11 @@ function Dashboard() {
     };
 
     const statCardStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
     };
 
     const statIconStyle = {
@@ -347,10 +350,11 @@ function Dashboard() {
     };
 
     const recentActivityStyle = {
-        background: "var(--color-white)",
+        background: "var(--panel-bg)",
         borderRadius: "0.75rem",
         padding: "1.5rem",
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
     };
 
     const activityItemStyle = {
@@ -616,7 +620,9 @@ function Dashboard() {
                                 flex: 1,
                                 padding: "0.6rem 0.8rem",
                                 borderRadius: "0.5rem",
-                                border: "1px solid var(--color-gray-300)",
+                                border: "1px solid var(--input-border)",
+                                background: "var(--input-bg)",
+                                color: "var(--color-gray-900)",
                             }}
                         />
                         <button
@@ -633,11 +639,12 @@ function Dashboard() {
                     {distractions.length === 0 ? (
                         <div
                             style={{
-                                background: "var(--color-white)",
+                                background: "var(--panel-bg)",
                                 borderRadius: "0.75rem",
                                 padding: "1.5rem",
                                 color: "var(--color-gray-600)",
                                 boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                                border: "1px solid var(--color-gray-200)",
                             }}
                         >
                             No distractions logged yet. Click "Log New
@@ -676,12 +683,12 @@ function Dashboard() {
                                             key={d.id}
                                             style={{
                                                 background:
-                                                    "var(--color-white)",
+                                                    "var(--panel-bg)",
                                                 borderRadius: "0.75rem",
                                                 padding: "1rem",
                                                 boxShadow:
                                                     "0 4px 10px rgba(0, 0, 0, 0.08)",
-                                                border: "1px solid var(--color-gray-100)",
+                                                border: "1px solid var(--color-gray-200)",
                                                 transition:
                                                     "transform 150ms ease",
                                             }}

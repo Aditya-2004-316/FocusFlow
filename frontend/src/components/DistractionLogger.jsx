@@ -57,7 +57,7 @@ const DistractionLogger = ({ isOpen, onClose, onLog }) => {
     };
 
     const modalStyle = {
-        backgroundColor: "var(--color-white)",
+        backgroundColor: "var(--panel-bg)",
         borderRadius: "1rem",
         padding: "2rem",
         width: "100%",
@@ -66,6 +66,7 @@ const DistractionLogger = ({ isOpen, onClose, onLog }) => {
             "translate(0, 0) rotate(0deg) skewX(0deg) skewY(0deg) scaleX(1) scaleY(1)",
         transition: "all 300ms ease-in-out",
         animation: "scaleIn 0.3s ease-out",
+        border: "1px solid var(--color-gray-200)",
     };
 
     const headerStyle = {
@@ -140,10 +141,12 @@ const DistractionLogger = ({ isOpen, onClose, onLog }) => {
     const textareaStyle = {
         width: "100%",
         padding: "1rem",
-        border: "1px solid var(--color-gray-300)",
+        border: "1px solid var(--input-border)",
         borderRadius: "0.75rem",
         resize: "none",
         transition: "all 300ms ease-in-out",
+        background: "var(--input-bg)",
+        color: "var(--color-gray-900)",
     };
 
     const formActionsStyle = {
