@@ -392,6 +392,254 @@ function Dashboard() {
         color: "var(--color-gray-500)",
     };
 
+    const sectionHeadingStyle = {
+        fontSize: "1.5rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
+        marginBottom: "0.5rem",
+    };
+
+    const sectionDescriptionStyle = {
+        color: "var(--color-gray-600)",
+        fontSize: "0.95rem",
+        marginBottom: "1.5rem",
+        lineHeight: 1.6,
+    };
+
+    const focusPlanSectionStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.75rem",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid var(--color-gray-200)",
+        margin: "2.5rem 0",
+    };
+
+    const focusPlanHeaderStyle = {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "1rem",
+        flexWrap: "wrap",
+        marginBottom: "1.5rem",
+    };
+
+    const focusPlanListStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.25rem",
+    };
+
+    const focusPlanItemStyle = {
+        background: "var(--color-gray-50)",
+        borderRadius: "0.75rem",
+        padding: "1.25rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+        minHeight: "180px",
+    };
+
+    const focusPlanMetaStyle = {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "0.75rem",
+    };
+
+    const focusPlanTimeStyle = {
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "var(--color-primary-600)",
+    };
+
+    const focusPlanTitleStyle = {
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const focusPlanDescriptionStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.5,
+    };
+
+    const focusPlanBadgeStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+    };
+
+    const actionChipStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.45rem 0.9rem",
+        borderRadius: "9999px",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        background: "var(--color-primary-50)",
+        color: "var(--color-primary-700)",
+    };
+
+    const momentumSectionStyle = {
+        margin: "2.5rem 0",
+    };
+
+    const momentumGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.5rem",
+    };
+
+    const momentumCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+        minHeight: "190px",
+    };
+
+    const momentumIconStyle = {
+        width: "2.25rem",
+        height: "2.25rem",
+        color: "var(--color-primary-600)",
+    };
+
+    const momentumTitleStyle = {
+        fontSize: "1.1rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const momentumDescriptionStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const momentumTrendStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+    };
+
+    const momentumTrendPositiveStyle = {
+        ...momentumTrendStyle,
+        color: "var(--color-green-600)",
+    };
+
+    const momentumTrendNegativeStyle = {
+        ...momentumTrendStyle,
+        color: "var(--color-red-600)",
+    };
+
+    const momentumActionStyle = {
+        marginTop: "auto",
+        fontSize: "0.8rem",
+        fontWeight: 600,
+        color: "var(--color-primary-600)",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+    };
+
+    const dailyFocusPlan = [
+        {
+            time: "08:30",
+            title: "Morning planning sprint",
+            description:
+                "Review today’s priorities and map one deep-work block before lunch.",
+            status: "in-progress",
+        },
+        {
+            time: "10:00",
+            title: "Deep work block",
+            description:
+                "90-minute focus session dedicated to the highest-impact objective.",
+            status: "scheduled",
+        },
+        {
+            time: "14:30",
+            title: "Experiment review",
+            description:
+                "Assess distraction triggers logged this week and adjust presets.",
+            status: "scheduled",
+        },
+        {
+            time: "17:45",
+            title: "Shutdown ritual",
+            description:
+                "Document key wins, queue next steps, and clear the workspace.",
+            status: "completed",
+        },
+    ];
+
+    const planStatusStyles = {
+        scheduled: {
+            background: "#e0f2fe",
+            color: "#075985",
+            label: "Scheduled",
+        },
+        "in-progress": {
+            background: "#fef3c7",
+            color: "#92400e",
+            label: "In progress",
+        },
+        completed: {
+            background: "#dcfce7",
+            color: "#166534",
+            label: "Completed",
+        },
+    };
+
+    const momentumHighlights = [
+        {
+            title: "Streak momentum",
+            description:
+                "You’re seven days into a focus streak. Protect the weekend with a 30-minute maintenance block.",
+            trend: {
+                direction: "up",
+                label: "+12% consistency",
+            },
+            icon: <FireIcon style={momentumIconStyle} />,
+            action: "Schedule weekend check-in",
+        },
+        {
+            title: "Break quality",
+            description:
+                "Short breaks are averaging 4.5 minutes—right in the sweet spot for recovery without losing focus.",
+            trend: {
+                direction: "up",
+                label: "Optimal range",
+            },
+            icon: <ClockIcon style={momentumIconStyle} />,
+            action: "Lock in preset cadence",
+        },
+        {
+            title: "Evening drift",
+            description:
+                "Task switching after 6 PM is creeping up again. Consider batching admin work earlier in the afternoon.",
+            trend: {
+                direction: "down",
+                label: "+8% distractions",
+            },
+            icon: <BellAlertIcon style={momentumIconStyle} />,
+            action: "Create admin block",
+        },
+    ];
+
     const distractionLoggerStyle = {
         position: "fixed",
         bottom: "2rem",
@@ -587,6 +835,91 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
+
+                    <section style={focusPlanSectionStyle}>
+                        <div style={focusPlanHeaderStyle}>
+                            <div>
+                                <h2 style={sectionHeadingStyle}>Today's focus plan</h2>
+                                <p style={sectionDescriptionStyle}>
+                                    Align deep work, strategic reviews, and wind-down rituals so your
+                                    energy peaks line up with the work that matters most.
+                                </p>
+                            </div>
+                            <div style={actionChipStyle}>
+                                <CalendarIcon style={{ width: "1.1rem", height: "1.1rem" }} />
+                                View weekly planner
+                            </div>
+                        </div>
+                        <div style={focusPlanListStyle}>
+                            {dailyFocusPlan.map((block, idx) => {
+                                const statusStyle =
+                                    planStatusStyles[block.status] || planStatusStyles["scheduled"];
+                                return (
+                                    <div key={idx} style={focusPlanItemStyle}>
+                                        <div style={focusPlanMetaStyle}>
+                                            <span style={focusPlanTimeStyle}>{block.time}</span>
+                                            <span
+                                                style={{
+                                                    ...focusPlanBadgeStyle,
+                                                    background: statusStyle.background,
+                                                    color: statusStyle.color,
+                                                }}
+                                            >
+                                                {statusStyle.label}
+                                            </span>
+                                        </div>
+                                        <div style={focusPlanTitleStyle}>{block.title}</div>
+                                        <p style={focusPlanDescriptionStyle}>{block.description}</p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+
+                    <section style={momentumSectionStyle}>
+                        <h2 style={sectionHeadingStyle}>Momentum highlights</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Snapshot of the habits powering your streaks, so you can double down on
+                            what works and correct drift early.
+                        </p>
+                        <div style={momentumGridStyle}>
+                            {momentumHighlights.map((item, idx) => {
+                                const TrendIcon =
+                                    item.trend.direction === "down"
+                                        ? ArrowTrendingDownIcon
+                                        : ArrowTrendingUpIcon;
+                                const trendStyle =
+                                    item.trend.direction === "down"
+                                        ? momentumTrendNegativeStyle
+                                        : momentumTrendPositiveStyle;
+                                return (
+                                    <div key={idx} style={momentumCardStyle}>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "0.75rem",
+                                            }}
+                                        >
+                                            {item.icon}
+                                            <div style={momentumTitleStyle}>{item.title}</div>
+                                        </div>
+                                        <p style={momentumDescriptionStyle}>{item.description}</p>
+                                        <span style={trendStyle}>
+                                            <TrendIcon style={{ width: "1rem", height: "1rem" }} />
+                                            {item.trend.label}
+                                        </span>
+                                        <span style={momentumActionStyle}>
+                                            {item.action}
+                                            <ChevronRightIcon
+                                                style={{ width: "1rem", height: "1rem" }}
+                                            />
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
                 </>
             )}
 

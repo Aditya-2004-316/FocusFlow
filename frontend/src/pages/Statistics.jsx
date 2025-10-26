@@ -144,6 +144,8 @@ const Statistics = () => {
         display: "flex",
         gap: "1rem",
         marginBottom: "2rem",
+        borderBottom: "2px solid var(--color-gray-200)",
+        paddingBottom: "0.5rem",
     };
 
     const timeRangeButtonStyle = {
@@ -232,6 +234,284 @@ const Statistics = () => {
         { value: "year", label: "This Year" },
     ];
 
+    const sectionTitleStyle = {
+        fontSize: "1.25rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+        marginBottom: "0.5rem",
+    };
+
+    const sectionSubtitleStyle = {
+        color: "var(--color-gray-600)",
+        fontSize: "0.95rem",
+        marginBottom: "1.5rem",
+    };
+
+    const insightsContainerStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.5rem",
+        marginBottom: "2.5rem",
+    };
+
+    const insightCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const insightHeaderStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
+        justifyContent: "space-between",
+    };
+
+    const insightIconContainerStyle = {
+        width: "2.5rem",
+        height: "2.5rem",
+        borderRadius: "0.75rem",
+        background: "var(--color-primary-50)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "1.5rem",
+        color: "var(--color-primary-600)",
+    };
+
+    const insightTitleStyle = {
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+        marginBottom: "0.25rem",
+    };
+
+    const insightHighlightStyle = {
+        fontSize: "1.35rem",
+        fontWeight: 700,
+        color: "var(--color-primary-700)",
+    };
+
+    const insightDescriptionStyle = {
+        color: "var(--color-gray-600)",
+        fontSize: "0.9rem",
+        lineHeight: 1.6,
+    };
+
+    const insightBadgeBaseStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+    };
+
+    const goalsSectionStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.75rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        marginBottom: "2.5rem",
+    };
+
+    const goalListStyle = {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.25rem",
+    };
+
+    const goalItemStyle = {
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.65rem",
+        background: "var(--color-gray-50)",
+        borderRadius: "0.75rem",
+        padding: "1rem",
+    };
+
+    const goalHeaderStyle = {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "0.75rem",
+    };
+
+    const goalTitleStyle = {
+        fontSize: "1rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const goalDescriptionStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.5,
+    };
+
+    const goalProgressTrackStyle = {
+        height: "0.5rem",
+        background: "var(--color-gray-200)",
+        borderRadius: "9999px",
+        overflow: "hidden",
+    };
+
+    const goalProgressFillStyle = {
+        height: "100%",
+        background: "linear-gradient(90deg, var(--color-primary-500), var(--color-cyan-400))",
+        borderRadius: "9999px",
+        transition: "width 0.3s ease-in-out",
+    };
+
+    const goalStatusPillBaseStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+    };
+
+    const tipsSectionStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.5rem",
+        marginBottom: "2rem",
+    };
+
+    const tipCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.25rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const tipTitleStyle = {
+        fontSize: "1rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const tipDescriptionStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const insights = [
+        {
+            title: "Peak Focus Hours",
+            highlight: "10 AM – 1 PM",
+            description:
+                "You consistently achieve your highest focus score during late mornings. Protect this window for deep work.",
+            icon: "⏰",
+            badge: {
+                label: "Prime Time",
+                bg: "var(--color-primary-50)",
+                text: "var(--color-primary-700)",
+            },
+        },
+        {
+            title: "Distraction Trend",
+            highlight: "-18% week-over-week",
+            description:
+                "Distractions dropped notably after adding 5-minute movement breaks. Keep the habit going to maintain momentum.",
+            icon: "📉",
+            badge: {
+                label: "Improving",
+                bg: "#dcfce7",
+                text: "#166534",
+            },
+        },
+        {
+            title: "Session Consistency",
+            highlight: "5-day streak",
+            description:
+                "Short evening check-ins helped you avoid zero-focus days. Try extending the streak with a weekend plan.",
+            icon: "🔥",
+            badge: {
+                label: "On Track",
+                bg: "#fee2e2",
+                text: "#b91c1c",
+            },
+        },
+    ];
+
+    const productivityGoals = [
+        {
+            title: "Log every distraction",
+            description:
+                "Capture the trigger and category for at least 90% of interruptions this week.",
+            progress: 72,
+            status: "on-track",
+        },
+        {
+            title: "Add one deep-work block",
+            description:
+                "Schedule a 90-minute uninterrupted session three times this week.",
+            progress: 45,
+            status: "needs-attention",
+        },
+        {
+            title: "Balance focus and breaks",
+            description:
+                "Maintain an average focus-to-break ratio of 3:1 across all sessions.",
+            progress: 88,
+            status: "exceeding",
+        },
+    ];
+
+    const improvementTips = [
+        {
+            title: "Automate session prep",
+            description:
+                "Use a preset to load your preferred focus/break lengths and start with fewer clicks.",
+            icon: "⚙️",
+        },
+        {
+            title: "Introduce anchor tasks",
+            description:
+                "Plan one high-impact task before noon and reflect on it in the evening to reinforce your streak.",
+            icon: "🎯",
+        },
+        {
+            title: "Review weekly patterns",
+            description:
+                "Compare this week with the previous one in the Statistics tab to spot shifts in productivity early.",
+            icon: "📅",
+        },
+    ];
+
+    const statusColors = {
+        "on-track": {
+            bg: "#dcfce7",
+            text: "#166534",
+            label: "On track",
+        },
+        "needs-attention": {
+            bg: "#fef3c7",
+            text: "#92400e",
+            label: "Needs attention",
+        },
+        exceeding: {
+            bg: "#dbeafe",
+            text: "#1d4ed8",
+            label: "Ahead of goal",
+        },
+    };
+
     return (
         <div style={containerStyle}>
             <div style={headerStyle}>
@@ -269,10 +549,10 @@ const Statistics = () => {
                 {timeRangeOptions.map((option) => (
                     <button
                         key={option.value}
-                        style={
+                        className={
                             selectedTimeRange === option.value
-                                ? activeTimeRangeStyle
-                                : timeRangeButtonStyle
+                                ? "btn-primary"
+                                : "btn-secondary"
                         }
                         onClick={() => setSelectedTimeRange(option.value)}
                     >
@@ -311,6 +591,112 @@ const Statistics = () => {
                     ))}
                 </div>
             </div>
+
+            <section>
+                <h2 style={sectionTitleStyle}>Focus Insights</h2>
+                <p style={sectionSubtitleStyle}>
+                    Understand where your momentum is building and identify the habits
+                    that keep you in a productive flow.
+                </p>
+                <div style={insightsContainerStyle}>
+                    {insights.map((insight, idx) => (
+                        <div key={idx} style={insightCardStyle}>
+                            <div style={insightHeaderStyle}>
+                                <div style={insightIconContainerStyle}>
+                                    <span>{insight.icon}</span>
+                                </div>
+                                <span
+                                    style={{
+                                        ...insightBadgeBaseStyle,
+                                        background: insight.badge.bg,
+                                        color: insight.badge.text,
+                                    }}
+                                >
+                                    {insight.badge.label}
+                                </span>
+                            </div>
+                            <div>
+                                <div style={insightTitleStyle}>{insight.title}</div>
+                                <div style={insightHighlightStyle}>
+                                    {insight.highlight}
+                                </div>
+                            </div>
+                            <p style={insightDescriptionStyle}>{insight.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section style={goalsSectionStyle}>
+                <h2 style={sectionTitleStyle}>Productivity Goals</h2>
+                <p style={sectionSubtitleStyle}>
+                    Stay accountable with measurable targets and track your progress in
+                    real time.
+                </p>
+                <div style={goalListStyle}>
+                    {productivityGoals.map((goal, idx) => {
+                        const status = statusColors[goal.status] || statusColors["on-track"];
+                        return (
+                            <div key={idx} style={goalItemStyle}>
+                                <div style={goalHeaderStyle}>
+                                    <span style={goalTitleStyle}>{goal.title}</span>
+                                    <span
+                                        style={{
+                                            ...goalStatusPillBaseStyle,
+                                            background: status.bg,
+                                            color: status.text,
+                                        }}
+                                    >
+                                        {status.label}
+                                    </span>
+                                </div>
+                                <p style={goalDescriptionStyle}>{goal.description}</p>
+                                <div style={goalProgressTrackStyle}>
+                                    <div
+                                        style={{
+                                            ...goalProgressFillStyle,
+                                            width: `${goal.progress}%`,
+                                        }}
+                                    />
+                                </div>
+                                <span
+                                    style={{
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                        color: "var(--color-gray-500)",
+                                    }}
+                                >
+                                    {goal.progress}% complete
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+
+            <section>
+                <h2 style={sectionTitleStyle}>Personalized Suggestions</h2>
+                <p style={sectionSubtitleStyle}>
+                    Small adjustments can compound into meaningful gains—try one of
+                    these ideas next session.
+                </p>
+                <div style={tipsSectionStyle}>
+                    {improvementTips.map((tip, idx) => (
+                        <div key={idx} style={tipCardStyle}>
+                            <div
+                                style={{
+                                    fontSize: "1.5rem",
+                                    lineHeight: 1,
+                                }}
+                            >
+                                {tip.icon}
+                            </div>
+                            <div style={tipTitleStyle}>{tip.title}</div>
+                            <p style={tipDescriptionStyle}>{tip.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 };

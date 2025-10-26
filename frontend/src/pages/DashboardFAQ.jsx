@@ -51,138 +51,67 @@ const faqs = [
 
 const pageBackgroundStyle = {
     minHeight: "100vh",
-    width: "99vw",
-    background:
-        "linear-gradient(120deg, var(--color-cyan-50) 0%, var(--color-primary-100) 100%)",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: -1,
+    background: "var(--color-gray-50)",
 };
 
 const containerStyle = {
-    width: "95%", // Changed from maxWidth
-    margin: "2.5rem auto",
-    padding: "clamp(1.5rem, 4vw, 2.5rem)", // Responsive padding
-    background: "rgba(255,255,255,0.85)",
-    borderRadius: "clamp(1rem, 3vw, 2rem)", // Responsive border radius
-    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-    backdropFilter: "blur(4px)",
-    position: "relative",
-    boxSizing: "border-box",
+    maxWidth: "76rem",
+    margin: "0 auto",
+    padding: "2rem",
 };
 
-const accentBarStyle = {
-    height: "6px",
-    width: "100px",
+const headerStyle = {
     background:
-        "linear-gradient(90deg, var(--color-primary-400), var(--color-cyan-400))",
-    borderRadius: "3px",
-    margin: "0 auto 0.8rem auto",
-    boxShadow: "0 2px 12px 0 rgba(0,0,0,0.10)",
+        "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
+    borderRadius: "1rem",
+    padding: "2rem",
+    marginBottom: "2rem",
+    color: "var(--color-white)",
+    boxShadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
 };
 
-const heroStyle = {
-    background:
-        "linear-gradient(100deg, var(--color-primary-700) 0%, var(--color-cyan-100) 60%, var(--color-primary-200) 100%)",
-    color: "var(--color-primary-800)",
-    borderRadius: "1.5rem",
-    padding: "clamp(1.5rem, 4vw, 2.5rem)", // Responsive padding
-    width: "100%",
-    boxSizing: "border-box",
-    marginBottom: "2.5rem",
-    boxShadow: "0 4px 32px 0 rgba(0,0,0,0.10)",
-    position: "relative",
-    textAlign: "center",
-};
-
-const iconCircleStyle = {
-    background:
-        "linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-primary-100) 100%)",
-    borderRadius: "50%",
-    width: "clamp(3.5rem, 6vw, 4.5rem)", // Responsive size
-    height: "clamp(3.5rem, 6vw, 4.5rem)", // Responsive size
+const faqsContainerStyle = {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "0 auto 0.1 auto",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    transition: "transform 0.18s, filter 0.18s",
-};
-
-const iconCircleHoverStyle = {
-    transform: "scale(1.08)",
-    filter: "brightness(1.12)",
+    flexDirection: "column",
+    gap: "1rem",
 };
 
 const titleStyle = {
-    fontSize: "clamp(1.8rem, 4vw, 2.3rem)", // Responsive font size
-    fontWeight: 900,
-    color: "var(--color-primary-900)",
-    margin: 0,
-    letterSpacing: "-1px",
-    textShadow: "0 2px 8px rgba(0,0,0,0.10)",
-    textAlign: "center", // Changed from left to center
-    fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
-    padding: "0 clamp(0.5rem, 2vw, 1rem)", // Added responsive padding
+    fontSize: "2rem",
+    fontWeight: 700,
+    marginBottom: "0.5rem",
 };
 
 const subtitleStyle = {
-    color: "var(--color-cyan-900)",
-    fontSize: "clamp(1rem, 2vw, 1.18rem)", // Responsive font size
-    width: "100%", // Changed from maxWidth
-    margin: "1.2rem auto 0 auto",
-    fontWeight: 500,
-    lineHeight: 1.6,
-    textAlign: "center",
-    padding: "0 clamp(0.5rem, 2vw, 1rem)", // Added responsive padding
-    boxSizing: "border-box",
+    fontSize: "1.125rem",
+    opacity: 0.9,
 };
 
-const mainStyle = {
-    width: "95%", // Changed from maxWidth
-    margin: "-2.5rem auto 2.5rem auto",
-    padding: "clamp(1rem, 3vw, 1.5rem)", // Responsive padding
-    background: "rgba(255,255,255,0.92)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
-    boxSizing: "border-box",
-};
 
-const cardStyle = {
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,0.96) 60%, var(--color-cyan-50) 100%)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.16), 0 1.5px 8px rgba(0,0,0,0.08)",
-    padding: "clamp(1rem, 3vw, 1.5rem)", // Responsive padding
-    width: "100%",
-    boxSizing: "border-box",
-    marginBottom: "1.5rem",
-    border: "2.5px solid var(--color-primary-200)",
-    position: "relative",
-    overflow: "hidden",
-    transition: "transform 0.18s, box-shadow 0.18s, border 0.18s",
+const faqCardStyle = {
+    background: "var(--panel-bg)",
+    borderRadius: "0.75rem",
+    padding: "1.5rem",
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    border: "1px solid var(--color-gray-200)",
+    transition: "all 0.2s ease-in-out",
     cursor: "pointer",
 };
 
-const cardHoverStyle = {
-    transform: "translateY(-6px) scale(1.03)",
-    boxShadow: "0 16px 48px rgba(0,0,0,0.22), 0 2px 12px rgba(0,0,0,0.10)",
-    border: "2.5px solid var(--color-primary-400)",
+const faqCardHoverStyle = {
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
 };
 
 const questionStyle = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    cursor: "pointer",
-    fontSize: "clamp(1rem, 2vw, 1.15rem)", // Responsive font size
-    fontWeight: 700,
-    color: "var(--color-primary-700)",
+    fontSize: "1.125rem",
+    fontWeight: 600,
+    color: "var(--color-gray-900)",
     marginBottom: 0,
-    letterSpacing: "-0.5px",
-    width: "100%",
-    userSelect: "none",
 };
 
 const answerContainerStyle = {
@@ -241,69 +170,28 @@ const infoBoxStyle = {
 
 const DashboardFAQ = () => {
     const [openIdx, setOpenIdx] = useState(null);
-    const [iconHovered, setIconHovered] = useState(false);
     const [cardHovered, setCardHovered] = useState(null);
 
     return (
         <>
             <div style={pageBackgroundStyle} />
             <div style={containerStyle}>
-                <section style={heroStyle}>
-                    <div style={accentBarStyle} />
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            marginBottom: "1.2rem",
-                        }}
-                    >
-                        <div
-                            style={
-                                iconHovered
-                                    ? {
-                                          ...iconCircleStyle,
-                                          ...iconCircleHoverStyle,
-                                      }
-                                    : iconCircleStyle
-                            }
-                            onMouseEnter={() => setIconHovered(true)}
-                            onMouseLeave={() => setIconHovered(false)}
-                        >
-                            <FaQuestionCircle
-                                style={{
-                                    fontSize: "2.5rem",
-                                    color: "var(--color-white)",
-                                }}
-                            />
-                        </div>
-                        <h1
-                            style={{
-                                ...titleStyle,
-                                margin: 0,
-                                textAlign: "center",
-                                lineHeight: 1.1,
-                                display: "block",
-                                marginTop: 0,
-                            }}
-                        >
-                            Frequently Asked Questions
-                        </h1>
-                    </div>
+                <div style={headerStyle}>
+                    <h1 style={titleStyle}>Frequently Asked Questions</h1>
                     <p style={subtitleStyle}>
                         Find answers to common questions about FocusFlow,
                         productivity, and how to get the most out of the
                         dashboard.
                     </p>
-                </section>
-                <main style={mainStyle}>
+                </div>
+                <div style={faqsContainerStyle}>
                     {faqs.map((faq, idx) => (
                         <div
                             key={idx}
                             style={
                                 cardHovered === idx
-                                    ? { ...cardStyle, ...cardHoverStyle }
-                                    : cardStyle
+                                    ? { ...faqCardStyle, ...faqCardHoverStyle }
+                                    : faqCardStyle
                             }
                             onMouseEnter={() => setCardHovered(idx)}
                             onMouseLeave={() => setCardHovered(null)}
@@ -314,26 +202,7 @@ const DashboardFAQ = () => {
                                     setOpenIdx(openIdx === idx ? null : idx)
                                 }
                             >
-                                <span
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "0.7rem",
-                                    }}
-                                >
-                                    <span
-                                        style={{
-                                            display: "inline-block",
-                                            width: 10,
-                                            height: 10,
-                                            borderRadius: "50%",
-                                            background:
-                                                "var(--color-primary-500)",
-                                            marginRight: 6,
-                                        }}
-                                    />
-                                    {faq.question}
-                                </span>
+                                <span>{faq.question}</span>
                                 {openIdx === idx ? (
                                     <FaChevronUp
                                         style={{
@@ -352,28 +221,12 @@ const DashboardFAQ = () => {
                             </div>
                             {openIdx === idx && (
                                 <div style={answerContainerStyle}>
-                                    <div style={answerMarkerStyle}>
-                                        <FaArrowRight
-                                            style={answerPointerStyle}
-                                        />
-                                    </div>
                                     <div style={answerStyle}>{faq.answer}</div>
                                 </div>
                             )}
                         </div>
                     ))}
-                    <div style={infoBoxStyle}>
-                        Can't find your question?{" "}
-                        <span
-                            style={{
-                                color: "var(--color-primary-600)",
-                                fontWeight: 600,
-                            }}
-                        >
-                            Contact support from your dashboard.
-                        </span>
-                    </div>
-                </main>
+                </div>
             </div>
         </>
     );

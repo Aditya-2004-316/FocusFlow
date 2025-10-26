@@ -281,7 +281,176 @@ const LandingPage = () => {
             fontSize: '1.1rem',
             marginTop: '1.5rem',
         },
+        sectionHeader: {
+            fontSize: '2.35rem',
+            fontWeight: '700',
+            color: '#ffffff',
+            textAlign: 'center',
+            marginBottom: '1rem',
+        },
+        sectionLead: {
+            textAlign: 'center',
+            maxWidth: '40rem',
+            margin: '0 auto 3rem',
+            color: '#94a3b8',
+            fontSize: '1.1rem',
+            lineHeight: '1.7',
+        },
+        roadmapSection: {
+            padding: '5rem 2rem',
+            background: 'rgba(15, 23, 42, 0.55)',
+        },
+        roadmapContainer: {
+            maxWidth: '1200px',
+            margin: '0 auto',
+        },
+        roadmapGrid: {
+            display: 'grid',
+            gap: '1.75rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        },
+        roadmapCard: {
+            background: 'rgba(30, 41, 59, 0.55)',
+            border: '1px solid #334155',
+            borderRadius: '1rem',
+            padding: '2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            boxShadow: '0 20px 45px -18px rgba(0,0,0,0.45)',
+        },
+        roadmapBadge: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'rgba(56, 189, 248, 0.12)',
+            color: '#38bdf8',
+            borderRadius: '9999px',
+            padding: '0.4rem 1rem',
+            fontWeight: 600,
+            fontSize: '0.85rem',
+        },
+        roadmapTitle: {
+            fontSize: '1.35rem',
+            fontWeight: '600',
+            color: '#ffffff',
+        },
+        roadmapDescription: {
+            color: '#cbd5f5',
+            lineHeight: '1.7',
+            fontSize: '0.98rem',
+        },
+        roadmapFooter: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            color: '#94a3b8',
+            fontSize: '0.9rem',
+            borderTop: '1px solid rgba(148, 163, 184, 0.2)',
+            paddingTop: '1rem',
+            marginTop: '0.5rem',
+        },
+        integrationSection: {
+            padding: '5rem 2rem',
+            background: 'rgba(10, 15, 26, 0.85)',
+        },
+        integrationContainer: {
+            maxWidth: '1100px',
+            margin: '0 auto',
+        },
+        integrationGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1.5rem',
+            marginTop: '3rem',
+        },
+        integrationCard: {
+            background: 'rgba(30, 41, 59, 0.45)',
+            borderRadius: '0.85rem',
+            border: '1px solid #1f2937',
+            padding: '1.75rem 1.5rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem',
+            alignItems: 'flex-start',
+            boxShadow: '0 15px 35px -18px rgba(0,0,0,0.4)',
+        },
+        integrationIcon: {
+            width: '2.5rem',
+            height: '2.5rem',
+            borderRadius: '0.75rem',
+            background: 'rgba(56, 189, 248, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.5rem',
+            color: '#38bdf8',
+        },
+        integrationTitle: {
+            fontSize: '1.15rem',
+            fontWeight: '600',
+            color: '#e2e8f0',
+        },
+        integrationDescription: {
+            color: '#94a3b8',
+            lineHeight: '1.6',
+            fontSize: '0.95rem',
+        },
     };
+
+    const roadmapHighlights = [
+        {
+            phase: 'Q4 · 2025',
+            badge: 'Coming soon',
+            title: 'FocusFlow mobile beta',
+            description:
+                'Carry your rituals on the go with native mobile timers, offline streak tracking, and mindful break reminders.',
+            owner: 'Mobile guild',
+        },
+        {
+            phase: 'Q1 · 2026',
+            badge: 'In research',
+            title: 'AI progress coach',
+            description:
+                'Surface weekly wins, energy dips, and personalized nudges powered by on-device analytics—no data leaves your workspace.',
+            owner: 'Intelligence crew',
+        },
+        {
+            phase: 'Q2 · 2026',
+            badge: 'Community-led',
+            title: 'Shared focus spaces',
+            description:
+                'Host co-working rooms with ambient sound, shared agendas, and live accountability dashboards for teams and study groups.',
+            owner: 'Community studio',
+        },
+    ];
+
+    const integrationPartners = [
+        {
+            icon: '🔄',
+            name: 'Calendar sync',
+            blurb:
+                'Auto-block focus sessions on Google or Outlook, and reflect completed timers back to your calendar for time auditing.',
+        },
+        {
+            icon: '💬',
+            name: 'Slack & Teams',
+            blurb:
+                'Signal when you enter focus mode, snooze notifications, and share quick wins without leaving your collaboration apps.',
+        },
+        {
+            icon: '📝',
+            name: 'Notion & Docs',
+            blurb:
+                'Embed live focus timers, log reflections as pages, and push session notes directly into your knowledge base.',
+        },
+        {
+            icon: '⚙️',
+            name: 'Automation hooks',
+            blurb:
+                'Use Zapier and webhooks to trigger rituals—spin up playlists, toggle smart lights, or log tasks in your favorite tool.',
+        },
+    ];
 
     return (
         <div style={styles.landingPage}>
@@ -830,6 +999,54 @@ const LandingPage = () => {
                     </p>
                 </div>
             </section>
+
+            {/* Product Roadmap Section */}
+            <section style={styles.roadmapSection}>
+                <div style={styles.roadmapContainer}>
+                    <h2 style={styles.sectionHeader}>What’s next for FocusFlow</h2>
+                    <p style={styles.sectionLead}>
+                        We build FocusFlow hand-in-hand with the community. Peek at the initiatives we’re
+                        prototyping and the experiments you can co-create with us.
+                    </p>
+                    <div style={styles.roadmapGrid}>
+                        {roadmapHighlights.map((item, idx) => (
+                            <div key={idx} style={styles.roadmapCard}>
+                                <span style={styles.roadmapBadge}>
+                                    <span role="img" aria-label="calendar">📅</span>
+                                    {item.phase}
+                                </span>
+                                <h3 style={styles.roadmapTitle}>{item.title}</h3>
+                                <p style={styles.roadmapDescription}>{item.description}</p>
+                                <div style={styles.roadmapFooter}>
+                                    <span>{item.badge}</span>
+                                    <span>{item.owner}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Integrations Section */}
+            <section style={styles.integrationSection}>
+                <div style={styles.integrationContainer}>
+                    <h2 style={styles.sectionHeader}>Connect FocusFlow to your workflow</h2>
+                    <p style={styles.sectionLead}>
+                        Pair timers, rituals, and analytics with the tools you already love. These integrations are
+                        live or in beta—join the waitlist to test-drive the next wave.
+                    </p>
+                    <div style={styles.integrationGrid}>
+                        {integrationPartners.map((partner, idx) => (
+                            <div key={idx} style={styles.integrationCard}>
+                                <div style={styles.integrationIcon}>{partner.icon}</div>
+                                <div style={styles.integrationTitle}>{partner.name}</div>
+                                <p style={styles.integrationDescription}>{partner.blurb}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             <LandingFooter />
             <AuthModals
                 isLoginOpen={isLoginOpen}

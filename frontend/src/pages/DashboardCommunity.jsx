@@ -138,6 +138,253 @@ const DashboardCommunity = () => {
         fontWeight: 600,
     };
 
+    const sectionHeadingStyle = {
+        fontSize: "1.5rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
+        marginBottom: "0.5rem",
+    };
+
+    const sectionDescriptionStyle = {
+        fontSize: "0.95rem",
+        color: "var(--color-gray-600)",
+        marginBottom: "1.5rem",
+        lineHeight: 1.6,
+    };
+
+    const mentorshipSectionStyle = {
+        margin: "2.5rem 0",
+    };
+
+    const mentorshipGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "1.5rem",
+    };
+
+    const mentorshipCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const mentorshipHeaderStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
+    };
+
+    const mentorshipAvatarStyle = {
+        width: "3rem",
+        height: "3rem",
+        borderRadius: "50%",
+        background: "var(--color-primary-100)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "var(--color-primary-700)",
+        fontWeight: 700,
+        fontSize: "1rem",
+    };
+
+    const mentorshipMetaStyle = {
+        display: "flex",
+        gap: "0.5rem",
+        flexWrap: "wrap",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "var(--color-primary-700)",
+    };
+
+    const mentorshipTagStyle = {
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        background: "var(--color-primary-50)",
+    };
+
+    const mentorshipBioStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const mentorshipActionStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "var(--color-primary-600)",
+    };
+
+    const spotlightSectionStyle = {
+        margin: "2.5rem 0",
+    };
+
+    const spotlightGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.5rem",
+    };
+
+    const spotlightCardStyle = {
+        background: "var(--color-gray-50)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const spotlightTitleStyle = {
+        fontSize: "1rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const spotlightDescriptionStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const spotlightTagListStyle = {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.5rem",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+        color: "var(--color-primary-700)",
+    };
+
+    const spotlightTagStyle = {
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        background: "var(--color-primary-50)",
+    };
+
+    const eventSectionStyle = {
+        margin: "2.5rem 0",
+    };
+
+    const eventTimelineStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "1.5rem",
+    };
+
+    const eventCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const eventMetaStyle = {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "0.75rem",
+        flexWrap: "wrap",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "var(--color-primary-700)",
+    };
+
+    const eventDescriptionStyle = {
+        fontSize: "0.875rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const eventActionStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "var(--color-primary-600)",
+    };
+
+    const communityMentors = [
+        {
+            initials: "JD",
+            name: "Jasmine Deep",
+            expertise: ["Deep Work", "Focus Rituals"],
+            bio: "Helped 50+ students design distraction-proof routines and maintain streaks over exam season.",
+            nextAvailability: "Mentor hours · Fri 5 PM",
+        },
+        {
+            initials: "RT",
+            name: "Ravi Thakur",
+            expertise: ["Career Switch", "Systems"],
+            bio: "Transitioned from sales to product design using FocusFlow habit loops—now mentors weekly sessions.",
+            nextAvailability: "Demo day host · Thu",
+        },
+        {
+            initials: "AM",
+            name: "Aisha Mendes",
+            expertise: ["Accountability", "Wellness"],
+            bio: "Runs the 6 AM accountability circle and shares recovery frameworks for sustainable focus.",
+            nextAvailability: "Morning circle · Sun",
+        },
+    ];
+
+    const communitySpotlights = [
+        {
+            title: "FocusLab Builders",
+            description:
+                "A cross-disciplinary crew shipping side projects together using weekly build logs and peer reviews.",
+            tags: ["Side projects", "Feedback loops"],
+        },
+        {
+            title: "Grad Prep Collective",
+            description:
+                "Study group coordinating GRE prep with shared decks, sprint pairings, and weekend mock sessions.",
+            tags: ["Study group", "Exam prep"],
+        },
+        {
+            title: "Mindful Makers",
+            description:
+                "Combines focus blocks with mindfulness and art breaks to protect energy while staying prolific.",
+            tags: ["Mindfulness", "Creative"],
+        },
+    ];
+
+    const communityEvents = [
+        {
+            title: "Feature jam & AMA",
+            date: "Nov 2 · 6 PM GMT",
+            description:
+                "Bring feature ideas, vote live, and chat with the product team about the roadmap.",
+            action: "Save your seat",
+        },
+        {
+            title: "Sprint challenge kickoff",
+            date: "Nov 6 · 8 AM GMT",
+            description:
+                "Two-week focus sprint with leaderboard, daily check-ins, and curated playlists.",
+            action: "Join the challenge",
+        },
+        {
+            title: "Community showcase",
+            date: "Nov 12 · 4 PM GMT",
+            description:
+                "Spotlight on member wins and lightning talks on the best habit experiments from October.",
+            action: "Submit a talk",
+        },
+    ];
+
     return (
         <div style={containerStyle}>
             {/* Header */}
@@ -152,28 +399,36 @@ const DashboardCommunity = () => {
             {/* Tabs */}
             <div style={tabsStyle}>
                 <button
-                    style={activeTab === "overview" ? activeTabStyle : tabStyle}
+                    className={
+                        activeTab === "overview" ? "btn-primary" : "btn-secondary"
+                    }
                     onClick={() => setActiveTab("overview")}
                 >
                     Overview
                 </button>
                 <button
-                    style={activeTab === "groups" ? activeTabStyle : tabStyle}
+                    className={
+                        activeTab === "groups" ? "btn-primary" : "btn-secondary"
+                    }
                     onClick={() => setActiveTab("groups")}
                 >
                     Study Groups
                 </button>
                 <button
-                    style={
-                        activeTab === "achievements" ? activeTabStyle : tabStyle
+                    className={
+                        activeTab === "achievements"
+                            ? "btn-primary"
+                            : "btn-secondary"
                     }
                     onClick={() => setActiveTab("achievements")}
                 >
                     Achievements
                 </button>
                 <button
-                    style={
-                        activeTab === "challenges" ? activeTabStyle : tabStyle
+                    className={
+                        activeTab === "challenges"
+                            ? "btn-primary"
+                            : "btn-secondary"
                     }
                     onClick={() => setActiveTab("challenges")}
                 >
@@ -415,6 +670,106 @@ const DashboardCommunity = () => {
                             </button>
                         </div>
                     </div>
+
+                    <section style={mentorshipSectionStyle}>
+                        <h2 style={sectionHeadingStyle}>Mentor office hours</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Learn from community leaders who share their focus frameworks, review session plans,
+                            and keep you accountable through live Q&amp;A blocks.
+                        </p>
+                        <div style={mentorshipGridStyle}>
+                            {communityMentors.map((mentor, idx) => (
+                                <div key={idx} style={mentorshipCardStyle}>
+                                    <div style={mentorshipHeaderStyle}>
+                                        <div style={mentorshipAvatarStyle}>{mentor.initials}</div>
+                                        <div>
+                                            <div
+                                                style={{
+                                                    fontSize: "1.05rem",
+                                                    fontWeight: 600,
+                                                    color: "var(--color-gray-900)",
+                                                }}
+                                            >
+                                                {mentor.name}
+                                            </div>
+                                            <div style={mentorshipMetaStyle}>
+                                                {mentor.expertise.map((area) => (
+                                                    <span key={area} style={mentorshipTagStyle}>
+                                                        {area}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style={mentorshipBioStyle}>{mentor.bio}</p>
+                                    <span style={mentorshipActionStyle}>{mentor.nextAvailability}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section style={spotlightSectionStyle}>
+                        <h2 style={sectionHeadingStyle}>Spotlight circles</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Tap into specialised cohorts that keep momentum high with shared rituals, retros, and
+                            progress posts.
+                        </p>
+                        <div style={spotlightGridStyle}>
+                            {communitySpotlights.map((item, idx) => (
+                                <div key={idx} style={spotlightCardStyle}>
+                                    <div style={spotlightTitleStyle}>{item.title}</div>
+                                    <p style={spotlightDescriptionStyle}>{item.description}</p>
+                                    <div style={spotlightTagListStyle}>
+                                        {item.tags.map((tag) => (
+                                            <span key={tag} style={spotlightTagStyle}>
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section style={eventSectionStyle}>
+                        <h2 style={sectionHeadingStyle}>Upcoming community events</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Reserve your spot in live sessions that blend accountability, product previews, and
+                            celebrations of member wins.
+                        </p>
+                        <div style={eventTimelineStyle}>
+                            {communityEvents.map((event, idx) => (
+                                <div key={idx} style={eventCardStyle}>
+                                    <div style={eventMetaStyle}>
+                                        <span>{event.date}</span>
+                                        <span
+                                            style={{
+                                                padding: "0.25rem 0.75rem",
+                                                borderRadius: "9999px",
+                                                background: "var(--color-primary-50)",
+                                                color: "var(--color-primary-700)",
+                                                fontSize: "0.75rem",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            Live session
+                                        </span>
+                                    </div>
+                                    <div
+                                        style={{
+                                            fontSize: "1.05rem",
+                                            fontWeight: 600,
+                                            color: "var(--color-gray-900)",
+                                        }}
+                                    >
+                                        {event.title}
+                                    </div>
+                                    <p style={eventDescriptionStyle}>{event.description}</p>
+                                    <span style={eventActionStyle}>{event.action}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
                 </div>
             )}
 

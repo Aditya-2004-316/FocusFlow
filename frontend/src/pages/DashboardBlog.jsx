@@ -53,29 +53,24 @@ const posts = [
 
 const pageBackgroundStyle = {
     minHeight: "100vh",
-    width: "99vw",
-    background:
-        "linear-gradient(120deg, var(--color-cyan-50) 0%, var(--color-primary-100) 100%)",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: -1,
+    background: "var(--color-gray-50)",
 };
 
 const containerStyle = {
-    width: "95%",
-    maxWidth: "1000px", // Add max width for better centering on large screens
-    margin: "2.5rem auto", // This centers the container
-    padding: "clamp(1.5rem, 4vw, 2.5rem)",
-    background: "rgba(255,255,255,0.85)",
-    borderRadius: "clamp(1rem, 3vw, 2rem)",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-    backdropFilter: "blur(4px)",
-    position: "relative",
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center", // Center all content within container
+    maxWidth: "76rem",
+    margin: "0 auto",
+    padding: "2rem",
+};
+
+const headerStyle = {
+    background:
+        "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
+    borderRadius: "1rem",
+    padding: "2rem",
+    marginBottom: "2rem",
+    color: "var(--color-white)",
+    boxShadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
 };
 
 const heroAccentBarStyle = {

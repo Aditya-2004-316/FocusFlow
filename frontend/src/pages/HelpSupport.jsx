@@ -103,6 +103,8 @@ const HelpSupport = () => {
         gap: "1rem",
         marginBottom: "2rem",
         flexWrap: "wrap",
+        borderBottom: "2px solid var(--color-gray-200)",
+        paddingBottom: "0.5rem",
     };
 
     const categoryButtonStyle = {
@@ -224,50 +226,46 @@ const HelpSupport = () => {
 
             <div style={categoriesContainerStyle}>
                 <button
-                    style={
-                        activeCategory === "all"
-                            ? activeCategoryButtonStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "all" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("all")}
                 >
                     All
                 </button>
                 <button
-                    style={
-                        activeCategory === "timer"
-                            ? activeCategoryButtonStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "timer" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("timer")}
                 >
                     Timer
                 </button>
                 <button
-                    style={
+                    className={
                         activeCategory === "settings"
-                            ? activeCategoryButtonStyle
-                            : categoryButtonStyle
+                            ? "btn-primary"
+                            : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("settings")}
                 >
                     Settings
                 </button>
                 <button
-                    style={
+                    className={
                         activeCategory === "statistics"
-                            ? activeCategoryButtonStyle
-                            : categoryButtonStyle
+                            ? "btn-primary"
+                            : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("statistics")}
                 >
                     Statistics
                 </button>
                 <button
-                    style={
+                    className={
                         activeCategory === "community"
-                            ? activeCategoryButtonStyle
-                            : categoryButtonStyle
+                            ? "btn-primary"
+                            : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("community")}
                 >

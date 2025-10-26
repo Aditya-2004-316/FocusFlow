@@ -3,51 +3,95 @@ import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
 import "../styles/CardHover.css";
 
-const testimonials = [
+const marqueeLogos = [
+    { name: "Orbit Labs" },
+    { name: "Northwind Collective" },
+    { name: "Launchpad Co." },
+    { name: "Atlas Solutions" },
+    { name: "Delta Ventures" },
+];
+
+const testimonialQuotes = [
     {
-        quote: "FocusFlow has increased my productivity by 40%.",
+        quote:
+            "FocusFlow is the first platform that blends rituals, timers, and analytics in a way my entire team actually adopts.",
         author: "Sarah Johnson",
-        role: "Project Manager",
+        role: "Head of Operations · Orbit Labs",
     },
     {
-        quote: "The intuitive interface and powerful features make it the perfect tool for both individuals and teams. Highly recommended",
+        quote:
+            "We shaved two hours off every sprint planning meeting. Seeing where focus time goes unlocked a new level of transparency.",
         author: "Michael Chen",
-        role: "Software Developer",
+        role: "Engineering Manager · Launchpad Co.",
     },
     {
-        quote: "As a freelancer, FocusFlow helps me stay organized and bill clients accurately. It's become an essential part of my workflow.",
+        quote:
+            "As a solo creator, the community and weekly retros help me stay accountable. My shipping cadence has tripled.",
         author: "Emily Rodriguez",
-        role: "Freelance Designer",
+        role: "Product Designer · Freelance",
     },
     {
-        quote: "FocusFlow helped me ace my finals! The Pomodoro timer kept me focused during long study sessions.",
+        quote:
+            "Students in our lab rely on FocusFlow to structure long study blocks. The habit streaks keep morale high during exam season.",
         author: "Alex Martinez",
-        role: "Computer Science Student",
+        role: "Program Director · Grad Prep Lab",
     },
     {
-        quote: "Best productivity app I've ever used. Simple, effective, and completely free. What more could you ask for?",
+        quote:
+            "FocusFlow’s distraction logging revealed our meeting overload. We rebalanced calendars and boosted output by 25%.",
         author: "David Kim",
-        role: "Marketing Manager",
+        role: "Director of Marketing · Northwind Collective",
     },
     {
-        quote: "The analytics feature is incredible. I can see exactly where my time goes and optimize my workflow accordingly.",
+        quote:
+            "The AI summaries surface patterns I would have missed. It’s like having a coach recapping every week’s momentum shifts.",
         author: "Jessica Lee",
-        role: "Data Analyst",
+        role: "Lead Analyst · Atlas Solutions",
+    },
+];
+
+const successStats = [
+    {
+        label: "Average focus score",
+        value: "4.8/5",
+        caption: "Based on 1,200 performance reviews across cohorts",
     },
     {
-        quote: "As a remote worker, FocusFlow helps me maintain structure and discipline. It's like having a productivity coach.",
-        author: "Ryan Thompson",
-        role: "Content Writer",
+        label: "Hours reclaimed per member",
+        value: "+6.5",
+        caption: "Median hours regained each month after distraction audits",
     },
     {
-        quote: "I've tried dozens of productivity apps, but FocusFlow is the only one I've stuck with. It just works!",
-        author: "Priya Patel",
-        role: "UX Designer",
+        label: "Team adoption",
+        value: "93%",
+        caption: "Users logging at least three focus blocks per week",
+    },
+];
+
+const industryPanels = [
+    {
+        title: "High-performing product teams",
+        points: [
+            "Protect deep work time with calendar sync",
+            "Run async stand-ups with ritual templates",
+            "Share sprint wins via auto-generated recaps",
+        ],
     },
     {
-        quote: "The distraction logging feature helped me identify my biggest time-wasters. Game changer!",
-        author: "James Wilson",
-        role: "Entrepreneur",
+        title: "Creatives & makers",
+        points: [
+            "Blend focus blocks with wellness resets",
+            "Log inspiration snippets right from breaks",
+            "Showcase progress in a polished portfolio view",
+        ],
+    },
+    {
+        title: "Students & educators",
+        points: [
+            "Plan revision cycles with adaptive timers",
+            "Track active recall vs. passive study time",
+            "Celebrate cohorts with streak spotlights",
+        ],
     },
 ];
 
@@ -58,159 +102,258 @@ const Testimonials = () => {
             background: 'linear-gradient(to bottom, #0f172a, #1e293b, #0f172a)',
             color: '#ffffff',
         },
-        testimonialsSection: {
-            padding: '5rem 2rem',
-            background: 'rgba(15, 23, 42, 0.5)',
+        page: {
+            minHeight: "100vh",
+            background: "linear-gradient(to bottom, #0b1120, #121b2f, #0b1120)",
+            color: "#ffffff",
         },
-        testimonialsContainer: {
-            maxWidth: '1200px',
-            margin: '0 auto',
+        hero: {
+            padding: "6rem 2rem 4rem",
+            textAlign: "center",
         },
-        testimonialsTitle: {
-            fontSize: '2.5rem',
-            fontWeight: '700',
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: '3rem',
+        heroInner: {
+            maxWidth: "780px",
+            margin: "0 auto",
         },
-        testimonialsGrid: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '2rem',
-            marginTop: '3rem',
+        heroTitle: {
+            fontSize: "3rem",
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            marginBottom: "1.25rem",
+            color: "#ffffff",
         },
-        testimonialCard: {
-            background: 'rgba(30, 41, 59, 0.5)',
-            backdropFilter: 'blur(8px)',
-            padding: '2rem',
-            borderRadius: '1rem',
-            transition: 'all 0.3s ease',
-            border: '1px solid #334155',
+        heroHighlight: {
+            background: "linear-gradient(to right, #38bdf8, #60a5fa)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
         },
-        testimonialCardHover: {
-            transform: 'translateY(-4px)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        heroSubtitle: {
+            fontSize: "1.18rem",
+            lineHeight: 1.8,
+            color: "#94a3b8",
         },
-        testimonialQuote: {
-            fontSize: '1.125rem',
-            color: '#d1d5db',
-            fontStyle: 'italic',
-            marginBottom: '1.5rem',
-            lineHeight: '1.6',
+        marquee: {
+            marginTop: "3rem",
+            display: "flex",
+            justifyContent: "center",
+            gap: "1.5rem",
+            flexWrap: "wrap",
+            color: "#64748b",
+            fontSize: "0.95rem",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
         },
-        testimonialAuthor: {
-            fontWeight: '600',
-            color: '#38bdf8',
-            marginBottom: '0.25rem',
+        section: {
+            padding: "5rem 2rem",
         },
-        testimonialRole: {
-            color: '#6b7280',
-            fontSize: '0.875rem',
+        container: {
+            maxWidth: "1200px",
+            margin: "0 auto",
+        },
+        statGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "1.5rem",
+        },
+        statCard: {
+            background: "rgba(30, 41, 59, 0.45)",
+            border: "1px solid rgba(148, 163, 184, 0.2)",
+            borderRadius: "1rem",
+            padding: "1.75rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+            boxShadow: "0 20px 45px -20px rgba(14, 165, 233, 0.3)",
+        },
+        statValue: {
+            fontSize: "2.4rem",
+            fontWeight: 700,
+            color: "#38bdf8",
+        },
+        statLabel: {
+            fontSize: "1rem",
+            color: "#e2e8f0",
+            fontWeight: 600,
+        },
+        statCaption: {
+            fontSize: "0.9rem",
+            color: "#94a3b8",
+            lineHeight: 1.6,
+        },
+        quoteGrid: {
+            marginTop: "3rem",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "1.75rem",
+        },
+        quoteCard: {
+            background: "rgba(17, 24, 39, 0.75)",
+            border: "1px solid rgba(56, 189, 248, 0.25)",
+            borderRadius: "1.1rem",
+            padding: "2.25rem 2rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            boxShadow: "0 25px 60px -30px rgba(56, 189, 248, 0.45)",
+        },
+        quoteMark: {
+            fontSize: "2.5rem",
+            color: "rgba(56, 189, 248, 0.65)",
+        },
+        quoteText: {
+            fontSize: "1.1rem",
+            lineHeight: 1.8,
+            color: "#cbd5f5",
+        },
+        quoteAuthor: {
+            fontWeight: 700,
+            color: "#e2e8f0",
+        },
+        quoteRole: {
+            color: "#94a3b8",
+            fontSize: "0.92rem",
+        },
+        panelSection: {
+            background: "rgba(10, 15, 26, 0.85)",
+            borderRadius: "1.25rem",
+            border: "1px solid rgba(148, 163, 184, 0.18)",
+            padding: "3rem",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "2rem",
+        },
+        panelCard: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+        },
+        panelTitle: {
+            fontSize: "1.1rem",
+            fontWeight: 600,
+            color: "#e2e8f0",
+        },
+        panelList: {
+            margin: 0,
+            paddingLeft: "1.25rem",
+            color: "#94a3b8",
+            fontSize: "0.95rem",
+            lineHeight: 1.6,
+        },
+        ctaBlock: {
+            textAlign: "center",
+            marginTop: "4rem",
+        },
+        ctaTitle: {
+            fontSize: "2.15rem",
+            fontWeight: 700,
+            color: "#ffffff",
+            marginBottom: "1rem",
+        },
+        ctaDescription: {
+            color: "#94a3b8",
+            maxWidth: "560px",
+            margin: "0 auto 2rem",
+            lineHeight: 1.7,
+        },
+        ctaButton: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
+            background: "linear-gradient(to right, #38bdf8, #60a5fa)",
+            color: "#0f172a",
+            padding: "1rem 2.75rem",
+            borderRadius: "9999px",
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            textDecoration: "none",
+            border: "none",
         },
     };
 
     return (
-        <div style={styles.landingPage}>
+        <div style={styles.page}>
             <LandingNavbar />
-            <section style={styles.testimonialsSection}>
-                <div style={styles.testimonialsContainer}>
-                    <h2 style={styles.testimonialsTitle}>
-                        What Our Users Say
-                    </h2>
-                    <p
-                        style={{
-                            color: "#94a3b8",
-                            fontSize: "1.15rem",
-                            textAlign: "center",
-                            margin: "0 auto 2.5rem auto",
-                            maxWidth: 600,
-                            fontWeight: 500,
-                        }}
-                    >
-                        Real stories from real users — see how FocusFlow is helping
-                        people boost their productivity, stay organized, and achieve
-                        their goals every day.
+            <section style={styles.hero}>
+                <div style={styles.heroInner}>
+                    <h1 style={styles.heroTitle}>
+                        Voices from leading teams who <span style={styles.heroHighlight}>protect their focus</span>
+                    </h1>
+                    <p style={styles.heroSubtitle}>
+                        FocusFlow powers product orgs, creative studios, and student cohorts around the globe. Here’s
+                        how they’re reclaiming time and momentum.
                     </p>
-
-                    {/* Rating Statistics */}
-                    <div style={{
-                        background: "rgba(30, 41, 59, 0.5)",
-                        backdropFilter: "blur(8px)",
-                        borderRadius: "1rem",
-                        border: "1px solid #334155",
-                        padding: "2rem",
-                        marginBottom: "3rem",
-                        textAlign: "center",
-                    }}>
-                        <h3 style={{ color: "#38bdf8", fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>
-                            ⭐ User Ratings
-                        </h3>
-                        <div style={{ fontSize: "3rem", fontWeight: 800, color: "#38bdf8", marginBottom: "0.5rem" }}>
-                            4.8/5
-                        </div>
-                        <p style={{ color: "#94a3b8", marginBottom: "2rem" }}>Based on 1,234 reviews</p>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", maxWidth: "800px", margin: "0 auto" }}>
-                            {[
-                                { label: "Ease of Use", rating: 4.9 },
-                                { label: "Features", rating: 4.8 },
-                                { label: "Design", rating: 4.9 },
-                                { label: "Support", rating: 4.7 },
-                            ].map((item, idx) => (
-                                <div key={idx}>
-                                    <div style={{ color: "#ffffff", fontSize: "1rem", marginBottom: "0.5rem" }}>{item.label}</div>
-                                    <div style={{ color: "#38bdf8", fontSize: "1.5rem", fontWeight: 700 }}>
-                                        {"⭐".repeat(Math.floor(item.rating))} {item.rating}/5
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                    <div style={styles.marquee}>
+                        {marqueeLogos.map((logo) => (
+                            <span key={logo.name}>{logo.name}</span>
+                        ))}
                     </div>
+                </div>
+            </section>
 
-                    <div style={styles.testimonialsGrid}>
-                        {testimonials.map((testimonial, index) => (
-                            <div 
-                                key={index} 
-                                className="hover-card"
-                                style={styles.testimonialCard}
-                            >
-                                <blockquote style={styles.testimonialQuote}>
-                                    "{testimonial.quote}"
-                                </blockquote>
-                                <div style={styles.testimonialAuthor}>
-                                    {testimonial.author}
-                                </div>
-                                <div style={styles.testimonialRole}>
-                                    {testimonial.role}
+            {/* Stats */}
+            <section style={styles.section}>
+                <div style={styles.container}>
+                    <div style={styles.statGrid}>
+                        {successStats.map((stat) => (
+                            <div key={stat.label} style={styles.statCard}>
+                                <div style={styles.statValue}>{stat.value}</div>
+                                <div style={styles.statLabel}>{stat.label}</div>
+                                <div style={styles.statCaption}>{stat.caption}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Quotes */}
+            <section style={styles.section}>
+                <div style={styles.container}>
+                    <div style={styles.quoteGrid}>
+                        {testimonialQuotes.map((item, idx) => (
+                            <div key={idx} className="hover-card" style={styles.quoteCard}>
+                                <div style={styles.quoteMark}>“</div>
+                                <p style={styles.quoteText}>{item.quote}</p>
+                                <div>
+                                    <div style={styles.quoteAuthor}>{item.author}</div>
+                                    <div style={styles.quoteRole}>{item.role}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div
-                        style={{
-                            marginTop: "3rem",
-                            background: "rgba(30, 41, 59, 0.5)",
-                            backdropFilter: "blur(8px)",
-                            borderRadius: "0.75rem",
-                            border: "1px solid #334155",
-                            padding: "1.5rem 1.5rem",
-                            textAlign: "center",
-                            color: "#94a3b8",
-                            fontSize: "1.08rem",
-                        }}
-                    >
-                        Want to share your own FocusFlow story? <br />
-                        <a
-                            href="mailto:focusflow@studentproject.com"
-                            style={{
-                                color: "#38bdf8",
-                                fontWeight: 600,
-                                textDecoration: "underline",
-                            }}
-                        >
-                            Send us your feedback
-                        </a>{" "}
-                        and you could be featured here!
+                </div>
+            </section>
+
+            {/* Industry Panels */}
+            <section style={styles.section}>
+                <div style={styles.container}>
+                    <div style={styles.panelSection}>
+                        {industryPanels.map((panel) => (
+                            <div key={panel.title} style={styles.panelCard}>
+                                <div style={styles.panelTitle}>{panel.title}</div>
+                                <ul style={styles.panelList}>
+                                    {panel.points.map((point) => (
+                                        <li key={point}>{point}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </div>
+                </div>
+            </section>
+
+            {/* CTA */}
+            <section style={{ ...styles.section, paddingBottom: "4rem" }}>
+                <div style={styles.ctaBlock}>
+                    <div style={styles.ctaTitle}>Ready to add your own headline?</div>
+                    <p style={styles.ctaDescription}>
+                        We partner with teams rolling out focus culture at scale. Book a walkthrough and we’ll tailor a
+                        momentum plan for your crew.
+                    </p>
+                    <a href="mailto:focusflow@studentproject.com" style={styles.ctaButton}>
+                        Share your story
+                    </a>
                 </div>
             </section>
             <LandingFooter />

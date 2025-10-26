@@ -49,180 +49,85 @@ const supportOptions = [
 
 const pageBackgroundStyle = {
     minHeight: "100vh",
-    width: "99vw",
-    background:
-        "linear-gradient(120deg, var(--color-cyan-50) 0%, var(--color-primary-100) 100%)",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: -1,
+    background: "var(--color-gray-50)",
 };
 
 const containerStyle = {
-    width: "95%",
-    maxWidth: "1000px", // Add max width for better centering on large screens
-    margin: "2.5rem auto", // This centers the container
-    padding: "clamp(1.5rem, 4vw, 2.5rem)",
-    background: "rgba(255,255,255,0.85)",
-    borderRadius: "clamp(1rem, 3vw, 2rem)",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-    backdropFilter: "blur(4px)",
-    position: "relative",
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center", // Center all content within container
+    maxWidth: "76rem",
+    margin: "0 auto",
+    padding: "2rem",
 };
 
-const heroAccentBarStyle = {
-    height: "6px",
-    width: "100px",
+const headerStyle = {
     background:
-        "linear-gradient(90deg, var(--color-primary-400), var(--color-cyan-400))",
-    borderRadius: "3px",
-    margin: "0 auto 0.8rem auto",
-    boxShadow: "0 2px 12px 0 rgba(0,0,0,0.10)",
-};
-
-const heroIconCircleStyle = {
-    background:
-        "linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-primary-100) 100%)",
-    borderRadius: "50%",
-    width: "clamp(3.5rem, 6vw, 4.5rem)", // Responsive size
-    height: "clamp(3.5rem, 6vw, 4.5rem)", // Responsive size
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "0 auto 0.1rem auto",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    transition: "transform 0.18s, filter 0.18s",
-};
-
-const heroIconHoverStyle = {
-    transform: "scale(1.08)",
-    filter: "brightness(1.12)",
-};
-
-const heroStyle = {
-    background:
-        "linear-gradient(100deg, var(--color-primary-700) 0%, var(--color-cyan-100) 60%, var(--color-primary-200) 100%)",
-    color: "var(--color-primary-800)",
-    borderRadius: "1.5rem",
-    padding: "clamp(1.5rem, 4vw, 2.5rem)", // Responsive padding
-    width: "100%",
-    boxSizing: "border-box",
-    marginBottom: "2.5rem",
-    boxShadow: "0 4px 32px 0 rgba(0,0,0,0.10)",
-    position: "relative",
-    textAlign: "center",
+        "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
+    borderRadius: "1rem",
+    padding: "2rem",
+    marginBottom: "2rem",
+    color: "var(--color-white)",
+    boxShadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
 };
 
 const titleStyle = {
-    fontSize: "clamp(1.8rem, 4vw, 2.3rem)", // Responsive font size
-    fontWeight: 900,
-    color: "var(--color-primary-900)",
-    margin: 0,
-    letterSpacing: "-1px",
-    textShadow: "0 2px 8px rgba(0,0,0,0.10)",
-    textAlign: "center",
-    fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
-    padding: "0 clamp(0.5rem, 2vw, 1rem)", // Added responsive padding
+    fontSize: "2rem",
+    fontWeight: 700,
+    marginBottom: "0.5rem",
 };
 
 const subtitleStyle = {
-    color: "var(--color-cyan-900)",
-    fontSize: "clamp(1rem, 2vw, 1.18rem)", // Responsive font size
-    width: "100%", // Changed from maxWidth
-    margin: "1.2rem auto 0 auto",
-    fontWeight: 500,
-    lineHeight: 1.6,
-    textAlign: "center",
-    padding: "0 clamp(0.5rem, 2vw, 1rem)", // Added responsive padding
-    boxSizing: "border-box",
+    fontSize: "1.125rem",
+    opacity: 0.9,
 };
 
-const mainStyle = {
-    width: "100%",
-    maxWidth: "900px", // Set a maximum width for better centering
-    margin: "-2.5rem auto 2.5rem auto", // Center the main container
-    padding: "clamp(1rem, 3vw, 1.5rem)",
-    background: "rgba(255,255,255,0.92)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+const optionsGridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "1.5rem",
+};
+
+const optionCardStyle = {
+    background: "var(--panel-bg)",
+    borderRadius: "0.75rem",
+    padding: "1.5rem",
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    border: "1px solid var(--color-gray-200)",
+    transition: "all 0.2s ease-in-out",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center", // Center horizontally
-    justifyContent: "center", // Center vertically if needed
-    gap: "1.5rem",
-    boxSizing: "border-box",
+    cursor: "pointer",
+    textDecoration: "none",
 };
 
-const cardStyle = {
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,0.96) 60%, var(--color-cyan-50) 100%)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.16), 0 1.5px 8px rgba(0,0,0,0.08)",
-    padding: "clamp(1rem, 3vw, 1.5rem)",
-    maxWidth: "750px",
-    width: "100%",
-    margin: "0 auto", // Center horizontally
-    display: "flex",
-    gap: "1rem",
-    alignItems: "flex-start",
-    transition: "all 0.2s ease-in-out",
-    marginBottom: "0",
-    boxSizing: "border-box",
+const optionCardHoverStyle = {
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
 };
 
-const cardHoverStyle = {
-    transform: "translateY(-6px) scale(1.03)",
-    boxShadow: "0 16px 48px rgba(0,0,0,0.22), 0 2px 12px rgba(0,0,0,0.10)",
-    border: "2.5px solid var(--color-primary-400)",
-};
-
-const iconWrapperStyle = {
+const optionIconContainerStyle = {
+    width: "2.5rem",
+    height: "2.5rem",
+    borderRadius: "0.5rem",
+    background: "var(--color-primary-50)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "0.2rem",
-    flexShrink: 0,
-    zIndex: 1,
-    padding: "0.5rem",
-    width: "3rem", // Fixed width for consistent layout
-};
-
-const optionContentStyle = {
-    display: "flex",
-    flexDirection: "column",
-    flex: 1,
-    zIndex: 1,
-    padding: "0 0.5rem", // Add some padding
-    width: "100%",
+    marginBottom: "1rem",
 };
 
 const optionTitleStyle = {
-    fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)", // Responsive font size
-    fontWeight: 700,
-    color: "var(--color-primary-700)",
+    fontSize: "1.125rem",
+    fontWeight: 600,
+    color: "var(--color-gray-900)",
     marginBottom: "0.5rem",
-    letterSpacing: "-0.3px",
 };
 
 const optionDescStyle = {
-    fontSize: "clamp(0.95rem, 2vw, 1.05rem)", // Responsive font size
-    color: "var(--color-gray-700)",
-    marginBottom: "0.75rem",
+    fontSize: "0.875rem",
+    color: "var(--color-gray-600)",
     lineHeight: 1.6,
-    fontWeight: 500,
 };
 
-const optionLinkStyle = {
-    fontSize: "clamp(0.85rem, 1.8vw, 0.95rem)", // Responsive font size
-    color: "var(--color-primary-600)",
-    fontWeight: 600,
-    textDecoration: "underline",
-    transition: "color 0.2s ease",
-};
 
 // Add new responsive styles for icon
 const iconStyle = {
@@ -230,107 +135,38 @@ const iconStyle = {
 };
 
 const DashboardSupport = () => {
-    const [iconHovered, setIconHovered] = useState(false);
     const [cardHovered, setCardHovered] = useState(null);
 
     return (
         <>
             <div style={pageBackgroundStyle} />
             <div style={containerStyle}>
-                <section style={heroStyle}>
-                    <div style={heroAccentBarStyle}></div>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            marginBottom: "1.2rem",
-                        }}
-                    >
-                        <div
-                            style={
-                                iconHovered
-                                    ? {
-                                          ...heroIconCircleStyle,
-                                          ...heroIconHoverStyle,
-                                      }
-                                    : heroIconCircleStyle
-                            }
-                            onMouseEnter={() => setIconHovered(true)}
-                            onMouseLeave={() => setIconHovered(false)}
-                        >
-                            <FaQuestionCircle
-                                style={{
-                                    fontSize: "2.5rem",
-                                    color: "var(--color-white)",
-                                }}
-                            />
-                        </div>
-                        <h1
-                            style={{
-                                ...titleStyle,
-                                margin: 0,
-                                textAlign: "center",
-                                lineHeight: 1.1,
-                                display: "block",
-                                marginTop: 0,
-                            }}
-                        >
-                            Support
-                        </h1>
-                    </div>
+                <div style={headerStyle}>
+                    <h1 style={titleStyle}>Support & Help</h1>
                     <p style={subtitleStyle}>
                         Need help? Find answers, contact our team, or connect
                         with the FocusFlow community.
                     </p>
-                </section>
-                <main style={mainStyle}>
+                </div>
+                <div style={optionsGridStyle}>
                     {supportOptions.map((option, idx) => (
-                        <div
+                        <a
                             key={idx}
+                            href={option.link}
                             style={
                                 cardHovered === idx
-                                    ? { ...cardStyle, ...cardHoverStyle }
-                                    : cardStyle
+                                    ? { ...optionCardStyle, ...optionCardHoverStyle }
+                                    : optionCardStyle
                             }
                             onMouseEnter={() => setCardHovered(idx)}
                             onMouseLeave={() => setCardHovered(null)}
                         >
-                            <div style={iconWrapperStyle}>{option.icon}</div>
-                            <div style={optionContentStyle}>
-                                <div style={optionTitleStyle}>
-                                    {option.title}
-                                </div>
-                                <div style={optionDescStyle}>
-                                    {option.description}
-                                </div>
-                                <div style={optionLinkStyle}>
-                                    {option.link.startsWith("mailto:") ? (
-                                        <a
-                                            href={option.link}
-                                            style={{
-                                                color: "inherit",
-                                                textDecoration: "inherit",
-                                            }}
-                                        >
-                                            {option.title}
-                                        </a>
-                                    ) : (
-                                        <a
-                                            href={option.link}
-                                            style={{
-                                                color: "inherit",
-                                                textDecoration: "inherit",
-                                            }}
-                                        >
-                                            Go to {option.title}
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                            <div style={optionIconContainerStyle}>{option.icon}</div>
+                            <div style={optionTitleStyle}>{option.title}</div>
+                            <div style={optionDescStyle}>{option.description}</div>
+                        </a>
                     ))}
-                </main>
+                </div>
             </div>
         </>
     );

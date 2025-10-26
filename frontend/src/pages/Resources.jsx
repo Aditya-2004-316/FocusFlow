@@ -240,6 +240,8 @@ const Resources = () => {
         gap: "1rem",
         marginBottom: "2rem",
         flexWrap: "wrap",
+        borderBottom: "2px solid var(--color-gray-200)",
+        paddingBottom: "0.5rem",
     };
 
     const categoryButtonStyle = {
@@ -363,6 +365,264 @@ const Resources = () => {
     const actionButtonHoverStyle = {
         background: "var(--color-primary-100)",
     };
+
+    const sectionHeadingStyle = {
+        fontSize: "1.5rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
+        marginBottom: "0.5rem",
+    };
+
+    const sectionSubtitleStyle = {
+        color: "var(--color-gray-600)",
+        fontSize: "0.95rem",
+        marginBottom: "1.5rem",
+        lineHeight: 1.6,
+    };
+
+    const tracksGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.5rem",
+        marginBottom: "2.5rem",
+    };
+
+    const trackCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const trackHeaderStyle = {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "0.75rem",
+        flexWrap: "wrap",
+    };
+
+    const trackMetaStyle = {
+        display: "flex",
+        gap: "0.5rem",
+        flexWrap: "wrap",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "var(--color-primary-700)",
+    };
+
+    const trackBadgeStyle = {
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        background: "var(--color-primary-50)",
+    };
+
+    const trackDescriptionStyle = {
+        fontSize: "0.9rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const trackOutlineListStyle = {
+        paddingLeft: "1.25rem",
+        color: "var(--color-gray-600)",
+        fontSize: "0.85rem",
+        lineHeight: 1.6,
+        margin: 0,
+    };
+
+    const toolkitSectionStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.75rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        marginBottom: "2.5rem",
+    };
+
+    const toolkitGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.5rem",
+    };
+
+    const toolkitCardStyle = {
+        background: "var(--color-gray-50)",
+        borderRadius: "0.75rem",
+        padding: "1.25rem",
+        border: "1px solid var(--color-gray-200)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const toolkitTitleStyle = {
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const toolkitDescriptionStyle = {
+        fontSize: "0.9rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const toolkitListStyle = {
+        paddingLeft: "1.25rem",
+        color: "var(--color-gray-600)",
+        fontSize: "0.85rem",
+        lineHeight: 1.6,
+        margin: 0,
+    };
+
+    const highlightGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.5rem",
+        marginBottom: "2.5rem",
+    };
+
+    const highlightCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.75rem",
+        padding: "1.5rem",
+        border: "1px solid var(--color-gray-200)",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const highlightHeaderStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
+    };
+
+    const highlightIconStyle = {
+        width: "2.5rem",
+        height: "2.5rem",
+        borderRadius: "0.75rem",
+        background: "var(--color-primary-50)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "1.35rem",
+        color: "var(--color-primary-600)",
+    };
+
+    const highlightMetricStyle = {
+        fontSize: "1.75rem",
+        fontWeight: 700,
+        color: "var(--color-primary-700)",
+    };
+
+    const highlightDescriptionStyle = {
+        fontSize: "0.9rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
+    };
+
+    const learningTracks = [
+        {
+            title: "Kickstart FocusFlow",
+            duration: "7-day plan",
+            focusAreas: ["Habits", "Timers"],
+            description:
+                "Build a reliable daily rhythm by pairing focus sessions with concise reflections and distraction logs.",
+            outline: [
+                "Day 1-2: Set up presets and baseline metrics",
+                "Day 3-4: Layer in distraction logging and quick reviews",
+                "Day 5-7: Add weekly retrospective and next-week planning",
+            ],
+        },
+        {
+            title: "Deep Work Accelerator",
+            duration: "14-day sprint",
+            focusAreas: ["Deep work", "Planning"],
+            description:
+                "Move a critical project forward with extended focus blocks, energy audits, and end-of-day shutdowns.",
+            outline: [
+                "Week 1: Map milestones and schedule protected blocks",
+                "Week 2: Optimize breaks, automate context switches",
+                "Final check-in: Share wins and iterate on the system",
+            ],
+        },
+        {
+            title: "Creative Recharge",
+            duration: "Weekend reset",
+            focusAreas: ["Creativity", "Wellness"],
+            description:
+                "Blend intentional rest with low-stakes creative sessions to reset attention and spark new ideas.",
+            outline: [
+                "Saturday AM: Light planning + inspiration sprint",
+                "Saturday PM: Guided focus block with playlist",
+                "Sunday: Reflection walk and journaling prompts",
+            ],
+        },
+    ];
+
+    const resourceBundles = [
+        {
+            title: "Deep work toolkit",
+            description:
+                "Everything you need to double down on immersive creation, from templates to pre-session rituals.",
+            items: [
+                "Focus block agenda template",
+                "Context-switch minimizer checklist",
+                "Ambient playlist recommendations",
+            ],
+        },
+        {
+            title: "Study sprint pack",
+            description:
+                "Designed for exam prep and coursework bursts with accountability prompts and reflection sheets.",
+            items: [
+                "30-day accountability tracker",
+                "Active recall flashcard guide",
+                "Weekly review and improvement retro",
+            ],
+        },
+        {
+            title: "Team focus library",
+            description:
+                "Help your squad sync on priorities with shared meeting notes, async updates, and retrospectives.",
+            items: [
+                "Stand-up notes template",
+                "Async handoff checklist",
+                "Retrospective mural starter",
+            ],
+        },
+    ];
+
+    const communityHighlights = [
+        {
+            icon: "🚀",
+            title: "Creators using templates",
+            metric: "2.4k downloads",
+            description:
+                "Members rely on the template hub to spin up project plans and personal dashboards in minutes.",
+        },
+        {
+            icon: "🎧",
+            title: "Focus playlists curated",
+            metric: "48 mixes",
+            description:
+                "From lo-fi beats to binaural mixes, explore playlists shared by the community to match any session.",
+        },
+        {
+            icon: "📝",
+            title: "Guides bookmarked",
+            metric: "6.3k saves",
+            description:
+                "Most-loved guides cover distraction-proof routines, energy management, and weekly planning rituals.",
+        },
+    ];
 
     const filteredResources = resources.filter((resource) => {
         const matchesCategory =
@@ -534,50 +794,40 @@ const Resources = () => {
 
             <div style={categoriesContainerStyle}>
                 <button
-                    style={
-                        activeCategory === "all"
-                            ? activeCategoryStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "all" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("all")}
                 >
                     All Resources
                 </button>
                 <button
-                    style={
-                        activeCategory === "guide"
-                            ? activeCategoryStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "guide" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("guide")}
                 >
                     Guides
                 </button>
                 <button
-                    style={
-                        activeCategory === "video"
-                            ? activeCategoryStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "video" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("video")}
                 >
                     Videos
                 </button>
                 <button
-                    style={
-                        activeCategory === "article"
-                            ? activeCategoryStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "article" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("article")}
                 >
                     Articles
                 </button>
                 <button
-                    style={
-                        activeCategory === "template"
-                            ? activeCategoryStyle
-                            : categoryButtonStyle
+                    className={
+                        activeCategory === "template" ? "btn-primary" : "btn-secondary"
                     }
                     onClick={() => setActiveCategory("template")}
                 >
@@ -687,6 +937,87 @@ const Resources = () => {
                     </div>
                 ))}
             </div>
+
+            <section>
+                <h2 style={sectionHeadingStyle}>Guided learning tracks</h2>
+                <p style={sectionSubtitleStyle}>
+                    Follow a curated sequence of guides, videos, and templates tailored to the type of progress
+                    you're chasing—from your first FocusFlow setup to deep work sprints.
+                </p>
+                <div style={tracksGridStyle}>
+                    {learningTracks.map((track, idx) => (
+                        <div key={idx} style={trackCardStyle}>
+                            <div style={trackHeaderStyle}>
+                                <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--color-gray-900)" }}>
+                                    {track.title}
+                                </span>
+                                <span style={trackBadgeStyle}>{track.duration}</span>
+                            </div>
+                            <div style={trackMetaStyle}>
+                                {track.focusAreas.map((area) => (
+                                    <span key={area} style={trackBadgeStyle}>
+                                        {area}
+                                    </span>
+                                ))}
+                            </div>
+                            <p style={trackDescriptionStyle}>{track.description}</p>
+                            <ul style={trackOutlineListStyle}>
+                                {track.outline.map((item, outlineIdx) => (
+                                    <li key={outlineIdx}>{item}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section style={toolkitSectionStyle}>
+                <h2 style={sectionHeadingStyle}>Downloadable toolkits</h2>
+                <p style={sectionSubtitleStyle}>
+                    Grab ready-made bundles that pair worksheets, checklists, and playlists so you can apply the
+                    concepts instantly.
+                </p>
+                <div style={toolkitGridStyle}>
+                    {resourceBundles.map((bundle, idx) => (
+                        <div key={idx} style={toolkitCardStyle}>
+                            <div style={toolkitTitleStyle}>{bundle.title}</div>
+                            <p style={toolkitDescriptionStyle}>{bundle.description}</p>
+                            <ul style={toolkitListStyle}>
+                                {bundle.items.map((item, itemIdx) => (
+                                    <li key={itemIdx}>{item}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section>
+                <h2 style={sectionHeadingStyle}>Community highlights</h2>
+                <p style={sectionSubtitleStyle}>
+                    See how other makers are building momentum with resources shared across the FocusFlow community.
+                </p>
+                <div style={highlightGridStyle}>
+                    {communityHighlights.map((highlight, idx) => (
+                        <div key={idx} style={highlightCardStyle}>
+                            <div style={highlightHeaderStyle}>
+                                <div style={highlightIconStyle}>{highlight.icon}</div>
+                                <div
+                                    style={{
+                                        fontSize: "1rem",
+                                        fontWeight: 600,
+                                        color: "var(--color-gray-900)",
+                                    }}
+                                >
+                                    {highlight.title}
+                                </div>
+                            </div>
+                            <div style={highlightMetricStyle}>{highlight.metric}</div>
+                            <p style={highlightDescriptionStyle}>{highlight.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
             {selectedResource && (
                 <div
