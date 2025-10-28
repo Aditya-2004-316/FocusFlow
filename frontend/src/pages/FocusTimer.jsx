@@ -84,137 +84,244 @@ const FocusTimer = () => {
     };
 
     const containerStyle = {
-        maxWidth: "76rem",
+        minHeight: "100vh",
+        padding: "4rem 1.75rem 4rem",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
+    };
+
+    const innerStyle = {
+        maxWidth: "1120px",
         margin: "0 auto",
-        padding: "2rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "2.75rem",
     };
 
     const headerStyle = {
-        background:
-            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-        borderRadius: "1rem",
-        padding: "2rem",
-        marginBottom: "2rem",
-        color: "var(--color-white)",
-        boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        background: "var(--panel-bg)",
+        borderRadius: "1.5rem",
+        border: "1px solid var(--input-border)",
+        padding: "2.75rem",
+        boxShadow: "var(--shadow-lg)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.5rem",
     };
 
     const titleStyle = {
-        fontSize: "2rem",
+        fontSize: "2.35rem",
         fontWeight: 700,
-        marginBottom: "0.5rem",
+        lineHeight: 1.2,
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        margin: 0,
     };
 
     const subtitleStyle = {
-        fontSize: "1.125rem",
-        opacity: 0.9,
-        marginBottom: "1.5rem",
+        fontSize: "1.08rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.75,
+        maxWidth: "44rem",
+    };
+
+    const chipRowStyle = {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.65rem",
+    };
+
+    const chipStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+        padding: "0.45rem 0.85rem",
+        borderRadius: "9999px",
+        fontSize: "0.85rem",
+        fontWeight: 600,
     };
 
     const cardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        border: "1px solid var(--color-gray-200)",
+        borderRadius: "1.1rem",
+        padding: "2rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-lg)",
         marginBottom: "1.5rem",
+    };
+
+    const timerContainerStyle = {
+        display: "grid",
+        gap: "2rem",
+        justifyItems: "center",
+    };
+
+    const timerDisplayStyle = {
+        fontSize: "4.5rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
+        letterSpacing: "0.08em",
+        textAlign: "center",
     };
 
     const timerControlsStyle = {
         display: "flex",
         justifyContent: "center",
-        gap: "1.25rem",
-        margin: "2rem 0 1.5rem 0",
+        gap: "1rem",
         flexWrap: "wrap",
     };
 
     const timerButtonStyle = {
-        padding: "0.75rem 2rem",
-        fontSize: "1.125rem",
+        padding: "0.85rem 2.3rem",
+        fontSize: "1rem",
         fontWeight: 600,
-        borderRadius: "0.5rem",
-        border: "none",
+        borderRadius: "9999px",
+        border: "1px solid var(--color-primary-200)",
         cursor: "pointer",
-        transition: "background 0.2s, color 0.2s",
-        marginBottom: "0.5rem",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.6rem",
     };
 
     const primaryButtonStyle = {
         ...timerButtonStyle,
-        background: "var(--color-primary-600)",
-        color: "#fff",
+        background: "linear-gradient(to right, #38bdf8, #60a5fa)",
+        border: "none",
+        color: "#0f172a",
+        boxShadow: "0 18px 35px -20px rgba(56, 189, 248, 0.65)",
     };
+
     const secondaryButtonStyle = {
         ...timerButtonStyle,
-        background: "var(--color-primary-600)",
-        color: "#fff",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+    };
+
+    const sessionGridStyle = {
+        display: "grid",
+        gap: "1.25rem",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        marginTop: "1.5rem",
+    };
+
+    const sessionItemStyle = {
+        background: "var(--color-gray-50)",
+        borderRadius: "0.85rem",
+        padding: "1.25rem 1.35rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.45rem",
+        border: "1px solid var(--color-gray-200)",
+    };
+
+    const sessionLabelStyle = {
+        fontSize: "0.85rem",
+        letterSpacing: "0.04em",
+        textTransform: "uppercase",
+        color: "var(--color-gray-600)",
+        fontWeight: 600,
+    };
+
+    const sessionValueStyle = {
+        fontSize: "1.5rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
     };
 
     const featuresGridStyle = {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
         gap: "1.5rem",
-        marginBottom: "2rem",
+    };
+
+    const featureCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.95rem",
+        padding: "1.7rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.85rem",
     };
 
     const featureIconStyle = {
-        color: "var(--color-primary-600)",
-        margin: "0 auto 1rem",
-        width: "3.5rem",
-        height: "3.5rem",
-        display: "block",
+        color: "var(--color-primary-500)",
+        margin: "0 auto",
+        width: "3.1rem",
+        height: "3.1rem",
+    };
+
+    const featureTitleStyle = {
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "var(--color-gray-900)",
+    };
+
+    const featureDescriptionStyle = {
+        fontSize: "0.9rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.6,
     };
 
     const contentSectionStyle = {
-        margin: "2.5rem 0",
+        margin: 0,
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.5rem",
     };
 
     const sectionTitleStyle = {
-        fontSize: "1.5rem",
+        fontSize: "1.55rem",
         fontWeight: 700,
         color: "var(--color-gray-900)",
-        marginBottom: "0.5rem",
+        marginBottom: "0.4rem",
     };
 
     const sectionDescriptionStyle = {
-        fontSize: "0.95rem",
+        fontSize: "0.98rem",
         color: "var(--color-gray-600)",
-        marginBottom: "1.5rem",
-        lineHeight: 1.6,
+        marginBottom: "1rem",
+        lineHeight: 1.7,
     };
 
     const presetGridStyle = {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
         gap: "1.5rem",
     };
 
     const presetCardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        borderRadius: "0.9rem",
+        padding: "1.75rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
     };
 
     const presetIconStyle = {
-        width: "2.75rem",
-        height: "2.75rem",
-        borderRadius: "0.75rem",
-        background: "var(--color-primary-50)",
+        width: "2.8rem",
+        height: "2.8rem",
+        borderRadius: "0.85rem",
+        background: "var(--color-primary-100)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "1.5rem",
+        fontSize: "1.55rem",
         color: "var(--color-primary-600)",
     };
 
     const presetHeadingStyle = {
-        fontSize: "1.05rem",
+        fontSize: "1.08rem",
         fontWeight: 600,
         color: "var(--color-gray-900)",
     };
@@ -225,13 +332,13 @@ const FocusTimer = () => {
         flexWrap: "wrap",
         fontSize: "0.85rem",
         fontWeight: 600,
-        color: "var(--color-primary-700)",
+        color: "var(--color-primary-600)",
     };
 
     const presetDescriptionStyle = {
-        fontSize: "0.875rem",
+        fontSize: "0.9rem",
         color: "var(--color-gray-600)",
-        lineHeight: 1.6,
+        lineHeight: 1.65,
     };
 
     const ritualListStyle = {
@@ -242,31 +349,31 @@ const FocusTimer = () => {
     };
 
     const ritualCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        background: "rgba(17, 24, 39, 0.68)",
+        borderRadius: "0.9rem",
+        padding: "1.6rem",
+        border: "1px solid rgba(148, 163, 184, 0.18)",
+        boxShadow: "0 20px 45px -30px rgba(8, 47, 73, 0.6)",
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
     };
 
     const ritualTitleStyle = {
-        fontSize: "1rem",
+        fontSize: "1.05rem",
         fontWeight: 600,
-        color: "var(--color-gray-900)",
+        color: "#f1f5f9",
     };
 
     const ritualDescriptionStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
+        fontSize: "0.9rem",
+        color: "#cbd5f5",
+        lineHeight: 1.65,
     };
 
     const ritualStepListStyle = {
         paddingLeft: "1.25rem",
-        color: "var(--color-gray-600)",
+        color: "#9fb6ff",
         fontSize: "0.85rem",
         lineHeight: 1.6,
         margin: 0,
@@ -280,26 +387,56 @@ const FocusTimer = () => {
     };
 
     const strategyCardStyle = {
-        background: "var(--color-gray-50)",
-        borderRadius: "0.75rem",
-        padding: "1.25rem",
+        background: "rgba(56, 189, 248, 0.08)",
+        borderRadius: "0.85rem",
+        padding: "1.35rem",
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
-        border: "1px solid var(--color-gray-200)",
+        border: "1px solid rgba(56, 189, 248, 0.25)",
     };
 
     const strategyTitleStyle = {
-        fontSize: "1rem",
+        fontSize: "1.02rem",
         fontWeight: 600,
-        color: "var(--color-gray-900)",
+        color: "#f1f5f9",
     };
 
     const strategyDescriptionStyle = {
-        fontSize: "0.85rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
+        fontSize: "0.9rem",
+        color: "#cbd5f5",
+        lineHeight: 1.65,
     };
+
+    const heroBadges = [
+        "Adaptive presets",
+        "Intentional breaks",
+        "Ritual-driven focus",
+        "Energy-aware planning",
+    ];
+
+    const featureCards = [
+        {
+            title: "Focus music",
+            description: "Play ambient soundscapes that reinforce deep work blocks.",
+            Icon: MusicalNoteIcon,
+        },
+        {
+            title: "Smart notifications",
+            description: "Stay on track with gentle reminders at the right moments.",
+            Icon: BellIcon,
+        },
+        {
+            title: "Session analytics",
+            description: "Review session-by-session stats without leaving the timer.",
+            Icon: ChartBarIcon,
+        },
+        {
+            title: "Quick settings",
+            description: "Adjust durations, sounds, and cycles while keeping momentum.",
+            Icon: Cog6ToothIcon,
+        },
+    ];
 
     const recommendedPresets = [
         {
@@ -394,269 +531,144 @@ const FocusTimer = () => {
 
     return (
         <div style={containerStyle}>
-            <div style={headerStyle}>
-                <h1 style={titleStyle}>Focus Timer</h1>
-                <p style={subtitleStyle}>
-                    Stay focused and boost your productivity with our Pomodoro
-                    timer
-                </p>
-            </div>
+            <div style={innerStyle}>
+                <section style={headerStyle}>
+                    <div>
+                        <h1 style={titleStyle}>Focus Timer</h1>
+                        <p style={subtitleStyle}>
+                            Build streaks that stick with adaptive focus sessions, intentional breaks,
+                            and quick post-block reflections.
+                        </p>
+                    </div>
+                    <div style={chipRowStyle}>
+                        {heroBadges.map((badge) => (
+                            <span key={badge} style={chipStyle}>
+                                {badge}
+                            </span>
+                        ))}
+                    </div>
+                </section>
 
-            <div className="timer-display">
-                <span className="timer-time">{formatTime(timeLeft)}</span>
-            </div>
-
-            <div className="timer-controls" style={timerControlsStyle}>
-                {isRunning ? (
-                    <button style={primaryButtonStyle} onClick={handlePause}>
-                        <PauseIcon className="h-5 w-5" /> Pause
-                    </button>
-                ) : (
-                    <button style={primaryButtonStyle} onClick={handleStart}>
-                        <PlayIcon className="h-5 w-5" /> Start
-                    </button>
-                )}
-                <button style={primaryButtonStyle} onClick={handleStop}>
-                    <StopIcon className="h-5 w-5" /> Stop
-                </button>
-                <button style={primaryButtonStyle} onClick={handleReset}>
-                    <ArrowPathIcon className="h-5 w-5" /> Reset
-                </button>
-            </div>
-
-            <div
-                className="session-info"
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "2rem",
-                    marginBottom: "2rem",
-                }}
-            >
-                <div className="session-item" style={{ textAlign: "center" }}>
-                    <div
-                        className="session-label"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                            marginBottom: "0.25rem",
-                        }}
-                    >
-                        Current Session
-                    </div>
-                    <div
-                        className="session-value"
-                        style={{
-                            fontSize: "1.25rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                        }}
-                    >
-                        {currentSession}
-                    </div>
-                </div>
-                <div className="session-item" style={{ textAlign: "center" }}>
-                    <div
-                        className="session-label"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                            marginBottom: "0.25rem",
-                        }}
-                    >
-                        Completed Sessions
-                    </div>
-                    <div
-                        className="session-value"
-                        style={{
-                            fontSize: "1.25rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                        }}
-                    >
-                        {completedSessions}
-                    </div>
-                </div>
-                <div className="session-item" style={{ textAlign: "center" }}>
-                    <div
-                        className="session-label"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                            marginBottom: "0.25rem",
-                        }}
-                    >
-                        Mode
-                    </div>
-                    <div
-                        className="session-value"
-                        style={{
-                            fontSize: "1.25rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                        }}
-                    >
-                        {isBreak ? "Break" : "Focus"}
-                    </div>
-                </div>
-            </div>
-
-            <div className="features-grid" style={featuresGridStyle}>
-                <div className="feature-card" style={cardStyle}>
-                    <MusicalNoteIcon style={featureIconStyle} />
-                    <div
-                        className="feature-title"
-                        style={{
-                            fontSize: "1rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                            marginBottom: "0.5rem",
-                        }}
-                    >
-                        Focus Music
-                    </div>
-                    <div
-                        className="feature-description"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                        }}
-                    >
-                        Play ambient sounds to enhance your focus
-                    </div>
-                </div>
-                <div className="feature-card" style={cardStyle}>
-                    <BellIcon style={featureIconStyle} />
-                    <div
-                        className="feature-title"
-                        style={{
-                            fontSize: "1rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                            marginBottom: "0.5rem",
-                        }}
-                    >
-                        Notifications
-                    </div>
-                    <div
-                        className="feature-description"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                        }}
-                    >
-                        Get notified when your session ends
-                    </div>
-                </div>
-                <div className="feature-card" style={cardStyle}>
-                    <ChartBarIcon style={featureIconStyle} />
-                    <div
-                        className="feature-title"
-                        style={{
-                            fontSize: "1rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                            marginBottom: "0.5rem",
-                        }}
-                    >
-                        Statistics
-                    </div>
-                    <div
-                        className="feature-description"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                        }}
-                    >
-                        Track your productivity over time
-                    </div>
-                </div>
-                <div
-                    className="feature-card"
-                    style={cardStyle}
-                    onClick={() => setShowSettings(!showSettings)}
-                >
-                    <Cog6ToothIcon style={featureIconStyle} />
-                    <div
-                        className="feature-title"
-                        style={{
-                            fontSize: "1rem",
-                            fontWeight: 600,
-                            color: "var(--color-gray-900)",
-                            marginBottom: "0.5rem",
-                        }}
-                    >
-                        Settings
-                    </div>
-                    <div
-                        className="feature-description"
-                        style={{
-                            fontSize: "0.875rem",
-                            color: "var(--color-gray-600)",
-                        }}
-                    >
-                        Customize your timer preferences
-                    </div>
-                </div>
-            </div>
-
-            <section style={contentSectionStyle}>
-                <h2 style={sectionTitleStyle}>Recommended session presets</h2>
-                <p style={sectionDescriptionStyle}>
-                    Match your work style with Pomodoro-inspired presets designed for deep focus,
-                    momentum, or creative sprints. Save your favorite combinations to jump in faster.
-                </p>
-                <div style={presetGridStyle}>
-                    {recommendedPresets.map((preset, idx) => (
-                        <div key={idx} style={presetCardStyle}>
-                            <div style={presetIconStyle}>{preset.icon}</div>
-                            <div style={presetHeadingStyle}>{preset.title}</div>
-                            <div style={presetMetaStyle}>
-                                <span>{preset.focus}</span>
-                                <span>{preset.break}</span>
+                <section style={cardStyle}>
+                    <div style={timerContainerStyle}>
+                        <div style={timerDisplayStyle}>{formatTime(timeLeft)}</div>
+                        <div style={timerControlsStyle}>
+                            {isRunning ? (
+                                <button style={primaryButtonStyle} onClick={handlePause}>
+                                    <PauseIcon className="h-5 w-5" /> Pause
+                                </button>
+                            ) : (
+                                <button style={primaryButtonStyle} onClick={handleStart}>
+                                    <PlayIcon className="h-5 w-5" /> Start
+                                </button>
+                            )}
+                            <button style={secondaryButtonStyle} onClick={handleStop}>
+                                <StopIcon className="h-5 w-5" /> Stop
+                            </button>
+                            <button style={secondaryButtonStyle} onClick={handleReset}>
+                                <ArrowPathIcon className="h-5 w-5" /> Reset
+                            </button>
+                        </div>
+                        <div style={sessionGridStyle}>
+                            <div style={sessionItemStyle}>
+                                <span style={sessionLabelStyle}>Current session</span>
+                                <span style={sessionValueStyle}>{currentSession}</span>
                             </div>
-                            <p style={presetDescriptionStyle}>{preset.description}</p>
+                            <div style={sessionItemStyle}>
+                                <span style={sessionLabelStyle}>Completed sessions</span>
+                                <span style={sessionValueStyle}>{completedSessions}</span>
+                            </div>
+                            <div style={sessionItemStyle}>
+                                <span style={sessionLabelStyle}>Mode</span>
+                                <span style={sessionValueStyle}>{isBreak ? "Break" : "Focus"}</span>
+                            </div>
                         </div>
-                    ))}
-                </div>
-            </section>
+                    </div>
+                </section>
 
-            <section style={contentSectionStyle}>
-                <h2 style={sectionTitleStyle}>Focus rituals</h2>
-                <p style={sectionDescriptionStyle}>
-                    Build a repeatable rhythm around every session—from the moment you hit start to
-                    the way you close out. Rituals reduce ramp-up time and keep your brain in focus mode.
-                </p>
-                <div style={ritualListStyle}>
-                    {focusRituals.map((ritual, idx) => (
-                        <div key={idx} style={ritualCardStyle}>
-                            <div style={ritualTitleStyle}>{ritual.title}</div>
-                            <p style={ritualDescriptionStyle}>{ritual.description}</p>
-                            <ul style={ritualStepListStyle}>
-                                {ritual.steps.map((step, stepIdx) => (
-                                    <li key={stepIdx}>{step}</li>
-                                ))}
-                            </ul>
+                <section style={cardStyle}>
+                    <div style={contentSectionStyle}>
+                        <h2 style={sectionTitleStyle}>Focus companion tools</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Layer in exactly what you need mid-session—from immersive soundscapes to
+                            quick configuration tweaks—without losing momentum.
+                        </p>
+                        <div style={featuresGridStyle}>
+                            {featureCards.map(({ title, description, Icon }) => (
+                                <div key={title} style={featureCardStyle}>
+                                    <Icon style={featureIconStyle} />
+                                    <div style={featureTitleStyle}>{title}</div>
+                                    <p style={featureDescriptionStyle}>{description}</p>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </section>
+                    </div>
+                </section>
 
-            <section style={contentSectionStyle}>
-                <h2 style={sectionTitleStyle}>Recovery strategies</h2>
-                <p style={sectionDescriptionStyle}>
-                    Sustain focus by steering your energy, batching similar work, and weaving movement
-                    into your day. Try one new strategy each week and observe the impact.
-                </p>
-                <div style={strategyGridStyle}>
-                    {recoveryStrategies.map((strategy, idx) => (
-                        <div key={idx} style={strategyCardStyle}>
-                            <div style={strategyTitleStyle}>{strategy.title}</div>
-                            <p style={strategyDescriptionStyle}>{strategy.description}</p>
+                <section style={cardStyle}>
+                    <div style={contentSectionStyle}>
+                        <h2 style={sectionTitleStyle}>Recommended session presets</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Match your work style with Pomodoro-inspired presets designed for deep focus,
+                            momentum, or creative sprints. Save your favorite combinations to jump in faster.
+                        </p>
+                        <div style={presetGridStyle}>
+                            {recommendedPresets.map((preset, idx) => (
+                                <div key={idx} style={presetCardStyle}>
+                                    <div style={presetIconStyle}>{preset.icon}</div>
+                                    <div style={presetHeadingStyle}>{preset.title}</div>
+                                    <div style={presetMetaStyle}>
+                                        <span>{preset.focus}</span>
+                                        <span>{preset.break}</span>
+                                    </div>
+                                    <p style={presetDescriptionStyle}>{preset.description}</p>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </section>
+                    </div>
+                </section>
+
+                <section style={cardStyle}>
+                    <div style={contentSectionStyle}>
+                        <h2 style={sectionTitleStyle}>Focus rituals</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Build a repeatable rhythm around every session—from the moment you hit start to
+                            the way you close out. Rituals reduce ramp-up time and keep your brain in focus mode.
+                        </p>
+                        <div style={ritualListStyle}>
+                            {focusRituals.map((ritual, idx) => (
+                                <div key={idx} style={ritualCardStyle}>
+                                    <div style={ritualTitleStyle}>{ritual.title}</div>
+                                    <p style={ritualDescriptionStyle}>{ritual.description}</p>
+                                    <ul style={ritualStepListStyle}>
+                                        {ritual.steps.map((step, stepIdx) => (
+                                            <li key={stepIdx}>{step}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section style={cardStyle}>
+                    <div style={contentSectionStyle}>
+                        <h2 style={sectionTitleStyle}>Recovery strategies</h2>
+                        <p style={sectionDescriptionStyle}>
+                            Sustain focus by steering your energy, batching similar work, and weaving movement
+                            into your day. Try one new strategy each week and observe the impact.
+                        </p>
+                        <div style={strategyGridStyle}>
+                            {recoveryStrategies.map((strategy, idx) => (
+                                <div key={idx} style={strategyCardStyle}>
+                                    <div style={strategyTitleStyle}>{strategy.title}</div>
+                                    <p style={strategyDescriptionStyle}>{strategy.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
     );
 };

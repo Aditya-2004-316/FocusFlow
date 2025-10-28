@@ -63,6 +63,7 @@ import LandingCareers from "./pages/Careers.jsx";
 import Privacy from "./pages/Privacy.jsx";
 import Terms from "./pages/Terms.jsx";
 import Security from "./pages/Security.jsx";
+import Product from "./pages/Product.jsx";
 import DashboardFeatures from "./pages/DashboardFeatures.jsx";
 import DashboardFAQ from "./pages/DashboardFAQ.jsx";
 import DashboardAbout from "./pages/DashboardAbout.jsx";
@@ -210,349 +211,317 @@ function Dashboard() {
         setDistractions((prev) => prev.filter((d) => d.id !== id));
     };
 
-    const containerStyle = {
-        maxWidth: "76rem",
-        margin: "0 auto",
-        padding: "2rem",
+    const dashboardStyles = {
+        wrapper: {
+            minHeight: "100%",
+            padding: "3.5rem 2rem 4rem",
+            background: "var(--color-white)",
+            color: "var(--color-gray-900)",
+        },
+        inner: {
+            maxWidth: "1120px",
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "2.75rem",
+        },
+        hero: {
+            background: "var(--panel-bg)",
+            borderRadius: "1.5rem",
+            border: "1px solid var(--input-border)",
+            padding: "2.75rem",
+            boxShadow: "var(--shadow-lg)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.75rem",
+        },
+        heroTitle: {
+            fontSize: "2.35rem",
+            fontWeight: 700,
+            lineHeight: 1.2,
+            color: "var(--color-gray-900)",
+        },
+        heroAccent: {
+            background: "linear-gradient(to right, #38bdf8, #818cf8)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+        },
+        heroLead: {
+            color: "var(--color-gray-600)",
+            fontSize: "1.1rem",
+            lineHeight: 1.75,
+            maxWidth: "44rem",
+        },
+        heroActions: {
+            display: "flex",
+            gap: "1rem",
+            flexWrap: "wrap",
+        },
+        primaryButton: {
+            background: "linear-gradient(to right, #38bdf8, #60a5fa)",
+            color: "#0f172a",
+            padding: "0.85rem 2.2rem",
+            borderRadius: "9999px",
+            fontWeight: 600,
+            fontSize: "1rem",
+            border: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            cursor: "pointer",
+        },
+        secondaryButton: {
+            background: "var(--color-primary-100)",
+            color: "var(--color-primary-700)",
+            padding: "0.85rem 2rem",
+            borderRadius: "9999px",
+            fontWeight: 600,
+            fontSize: "1rem",
+            border: "1px solid var(--color-primary-200)",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            cursor: "pointer",
+        },
+        heroBadgeRow: {
+            display: "flex",
+            gap: "0.75rem",
+            flexWrap: "wrap",
+        },
+        tabBar: {
+            display: "flex",
+            gap: "0.75rem",
+            flexWrap: "wrap",
+        },
+        tab: {
+            background: "var(--color-gray-100)",
+            color: "var(--color-gray-600)",
+            border: "1px solid var(--color-gray-200)",
+            borderRadius: "0.75rem",
+            padding: "0.65rem 1.4rem",
+            fontWeight: 500,
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+        },
+        tabActive: {
+            background: "var(--color-primary-100)",
+            color: "var(--color-primary-700)",
+            border: "1px solid var(--color-primary-300)",
+            boxShadow: "var(--shadow-md)",
+        },
+        section: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.75rem",
+        },
+        sectionHeader: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.65rem",
+            maxWidth: "42rem",
+        },
+        sectionTitle: {
+            fontSize: "1.6rem",
+            fontWeight: 700,
+            color: "var(--color-gray-900)",
+        },
+        sectionLead: {
+            color: "var(--color-gray-600)",
+            fontSize: "1rem",
+            lineHeight: 1.7,
+        },
+        quickStatsGrid: {
+            display: "grid",
+            gap: "1.5rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        },
+        quickStatCard: {
+            background: "var(--panel-bg)",
+            border: "1px solid var(--input-border)",
+            borderRadius: "1.05rem",
+            padding: "1.6rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+            boxShadow: "var(--shadow-md)",
+        },
+        statIconWrap: {
+            width: "2.5rem",
+            height: "2.5rem",
+            borderRadius: "0.75rem",
+            background: "var(--color-primary-100)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--color-primary-600)",
+        },
+        statLabel: {
+            fontSize: "0.9rem",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: "var(--color-gray-600)",
+            fontWeight: 600,
+        },
+        statValue: {
+            fontSize: "1.75rem",
+            fontWeight: 700,
+            color: "var(--color-gray-900)",
+        },
+        statDelta: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+        },
+        statDeltaPositive: {
+            color: "#22d3ee",
+        },
+        statDeltaNegative: {
+            color: "#f87171",
+        },
+        card: {
+            background: "var(--panel-bg)",
+            borderRadius: "1.05rem",
+            border: "1px solid var(--input-border)",
+            boxShadow: "var(--shadow-md)",
+        },
+        activityCard: {
+            padding: "1.75rem",
+        },
+        activityList: {
+            display: "flex",
+            flexDirection: "column",
+        },
+        activityItem: {
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+            padding: "1rem 0",
+            borderBottom: "1px solid var(--color-gray-200)",
+        },
+        activityIcon: {
+            width: "2.5rem",
+            height: "2.5rem",
+            borderRadius: "0.75rem",
+            background: "var(--color-primary-100)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--color-primary-600)",
+        },
+        activityTitle: {
+            fontSize: "1rem",
+            fontWeight: 600,
+            color: "var(--color-gray-900)",
+        },
+        activityTime: {
+            fontSize: "0.85rem",
+            color: "var(--color-gray-600)",
+        },
+        focusPlanSection: {
+            padding: "2rem",
+            background: "var(--panel-bg)",
+            borderRadius: "1.2rem",
+            border: "1px solid var(--input-border)",
+            boxShadow: "var(--shadow-md)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.75rem",
+        },
+        focusPlanHeader: {
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "1.25rem",
+            flexWrap: "wrap",
+        },
+        focusPlanList: {
+            right: "2.25rem",
+            zIndex: 1000,
+        },
     };
 
-    const welcomeSectionStyle = {
-        background:
-            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-        borderRadius: "1rem",
-        padding: "2rem",
-        marginBottom: "2rem",
-        color: "var(--color-white)",
-        boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    };
+    const dashboardTabs = [
+        { key: "overview", label: "Overview" },
+        { key: "timers", label: "Timers" },
+        { key: "stats", label: "Statistics" },
+        { key: "distractions", label: "Distractions" },
+    ];
 
-    const welcomeTitleStyle = {
-        fontSize: "2rem",
-        fontWeight: 700,
-        marginBottom: "0.5rem",
-    };
+    const quickStatCards = [
+        {
+            title: "Today's focus time",
+            value: "2h 15m",
+            delta: "+15% vs yesterday",
+            trend: "up",
+            icon: ClockIcon,
+        },
+        {
+            title: "Completed sessions",
+            value: "5",
+            delta: "+2 vs yesterday",
+            trend: "up",
+            icon: CheckCircleIcon,
+        },
+        {
+            title: "Productivity score",
+            value: "85%",
+            delta: "+5% vs yesterday",
+            trend: "up",
+            icon: TrophyIcon,
+        },
+        {
+            title: "Current streak",
+            value: "7 days",
+            delta: "New record!",
+            trend: "up",
+            icon: FireIcon,
+        },
+    ];
 
-    const welcomeSubtitleStyle = {
-        fontSize: "1.125rem",
-        opacity: 0.9,
-        marginBottom: "1.5rem",
-    };
+    const activityFeed = [
+        {
+            icon: CheckCircleIcon,
+            description: "Completed 25-minute focus session",
+            time: "2 minutes ago",
+        },
+        {
+            icon: ClockIcon,
+            description: "Started new focus session",
+            time: "15 minutes ago",
+        },
+        {
+            icon: BellAlertIcon,
+            description: "Logged distraction: Phone call",
+            time: "1 hour ago",
+        },
+    ];
 
-    const actionButtonsStyle = {
-        display: "flex",
-        gap: "1rem",
-    };
-
-    const buttonStyle = {
-        padding: "0.75rem 1.5rem",
-        borderRadius: "0.5rem",
-        fontSize: "1rem",
-        fontWeight: 500,
-        display: "flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        cursor: "pointer",
-        transition: "all 0.2s ease-in-out",
-    };
-
-    const primaryButtonStyle = {
-        ...buttonStyle,
-        background: "var(--color-white)",
-        color: "var(--color-primary-600)",
-        border: "none",
-    };
-
-    const secondaryButtonStyle = {
-        ...buttonStyle,
-        background: "rgba(255, 255, 255, 0.1)",
-        color: "var(--color-white)",
-        border: "2px solid var(--color-white)",
-    };
-
-    const tabsStyle = {
-        display: "flex",
-        gap: "1rem",
-        marginBottom: "2rem",
-        borderBottom: "2px solid var(--color-gray-200)",
-        paddingBottom: "0.5rem",
-    };
-
-    const tabStyle = {
-        padding: "0.75rem 1.5rem",
-        fontSize: "1rem",
-        fontWeight: 500,
-        color: "var(--color-primary-700)",
-        cursor: "pointer",
-        borderRadius: "0.5rem",
-        transition: "all 0.2s ease-in-out",
-        background: "var(--color-primary-50)",
-        border: "none",
-    };
-
-    const activeTabStyle = {
-        ...tabStyle,
-        background: "var(--color-primary-600)",
-        color: "#ffffff",
-    };
-
-    const quickStatsGridStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "1.5rem",
-        marginBottom: "2rem",
-    };
-
-    const statCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        border: "1px solid var(--color-gray-200)",
-    };
-
-    const statIconStyle = {
-        width: "2rem",
-        height: "2rem",
-        color: "var(--color-primary-600)",
-        marginBottom: "1rem",
-    };
-
-    const statTitleStyle = {
-        fontSize: "0.875rem",
-        fontWeight: 500,
-        color: "var(--color-gray-600)",
-        marginBottom: "0.5rem",
-    };
-
-    const statValueStyle = {
-        fontSize: "1.5rem",
-        fontWeight: 700,
-        color: "var(--color-gray-900)",
-        marginBottom: "0.25rem",
-    };
-
-    const statChangeStyle = {
-        fontSize: "0.875rem",
-        display: "flex",
-        alignItems: "center",
-        gap: "0.25rem",
-    };
-
-    const positiveChangeStyle = {
-        ...statChangeStyle,
-        color: "var(--color-green-600)",
-    };
-
-    const negativeChangeStyle = {
-        ...statChangeStyle,
-        color: "var(--color-red-600)",
-    };
-
-    const recentActivityStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        border: "1px solid var(--color-gray-200)",
-    };
-
-    const activityItemStyle = {
-        display: "flex",
-        alignItems: "center",
-        gap: "1rem",
-        padding: "1rem 0",
-        borderBottom: "1px solid var(--color-gray-100)",
-    };
-
-    const activityIconStyle = {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "var(--color-primary-100)",
-        color: "var(--color-primary-600)",
-    };
-
-    const activityContentStyle = {
-        flex: 1,
-    };
-
-    const activityTitleStyle = {
-        fontSize: "1rem",
-        fontWeight: 500,
-        color: "var(--color-gray-900)",
-        marginBottom: "0.25rem",
-    };
-
-    const activityTimeStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-500)",
-    };
-
-    const sectionHeadingStyle = {
-        fontSize: "1.5rem",
-        fontWeight: 700,
-        color: "var(--color-gray-900)",
-        marginBottom: "0.5rem",
-    };
-
-    const sectionDescriptionStyle = {
-        color: "var(--color-gray-600)",
-        fontSize: "0.95rem",
-        marginBottom: "1.5rem",
-        lineHeight: 1.6,
-    };
-
-    const focusPlanSectionStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.75rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        border: "1px solid var(--color-gray-200)",
-        margin: "2.5rem 0",
-    };
-
-    const focusPlanHeaderStyle = {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: "1rem",
-        flexWrap: "wrap",
-        marginBottom: "1.5rem",
-    };
-
-    const focusPlanListStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "1.25rem",
-    };
-
-    const focusPlanItemStyle = {
-        background: "var(--color-gray-50)",
-        borderRadius: "0.75rem",
-        padding: "1.25rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-        minHeight: "180px",
-    };
-
-    const focusPlanMetaStyle = {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: "0.75rem",
-    };
-
-    const focusPlanTimeStyle = {
-        fontSize: "0.85rem",
-        fontWeight: 600,
-        color: "var(--color-primary-600)",
-    };
-
-    const focusPlanTitleStyle = {
-        fontSize: "1.05rem",
-        fontWeight: 600,
-        color: "var(--color-gray-900)",
-    };
-
-    const focusPlanDescriptionStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.5,
-    };
-
-    const focusPlanBadgeStyle = {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
-        padding: "0.25rem 0.75rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 600,
-    };
-
-    const actionChipStyle = {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
-        padding: "0.45rem 0.9rem",
-        borderRadius: "9999px",
-        fontSize: "0.85rem",
-        fontWeight: 600,
-        background: "var(--color-primary-50)",
-        color: "var(--color-primary-700)",
-    };
-
-    const momentumSectionStyle = {
-        margin: "2.5rem 0",
-    };
-
-    const momentumGridStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "1.5rem",
-    };
-
-    const momentumCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-        minHeight: "190px",
-    };
-
-    const momentumIconStyle = {
-        width: "2.25rem",
-        height: "2.25rem",
-        color: "var(--color-primary-600)",
-    };
-
-    const momentumTitleStyle = {
-        fontSize: "1.1rem",
-        fontWeight: 600,
-        color: "var(--color-gray-900)",
-    };
-
-    const momentumDescriptionStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
-    };
-
-    const momentumTrendStyle = {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
-        fontSize: "0.85rem",
-        fontWeight: 600,
-    };
-
-    const momentumTrendPositiveStyle = {
-        ...momentumTrendStyle,
-        color: "var(--color-green-600)",
-    };
-
-    const momentumTrendNegativeStyle = {
-        ...momentumTrendStyle,
-        color: "var(--color-red-600)",
-    };
-
-    const momentumActionStyle = {
-        marginTop: "auto",
-        fontSize: "0.8rem",
-        fontWeight: 600,
-        color: "var(--color-primary-600)",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
+    const sectionIntro = {
+        snapshot: {
+            title: "Snapshot of today",
+            lead: "Keep a pulse on your focus rhythm with real-time stats and trend signals across sessions, streaks, and productivity scores.",
+        },
+        activity: {
+            title: "Recent activity",
+            lead: "A running log of what you shipped, started, and noted so your coaching loops always have fresh context.",
+        },
+        focusPlan: {
+            title: "Today's focus plan",
+            lead: "Align deep work, strategic reviews, and wind-down rituals so energy peaks sync with the work that matters most.",
+        },
+        momentum: {
+            title: "Momentum highlights",
+            lead: "Signals and nudges drawn from your week to reinforce winning habits and course-correct early.",
+        },
+        distractions: {
+            title: "Distraction log",
+            lead: "Tag, review, and clear blockers in minutes. Every insight rolls back into smarter presets and rituals.",
+        },
     };
 
     const dailyFocusPlan = [
@@ -604,6 +573,8 @@ function Dashboard() {
         },
     };
 
+    const heroBadges = ["Daily focus lab", "Community streaks", "Offline-ready rituals"];
+
     const momentumHighlights = [
         {
             title: "Streak momentum",
@@ -613,7 +584,7 @@ function Dashboard() {
                 direction: "up",
                 label: "+12% consistency",
             },
-            icon: <FireIcon style={momentumIconStyle} />,
+            icon: FireIcon,
             action: "Schedule weekend check-in",
         },
         {
@@ -624,7 +595,7 @@ function Dashboard() {
                 direction: "up",
                 label: "Optimal range",
             },
-            icon: <ClockIcon style={momentumIconStyle} />,
+            icon: ClockIcon,
             action: "Lock in preset cadence",
         },
         {
@@ -635,486 +606,298 @@ function Dashboard() {
                 direction: "down",
                 label: "+8% distractions",
             },
-            icon: <BellAlertIcon style={momentumIconStyle} />,
+            icon: BellAlertIcon,
             action: "Create admin block",
         },
     ];
-
-    const distractionLoggerStyle = {
-        position: "fixed",
-        bottom: "2rem",
-        right: "2rem",
-        zIndex: 1000,
-    };
-
     return (
-        <div style={containerStyle}>
-            {/* Welcome Section */}
-            <div style={welcomeSectionStyle}>
-                <h1 style={welcomeTitleStyle}>Welcome back!</h1>
-                <p style={welcomeSubtitleStyle}>
-                    Ready to boost your productivity? Let's get focused.
-                </p>
-                <div style={actionButtonsStyle}>
-                    <button
-                        style={primaryButtonStyle}
-                        onClick={() => setActiveTab("timers")}
-                    >
-                        <PlayIcon
-                            style={{ width: "1.25rem", height: "1.25rem" }}
-                        />
-                        Start Focus Session
-                    </button>
-                    <button
-                        style={secondaryButtonStyle}
-                        onClick={() => setIsLoggerOpen(true)}
-                    >
-                        <PlusIcon
-                            style={{ width: "1.25rem", height: "1.25rem" }}
-                        />
-                        Log Distraction
-                    </button>
-                </div>
-            </div>
-
-            {/* Navigation Tabs */}
-            <div style={tabsStyle}>
-                <button
-                    className={
-                        activeTab === "overview"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
-                    onClick={() => setActiveTab("overview")}
-                >
-                    Overview
-                </button>
-                <button
-                    className={
-                        activeTab === "timers" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveTab("timers")}
-                >
-                    Timers
-                </button>
-                <button
-                    className={
-                        activeTab === "stats" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveTab("stats")}
-                >
-                    Statistics
-                </button>
-                <button
-                    className={
-                        activeTab === "distractions"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
-                    onClick={() => setActiveTab("distractions")}
-                >
-                    Distractions
-                </button>
-            </div>
-
-            {/* Content based on active tab */}
-            {activeTab === "overview" && (
-                <>
-                    {/* Quick Stats Grid */}
-                    <div style={quickStatsGridStyle}>
-                        <div style={statCardStyle}>
-                            <ClockIcon style={statIconStyle} />
-                            <div style={statTitleStyle}>Today's Focus Time</div>
-                            <div style={statValueStyle}>2h 15m</div>
-                            <div style={positiveChangeStyle}>
-                                <ArrowTrendingUpIcon
-                                    style={{ width: "1rem", height: "1rem" }}
-                                />
-                                +15% from yesterday
-                            </div>
-                        </div>
-
-                        <div style={statCardStyle}>
-                            <CheckCircleIcon style={statIconStyle} />
-                            <div style={statTitleStyle}>Completed Sessions</div>
-                            <div style={statValueStyle}>5</div>
-                            <div style={positiveChangeStyle}>
-                                <ArrowTrendingUpIcon
-                                    style={{ width: "1rem", height: "1rem" }}
-                                />
-                                +2 from yesterday
-                            </div>
-                        </div>
-
-                        <div style={statCardStyle}>
-                            <TrophyIcon style={statIconStyle} />
-                            <div style={statTitleStyle}>Productivity Score</div>
-                            <div style={statValueStyle}>85%</div>
-                            <div style={positiveChangeStyle}>
-                                <ArrowTrendingUpIcon
-                                    style={{ width: "1rem", height: "1rem" }}
-                                />
-                                +5% from yesterday
-                            </div>
-                        </div>
-
-                        <div style={statCardStyle}>
-                            <FireIcon style={statIconStyle} />
-                            <div style={statTitleStyle}>Current Streak</div>
-                            <div style={statValueStyle}>7 days</div>
-                            <div style={positiveChangeStyle}>
-                                <ArrowTrendingUpIcon
-                                    style={{ width: "1rem", height: "1rem" }}
-                                />
-                                New record!
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Recent Activity */}
-                    <div style={recentActivityStyle}>
-                        <h2
-                            style={{
-                                marginBottom: "1.5rem",
-                                fontSize: "1.25rem",
-                                fontWeight: 600,
-                            }}
-                        >
-                            Recent Activity
-                        </h2>
-                        <div style={activityItemStyle}>
-                            <div style={activityIconStyle}>
-                                <CheckCircleIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
-                            </div>
-                            <div style={activityContentStyle}>
-                                <div style={activityTitleStyle}>
-                                    Completed 25-minute focus session
-                                </div>
-                                <div style={activityTimeStyle}>
-                                    2 minutes ago
-                                </div>
-                            </div>
-                        </div>
-                        <div style={activityItemStyle}>
-                            <div style={activityIconStyle}>
-                                <ClockIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
-                            </div>
-                            <div style={activityContentStyle}>
-                                <div style={activityTitleStyle}>
-                                    Started new focus session
-                                </div>
-                                <div style={activityTimeStyle}>
-                                    15 minutes ago
-                                </div>
-                            </div>
-                        </div>
-                        <div style={activityItemStyle}>
-                            <div style={activityIconStyle}>
-                                <BellAlertIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
-                            </div>
-                            <div style={activityContentStyle}>
-                                <div style={activityTitleStyle}>
-                                    Logged distraction: Phone call
-                                </div>
-                                <div style={activityTimeStyle}>1 hour ago</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <section style={focusPlanSectionStyle}>
-                        <div style={focusPlanHeaderStyle}>
-                            <div>
-                                <h2 style={sectionHeadingStyle}>Today's focus plan</h2>
-                                <p style={sectionDescriptionStyle}>
-                                    Align deep work, strategic reviews, and wind-down rituals so your
-                                    energy peaks line up with the work that matters most.
-                                </p>
-                            </div>
-                            <div style={actionChipStyle}>
-                                <CalendarIcon style={{ width: "1.1rem", height: "1.1rem" }} />
-                                View weekly planner
-                            </div>
-                        </div>
-                        <div style={focusPlanListStyle}>
-                            {dailyFocusPlan.map((block, idx) => {
-                                const statusStyle =
-                                    planStatusStyles[block.status] || planStatusStyles["scheduled"];
-                                return (
-                                    <div key={idx} style={focusPlanItemStyle}>
-                                        <div style={focusPlanMetaStyle}>
-                                            <span style={focusPlanTimeStyle}>{block.time}</span>
-                                            <span
-                                                style={{
-                                                    ...focusPlanBadgeStyle,
-                                                    background: statusStyle.background,
-                                                    color: statusStyle.color,
-                                                }}
-                                            >
-                                                {statusStyle.label}
-                                            </span>
-                                        </div>
-                                        <div style={focusPlanTitleStyle}>{block.title}</div>
-                                        <p style={focusPlanDescriptionStyle}>{block.description}</p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </section>
-
-                    <section style={momentumSectionStyle}>
-                        <h2 style={sectionHeadingStyle}>Momentum highlights</h2>
-                        <p style={sectionDescriptionStyle}>
-                            Snapshot of the habits powering your streaks, so you can double down on
-                            what works and correct drift early.
+        <div style={dashboardStyles.wrapper}>
+            <div style={dashboardStyles.inner}>
+                <section style={dashboardStyles.hero}>
+                    <div>
+                        <h1 style={dashboardStyles.heroTitle}>
+                            Welcome back, <span style={dashboardStyles.heroAccent}>your focus lab awaits</span>
+                        </h1>
+                        <p style={dashboardStyles.heroLead}>
+                            Shape your day with calibrated sessions, mindful breaks, and community accountability—everything you need to keep momentum compounding.
                         </p>
-                        <div style={momentumGridStyle}>
-                            {momentumHighlights.map((item, idx) => {
-                                const TrendIcon =
-                                    item.trend.direction === "down"
-                                        ? ArrowTrendingDownIcon
-                                        : ArrowTrendingUpIcon;
-                                const trendStyle =
-                                    item.trend.direction === "down"
-                                        ? momentumTrendNegativeStyle
-                                        : momentumTrendPositiveStyle;
-                                return (
-                                    <div key={idx} style={momentumCardStyle}>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "0.75rem",
-                                            }}
-                                        >
-                                            {item.icon}
-                                            <div style={momentumTitleStyle}>{item.title}</div>
-                                        </div>
-                                        <p style={momentumDescriptionStyle}>{item.description}</p>
-                                        <span style={trendStyle}>
-                                            <TrendIcon style={{ width: "1rem", height: "1rem" }} />
-                                            {item.trend.label}
-                                        </span>
-                                        <span style={momentumActionStyle}>
-                                            {item.action}
-                                            <ChevronRightIcon
-                                                style={{ width: "1rem", height: "1rem" }}
-                                            />
-                                        </span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </section>
-                </>
-            )}
-
-            {activeTab === "timers" && <Timer />}
-            {activeTab === "stats" && <Stats />}
-            {activeTab === "distractions" && (
-                <div>
-                    <h2
-                        style={{
-                            marginBottom: "1.5rem",
-                            fontSize: "1.5rem",
-                            fontWeight: 700,
-                        }}
-                    >
-                        Distraction Log {isSyncing && chip("syncing...")}
-                    </h2>
-
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "0.75rem",
-                            alignItems: "center",
-                            marginBottom: "1rem",
-                        }}
-                    >
-                        <input
-                            value={filterText}
-                            onChange={(e) => setFilterText(e.target.value)}
-                            placeholder="Filter by text/type..."
-                            style={{
-                                flex: 1,
-                                padding: "0.6rem 0.8rem",
-                                borderRadius: "0.5rem",
-                                border: "1px solid var(--input-border)",
-                                background: "var(--input-bg)",
-                                color: "var(--color-gray-900)",
-                            }}
-                        />
+                    </div>
+                    <div style={dashboardStyles.heroActions}>
                         <button
-                            style={primaryButtonStyle}
+                            style={dashboardStyles.primaryButton}
+                            onClick={() => setActiveTab("timers")}
+                        >
+                            <PlayIcon style={{ width: "1.2rem", height: "1.2rem" }} />
+                            Start focus session
+                        </button>
+                        <button
+                            style={dashboardStyles.secondaryButton}
                             onClick={() => setIsLoggerOpen(true)}
                         >
-                            <PlusIcon
-                                style={{ width: "1.25rem", height: "1.25rem" }}
-                            />
-                            Log New Distraction
+                            <PlusIcon style={{ width: "1.2rem", height: "1.2rem" }} />
+                            Log distraction
                         </button>
                     </div>
+                    <div style={dashboardStyles.heroBadgeRow}>
+                        {heroBadges.map((badge) => (
+                            <span key={badge} style={dashboardStyles.actionChip}>
+                                {badge}
+                            </span>
+                        ))}
+                    </div>
+                </section>
 
-                    {distractions.length === 0 ? (
-                        <div
-                            style={{
-                                background: "var(--panel-bg)",
-                                borderRadius: "0.75rem",
-                                padding: "1.5rem",
-                                color: "var(--color-gray-600)",
-                                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                                border: "1px solid var(--color-gray-200)",
-                            }}
+                <div style={dashboardStyles.tabBar}>
+                    {dashboardTabs.map((tab) => (
+                        <button
+                            key={tab.key}
+                            style={
+                                activeTab === tab.key
+                                    ? { ...dashboardStyles.tab, ...dashboardStyles.tabActive }
+                                    : dashboardStyles.tab
+                            }
+                            onClick={() => setActiveTab(tab.key)}
                         >
-                            No distractions logged yet. Click "Log New
-                            Distraction" to add one.
-                        </div>
-                    ) : (
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns:
-                                    "repeat(auto-fit, minmax(280px, 1fr))",
-                                gap: "1rem",
-                            }}
-                        >
-                            {distractions
-                                .filter((d) => {
-                                    const t = (filterText || "").toLowerCase();
-                                    if (!t) return true;
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+
+                {activeTab === "overview" && (
+                    <>
+                        <section style={dashboardStyles.section}>
+                            <header style={dashboardStyles.sectionHeader}>
+                                <h2 style={dashboardStyles.sectionTitle}>{sectionIntro.snapshot.title}</h2>
+                                <p style={dashboardStyles.sectionLead}>{sectionIntro.snapshot.lead}</p>
+                            </header>
+                            <div style={dashboardStyles.quickStatsGrid}>
+                                {quickStatCards.map((card) => {
+                                    const Icon = card.icon;
+                                    const TrendIcon =
+                                        card.trend === "down" ? ArrowTrendingDownIcon : ArrowTrendingUpIcon;
+                                    const deltaStyle = {
+                                        ...dashboardStyles.statDelta,
+                                        ...(card.trend === "down"
+                                            ? dashboardStyles.statDeltaNegative
+                                            : dashboardStyles.statDeltaPositive),
+                                    };
                                     return (
-                                        (d.note || "")
-                                            .toLowerCase()
-                                            .includes(t) ||
-                                        (d.type || "").toLowerCase().includes(t)
+                                        <div key={card.title} style={dashboardStyles.quickStatCard}>
+                                            <div style={dashboardStyles.statIconWrap}>
+                                                <Icon style={{ width: "1.4rem", height: "1.4rem" }} />
+                                            </div>
+                                            <span style={dashboardStyles.statLabel}>{card.title}</span>
+                                            <span style={dashboardStyles.statValue}>{card.value}</span>
+                                            <span style={deltaStyle}>
+                                                <TrendIcon style={{ width: "1rem", height: "1rem" }} />
+                                                {card.delta}
+                                            </span>
+                                        </div>
                                     );
-                                })
-                                .slice()
-                                .sort(
-                                    (a, b) =>
-                                        new Date(b.timestamp) -
-                                        new Date(a.timestamp)
-                                )
-                                .map((d) => {
-                                    const sev = severityColor(d.severity);
+                                })}
+                            </div>
+                        </section>
+
+                        <section style={{ ...dashboardStyles.section, ...dashboardStyles.card, ...dashboardStyles.activityCard }}>
+                            <header style={dashboardStyles.sectionHeader}>
+                                <h2 style={dashboardStyles.sectionTitle}>{sectionIntro.activity.title}</h2>
+                                <p style={dashboardStyles.sectionLead}>{sectionIntro.activity.lead}</p>
+                            </header>
+                            <div style={dashboardStyles.activityList}>
+                                {activityFeed.map((activity, idx) => {
+                                    const Icon = activity.icon;
                                     return (
                                         <div
-                                            key={d.id}
+                                            key={`${activity.description}-${idx}`}
                                             style={{
-                                                background:
-                                                    "var(--panel-bg)",
-                                                borderRadius: "0.75rem",
-                                                padding: "1rem",
-                                                boxShadow:
-                                                    "0 4px 10px rgba(0, 0, 0, 0.08)",
-                                                border: "1px solid var(--color-gray-200)",
-                                                transition:
-                                                    "transform 150ms ease",
+                                                ...dashboardStyles.activityItem,
+                                                borderBottom:
+                                                    idx === activityFeed.length - 1
+                                                        ? "none"
+                                                        : dashboardStyles.activityItem.borderBottom,
                                             }}
                                         >
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent:
-                                                        "space-between",
-                                                    marginBottom: "0.5rem",
-                                                }}
-                                            >
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        gap: "0.5rem",
-                                                        flexWrap: "wrap",
-                                                    }}
-                                                >
-                                                    {chip(d.type || "other")}
-                                                    {chip(
-                                                        d.severity || "medium",
-                                                        {
-                                                            background: sev.bg,
-                                                            color: sev.fg,
-                                                        }
-                                                    )}
-                                                </div>
-                                                <div
-                                                    style={{
-                                                        fontSize: "0.75rem",
-                                                        color: "var(--color-gray-500)",
-                                                    }}
-                                                >
-                                                    {new Date(
-                                                        d.timestamp
-                                                    ).toLocaleString()}
-                                                </div>
+                                            <div style={dashboardStyles.activityIcon}>
+                                                <Icon style={{ width: "1.2rem", height: "1.2rem" }} />
                                             </div>
-                                            <div
-                                                style={{
-                                                    fontSize: "0.95rem",
-                                                    color: "var(--color-gray-800)",
-                                                    marginBottom: "0.75rem",
-                                                }}
-                                            >
-                                                {d.note}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "flex-end",
-                                                    gap: "0.5rem",
-                                                }}
-                                            >
-                                                <button
-                                                    onClick={() =>
-                                                        handleDeleteDistraction(
-                                                            d.id
-                                                        )
-                                                    }
-                                                    style={{
-                                                        background:
-                                                            "var(--color-red-50)",
-                                                        color: "var(--color-red-700)",
-                                                        border: "1px solid #fecaca",
-                                                        padding:
-                                                            "0.4rem 0.75rem",
-                                                        borderRadius: "0.5rem",
-                                                        cursor: "pointer",
-                                                    }}
-                                                >
-                                                    Delete
-                                                </button>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={dashboardStyles.activityTitle}>{activity.description}</div>
+                                                <div style={dashboardStyles.activityTime}>{activity.time}</div>
                                             </div>
                                         </div>
                                     );
                                 })}
-                        </div>
-                    )}
-                </div>
-            )}
+                            </div>
+                        </section>
 
-            {/* Distraction Logger */}
-            {isLoggerOpen && (
-                <div style={distractionLoggerStyle}>
-                    <DistractionLogger
-                        isOpen={isLoggerOpen}
-                        onClose={() => setIsLoggerOpen(false)}
-                        onLog={handleLogDistraction}
-                    />
-                </div>
-            )}
+                        <section style={dashboardStyles.focusPlanSection}>
+                            <div style={dashboardStyles.focusPlanHeader}>
+                                <div style={dashboardStyles.sectionHeader}>
+                                    <h2 style={dashboardStyles.sectionTitle}>{sectionIntro.focusPlan.title}</h2>
+                                    <p style={dashboardStyles.sectionLead}>{sectionIntro.focusPlan.lead}</p>
+                                </div>
+                                <span style={dashboardStyles.actionChip}>
+                                    <CalendarIcon style={{ width: "1.05rem", height: "1.05rem" }} />
+                                    View weekly planner
+                                </span>
+                            </div>
+                            <div style={dashboardStyles.focusPlanList}>
+                                {dailyFocusPlan.map((block, idx) => {
+                                    const statusStyle =
+                                        planStatusStyles[block.status] || planStatusStyles["scheduled"];
+                                    return (
+                                        <div key={`${block.title}-${idx}`} style={dashboardStyles.focusPlanEntry}>
+                                            <div style={dashboardStyles.focusPlanMeta}>
+                                                <span style={dashboardStyles.focusPlanTime}>{block.time}</span>
+                                                <span
+                                                    style={{
+                                                        ...dashboardStyles.focusPlanBadge,
+                                                        background: statusStyle.background,
+                                                        color: statusStyle.color,
+                                                    }}
+                                                >
+                                                    {statusStyle.label}
+                                                </span>
+                                            </div>
+                                            <div style={dashboardStyles.focusPlanTitle}>{block.title}</div>
+                                            <p style={dashboardStyles.focusPlanDescription}>{block.description}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+
+                        <section style={dashboardStyles.section}>
+                            <header style={dashboardStyles.sectionHeader}>
+                                <h2 style={dashboardStyles.sectionTitle}>{sectionIntro.momentum.title}</h2>
+                                <p style={dashboardStyles.sectionLead}>{sectionIntro.momentum.lead}</p>
+                            </header>
+                            <div style={dashboardStyles.momentumGrid}>
+                                {momentumHighlights.map((item, idx) => {
+                                    const Icon = item.icon;
+                                    const TrendIcon =
+                                        item.trend.direction === "down"
+                                            ? ArrowTrendingDownIcon
+                                            : ArrowTrendingUpIcon;
+                                    const trendTint =
+                                        item.trend.direction === "down"
+                                            ? dashboardStyles.momentumTrendNegative
+                                            : dashboardStyles.momentumTrendPositive;
+                                    return (
+                                        <div key={`${item.title}-${idx}`} style={dashboardStyles.momentumCard}>
+                                            <div style={dashboardStyles.momentumHeader}>
+                                                <Icon style={{ width: "1.4rem", height: "1.4rem" }} />
+                                                <div style={dashboardStyles.momentumTitle}>{item.title}</div>
+                                            </div>
+                                            <p style={dashboardStyles.momentumDescription}>{item.description}</p>
+                                            <span style={{ ...dashboardStyles.momentumTrend, ...trendTint }}>
+                                                <TrendIcon style={{ width: "1rem", height: "1rem" }} />
+                                                {item.trend.label}
+                                            </span>
+                                            <span style={dashboardStyles.momentumAction}>
+                                                {item.action}
+                                                <ChevronRightIcon style={{ width: "1rem", height: "1rem" }} />
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    </>
+                )}
+
+                {activeTab === "timers" && <Timer />}
+                {activeTab === "stats" && <Stats />}
+                {activeTab === "distractions" && (
+                    <section style={dashboardStyles.section}>
+                        <header style={dashboardStyles.sectionHeader}>
+                            <h2 style={dashboardStyles.sectionTitle}>
+                                {sectionIntro.distractions.title} {isSyncing && chip("syncing...")}
+                            </h2>
+                            <p style={dashboardStyles.sectionLead}>{sectionIntro.distractions.lead}</p>
+                        </header>
+
+                        <div style={dashboardStyles.filterRow}>
+                            <input
+                                value={filterText}
+                                onChange={(e) => setFilterText(e.target.value)}
+                                placeholder="Filter by text/type..."
+                                style={dashboardStyles.filterInput}
+                            />
+                            <button
+                                style={dashboardStyles.filterButton}
+                                onClick={() => setIsLoggerOpen(true)}
+                            >
+                                <PlusIcon style={{ width: "1.2rem", height: "1.2rem" }} />
+                                Log new distraction
+                            </button>
+                        </div>
+
+                        {distractions.length === 0 ? (
+                            <div style={dashboardStyles.blankState}>
+                                No distractions logged yet. Tap "Log new distraction" to capture your first note.
+                            </div>
+                        ) : (
+                            <div style={dashboardStyles.distractionGrid}>
+                                {distractions
+                                    .filter((d) => {
+                                        const t = (filterText || "").toLowerCase();
+                                        if (!t) return true;
+                                        return (
+                                            (d.note || "").toLowerCase().includes(t) ||
+                                            (d.type || "").toLowerCase().includes(t)
+                                        );
+                                    })
+                                    .slice()
+                                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                                    .map((d) => {
+                                        const sev = severityColor(d.severity);
+                                        return (
+                                            <div key={d.id} style={dashboardStyles.distractionCard}>
+                                                <div style={dashboardStyles.distractionMeta}>
+                                                    <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap" }}>
+                                                        <span style={dashboardStyles.chip}>{d.type || "other"}</span>
+                                                        <span
+                                                            style={{
+                                                                ...dashboardStyles.chip,
+                                                                background: sev.bg,
+                                                                color: sev.fg,
+                                                            }}
+                                                        >
+                                                            {d.severity || "medium"}
+                                                        </span>
+                                                    </div>
+                                                    <span style={dashboardStyles.cardTimestamp}>
+                                                        {new Date(d.timestamp).toLocaleString()}
+                                                    </span>
+                                                </div>
+                                                <div style={dashboardStyles.cardBody}>{d.note}</div>
+                                                <div style={dashboardStyles.cardActions}>
+                                                    <button
+                                                        onClick={() => handleDeleteDistraction(d.id)}
+                                                        style={dashboardStyles.deleteButton}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                            </div>
+                        )}
+                    </section>
+                )}
+
+                {isLoggerOpen && (
+                    <div style={dashboardStyles.floatingLogger}>
+                        <DistractionLogger
+                            isOpen={isLoggerOpen}
+                            onClose={() => setIsLoggerOpen(false)}
+                            onLog={handleLogDistraction}
+                        />
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
@@ -1523,6 +1306,7 @@ function App() {
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/updates" element={<Updates />} />
+                        <Route path="/product" element={<Product />} />
                         <Route path="/privacy" element={<Privacy />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/security" element={<Security />} />

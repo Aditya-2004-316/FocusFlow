@@ -55,33 +55,48 @@ const HelpSupport = () => {
         return matchesCategory && matchesSearch;
     });
 
-    const containerStyle = {
-        maxWidth: "76rem",
+    const pageWrapperStyle = {
+        minHeight: "100vh",
+        padding: "4.5rem 1.75rem 5rem",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
+    };
+
+    const innerStyle = {
+        maxWidth: "1120px",
         margin: "0 auto",
-        padding: "2rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "2rem",
     };
 
-    const headerStyle = {
-        background:
-            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-        borderRadius: "1rem",
-        padding: "2rem",
-        marginBottom: "2rem",
-        color: "var(--color-white)",
-        boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    const heroPanelStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "1.5rem",
+        border: "1px solid var(--input-border)",
+        padding: "2.75rem",
+        boxShadow: "var(--shadow-lg)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.8rem",
     };
 
-    const titleStyle = {
-        fontSize: "2rem",
+    const heroTitleStyle = {
+        fontSize: "2.3rem",
         fontWeight: 700,
-        marginBottom: "0.5rem",
+        lineHeight: 1.2,
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        margin: 0,
     };
 
-    const descriptionStyle = {
-        fontSize: "1.125rem",
-        opacity: 0.9,
-        marginBottom: "1.5rem",
+    const heroLeadStyle = {
+        fontSize: "1.05rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.7,
+        maxWidth: "44rem",
     };
 
     const searchContainerStyle = {
@@ -90,39 +105,40 @@ const HelpSupport = () => {
 
     const searchInputStyle = {
         width: "100%",
-        padding: "0.75rem 1rem",
-        borderRadius: "0.5rem",
+        padding: "0.85rem 1.15rem",
+        borderRadius: "0.75rem",
         border: "1px solid var(--input-border)",
         fontSize: "1rem",
         color: "var(--color-gray-900)",
         backgroundColor: "var(--input-bg)",
+        outline: "none",
     };
 
     const categoriesContainerStyle = {
         display: "flex",
-        gap: "1rem",
-        marginBottom: "2rem",
+        gap: "0.75rem",
+        marginBottom: "1rem",
         flexWrap: "wrap",
-        borderBottom: "2px solid var(--color-gray-200)",
-        paddingBottom: "0.5rem",
     };
 
     const categoryButtonStyle = {
-        padding: "0.75rem 1.5rem",
-        fontSize: "1rem",
-        fontWeight: 500,
-        color: "var(--color-primary-700)",
+        padding: "0.65rem 1.4rem",
+        fontSize: "0.95rem",
+        fontWeight: 600,
+        color: "var(--color-gray-600)",
         cursor: "pointer",
-        borderRadius: "0.5rem",
-        transition: "all 0.2s ease-in-out",
-        border: "none",
-        background: "var(--color-primary-50)",
+        borderRadius: "0.75rem",
+        border: "1px solid var(--color-gray-200)",
+        background: "var(--color-gray-100)",
+        transition: "all 0.2s ease",
     };
 
     const activeCategoryButtonStyle = {
         ...categoryButtonStyle,
-        background: "var(--color-primary-600)",
-        color: "#ffffff",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+        border: "1px solid var(--color-primary-300)",
+        boxShadow: "var(--shadow-md)",
     };
 
     const faqContainerStyle = {
@@ -131,11 +147,11 @@ const HelpSupport = () => {
 
     const faqItemStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        marginBottom: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        borderRadius: "1.05rem",
+        padding: "1.6rem",
+        marginBottom: "1.2rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
     };
 
     const questionStyle = {
@@ -148,7 +164,7 @@ const HelpSupport = () => {
     const answerStyle = {
         fontSize: "1rem",
         color: "var(--color-gray-600)",
-        lineHeight: "1.5",
+        lineHeight: "1.6",
     };
 
     const supportOptionsContainerStyle = {
@@ -160,14 +176,14 @@ const HelpSupport = () => {
 
     const supportCardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        border: "1px solid var(--color-gray-200)",
+        borderRadius: "1.05rem",
+        padding: "1.6rem",
+        boxShadow: "var(--shadow-md)",
+        border: "1px solid var(--input-border)",
         textAlign: "center",
         cursor: "pointer",
         transition: "all 0.2s ease-in-out",
-        marginBottom: "1.5rem",
+        marginBottom: "1.2rem",
     };
 
     const supportCardHoverStyle = {
@@ -178,7 +194,7 @@ const HelpSupport = () => {
     const supportIconStyle = {
         width: "2rem",
         height: "2rem",
-        color: "var(--color-primary-600)",
+        color: "var(--color-primary-500)",
         margin: "0 auto 1rem",
     };
 
@@ -190,7 +206,7 @@ const HelpSupport = () => {
     };
 
     const supportDescriptionStyle = {
-        fontSize: "0.875rem",
+        fontSize: "0.9rem",
         color: "var(--color-gray-600)",
         marginBottom: "1rem",
     };
@@ -200,19 +216,20 @@ const HelpSupport = () => {
         alignItems: "center",
         gap: "0.5rem",
         color: "var(--color-primary-600)",
-        fontSize: "0.875rem",
-        fontWeight: 500,
+        fontSize: "0.9rem",
+        fontWeight: 600,
         textDecoration: "none",
     };
 
     return (
-        <div style={containerStyle}>
-            <div style={headerStyle}>
-                <h1 style={titleStyle}>Help & Support</h1>
-                <p style={descriptionStyle}>
-                    Find answers to your questions and get the support you need
-                </p>
-            </div>
+        <div style={pageWrapperStyle}>
+            <div style={innerStyle}>
+                <section style={heroPanelStyle}>
+                    <h1 style={heroTitleStyle}>Help & Support</h1>
+                    <p style={heroLeadStyle}>
+                        Find answers to your questions and get the support you need
+                    </p>
+                </section>
 
             <div style={searchContainerStyle}>
                 <input
@@ -225,52 +242,25 @@ const HelpSupport = () => {
             </div>
 
             <div style={categoriesContainerStyle}>
-                <button
-                    className={
-                        activeCategory === "all" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("all")}
-                >
-                    All
-                </button>
-                <button
-                    className={
-                        activeCategory === "timer" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("timer")}
-                >
-                    Timer
-                </button>
-                <button
-                    className={
-                        activeCategory === "settings"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("settings")}
-                >
-                    Settings
-                </button>
-                <button
-                    className={
-                        activeCategory === "statistics"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("statistics")}
-                >
-                    Statistics
-                </button>
-                <button
-                    className={
-                        activeCategory === "community"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("community")}
-                >
-                    Community
-                </button>
+                {[
+                    { key: "all", label: "All" },
+                    { key: "timer", label: "Timer" },
+                    { key: "settings", label: "Settings" },
+                    { key: "statistics", label: "Statistics" },
+                    { key: "community", label: "Community" },
+                ].map((cat) => (
+                    <button
+                        key={cat.key}
+                        style={
+                            activeCategory === cat.key
+                                ? activeCategoryButtonStyle
+                                : categoryButtonStyle
+                        }
+                        onClick={() => setActiveCategory(cat.key)}
+                    >
+                        {cat.label}
+                    </button>
+                ))}
             </div>
 
             <div style={faqContainerStyle}>
@@ -383,6 +373,7 @@ const HelpSupport = () => {
                     </a>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

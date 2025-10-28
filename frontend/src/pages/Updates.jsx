@@ -64,8 +64,11 @@ const Updates = () => {
                 style={{
                     fontSize: "2.5rem",
                     fontWeight: 700,
-                    color: "#ffffff",
                     marginBottom: "1rem",
+                    background: "linear-gradient(to right, #38bdf8, #818cf8)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
                 }}
             >
                 Latest Updates
@@ -85,7 +88,7 @@ const Updates = () => {
         </section>
         <main
             style={{
-                maxWidth: 900,
+                maxWidth: 1200,
                 margin: "-2.5rem auto 2rem auto",
                 padding: "1rem",
             }}

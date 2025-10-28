@@ -6,6 +6,8 @@ import {
     FaUsers,
     FaDiscord,
     FaCalendarAlt,
+    FaPlayCircle,
+    FaArrowRight,
 } from "react-icons/fa";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
@@ -19,6 +21,17 @@ const pageStyles = {
     },
     section: {
         padding: "5rem 2rem",
+        position: "relative",
+        overflow: "hidden",
+    },
+    sectionPulse: {
+        position: "absolute",
+        inset: "-120px -40px auto",
+        height: "320px",
+        background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.18), transparent 60%)",
+        filter: "blur(6px)",
+        opacity: 0.8,
+        pointerEvents: "none",
     },
     container: {
         maxWidth: "1200px",
@@ -26,13 +39,15 @@ const pageStyles = {
     },
     heroContent: {
         textAlign: "center",
-        maxWidth: "720px",
+        maxWidth: "760px",
         margin: "0 auto",
+        position: "relative",
+        zIndex: 1,
     },
     heroTitle: {
-        fontSize: "3rem",
-        fontWeight: 700,
-        letterSpacing: "-0.03em",
+        fontSize: "3.2rem",
+        fontWeight: 800,
+        letterSpacing: "-0.035em",
         color: "#ffffff",
         marginBottom: "1rem",
     },
@@ -43,9 +58,45 @@ const pageStyles = {
         backgroundClip: "text",
     },
     heroLead: {
-        fontSize: "1.2rem",
-        color: "#94a3b8",
-        lineHeight: 1.7,
+        fontSize: "1.24rem",
+        color: "#cbd5f5",
+        lineHeight: 1.75,
+    },
+    heroActions: {
+        marginTop: "2.5rem",
+        display: "flex",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        gap: "1rem",
+    },
+    heroBtnPrimary: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.55rem",
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
+        color: "#0f172a",
+        padding: "0.95rem 2.4rem",
+        borderRadius: "9999px",
+        fontWeight: 700,
+        fontSize: "1.05rem",
+        border: "none",
+        cursor: "pointer",
+        transition: "transform 0.25s ease, box-shadow 0.25s ease",
+        boxShadow: "0 25px 50px -28px rgba(56, 189, 248, 0.7)",
+    },
+    heroBtnSecondary: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.55rem",
+        background: "rgba(15, 23, 42, 0.75)",
+        color: "#38bdf8",
+        padding: "0.95rem 2.3rem",
+        borderRadius: "9999px",
+        fontWeight: 600,
+        fontSize: "1.03rem",
+        border: "1px solid rgba(56, 189, 248, 0.35)",
+        cursor: "pointer",
+        transition: "transform 0.25s ease, border-color 0.25s ease",
     },
     statsGrid: {
         display: "grid",
@@ -81,12 +132,23 @@ const pageStyles = {
     overviewCard: {
         background: "rgba(30, 41, 59, 0.45)",
         border: "1px solid rgba(99, 102, 241, 0.25)",
-        borderRadius: "1rem",
-        padding: "1.75rem",
+        borderRadius: "1.1rem",
+        padding: "1.95rem 1.85rem",
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
-        transition: "transform 0.2s ease", 
+        gap: "0.95rem",
+        transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+        position: "relative",
+        overflow: "hidden",
+    },
+    overviewGlow: {
+        position: "absolute",
+        inset: "auto -80px -120px auto",
+        width: "220px",
+        height: "220px",
+        background: "radial-gradient(circle at center, rgba(129, 140, 248, 0.28), transparent)",
+        filter: "blur(6px)",
+        opacity: 0.5,
     },
     iconBadge: {
         width: "2.75rem",
@@ -132,14 +194,15 @@ const pageStyles = {
         marginTop: "3rem",
     },
     spotlightCard: {
-        background: "rgba(17, 24, 39, 0.75)",
-        border: "1px solid rgba(56, 189, 248, 0.2)",
-        borderRadius: "1rem",
-        padding: "1.75rem",
-        boxShadow: "0 25px 55px -25px rgba(56, 189, 248, 0.3)",
+        background: "rgba(17, 24, 39, 0.8)",
+        border: "1px solid rgba(56, 189, 248, 0.25)",
+        borderRadius: "1.1rem",
+        padding: "1.85rem",
+        boxShadow: "0 25px 55px -25px rgba(56, 189, 248, 0.4)",
         display: "flex",
         flexDirection: "column",
         gap: "0.85rem",
+        transition: "transform 0.25s ease, border-color 0.25s ease",
     },
     spotlightHeader: {
         display: "flex",
@@ -189,18 +252,64 @@ const pageStyles = {
     footerCta: {
         textAlign: "center",
         marginTop: "4rem",
+        position: "relative",
+        zIndex: 1,
     },
     footerButton: {
         background: "linear-gradient(to right, #38bdf8, #818cf8)",
         color: "#0f172a",
-        padding: "0.95rem 2.5rem",
+        padding: "0.95rem 2.7rem",
         borderRadius: "9999px",
         fontWeight: 700,
-        fontSize: "1.05rem",
+        fontSize: "1.07rem",
         border: "none",
         display: "inline-block",
-        marginTop: "1.5rem",
-        transition: "transform 0.2s ease",
+        marginTop: "1.6rem",
+        transition: "transform 0.25s ease, box-shadow 0.25s ease",
+        boxShadow: "0 25px 50px -28px rgba(56, 189, 248, 0.7)",
+    },
+    resourceSection: {
+        padding: "5rem 2rem",
+        position: "relative",
+    },
+    resourceGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "1.75rem",
+        marginTop: "2.5rem",
+    },
+    resourceCard: {
+        background: "rgba(15, 23, 42, 0.75)",
+        border: "1px solid rgba(56, 189, 248, 0.2)",
+        borderRadius: "1.05rem",
+        padding: "1.85rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.9rem",
+        position: "relative",
+        overflow: "hidden",
+        transition: "transform 0.25s ease, border-color 0.25s ease",
+    },
+    resourceIconBadge: {
+        width: "2.5rem",
+        height: "2.5rem",
+        borderRadius: "0.8rem",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(56, 189, 248, 0.18)",
+        color: "#38bdf8",
+        fontSize: "1.4rem",
+    },
+    resourceLink: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.45rem",
+        color: "#38bdf8",
+        fontWeight: 600,
+        fontSize: "0.95rem",
+        marginTop: "0.5rem",
+        textDecoration: "none",
     },
 };
 
@@ -296,6 +405,7 @@ const Community = () => (
 
         {/* Hero Section */}
         <section style={{ ...pageStyles.section, paddingTop: "6rem" }}>
+            <div style={pageStyles.sectionPulse} />
             <div style={pageStyles.heroContent}>
                 <h1 style={pageStyles.heroTitle}>
                     Where <span style={pageStyles.heroGradient}>focus-led builders</span> connect
@@ -304,6 +414,34 @@ const Community = () => (
                     Tap into accountability circles, open product builds, and wellness rituals led by thousands of
                     productivity natives. Your next streak starts with the community cheering alongside you.
                 </p>
+                <div style={pageStyles.heroActions}>
+                    <button
+                        style={pageStyles.heroBtnPrimary}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "translateY(-3px)";
+                            e.currentTarget.style.boxShadow = "0 35px 70px -32px rgba(56, 189, 248, 0.75)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0px)";
+                            e.currentTarget.style.boxShadow = pageStyles.heroBtnPrimary.boxShadow;
+                        }}
+                    >
+                        <FaUsers /> Jump into a live circle
+                    </button>
+                    <button
+                        style={pageStyles.heroBtnSecondary}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "translateY(-3px)";
+                            e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.55)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0px)";
+                            e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.35)";
+                        }}
+                    >
+                        <FaPlayCircle /> Watch onboarding tour
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -337,6 +475,7 @@ const Community = () => (
                 <div style={pageStyles.overviewGrid}>
                     {involvementTracks.map((track, idx) => (
                         <div key={idx} className="hover-card" style={pageStyles.overviewCard}>
+                            <div style={pageStyles.overviewGlow} />
                             <div style={pageStyles.iconBadge}>{track.icon}</div>
                             <div style={pageStyles.cardTitle}>{track.title}</div>
                             <p style={pageStyles.cardBody}>{track.description}</p>
@@ -388,6 +527,7 @@ const Community = () => (
 
         {/* Upcoming Events */}
         <section style={pageStyles.section}>
+            <div style={pageStyles.sectionPulse} />
             <div style={pageStyles.container}>
                 <div style={{ textAlign: "center", maxWidth: "620px", margin: "0 auto" }}>
                     <h2 style={{ fontSize: "2.1rem", fontWeight: 700, color: "#ffffff", marginBottom: "1rem" }}>
@@ -415,8 +555,66 @@ const Community = () => (
             </div>
         </section>
 
+        {/* Resource Section */}
+        <section style={pageStyles.resourceSection}>
+            <div style={pageStyles.sectionPulse} />
+            <div style={pageStyles.container}>
+                <div style={{ textAlign: "center", maxWidth: "650px", margin: "0 auto" }}>
+                    <h2 style={{ fontSize: "2.15rem", fontWeight: 700, color: "#ffffff", marginBottom: "1rem" }}>
+                        Resources to kickstart your streak
+                    </h2>
+                    <p style={{ color: "#94a3b8", lineHeight: 1.7 }}>
+                        Workshops, asset kits, and office hours recordings curated by the community so you can plug in immediately.
+                    </p>
+                </div>
+                <div style={pageStyles.resourceGrid}>
+                    {[
+                        {
+                            title: "Starter rituals vault",
+                            description: "Download community templates for morning focus, study sprints, and team retros.",
+                            href: "/resources",
+                        },
+                        {
+                            title: "Mentor office hours",
+                            description: "Watch replays from product leads and study coaches answering workflow questions.",
+                            href: "mailto:focusflow@studentproject.com?subject=Mentor%20office%20hours",
+                        },
+                        {
+                            title: "Integration cookbook",
+                            description: "See how makers automate FocusFlow with Notion, Slack, and custom webhooks.",
+                            href: "mailto:focusflow@studentproject.com?subject=Integration%20cookbook",
+                        },
+                    ].map((resource) => (
+                        <a
+                            key={resource.title}
+                            href={resource.href}
+                            style={{ ...pageStyles.resourceCard, textDecoration: "none" }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "translateY(-4px)";
+                                e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.4)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "translateY(0px)";
+                                e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.2)";
+                            }}
+                        >
+                            <div style={pageStyles.resourceIconBadge}>
+                                <FaPlayCircle />
+                            </div>
+                            <div style={{ fontSize: "1.2rem", fontWeight: 600, color: "#e2e8f0" }}>{resource.title}</div>
+                            <p style={{ color: "#94a3b8", lineHeight: 1.65 }}>{resource.description}</p>
+                            <span style={pageStyles.resourceLink}>
+                                Access resource <FaArrowRight />
+                            </span>
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </section>
+
         {/* CTA */}
         <section style={{ ...pageStyles.section, paddingBottom: "4rem" }}>
+            <div style={pageStyles.sectionPulse} />
             <div style={pageStyles.footerCta}>
                 <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#e2e8f0" }}>
                     Start your community streak today

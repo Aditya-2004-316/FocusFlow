@@ -192,341 +192,29 @@ const Resources = () => {
         },
     ];
 
-    const containerStyle = {
-        maxWidth: "76rem",
-        margin: "0 auto",
-        padding: "2rem",
-    };
-
-    const headerStyle = {
-        background:
-            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-        borderRadius: "1rem",
-        padding: "2rem",
-        marginBottom: "2rem",
-        color: "var(--color-white)",
-        boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-    };
-
-    const titleStyle = {
-        fontSize: "2rem",
-        fontWeight: 700,
-        marginBottom: "0.5rem",
-    };
-
-    const descriptionStyle = {
-        fontSize: "1.125rem",
-        opacity: 0.9,
-        marginBottom: "1.5rem",
-    };
-
-    const searchContainerStyle = {
-        marginBottom: "2rem",
-    };
-
-    const searchInputStyle = {
-        width: "100%",
-        padding: "0.75rem 1rem",
-        borderRadius: "0.5rem",
-        border: "1px solid var(--input-border)",
-        fontSize: "1rem",
-        color: "var(--color-gray-900)",
-        backgroundColor: "var(--input-bg)",
-    };
-
-    const categoriesContainerStyle = {
-        display: "flex",
-        gap: "1rem",
-        marginBottom: "2rem",
-        flexWrap: "wrap",
-        borderBottom: "2px solid var(--color-gray-200)",
-        paddingBottom: "0.5rem",
-    };
-
-    const categoryButtonStyle = {
-        padding: "0.75rem 1.5rem",
-        fontSize: "1rem",
-        fontWeight: 500,
-        color: "var(--color-primary-700)",
-        cursor: "pointer",
-        borderRadius: "0.5rem",
-        transition: "all 0.2s ease-in-out",
-        border: "none",
-        background: "var(--color-primary-50)",
-    };
-
-    const activeCategoryStyle = {
-        ...categoryButtonStyle,
-        background: "var(--color-primary-600)",
-        color: "#ffffff",
-    };
-
-    const resourcesGridStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-        gap: "1.5rem",
-        marginBottom: "2rem",
-    };
-
-    const resourceCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        border: "1px solid var(--color-gray-200)",
-        transition: "all 0.2s ease-in-out",
-        marginBottom: "1.5rem",
-        border: "1px solid var(--color-gray-100)",
-    };
-
-    const resourceCardHoverStyle = {
-        transform: "translateY(-2px)",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    };
-
-    const resourceHeaderStyle = {
-        display: "flex",
-        alignItems: "center",
-        gap: "1rem",
-        marginBottom: "1rem",
-    };
-
-    const resourceIconStyle = {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "0.5rem",
-        backgroundColor: "transparent",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    };
-
-    const resourceTitleStyle = {
-        fontSize: "1.125rem",
-        fontWeight: 600,
-        color: "var(--color-gray-900)",
-        marginBottom: "0.5rem",
-    };
-
-    const resourceDescriptionStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-600)",
-        marginBottom: "1rem",
-        lineHeight: "1.5",
-    };
-
-    const resourceMetaStyle = {
-        display: "flex",
-        alignItems: "center",
-        gap: "1rem",
-        marginBottom: "1rem",
-    };
-
-    const resourceMetaItemStyle = {
-        display: "flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        fontSize: "0.75rem",
-        color: "var(--color-gray-500)",
-    };
-
-    const tagsContainerStyle = {
-        display: "flex",
-        gap: "0.5rem",
-        flexWrap: "wrap",
-    };
-
-    const tagStyle = {
-        padding: "0.25rem 0.75rem",
-        borderRadius: "9999px",
-        fontSize: "0.75rem",
-        fontWeight: 500,
-        backgroundColor: "var(--color-gray-100)",
-        color: "var(--color-gray-700)",
-    };
-
-    const actionButtonStyle = {
-        display: "flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        padding: "0.5rem 1rem",
-        borderRadius: "0.375rem",
-        fontSize: "0.875rem",
-        fontWeight: 500,
-        color: "var(--color-primary-700)",
-        background: "var(--color-primary-50)",
-        cursor: "pointer",
-        transition: "all 0.2s ease-in-out",
-        marginTop: "1rem",
-        border: "none",
-    };
-
-    const actionButtonHoverStyle = {
-        background: "var(--color-primary-100)",
-    };
-
-    const sectionHeadingStyle = {
-        fontSize: "1.5rem",
-        fontWeight: 700,
-        color: "var(--color-gray-900)",
-        marginBottom: "0.5rem",
-    };
-
-    const sectionSubtitleStyle = {
-        color: "var(--color-gray-600)",
-        fontSize: "0.95rem",
-        marginBottom: "1.5rem",
-        lineHeight: 1.6,
-    };
-
-    const tracksGridStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "1.5rem",
-        marginBottom: "2.5rem",
-    };
-
-    const trackCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-    };
-
-    const trackHeaderStyle = {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: "0.75rem",
-        flexWrap: "wrap",
-    };
-
-    const trackMetaStyle = {
-        display: "flex",
-        gap: "0.5rem",
-        flexWrap: "wrap",
-        fontSize: "0.85rem",
-        fontWeight: 600,
-        color: "var(--color-primary-700)",
-    };
-
-    const trackBadgeStyle = {
-        padding: "0.25rem 0.75rem",
-        borderRadius: "9999px",
-        background: "var(--color-primary-50)",
-    };
-
-    const trackDescriptionStyle = {
-        fontSize: "0.9rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
-    };
-
-    const trackOutlineListStyle = {
-        paddingLeft: "1.25rem",
-        color: "var(--color-gray-600)",
-        fontSize: "0.85rem",
-        lineHeight: 1.6,
-        margin: 0,
-    };
-
-    const toolkitSectionStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.75rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        marginBottom: "2.5rem",
-    };
-
-    const toolkitGridStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "1.5rem",
-    };
-
-    const toolkitCardStyle = {
-        background: "var(--color-gray-50)",
-        borderRadius: "0.75rem",
-        padding: "1.25rem",
-        border: "1px solid var(--color-gray-200)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-    };
-
-    const toolkitTitleStyle = {
-        fontSize: "1.05rem",
-        fontWeight: 600,
-        color: "var(--color-gray-900)",
-    };
-
-    const toolkitDescriptionStyle = {
-        fontSize: "0.9rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
-    };
-
-    const toolkitListStyle = {
-        paddingLeft: "1.25rem",
-        color: "var(--color-gray-600)",
-        fontSize: "0.85rem",
-        lineHeight: 1.6,
-        margin: 0,
-    };
-
-    const highlightGridStyle = {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "1.5rem",
-        marginBottom: "2.5rem",
-    };
-
-    const highlightCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0.75rem",
-    };
-
-    const highlightHeaderStyle = {
-        display: "flex",
-        alignItems: "center",
-        gap: "0.75rem",
-    };
-
-    const highlightIconStyle = {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "0.75rem",
-        background: "var(--color-primary-50)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "1.35rem",
-        color: "var(--color-primary-600)",
-    };
-
-    const highlightMetricStyle = {
-        fontSize: "1.75rem",
-        fontWeight: 700,
-        color: "var(--color-primary-700)",
-    };
-
-    const highlightDescriptionStyle = {
-        fontSize: "0.9rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
-    };
+    const communityHighlights = [
+        {
+            icon: "🚀",
+            title: "Creators using templates",
+            metric: "2.4k downloads",
+            description:
+                "Members rely on the template hub to spin up project plans and personal dashboards in minutes.",
+        },
+        {
+            icon: "🎧",
+            title: "Focus playlists curated",
+            metric: "48 mixes",
+            description:
+                "From lo-fi beats to binaural mixes, explore playlists shared by the community to match any session.",
+        },
+        {
+            icon: "📝",
+            title: "Guides bookmarked",
+            metric: "6.3k saves",
+            description:
+                "Most-loved guides cover distraction-proof routines, energy management, and weekly planning rituals.",
+        },
+    ];
 
     const learningTracks = [
         {
@@ -600,106 +288,198 @@ const Resources = () => {
         },
     ];
 
-    const communityHighlights = [
-        {
-            icon: "🚀",
-            title: "Creators using templates",
-            metric: "2.4k downloads",
-            description:
-                "Members rely on the template hub to spin up project plans and personal dashboards in minutes.",
-        },
-        {
-            icon: "🎧",
-            title: "Focus playlists curated",
-            metric: "48 mixes",
-            description:
-                "From lo-fi beats to binaural mixes, explore playlists shared by the community to match any session.",
-        },
-        {
-            icon: "📝",
-            title: "Guides bookmarked",
-            metric: "6.3k saves",
-            description:
-                "Most-loved guides cover distraction-proof routines, energy management, and weekly planning rituals.",
-        },
+    const heroChips = [
+        "Guides & templates",
+        "Workshop replays",
+        "Ritual toolkits",
+        "Community picks",
     ];
 
-    const filteredResources = resources.filter((resource) => {
-        const matchesCategory =
-            activeCategory === "all" || resource.type === activeCategory;
-        const matchesSearch =
-            resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            resource.description
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-            resource.tags.some((tag) =>
-                tag.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        return matchesCategory && matchesSearch;
-    });
-
-    const getIconComponent = (iconName) => {
-        switch (iconName) {
-            case "BookOpenIcon":
-                return (
-                    <BookOpenIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-            case "VideoCameraIcon":
-                return (
-                    <VideoCameraIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-            case "DocumentTextIcon":
-                return (
-                    <DocumentTextIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-            case "LightBulbIcon":
-                return (
-                    <LightBulbIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-            case "AcademicCapIcon":
-                return (
-                    <AcademicCapIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-            case "PresentationChartLineIcon":
-                return (
-                    <PresentationChartLineIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-            default:
-                return (
-                    <BookOpenIcon
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                    />
-                );
-        }
+    const resourcesContainerStyle = {
+        background: "rgba(17, 24, 39, 0.7)",
+        borderRadius: "1.1rem",
+        padding: "1.85rem",
+        border: "1px solid rgba(148, 163, 184, 0.22)",
+        boxShadow: "0 28px 60px -36px rgba(8, 47, 73, 0.68)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.75rem",
     };
 
-    const onOpenResource = (resource) => {
-        setSelectedResource(resource);
+    const searchContainerStyle = {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
     };
 
-    const onCloseResource = () => {
-        setSelectedResource(null);
+    const searchInputStyle = {
+        width: "100%",
+        padding: "0.85rem 1.15rem",
+        borderRadius: "0.75rem",
+        border: "1px solid rgba(148, 163, 184, 0.28)",
+        fontSize: "1rem",
+        color: "#f8fafc",
+        backgroundColor: "rgba(15, 23, 42, 0.6)",
+        outline: "none",
     };
 
-    useEffect(() => {
-        const onEsc = (e) => {
-            if (e.key === "Escape") onCloseResource();
-        };
-        window.addEventListener("keydown", onEsc);
-        return () => window.removeEventListener("keydown", onEsc);
-    }, []);
+    const categoriesContainerStyle = {
+        display: "flex",
+        gap: "0.75rem",
+        flexWrap: "wrap",
+    };
+
+    const categoryButtonStyle = {
+        padding: "0.55rem 1.3rem",
+        fontSize: "0.95rem",
+        fontWeight: 600,
+        color: "#94a3b8",
+        cursor: "pointer",
+        borderRadius: "0.75rem",
+        border: "1px solid rgba(148, 163, 184, 0.18)",
+        background: "rgba(15, 23, 42, 0.35)",
+        transition: "all 0.2s ease",
+    };
+
+    const activeCategoryStyle = {
+        ...categoryButtonStyle,
+        background: "rgba(56, 189, 248, 0.18)",
+        color: "#f8fafc",
+        border: "1px solid rgba(56, 189, 248, 0.4)",
+        boxShadow: "0 12px 28px -20px rgba(56, 189, 248, 0.5)",
+    };
+
+    const resourcesGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+        gap: "1.5rem",
+    };
+
+    const resourceCardStyle = {
+        background: "rgba(15, 23, 42, 0.6)",
+        borderRadius: "1rem",
+        padding: "1.7rem",
+        border: "1px solid rgba(148, 163, 184, 0.2)",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+    };
+
+    const resourceCardHoverStyle = {
+        transform: "translateY(-3px)",
+        boxShadow: "0 20px 45px -30px rgba(56, 189, 248, 0.35)",
+    };
+
+    const resourceHeaderStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem",
+    };
+
+    const resourceIconStyle = {
+        width: "2.6rem",
+        height: "2.6rem",
+        borderRadius: "0.75rem",
+        background: "rgba(56, 189, 248, 0.16)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#38bdf8",
+    };
+
+    const resourceTitleStyle = {
+        fontSize: "1.1rem",
+        fontWeight: 600,
+        color: "#f8fafc",
+        marginBottom: "0.35rem",
+    };
+
+    const resourceDescriptionStyle = {
+        fontSize: "0.95rem",
+        color: "#cbd5f5",
+        lineHeight: 1.7,
+    };
+
+    const resourceMetaStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem",
+        flexWrap: "wrap",
+        color: "#9fb6ff",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+    };
+
+    const resourceMetaItemStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+    };
+
+    const heroChipRowStyle = {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.65rem",
+    };
+
+    const heroChipStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        background: "rgba(56, 189, 248, 0.14)",
+        color: "#38bdf8",
+        padding: "0.45rem 0.85rem",
+        borderRadius: "9999px",
+        fontSize: "0.85rem",
+        fontWeight: 600,
+    };
+
+    const containerStyle = {
+        minHeight: "100vh",
+        padding: "4.5rem 1.75rem 5rem",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
+        overflowY: "auto",
+        overflowX: "hidden",
+    };
+
+    const innerStyle = {
+        maxWidth: "1120px",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: "2.75rem",
+    };
+
+    const heroStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "1.5rem",
+        border: "1px solid var(--input-border)",
+        padding: "2.75rem",
+        boxShadow: "var(--shadow-lg)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.6rem",
+    };
+
+    const heroTitleStyle = {
+        fontSize: "2.3rem",
+        fontWeight: 700,
+        lineHeight: 1.2,
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        margin: 0,
+    };
+
+    const heroDescriptionStyle = {
+        fontSize: "1.08rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.7,
+        maxWidth: "44rem",
+    };
 
     const modalOverlayStyle = {
         position: "fixed",
@@ -718,8 +498,8 @@ const Resources = () => {
         background: "var(--panel-bg)",
         borderRadius: "1rem",
         padding: "1.5rem",
-        boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-        border: "1px solid var(--color-gray-200)",
+        boxShadow: "var(--shadow-lg)",
+        border: "1px solid var(--input-border)",
         maxHeight: "80vh",
         display: "flex",
         flexDirection: "column",
@@ -739,405 +519,355 @@ const Resources = () => {
         border: "none",
         cursor: "pointer",
         fontSize: "1.25rem",
-        color: "var(--color-gray-500)",
+        color: "var(--color-gray-600)",
     };
 
-    const chip = (label) => (
-        <span
-            style={{
-                display: "inline-block",
-                padding: "0.15rem 0.5rem",
-                fontSize: "0.7rem",
-                borderRadius: "9999px",
-                background: "var(--color-gray-100)",
-                color: "var(--color-gray-700)",
-            }}
-        >
-            {label}
-        </span>
-    );
+    const highlightGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.5rem",
+    };
 
-    const downloadTemplate = (res) => {
-        const content = `# ${res.title}\n\n${
-            res.description
-        }\n\nTags: ${res.tags.join(", ")}`;
-        const blob = new Blob([content], { type: "text/markdown" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${res.title.replace(/\s+/g, "_")}.md`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+    const highlightCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "0.95rem",
+        padding: "1.6rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.75rem",
+    };
+
+    const highlightHeaderStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
+    };
+
+    const highlightIconStyle = {
+        width: "2.4rem",
+        height: "2.4rem",
+        borderRadius: "0.75rem",
+        background: "var(--color-primary-100)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "1.35rem",
+        color: "var(--color-primary-600)",
+    };
+
+    const highlightMetricStyle = {
+        fontSize: "1.65rem",
+        fontWeight: 700,
+        color: "var(--color-primary-600)",
+    };
+
+    const highlightDescriptionStyle = {
+        fontSize: "0.92rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.65,
+    };
+
+    const toolkitListStyle = {
+        paddingLeft: "1.25rem",
+        color: "var(--color-gray-700)",
+        fontSize: "0.85rem",
+        lineHeight: 1.6,
+        margin: 0,
+    };
+
+    const filteredResources = resources.filter((resource) => {
+        const matchesCategory =
+            activeCategory === "all" || resource.type === activeCategory;
+        const matchesSearch =
+            resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            resource.description
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+            resource.tags.some((tag) =>
+                tag.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        return matchesCategory && matchesSearch;
+    });
+
+    const getIconComponent = (iconName) => {
+        switch (iconName) {
+            case "BookOpenIcon":
+                return (
+                    <BookOpenIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+            case "VideoCameraIcon":
+                return (
+                    <VideoCameraIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+            case "DocumentTextIcon":
+                return (
+                    <DocumentTextIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+            case "LightBulbIcon":
+                return (
+                    <LightBulbIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+            case "AcademicCapIcon":
+                return (
+                    <AcademicCapIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+            case "PresentationChartLineIcon":
+                return (
+                    <PresentationChartLineIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+            default:
+                return (
+                    <BookOpenIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                );
+        }
+    };
+
+    const onCloseResource = () => {
+        setSelectedResource(null);
     };
 
     return (
         <div style={containerStyle}>
-            <div style={headerStyle}>
-                <h1 style={titleStyle}>Resources</h1>
-                <p style={descriptionStyle}>
-                    Explore our collection of guides, videos, and tools to help
-                    you maximize your productivity
-                </p>
-            </div>
-
-            <div style={searchContainerStyle}>
-                <input
-                    type="text"
-                    placeholder="Search resources..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    style={searchInputStyle}
-                />
-            </div>
-
-            <div style={categoriesContainerStyle}>
-                <button
-                    className={
-                        activeCategory === "all" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("all")}
-                >
-                    All Resources
-                </button>
-                <button
-                    className={
-                        activeCategory === "guide" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("guide")}
-                >
-                    Guides
-                </button>
-                <button
-                    className={
-                        activeCategory === "video" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("video")}
-                >
-                    Videos
-                </button>
-                <button
-                    className={
-                        activeCategory === "article" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("article")}
-                >
-                    Articles
-                </button>
-                <button
-                    className={
-                        activeCategory === "template" ? "btn-primary" : "btn-secondary"
-                    }
-                    onClick={() => setActiveCategory("template")}
-                >
-                    Templates
-                </button>
-            </div>
-
-            <div style={resourcesGridStyle}>
-                {filteredResources.map((resource) => (
-                    <div
-                        key={resource.id}
-                        style={resourceCardStyle}
-                        onMouseEnter={(e) => {
-                            Object.assign(
-                                e.currentTarget.style,
-                                resourceCardHoverStyle
-                            );
-                        }}
-                        onMouseLeave={(e) => {
-                            Object.assign(
-                                e.currentTarget.style,
-                                resourceCardStyle
-                            );
-                        }}
-                    >
-                        <div style={resourceHeaderStyle}>
-                            <div style={resourceIconStyle}>
-                                {getIconComponent(resource.icon)}
-                            </div>
-                            <div>
-                                <h3 style={resourceTitleStyle}>
-                                    {resource.title}
-                                </h3>
-                                <div style={resourceMetaStyle}>
-                                    <span style={resourceMetaItemStyle}>
-                                        {resource.level}
-                                    </span>
-                                    {resource.duration && (
-                                        <span style={resourceMetaItemStyle}>
-                                            {resource.duration}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        <p style={resourceDescriptionStyle}>
-                            {resource.description}
+            <div style={innerStyle}>
+                <section style={heroStyle}>
+                    <div>
+                        <h1 style={heroTitleStyle}>Resources</h1>
+                        <p style={heroDescriptionStyle}>
+                            Explore curated guides, templates, and workshops that keep your focus practice evolving. Filter by format, search by topic, and dive in when you’re ready to level up.
                         </p>
-
-                        <div style={tagsContainerStyle}>
-                            {resource.tags.map((tag) => (
-                                <span key={tag} style={tagStyle}>
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-
-                        <button
-                            style={actionButtonStyle}
-                            onMouseEnter={(e) => {
-                                Object.assign(
-                                    e.currentTarget.style,
-                                    actionButtonHoverStyle
-                                );
-                            }}
-                            onMouseLeave={(e) => {
-                                Object.assign(
-                                    e.currentTarget.style,
-                                    actionButtonStyle
-                                );
-                            }}
-                            onClick={() => onOpenResource(resource)}
-                        >
-                            {resource.type === "video" ? (
-                                <>
-                                    <PlayCircleIcon
-                                        style={{
-                                            width: "1rem",
-                                            height: "1rem",
-                                        }}
-                                    />
-                                    Watch Now
-                                </>
-                            ) : resource.type === "template" ? (
-                                <>
-                                    <ArrowDownTrayIcon
-                                        style={{
-                                            width: "1rem",
-                                            height: "1rem",
-                                        }}
-                                    />
-                                    Download
-                                </>
-                            ) : (
-                                <>
-                                    <BookOpenIcon
-                                        style={{
-                                            width: "1rem",
-                                            height: "1rem",
-                                        }}
-                                    />
-                                    Learn More
-                                </>
-                            )}
-                        </button>
                     </div>
-                ))}
-            </div>
+                    <div style={heroChipRowStyle}>
+                        {heroChips.map((chip) => (
+                            <span key={chip} style={heroChipStyle}>
+                                {chip}
+                            </span>
+                        ))}
+                    </div>
+                </section>
+            <section style={resourcesContainerStyle}>
+                <div style={searchContainerStyle}>
+                    <input
+                        type="text"
+                        placeholder="Search resources..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        style={searchInputStyle}
+                    />
+                    <div style={categoriesContainerStyle}>
+                        {[
+                            { key: "all", label: "All" },
+                            { key: "guide", label: "Guides" },
+                            { key: "video", label: "Videos" },
+                            { key: "article", label: "Articles" },
+                            { key: "template", label: "Templates" },
+                        ].map((category) => (
+                            <button
+                                key={category.key}
+                                style={
+                                    activeCategory === category.key
+                                        ? activeCategoryStyle
+                                        : categoryButtonStyle
+                                }
+                                onClick={() => setActiveCategory(category.key)}
+                            >
+                                {category.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
-            <section>
-                <h2 style={sectionHeadingStyle}>Guided learning tracks</h2>
-                <p style={sectionSubtitleStyle}>
-                    Follow a curated sequence of guides, videos, and templates tailored to the type of progress
-                    you're chasing—from your first FocusFlow setup to deep work sprints.
-                </p>
-                <div style={tracksGridStyle}>
-                    {learningTracks.map((track, idx) => (
-                        <div key={idx} style={trackCardStyle}>
-                            <div style={trackHeaderStyle}>
-                                <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--color-gray-900)" }}>
-                                    {track.title}
-                                </span>
-                                <span style={trackBadgeStyle}>{track.duration}</span>
+                <div style={resourcesGridStyle}>
+                    {filteredResources.map((resource) => (
+                        <div
+                            key={resource.id}
+                            style={resourceCardStyle}
+                            onMouseEnter={(e) =>
+                                Object.assign(e.currentTarget.style, resourceCardHoverStyle)
+                            }
+                            onMouseLeave={(e) =>
+                                Object.assign(e.currentTarget.style, resourceCardStyle)
+                            }
+                        >
+                            <div style={resourceHeaderStyle}>
+                                <div style={resourceIconStyle}>
+                                    {getIconComponent(resource.icon)}
+                                </div>
+                                <div>
+                                    <div style={resourceTitleStyle}>{resource.title}</div>
+                                    <div style={resourceMetaStyle}>
+                                        <span style={resourceMetaItemStyle}>{resource.level}</span>
+                                        {resource.duration && (
+                                            <span style={resourceMetaItemStyle}>
+                                                {resource.duration}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
-                            <div style={trackMetaStyle}>
-                                {track.focusAreas.map((area) => (
-                                    <span key={area} style={trackBadgeStyle}>
-                                        {area}
+
+                            <p style={resourceDescriptionStyle}>{resource.description}</p>
+
+                            <div style={categoriesContainerStyle}>
+                                {(resource.tags || []).map((tag) => (
+                                    <span key={tag} style={categoryButtonStyle}>
+                                        {tag}
                                     </span>
                                 ))}
                             </div>
-                            <p style={trackDescriptionStyle}>{track.description}</p>
-                            <ul style={trackOutlineListStyle}>
-                                {track.outline.map((item, outlineIdx) => (
-                                    <li key={outlineIdx}>{item}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-            </section>
 
-            <section style={toolkitSectionStyle}>
-                <h2 style={sectionHeadingStyle}>Downloadable toolkits</h2>
-                <p style={sectionSubtitleStyle}>
-                    Grab ready-made bundles that pair worksheets, checklists, and playlists so you can apply the
-                    concepts instantly.
-                </p>
-                <div style={toolkitGridStyle}>
-                    {resourceBundles.map((bundle, idx) => (
-                        <div key={idx} style={toolkitCardStyle}>
-                            <div style={toolkitTitleStyle}>{bundle.title}</div>
-                            <p style={toolkitDescriptionStyle}>{bundle.description}</p>
-                            <ul style={toolkitListStyle}>
-                                {bundle.items.map((item, itemIdx) => (
-                                    <li key={itemIdx}>{item}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            <section>
-                <h2 style={sectionHeadingStyle}>Community highlights</h2>
-                <p style={sectionSubtitleStyle}>
-                    See how other makers are building momentum with resources shared across the FocusFlow community.
-                </p>
-                <div style={highlightGridStyle}>
-                    {communityHighlights.map((highlight, idx) => (
-                        <div key={idx} style={highlightCardStyle}>
-                            <div style={highlightHeaderStyle}>
-                                <div style={highlightIconStyle}>{highlight.icon}</div>
-                                <div
-                                    style={{
-                                        fontSize: "1rem",
-                                        fontWeight: 600,
-                                        color: "var(--color-gray-900)",
-                                    }}
-                                >
-                                    {highlight.title}
-                                </div>
-                            </div>
-                            <div style={highlightMetricStyle}>{highlight.metric}</div>
-                            <p style={highlightDescriptionStyle}>{highlight.description}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {selectedResource && (
-                <div
-                    style={modalOverlayStyle}
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) onCloseResource();
-                    }}
-                >
-                    <div style={modalStyle}>
-                        <div style={modalHeaderStyle}>
-                            <h3
-                                style={{ fontSize: "1.25rem", fontWeight: 700 }}
-                            >
-                                {selectedResource.title}
-                            </h3>
                             <button
-                                onClick={onCloseResource}
-                                aria-label="Close"
-                                style={modalCloseButtonStyle}
+                                style={categoryButtonStyle}
+                                onMouseEnter={(e) =>
+                                    Object.assign(e.currentTarget.style, activeCategoryStyle)
+                                }
+                                onMouseLeave={(e) =>
+                                    Object.assign(e.currentTarget.style, categoryButtonStyle)
+                                }
+                                onClick={() => setSelectedResource(resource)}
                             >
-                                ×
+                                {resource.type === "video" ? (
+                                    <>
+                                        <PlayCircleIcon style={{ width: "1rem", height: "1rem" }} />
+                                        Watch
+                                    </>
+                                ) : resource.type === "template" ? (
+                                    <>
+                                        <ArrowDownTrayIcon style={{ width: "1rem", height: "1rem" }} />
+                                        Download
+                                    </>
+                                ) : (
+                                    <>
+                                        <BookOpenIcon style={{ width: "1rem", height: "1rem" }} />
+                                        View
+                                    </>
+                                )}
                             </button>
                         </div>
-                        <div
-                            style={{
-                                flex: "1 1 auto",
-                                overflowY: "auto",
-                                paddingRight: "0.25rem",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    gap: "0.75rem",
-                                    marginBottom: "0.75rem",
-                                    flexWrap: "wrap",
-                                }}
-                            >
-                                {chip(selectedResource.type)}
-                                {selectedResource.level &&
-                                    chip(selectedResource.level)}
-                                {selectedResource.duration &&
-                                    chip(selectedResource.duration)}
+                    ))}
+                </div>
+            </section>
+            <div style={{ display: "flex", flexDirection: "column", gap: "2.75rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
+                    <h2 style={{ fontSize: "1.65rem", fontWeight: 600, marginBottom: "0.5rem" }}>
+                        Learning Tracks
+                    </h2>
+                    <div style={highlightGridStyle}>
+                        {learningTracks.map((track, idx) => (
+                            <div key={idx} style={highlightCardStyle}>
+                                <div style={highlightHeaderStyle}>
+                                    <div style={highlightIconStyle}>
+                                        <BookOpenIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                                    </div>
+                                    <h3 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.35rem" }}>
+                                        {track.title}
+                                    </h3>
+                                </div>
+                                <p style={highlightDescriptionStyle}>{track.description}</p>
+                                <ul style={toolkitListStyle}>
+                                    {track.outline.map((item, idx) => (
+                                        <li key={idx}>{item}</li>
+                                    ))}
+                                </ul>
                             </div>
-                            <p
-                                style={{
-                                    color: "var(--color-gray-700)",
-                                    marginBottom: "1rem",
-                                }}
-                            >
-                                {selectedResource.description}
-                            </p>
-
-                            {selectedResource.type === "video" && (
+                        ))}
+                    </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
+                    <h2 style={{ fontSize: "1.65rem", fontWeight: 600, marginBottom: "0.5rem" }}>
+                        Resource Bundles
+                    </h2>
+                    <div style={highlightGridStyle}>
+                        {resourceBundles.map((bundle, idx) => (
+                            <div key={idx} style={highlightCardStyle}>
+                                <div style={highlightHeaderStyle}>
+                                    <div style={highlightIconStyle}>
+                                        <DocumentTextIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                                    </div>
+                                    <h3 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.35rem" }}>
+                                        {bundle.title}
+                                    </h3>
+                                </div>
+                                <p style={highlightDescriptionStyle}>{bundle.description}</p>
+                                <ul style={toolkitListStyle}>
+                                    {bundle.items.map((item, idx) => (
+                                        <li key={idx}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
+                    <h2 style={{ fontSize: "1.65rem", fontWeight: 600, marginBottom: "0.5rem" }}>
+                        Community Highlights
+                    </h2>
+                    <div style={highlightGridStyle}>
+                        {communityHighlights.map((highlight, idx) => (
+                            <div key={idx} style={highlightCardStyle}>
+                                <div style={highlightHeaderStyle}>
+                                    <div style={highlightIconStyle}>{highlight.icon}</div>
+                                    <h3 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.35rem" }}>
+                                        {highlight.title}
+                                    </h3>
+                                </div>
+                                <p style={highlightMetricStyle}>{highlight.metric}</p>
+                                <p style={highlightDescriptionStyle}>{highlight.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            </div>
+            {selectedResource && (
+                <div style={modalOverlayStyle}>
+                    <div style={modalStyle}>
+                        <div style={modalHeaderStyle}>
+                            <h2 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.35rem" }}>
+                                {selectedResource.title}
+                            </h2>
+                            <button style={modalCloseButtonStyle} onClick={onCloseResource}>
+                                ✕
+                            </button>
+                        </div>
+                        <div style={{ padding: "1rem" }}>
+                            {selectedResource.type === "video" && selectedResource.videoUrl && (
+                                <div style={{ width: "100%", height: "100%" }}>
+                                    <iframe
+                                        title={selectedResource.title}
+                                        src={selectedResource.videoUrl}
+                                        frameBorder="0"
+                                        allowFullScreen
+                                        style={{ width: "100%", height: "100%" }}
+                                    />
+                                </div>
+                            )}
+                            {selectedResource.type !== "video" && selectedResource.content && (
                                 <div
                                     style={{
-                                        width: "100%",
-                                        aspectRatio: "16 / 9",
-                                        background: "#111827",
+                                        background: "var(--color-gray-50)",
+                                        border: "1px solid var(--color-gray-100)",
                                         borderRadius: "0.75rem",
-                                        overflow: "hidden",
+                                        padding: "1rem",
                                         marginBottom: "1rem",
                                     }}
                                 >
-                                    {selectedResource.videoUrl ? (
-                                        <iframe
-                                            src={selectedResource.videoUrl}
-                                            title={selectedResource.title}
-                                            style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                border: 0,
-                                            }}
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                            allowFullScreen
-                                        />
-                                    ) : (
-                                        <div
-                                            style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                color: "#e5e7eb",
-                                            }}
-                                        >
-                                            Video player placeholder
-                                        </div>
-                                    )}
+                                    {selectedResource.content
+                                        .split("\n\n")
+                                        .map((paragraph, idx) => (
+                                            <p
+                                                key={idx}
+                                                style={{
+                                                    marginBottom: "0.75rem",
+                                                    color: "var(--color-gray-800)",
+                                                }}
+                                            >
+                                                {paragraph}
+                                            </p>
+                                        ))}
                                 </div>
                             )}
-
-                            {selectedResource.type !== "video" &&
-                                selectedResource.content && (
-                                    <div
-                                        style={{
-                                            background: "var(--color-gray-50)",
-                                            border: "1px solid var(--color-gray-100)",
-                                            borderRadius: "0.75rem",
-                                            padding: "1rem",
-                                            marginBottom: "1rem",
-                                        }}
-                                    >
-                                        {selectedResource.content
-                                            .split("\n\n")
-                                            .map((p, idx) => (
-                                                <p
-                                                    key={idx}
-                                                    style={{
-                                                        marginBottom: "0.75rem",
-                                                        color: "var(--color-gray-800)",
-                                                    }}
-                                                >
-                                                    {p}
-                                                </p>
-                                            ))}
-                                    </div>
-                                )}
-
                             {Array.isArray(selectedResource.bullets) &&
                                 selectedResource.bullets.length > 0 && (
                                     <div style={{ marginTop: "0.5rem" }}>
@@ -1155,23 +885,39 @@ const Resources = () => {
                                                 color: "var(--color-gray-700)",
                                             }}
                                         >
-                                            {selectedResource.bullets.map(
-                                                (b, i) => (
-                                                    <li
-                                                        key={i}
-                                                        style={{
-                                                            marginBottom:
-                                                                "0.35rem",
-                                                        }}
-                                                    >
-                                                        {b}
-                                                    </li>
-                                                )
-                                            )}
+                                            {selectedResource.bullets.map((bullet, idx) => (
+                                                <li
+                                                    key={idx}
+                                                    style={{
+                                                        marginBottom: "0.35rem",
+                                                    }}
+                                                >
+                                                    {bullet}
+                                                </li>
+                                            ))}
                                         </ul>
                                     </div>
                                 )}
                         </div>
+                        {selectedResource.type === "template" && (
+                            <button
+                                style={{
+                                    ...actionButtonStyle,
+                                    marginTop: "1.5rem",
+                                    alignSelf: "flex-start",
+                                }}
+                                onMouseEnter={(e) =>
+                                    Object.assign(e.currentTarget.style, actionButtonHoverStyle)
+                                }
+                                onMouseLeave={(e) =>
+                                    Object.assign(e.currentTarget.style, actionButtonStyle)
+                                }
+                                onClick={() => downloadTemplate(selectedResource)}
+                            >
+                                <ArrowDownTrayIcon style={{ width: "1rem", height: "1rem" }} />
+                                Download template
+                            </button>
+                        )}
                     </div>
                 </div>
             )}

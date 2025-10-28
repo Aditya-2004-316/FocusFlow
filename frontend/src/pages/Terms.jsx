@@ -16,8 +16,11 @@ const Terms = () => (
                 style={{
                     fontSize: "2.5rem",
                     fontWeight: 700,
-                    color: "#ffffff",
                     marginBottom: "1rem",
+                    background: "linear-gradient(to right, #38bdf8, #818cf8)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
                 }}
             >
                 Terms of Service

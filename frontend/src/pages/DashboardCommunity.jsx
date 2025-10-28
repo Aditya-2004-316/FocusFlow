@@ -14,65 +14,81 @@ const DashboardCommunity = () => {
     const [activeTab, setActiveTab] = useState("overview");
 
     const containerStyle = {
-        maxWidth: "76rem",
+        minHeight: "100vh",
+        padding: "4.5rem 1.75rem 5rem",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
+    };
+
+    const innerStyle = {
+        maxWidth: "1120px",
         margin: "0 auto",
-        padding: "2rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "2.75rem",
     };
 
     const headerStyle = {
-        background:
-            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-        borderRadius: "1rem",
-        padding: "2rem",
-        marginBottom: "2rem",
-        color: "var(--color-white)",
-        boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        background: "var(--panel-bg)",
+        borderRadius: "1.5rem",
+        border: "1px solid var(--input-border)",
+        padding: "2.75rem",
+        color: "var(--color-gray-900)",
+        boxShadow: "var(--shadow-lg)",
     };
 
     const titleStyle = {
-        fontSize: "2rem",
+        fontSize: "2.3rem",
         fontWeight: 700,
-        marginBottom: "0.5rem",
+        lineHeight: 1.2,
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        margin: 0,
     };
 
     const subtitleStyle = {
-        fontSize: "1.125rem",
-        opacity: 0.9,
-        marginBottom: "1.5rem",
+        fontSize: "1.08rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.7,
+        maxWidth: "44rem",
+        marginTop: "0.4rem",
     };
 
     const tabsStyle = {
         display: "flex",
-        gap: "1rem",
-        marginBottom: "2rem",
-        borderBottom: "2px solid var(--color-gray-200)",
-        paddingBottom: "0.5rem",
+        gap: "0.75rem",
+        marginBottom: "0.5rem",
+        flexWrap: "wrap",
     };
 
     const tabStyle = {
-        padding: "0.75rem 1.5rem",
-        fontSize: "1rem",
-        fontWeight: 500,
+        padding: "0.65rem 1.4rem",
+        fontSize: "0.95rem",
+        fontWeight: 600,
         color: "var(--color-gray-600)",
         cursor: "pointer",
-        borderRadius: "0.5rem",
-        transition: "all 0.2s ease-in-out",
-        border: "none",
-        background: "none",
+        borderRadius: "0.75rem",
+        border: "1px solid var(--color-gray-200)",
+        background: "var(--color-gray-100)",
+        transition: "all 0.2s ease",
     };
 
     const activeTabStyle = {
         ...tabStyle,
-        background: "var(--color-primary-50)",
+        background: "var(--color-primary-100)",
         color: "var(--color-primary-700)",
+        border: "1px solid var(--color-primary-300)",
+        boxShadow: "var(--shadow-md)",
     };
 
     const cardStyle = {
-        background: "var(--color-white)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        background: "var(--panel-bg)",
+        borderRadius: "1.05rem",
+        padding: "1.75rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
         marginBottom: "1.5rem",
     };
 
@@ -84,10 +100,11 @@ const DashboardCommunity = () => {
     };
 
     const statCardStyle = {
-        background: "var(--color-white)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        background: "var(--panel-bg)",
+        borderRadius: "1.05rem",
+        padding: "1.6rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
         display: "flex",
         alignItems: "center",
         gap: "1rem",
@@ -96,34 +113,36 @@ const DashboardCommunity = () => {
     const iconStyle = {
         width: "2.5rem",
         height: "2.5rem",
-        color: "var(--color-primary-600)",
+        color: "var(--color-primary-500)",
         flexShrink: 0,
     };
 
     const buttonStyle = {
-        padding: "0.75rem 1.5rem",
-        borderRadius: "0.5rem",
+        background: "linear-gradient(to right, #38bdf8, #60a5fa)",
+        color: "#0f172a",
+        padding: "0.85rem 1.9rem",
+        borderRadius: "9999px",
         fontSize: "1rem",
-        fontWeight: 500,
-        display: "flex",
+        fontWeight: 700,
+        display: "inline-flex",
         alignItems: "center",
-        gap: "0.5rem",
+        gap: "0.6rem",
         cursor: "pointer",
-        transition: "all 0.2s ease-in-out",
-        background: "var(--color-primary-600)",
-        color: "var(--color-white)",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
         border: "none",
+        boxShadow: "0 16px 30px -20px rgba(56, 189, 248, 0.6)",
     };
 
     const userCardStyle = {
-        background: "var(--color-white)",
-        borderRadius: "0.75rem",
-        padding: "1rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        background: "var(--color-gray-50)",
+        borderRadius: "1rem",
+        border: "1px solid var(--color-gray-200)",
+        padding: "1.2rem",
         display: "flex",
         alignItems: "center",
         gap: "1rem",
         marginBottom: "1rem",
+        boxShadow: "var(--shadow-soft)",
     };
 
     const avatarStyle = {
@@ -134,8 +153,8 @@ const DashboardCommunity = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        color: "var(--color-primary-600)",
-        fontWeight: 600,
+        color: "var(--color-primary-700)",
+        fontWeight: 700,
     };
 
     const sectionHeadingStyle = {
@@ -164,10 +183,10 @@ const DashboardCommunity = () => {
 
     const mentorshipCardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        borderRadius: "1.05rem",
+        padding: "1.6rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
@@ -198,17 +217,18 @@ const DashboardCommunity = () => {
         flexWrap: "wrap",
         fontSize: "0.85rem",
         fontWeight: 600,
-        color: "var(--color-primary-700)",
+        color: "var(--color-primary-600)",
     };
 
     const mentorshipTagStyle = {
         padding: "0.25rem 0.75rem",
         borderRadius: "9999px",
-        background: "var(--color-primary-50)",
+        background: "var(--color-primary-100)",
+        border: "1px solid var(--color-primary-200)",
     };
 
     const mentorshipBioStyle = {
-        fontSize: "0.875rem",
+        fontSize: "0.9rem",
         color: "var(--color-gray-600)",
         lineHeight: 1.6,
     };
@@ -233,23 +253,24 @@ const DashboardCommunity = () => {
     };
 
     const spotlightCardStyle = {
-        background: "var(--color-gray-50)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--color-primary-200)",
+        borderRadius: "1rem",
+        padding: "1.75rem",
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
+        gap: "0.85rem",
+        boxShadow: "var(--shadow-md)",
     };
 
     const spotlightTitleStyle = {
-        fontSize: "1rem",
+        fontSize: "1.1rem",
         fontWeight: 600,
         color: "var(--color-gray-900)",
     };
 
     const spotlightDescriptionStyle = {
-        fontSize: "0.875rem",
+        fontSize: "0.9rem",
         color: "var(--color-gray-600)",
         lineHeight: 1.6,
     };
@@ -260,13 +281,13 @@ const DashboardCommunity = () => {
         gap: "0.5rem",
         fontSize: "0.75rem",
         fontWeight: 600,
-        color: "var(--color-primary-700)",
+        color: "var(--color-primary-600)",
     };
 
     const spotlightTagStyle = {
         padding: "0.25rem 0.75rem",
         borderRadius: "9999px",
-        background: "var(--color-primary-50)",
+        background: "var(--color-primary-100)",
     };
 
     const eventSectionStyle = {
@@ -281,10 +302,10 @@ const DashboardCommunity = () => {
 
     const eventCardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        borderRadius: "1.05rem",
+        padding: "1.6rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
@@ -298,11 +319,11 @@ const DashboardCommunity = () => {
         flexWrap: "wrap",
         fontSize: "0.85rem",
         fontWeight: 600,
-        color: "var(--color-primary-700)",
+        color: "var(--color-primary-600)",
     };
 
     const eventDescriptionStyle = {
-        fontSize: "0.875rem",
+        fontSize: "0.9rem",
         color: "var(--color-gray-600)",
         lineHeight: 1.6,
     };
@@ -387,6 +408,7 @@ const DashboardCommunity = () => {
 
     return (
         <div style={containerStyle}>
+            <div style={innerStyle}>
             {/* Header */}
             <div style={headerStyle}>
                 <h1 style={titleStyle}>Community Hub</h1>
@@ -399,37 +421,25 @@ const DashboardCommunity = () => {
             {/* Tabs */}
             <div style={tabsStyle}>
                 <button
-                    className={
-                        activeTab === "overview" ? "btn-primary" : "btn-secondary"
-                    }
+                    style={activeTab === "overview" ? activeTabStyle : tabStyle}
                     onClick={() => setActiveTab("overview")}
                 >
                     Overview
                 </button>
                 <button
-                    className={
-                        activeTab === "groups" ? "btn-primary" : "btn-secondary"
-                    }
+                    style={activeTab === "groups" ? activeTabStyle : tabStyle}
                     onClick={() => setActiveTab("groups")}
                 >
                     Study Groups
                 </button>
                 <button
-                    className={
-                        activeTab === "achievements"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
+                    style={activeTab === "achievements" ? activeTabStyle : tabStyle}
                     onClick={() => setActiveTab("achievements")}
                 >
                     Achievements
                 </button>
                 <button
-                    className={
-                        activeTab === "challenges"
-                            ? "btn-primary"
-                            : "btn-secondary"
-                    }
+                    style={activeTab === "challenges" ? activeTabStyle : tabStyle}
                     onClick={() => setActiveTab("challenges")}
                 >
                     Challenges
@@ -453,7 +463,7 @@ const DashboardCommunity = () => {
                                 >
                                     1,247
                                 </h3>
-                                <p style={{ color: "var(--color-gray-600)" }}>
+                                <p style={{ color: "#94a3b8" }}>
                                     Active Members
                                 </p>
                             </div>
@@ -470,7 +480,7 @@ const DashboardCommunity = () => {
                                 >
                                     89
                                 </h3>
-                                <p style={{ color: "var(--color-gray-600)" }}>
+                                <p style={{ color: "#94a3b8" }}>
                                     Achievements Unlocked
                                 </p>
                             </div>
@@ -487,7 +497,7 @@ const DashboardCommunity = () => {
                                 >
                                     156
                                 </h3>
-                                <p style={{ color: "var(--color-gray-600)" }}>
+                                <p style={{ color: "#94a3b8" }}>
                                     Focus Sessions Today
                                 </p>
                             </div>
@@ -504,7 +514,7 @@ const DashboardCommunity = () => {
                                 >
                                     23
                                 </h3>
-                                <p style={{ color: "var(--color-gray-600)" }}>
+                                <p style={{ color: "#94a3b8" }}>
                                     Active Challenges
                                 </p>
                             </div>
@@ -535,7 +545,7 @@ const DashboardCommunity = () => {
                                 </h4>
                                 <p
                                     style={{
-                                        color: "var(--color-gray-600)",
+                                        color: "#94a3b8",
                                         fontSize: "0.875rem",
                                     }}
                                 >
@@ -545,7 +555,7 @@ const DashboardCommunity = () => {
                             </div>
                             <span
                                 style={{
-                                    color: "var(--color-gray-500)",
+                                    color: "#94a3b8",
                                     fontSize: "0.875rem",
                                 }}
                             >
@@ -565,7 +575,7 @@ const DashboardCommunity = () => {
                                 </h4>
                                 <p
                                     style={{
-                                        color: "var(--color-gray-600)",
+                                        color: "#94a3b8",
                                         fontSize: "0.875rem",
                                     }}
                                 >
@@ -575,7 +585,7 @@ const DashboardCommunity = () => {
                             </div>
                             <span
                                 style={{
-                                    color: "var(--color-gray-500)",
+                                    color: "#94a3b8",
                                     fontSize: "0.875rem",
                                 }}
                             >
@@ -595,7 +605,7 @@ const DashboardCommunity = () => {
                                 </h4>
                                 <p
                                     style={{
-                                        color: "var(--color-gray-600)",
+                                        color: "#94a3b8",
                                         fontSize: "0.875rem",
                                     }}
                                 >
@@ -605,7 +615,7 @@ const DashboardCommunity = () => {
                             </div>
                             <span
                                 style={{
-                                    color: "var(--color-gray-500)",
+                                    color: "#94a3b8",
                                     fontSize: "0.875rem",
                                 }}
                             >
@@ -687,7 +697,7 @@ const DashboardCommunity = () => {
                                                 style={{
                                                     fontSize: "1.05rem",
                                                     fontWeight: 600,
-                                                    color: "var(--color-gray-900)",
+                                                    color: "#f8fafc",
                                                 }}
                                             >
                                                 {mentor.name}
@@ -759,7 +769,7 @@ const DashboardCommunity = () => {
                                         style={{
                                             fontSize: "1.05rem",
                                             fontWeight: 600,
-                                            color: "var(--color-gray-900)",
+                                            color: "#f8fafc",
                                         }}
                                     >
                                         {event.title}
@@ -786,7 +796,7 @@ const DashboardCommunity = () => {
                     </h2>
                     <p
                         style={{
-                            color: "var(--color-gray-600)",
+                            color: "#94a3b8",
                             marginBottom: "2rem",
                         }}
                     >
@@ -829,7 +839,7 @@ const DashboardCommunity = () => {
                     </h2>
                     <p
                         style={{
-                            color: "var(--color-gray-600)",
+                            color: "#94a3b8",
                             marginBottom: "2rem",
                         }}
                     >
@@ -872,7 +882,7 @@ const DashboardCommunity = () => {
                     </h2>
                     <p
                         style={{
-                            color: "var(--color-gray-600)",
+                            color: "#94a3b8",
                             marginBottom: "2rem",
                         }}
                     >
@@ -901,6 +911,7 @@ const DashboardCommunity = () => {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 };

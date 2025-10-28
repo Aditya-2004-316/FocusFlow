@@ -16,8 +16,11 @@ const Security = () => (
                 style={{
                     fontSize: "2.5rem",
                     fontWeight: 700,
-                    color: "#ffffff",
                     marginBottom: "1rem",
+                    background: "linear-gradient(to right, #38bdf8, #818cf8)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
                 }}
             >
                 Security
@@ -155,19 +158,36 @@ const Security = () => (
                 <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
                     🚪 Access Control & Authentication
                 </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1.75rem" }}>
                     {[
-                        { icon: "🔐", title: "Multi-Factor Authentication", desc: "Optional 2FA for enhanced account security" },
-                        { icon: "🔑", title: "Session Management", desc: "Automatic logout after inactivity" },
-                        { icon: "🚫", title: "Role-Based Access", desc: "Least-privilege principle for team features" },
-                        { icon: "📱", title: "Device Management", desc: "View and manage logged-in devices" },
+                        { icon: "🔐", title: "Multi-Factor Authentication", headline: "Layered sign-in", desc: "Offer optional 2FA via authenticator apps or SMS so high-impact accounts stay protected." },
+                        { icon: "🔑", title: "Session Management", headline: "Smart session limits", desc: "Idle sessions expire automatically and can be revoked instantly from the dashboard." },
+                        { icon: "🚫", title: "Role-Based Access", headline: "Principle of least privilege", desc: "Granular roles keep administrative abilities scoped only to what teammates need." },
+                        { icon: "📱", title: "Device Management", headline: "Visibility across devices", desc: "Review active device fingerprints, terminate logins, and flag anomalies in one place." },
                     ].map((item, idx) => (
-                        <div key={idx} style={{ textAlign: "center", padding: "1rem" }}>
-                            <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>{item.icon}</div>
-                            <h3 style={{ color: "#ffffff", fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem" }}>
-                                {item.title}
-                            </h3>
-                            <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>
+                        <div
+                            key={idx}
+                            style={{
+                                padding: "1.5rem",
+                                background: "rgba(15, 23, 42, 0.6)",
+                                borderRadius: "0.9rem",
+                                border: "1px solid rgba(56, 189, 248, 0.18)",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "0.65rem",
+                                boxShadow: "0 18px 45px -30px rgba(56, 189, 248, 0.35)",
+                            }}
+                        >
+                            <div style={{ fontSize: "2.35rem" }}>{item.icon}</div>
+                            <div>
+                                <h3 style={{ color: "#e2e8f0", fontSize: "1.15rem", fontWeight: 600, marginBottom: "0.35rem" }}>
+                                    {item.title}
+                                </h3>
+                                <span style={{ color: "#38bdf8", fontSize: "0.9rem", fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                                    {item.headline}
+                                </span>
+                            </div>
+                            <p style={{ color: "#94a3b8", fontSize: "0.96rem", lineHeight: 1.6, margin: 0 }}>
                                 {item.desc}
                             </p>
                         </div>

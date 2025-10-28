@@ -49,130 +49,177 @@ const Statistics = () => {
     ];
 
     const containerStyle = {
-        maxWidth: "76rem",
+        minHeight: "100vh",
+        padding: "4rem 1.75rem 4rem",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
+    };
+
+    const innerStyle = {
+        maxWidth: "1120px",
         margin: "0 auto",
-        padding: "2rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "2.75rem",
     };
 
     const headerStyle = {
-        background:
-            "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-        borderRadius: "1rem",
-        padding: "2rem",
-        marginBottom: "2rem",
-        color: "var(--color-white)",
-        boxShadow:
-            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        background: "var(--panel-bg)",
+        borderRadius: "1.5rem",
+        border: "1px solid var(--input-border)",
+        padding: "2.75rem",
+        boxShadow: "var(--shadow-lg)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.75rem",
     };
 
     const titleStyle = {
-        fontSize: "2rem",
+        fontSize: "2.3rem",
         fontWeight: 700,
-        marginBottom: "0.5rem",
+        lineHeight: 1.2,
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        margin: 0,
     };
 
     const descriptionStyle = {
-        fontSize: "1.125rem",
-        opacity: 0.9,
-        marginBottom: "1.5rem",
+        fontSize: "1.08rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.7,
+        maxWidth: "44rem",
+    };
+
+    const chipRowStyle = {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.65rem",
+    };
+
+    const chipStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+        padding: "0.45rem 0.85rem",
+        borderRadius: "9999px",
+        fontSize: "0.85rem",
+        fontWeight: 600,
     };
 
     const metricsGridStyle = {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
         gap: "1.5rem",
-        marginBottom: "2rem",
     };
 
     const metricCardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        marginBottom: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
+        borderRadius: "1.05rem",
+        padding: "1.75rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.8rem",
     };
 
     const metricHeaderStyle = {
         display: "flex",
         alignItems: "center",
-        gap: "0.75rem",
-        marginBottom: "1rem",
+        gap: "0.9rem",
     };
 
     const metricIconStyle = {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "0.5rem",
-        backgroundColor: "transparent",
+        width: "2.6rem",
+        height: "2.6rem",
+        borderRadius: "0.75rem",
+        background: "var(--color-primary-100)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "2rem",
+        fontSize: "1.4rem",
+        color: "var(--color-primary-600)",
     };
 
     const metricTitleStyle = {
-        fontSize: "0.875rem",
-        fontWeight: 500,
+        fontSize: "0.85rem",
+        letterSpacing: "0.04em",
+        textTransform: "uppercase",
         color: "var(--color-gray-600)",
+        fontWeight: 600,
     };
 
     const metricValueStyle = {
-        fontSize: "1.5rem",
+        fontSize: "1.85rem",
         fontWeight: 700,
         color: "var(--color-gray-900)",
-        marginBottom: "0.5rem",
     };
 
     const metricChangeStyle = {
-        display: "flex",
+        display: "inline-flex",
         alignItems: "center",
-        gap: "0.25rem",
-        fontSize: "0.875rem",
-        fontWeight: 500,
+        gap: "0.4rem",
+        fontSize: "0.85rem",
+        fontWeight: 600,
     };
 
     const positiveChangeStyle = {
-        color: "var(--color-green-600)",
+        color: "#22d3ee",
     };
 
     const negativeChangeStyle = {
-        color: "var(--color-red-600)",
+        color: "#f87171",
+    };
+
+    const toolbarCardStyle = {
+        background: "var(--panel-bg)",
+        borderRadius: "1rem",
+        border: "1px solid var(--input-border)",
+        padding: "1.35rem 1.75rem",
+        boxShadow: "var(--shadow-md)",
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "1.25rem",
+        alignItems: "center",
+        justifyContent: "space-between",
     };
 
     const timeRangeContainerStyle = {
         display: "flex",
-        gap: "1rem",
-        marginBottom: "2rem",
-        borderBottom: "2px solid var(--color-gray-200)",
-        paddingBottom: "0.5rem",
+        gap: "0.75rem",
+        flexWrap: "wrap",
     };
 
     const timeRangeButtonStyle = {
-        padding: "0.75rem 1.5rem",
-        fontSize: "1rem",
-        fontWeight: 500,
-        color: "var(--color-primary-700)",
+        padding: "0.55rem 1.4rem",
+        fontSize: "0.95rem",
+        fontWeight: 600,
+        color: "var(--color-gray-600)",
         cursor: "pointer",
-        borderRadius: "0.5rem",
-        transition: "all 0.2s ease-in-out",
-        border: "none",
-        background: "var(--color-primary-50)",
+        borderRadius: "0.75rem",
+        border: "1px solid var(--color-gray-200)",
+        background: "var(--color-gray-100)",
+        transition: "all 0.2s ease",
     };
 
     const activeTimeRangeStyle = {
         ...timeRangeButtonStyle,
-        background: "var(--color-primary-600)",
-        color: "#ffffff",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+        border: "1px solid var(--color-primary-300)",
+        boxShadow: "var(--shadow-md)",
     };
 
     const chartContainerStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        marginBottom: "2rem",
-        border: "1px solid var(--color-gray-200)",
+        borderRadius: "1.1rem",
+        padding: "2rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
     };
 
     const chartHeaderStyle = {
@@ -183,17 +230,17 @@ const Statistics = () => {
     };
 
     const chartTitleStyle = {
-        fontSize: "1.125rem",
+        fontSize: "1.25rem",
         fontWeight: 600,
         color: "var(--color-gray-900)",
     };
 
     const chartContentStyle = {
-        height: "300px",
+        height: "320px",
         display: "flex",
         alignItems: "flex-end",
-        gap: "1rem",
-        padding: "1rem 0",
+        gap: "1.1rem",
+        padding: "0.5rem 0 0",
     };
 
     const barContainerStyle = {
@@ -201,30 +248,32 @@ const Statistics = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "0.5rem",
+        gap: "0.6rem",
     };
 
     const barStyle = {
         width: "100%",
-        backgroundColor: "var(--color-primary-100)",
-        borderRadius: "0.25rem",
+        borderRadius: "0.5rem",
         position: "relative",
+        overflow: "hidden",
+        background: "rgba(59, 130, 246, 0.2)",
     };
 
     const focusBarStyle = {
         ...barStyle,
-        backgroundColor: "var(--color-primary-500)",
+        background: "linear-gradient(180deg, rgba(56, 189, 248, 0.85), rgba(37, 99, 235, 0.65))",
     };
 
     const breakBarStyle = {
         ...barStyle,
-        backgroundColor: "var(--color-yellow-500)",
+        background: "linear-gradient(180deg, rgba(250, 204, 21, 0.85), rgba(234, 179, 8, 0.65))",
     };
 
     const barLabelStyle = {
-        fontSize: "0.75rem",
-        color: "var(--color-gray-500)",
+        fontSize: "0.78rem",
+        color: "var(--color-gray-600)",
         textAlign: "center",
+        fontWeight: 600,
     };
 
     const timeRangeOptions = [
@@ -235,34 +284,34 @@ const Statistics = () => {
     ];
 
     const sectionTitleStyle = {
-        fontSize: "1.25rem",
-        fontWeight: 600,
+        fontSize: "1.55rem",
+        fontWeight: 700,
         color: "var(--color-gray-900)",
-        marginBottom: "0.5rem",
+        marginBottom: "0.45rem",
     };
 
     const sectionSubtitleStyle = {
         color: "var(--color-gray-600)",
-        fontSize: "0.95rem",
-        marginBottom: "1.5rem",
+        fontSize: "0.98rem",
+        marginBottom: "1.4rem",
+        lineHeight: 1.7,
     };
 
     const insightsContainerStyle = {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         gap: "1.5rem",
-        marginBottom: "2.5rem",
     };
 
     const insightCardStyle = {
         background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.5rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        borderRadius: "1rem",
+        padding: "1.75rem",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
+        gap: "0.9rem",
     };
 
     const insightHeaderStyle = {
@@ -273,53 +322,52 @@ const Statistics = () => {
     };
 
     const insightIconContainerStyle = {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "0.75rem",
-        background: "var(--color-primary-50)",
+        width: "2.6rem",
+        height: "2.6rem",
+        borderRadius: "0.8rem",
+        background: "var(--color-primary-100)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "1.5rem",
+        fontSize: "1.4rem",
         color: "var(--color-primary-600)",
     };
 
     const insightTitleStyle = {
-        fontSize: "1.05rem",
+        fontSize: "1.1rem",
         fontWeight: 600,
         color: "var(--color-gray-900)",
-        marginBottom: "0.25rem",
+        marginBottom: "0.3rem",
     };
 
     const insightHighlightStyle = {
-        fontSize: "1.35rem",
+        fontSize: "1.4rem",
         fontWeight: 700,
-        color: "var(--color-primary-700)",
+        color: "#38bdf8",
     };
 
     const insightDescriptionStyle = {
-        color: "var(--color-gray-600)",
-        fontSize: "0.9rem",
-        lineHeight: 1.6,
+        color: "#cbd5f5",
+        fontSize: "0.92rem",
+        lineHeight: 1.7,
     };
 
     const insightBadgeBaseStyle = {
         display: "inline-flex",
         alignItems: "center",
         gap: "0.35rem",
-        padding: "0.25rem 0.75rem",
+        padding: "0.28rem 0.85rem",
         borderRadius: "9999px",
-        fontSize: "0.75rem",
+        fontSize: "0.78rem",
         fontWeight: 600,
     };
 
     const goalsSectionStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.75rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        marginBottom: "2.5rem",
+        background: "rgba(17, 24, 39, 0.7)",
+        borderRadius: "1rem",
+        padding: "1.9rem",
+        border: "1px solid rgba(56, 189, 248, 0.18)",
+        boxShadow: "0 28px 60px -36px rgba(8, 47, 73, 0.7)",
     };
 
     const goalListStyle = {
@@ -331,10 +379,11 @@ const Statistics = () => {
     const goalItemStyle = {
         display: "flex",
         flexDirection: "column",
-        gap: "0.65rem",
-        background: "var(--color-gray-50)",
-        borderRadius: "0.75rem",
-        padding: "1rem",
+        gap: "0.75rem",
+        background: "rgba(15, 23, 42, 0.6)",
+        borderRadius: "0.9rem",
+        padding: "1.2rem 1.35rem",
+        border: "1px solid rgba(148, 163, 184, 0.18)",
     };
 
     const goalHeaderStyle = {
@@ -342,72 +391,72 @@ const Statistics = () => {
         justifyContent: "space-between",
         alignItems: "center",
         gap: "0.75rem",
+        flexWrap: "wrap",
     };
 
     const goalTitleStyle = {
-        fontSize: "1rem",
+        fontSize: "1.05rem",
         fontWeight: 600,
-        color: "var(--color-gray-900)",
+        color: "#f8fafc",
     };
 
     const goalDescriptionStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.5,
+        fontSize: "0.92rem",
+        color: "#cbd5f5",
+        lineHeight: 1.7,
     };
 
     const goalProgressTrackStyle = {
-        height: "0.5rem",
-        background: "var(--color-gray-200)",
+        height: "0.55rem",
+        background: "rgba(148, 163, 184, 0.22)",
         borderRadius: "9999px",
         overflow: "hidden",
     };
 
     const goalProgressFillStyle = {
         height: "100%",
-        background: "linear-gradient(90deg, var(--color-primary-500), var(--color-cyan-400))",
+        background: "linear-gradient(90deg, #38bdf8, #818cf8)",
         borderRadius: "9999px",
-        transition: "width 0.3s ease-in-out",
+        transition: "width 0.35s ease",
     };
 
     const goalStatusPillBaseStyle = {
         display: "inline-flex",
         alignItems: "center",
         gap: "0.35rem",
-        padding: "0.25rem 0.75rem",
+        padding: "0.28rem 0.85rem",
         borderRadius: "9999px",
-        fontSize: "0.75rem",
+        fontSize: "0.78rem",
         fontWeight: 600,
     };
 
     const tipsSectionStyle = {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         gap: "1.5rem",
-        marginBottom: "2rem",
     };
 
     const tipCardStyle = {
-        background: "var(--panel-bg)",
-        borderRadius: "0.75rem",
-        padding: "1.25rem",
-        border: "1px solid var(--color-gray-200)",
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        background: "rgba(17, 24, 39, 0.7)",
+        borderRadius: "0.95rem",
+        padding: "1.6rem",
+        border: "1px solid rgba(148, 163, 184, 0.18)",
+        boxShadow: "0 26px 55px -34px rgba(8, 47, 73, 0.72)",
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
     };
 
     const tipTitleStyle = {
-        fontSize: "1rem",
+        fontSize: "1.05rem",
         fontWeight: 600,
-        color: "var(--color-gray-900)",
+        color: "#f8fafc",
     };
 
     const tipDescriptionStyle = {
-        fontSize: "0.875rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.6,
+        fontSize: "0.92rem",
+        color: "#cbd5f5",
+        lineHeight: 1.65,
     };
 
     const insights = [

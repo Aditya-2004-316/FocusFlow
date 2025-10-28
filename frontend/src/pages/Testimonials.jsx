@@ -97,52 +97,84 @@ const industryPanels = [
 
 const Testimonials = () => {
     const styles = {
-        landingPage: {
-            minHeight: '100vh',
-            background: 'linear-gradient(to bottom, #0f172a, #1e293b, #0f172a)',
-            color: '#ffffff',
-        },
         page: {
             minHeight: "100vh",
-            background: "linear-gradient(to bottom, #0b1120, #121b2f, #0b1120)",
+            background: "linear-gradient(180deg, #0b1120 0%, #111c33 55%, #0b1120 100%)",
             color: "#ffffff",
         },
         hero: {
-            padding: "6rem 2rem 4rem",
+            padding: "6.5rem 2rem 4.5rem",
             textAlign: "center",
+            position: "relative",
+            overflow: "hidden",
+        },
+        heroPulse: {
+            position: "absolute",
+            inset: "-140px auto auto -80px",
+            width: "360px",
+            height: "360px",
+            background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.2), transparent 62%)",
+            filter: "blur(8px)",
         },
         heroInner: {
-            maxWidth: "780px",
+            maxWidth: "820px",
             margin: "0 auto",
+            position: "relative",
+            zIndex: 1,
         },
         heroTitle: {
-            fontSize: "3rem",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
+            fontSize: "3.25rem",
+            fontWeight: 800,
+            letterSpacing: "-0.035em",
             marginBottom: "1.25rem",
-            color: "#ffffff",
         },
         heroHighlight: {
-            background: "linear-gradient(to right, #38bdf8, #60a5fa)",
+            background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
         },
         heroSubtitle: {
-            fontSize: "1.18rem",
-            lineHeight: 1.8,
-            color: "#94a3b8",
+            fontSize: "1.22rem",
+            lineHeight: 1.78,
+            color: "#cbd5f5",
         },
         marquee: {
-            marginTop: "3rem",
+            marginTop: "3.25rem",
             display: "flex",
             justifyContent: "center",
-            gap: "1.5rem",
+            gap: "1.75rem",
             flexWrap: "wrap",
             color: "#64748b",
             fontSize: "0.95rem",
             letterSpacing: "0.12em",
             textTransform: "uppercase",
+        },
+        heroStats: {
+            marginTop: "3.5rem",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "1.35rem",
+            justifyContent: "center",
+        },
+        heroStat: {
+            minWidth: "220px",
+            padding: "1.35rem 1.65rem",
+            background: "rgba(17, 24, 39, 0.7)",
+            border: "1px solid rgba(148, 163, 184, 0.22)",
+            borderRadius: "1.2rem",
+            boxShadow: "0 22px 55px -35px rgba(56, 189, 248, 0.75)",
+        },
+        heroStatValue: {
+            fontSize: "1.85rem",
+            fontWeight: 700,
+            color: "#38bdf8",
+            marginBottom: "0.4rem",
+        },
+        heroStatLabel: {
+            color: "#94a3b8",
+            lineHeight: 1.6,
+            fontSize: "0.95rem",
         },
         section: {
             padding: "5rem 2rem",
@@ -154,57 +186,69 @@ const Testimonials = () => {
         statGrid: {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: "1.5rem",
+            gap: "1.75rem",
         },
         statCard: {
-            background: "rgba(30, 41, 59, 0.45)",
-            border: "1px solid rgba(148, 163, 184, 0.2)",
-            borderRadius: "1rem",
-            padding: "1.75rem",
+            background: "rgba(30, 41, 59, 0.55)",
+            border: "1px solid rgba(148, 163, 184, 0.22)",
+            borderRadius: "1.1rem",
+            padding: "1.85rem",
             display: "flex",
             flexDirection: "column",
-            gap: "0.75rem",
-            boxShadow: "0 20px 45px -20px rgba(14, 165, 233, 0.3)",
+            gap: "0.85rem",
+            boxShadow: "0 25px 55px -32px rgba(14, 165, 233, 0.45)",
         },
         statValue: {
-            fontSize: "2.4rem",
+            fontSize: "2.45rem",
             fontWeight: 700,
             color: "#38bdf8",
         },
         statLabel: {
-            fontSize: "1rem",
+            fontSize: "1.02rem",
             color: "#e2e8f0",
             fontWeight: 600,
         },
         statCaption: {
-            fontSize: "0.9rem",
+            fontSize: "0.92rem",
             color: "#94a3b8",
             lineHeight: 1.6,
         },
         quoteGrid: {
-            marginTop: "3rem",
+            marginTop: "3.25rem",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "1.75rem",
+            gap: "1.85rem",
         },
         quoteCard: {
-            background: "rgba(17, 24, 39, 0.75)",
-            border: "1px solid rgba(56, 189, 248, 0.25)",
-            borderRadius: "1.1rem",
-            padding: "2.25rem 2rem",
+            background: "rgba(17, 24, 39, 0.78)",
+            border: "1px solid rgba(56, 189, 248, 0.3)",
+            borderRadius: "1.2rem",
+            padding: "2.4rem 2.1rem",
             display: "flex",
             flexDirection: "column",
-            gap: "1rem",
-            boxShadow: "0 25px 60px -30px rgba(56, 189, 248, 0.45)",
+            gap: "1.05rem",
+            position: "relative",
+            overflow: "hidden",
+            boxShadow: "0 30px 60px -35px rgba(56, 189, 248, 0.5)",
+            transition: "transform 0.25s ease, border-color 0.25s ease",
+        },
+        quoteGlow: {
+            position: "absolute",
+            inset: "auto auto -120px -90px",
+            width: "240px",
+            height: "240px",
+            background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.28), transparent)",
+            filter: "blur(6px)",
+            opacity: 0.6,
         },
         quoteMark: {
-            fontSize: "2.5rem",
-            color: "rgba(56, 189, 248, 0.65)",
+            fontSize: "2.6rem",
+            color: "rgba(56, 189, 248, 0.7)",
         },
         quoteText: {
-            fontSize: "1.1rem",
-            lineHeight: 1.8,
-            color: "#cbd5f5",
+            fontSize: "1.12rem",
+            lineHeight: 1.85,
+            color: "#dbeafe",
         },
         quoteAuthor: {
             fontWeight: 700,
@@ -216,12 +260,12 @@ const Testimonials = () => {
         },
         panelSection: {
             background: "rgba(10, 15, 26, 0.85)",
-            borderRadius: "1.25rem",
+            borderRadius: "1.35rem",
             border: "1px solid rgba(148, 163, 184, 0.18)",
-            padding: "3rem",
+            padding: "3.2rem",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "2rem",
+            gap: "2.25rem",
         },
         panelCard: {
             display: "flex",
@@ -229,7 +273,7 @@ const Testimonials = () => {
             gap: "1rem",
         },
         panelTitle: {
-            fontSize: "1.1rem",
+            fontSize: "1.13rem",
             fontWeight: 600,
             color: "#e2e8f0",
         },
@@ -238,14 +282,14 @@ const Testimonials = () => {
             paddingLeft: "1.25rem",
             color: "#94a3b8",
             fontSize: "0.95rem",
-            lineHeight: 1.6,
+            lineHeight: 1.65,
         },
         ctaBlock: {
             textAlign: "center",
-            marginTop: "4rem",
+            marginTop: "4.25rem",
         },
         ctaTitle: {
-            fontSize: "2.15rem",
+            fontSize: "2.2rem",
             fontWeight: 700,
             color: "#ffffff",
             marginBottom: "1rem",
@@ -254,21 +298,22 @@ const Testimonials = () => {
             color: "#94a3b8",
             maxWidth: "560px",
             margin: "0 auto 2rem",
-            lineHeight: 1.7,
+            lineHeight: 1.72,
         },
         ctaButton: {
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "0.5rem",
+            gap: "0.6rem",
             background: "linear-gradient(to right, #38bdf8, #60a5fa)",
             color: "#0f172a",
-            padding: "1rem 2.75rem",
+            padding: "1rem 2.85rem",
             borderRadius: "9999px",
             fontWeight: 700,
-            fontSize: "1.05rem",
+            fontSize: "1.06rem",
             textDecoration: "none",
             border: "none",
+            boxShadow: "0 22px 48px -24px rgba(56, 189, 248, 0.65)",
         },
     };
 
@@ -276,6 +321,7 @@ const Testimonials = () => {
         <div style={styles.page}>
             <LandingNavbar />
             <section style={styles.hero}>
+                <div style={styles.heroPulse} />
                 <div style={styles.heroInner}>
                     <h1 style={styles.heroTitle}>
                         Voices from leading teams who <span style={styles.heroHighlight}>protect their focus</span>
@@ -287,6 +333,14 @@ const Testimonials = () => {
                     <div style={styles.marquee}>
                         {marqueeLogos.map((logo) => (
                             <span key={logo.name}>{logo.name}</span>
+                        ))}
+                    </div>
+                    <div style={styles.heroStats}>
+                        {successStats.map((stat) => (
+                            <div key={stat.label} style={styles.heroStat}>
+                                <div style={styles.heroStatValue}>{stat.value}</div>
+                                <div style={styles.heroStatLabel}>{stat.label}</div>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -301,24 +355,6 @@ const Testimonials = () => {
                                 <div style={styles.statValue}>{stat.value}</div>
                                 <div style={styles.statLabel}>{stat.label}</div>
                                 <div style={styles.statCaption}>{stat.caption}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Quotes */}
-            <section style={styles.section}>
-                <div style={styles.container}>
-                    <div style={styles.quoteGrid}>
-                        {testimonialQuotes.map((item, idx) => (
-                            <div key={idx} className="hover-card" style={styles.quoteCard}>
-                                <div style={styles.quoteMark}>“</div>
-                                <p style={styles.quoteText}>{item.quote}</p>
-                                <div>
-                                    <div style={styles.quoteAuthor}>{item.author}</div>
-                                    <div style={styles.quoteRole}>{item.role}</div>
-                                </div>
                             </div>
                         ))}
                     </div>

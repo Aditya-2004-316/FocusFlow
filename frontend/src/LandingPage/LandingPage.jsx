@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import LandingNavbar from "./LandingNavbar";
 import LandingFooter from "./LandingFooter";
 import AuthModals from "./AuthModals";
-import FocusFlowDashboard from "../assets/focusflowdashboard.png";
 
 const LandingPage = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -226,67 +225,158 @@ const LandingPage = () => {
             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
         },
         howItWorksSection: {
-            padding: '4rem 2rem',
+            padding: '5rem 2rem',
             background: 'rgba(15, 23, 42, 0.5)',
         },
         howItWorksContainer: {
-            maxWidth: '900px',
+            maxWidth: '1100px',
             margin: '0 auto',
-            background: 'rgba(30, 41, 59, 0.5)',
-            backdropFilter: 'blur(8px)',
-            borderRadius: '1rem',
-            border: '1px solid #334155',
-            padding: '3rem 2rem',
-            textAlign: 'center',
+            background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(14, 165, 233, 0.05))',
+            borderRadius: '1.25rem',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            padding: '3.25rem 3rem',
+            position: 'relative',
+            overflow: 'hidden',
+        },
+        howBackdropOrb: {
+            position: 'absolute',
+            width: '320px',
+            height: '320px',
+            background: 'radial-gradient(circle at center, rgba(96, 165, 250, 0.35), transparent)',
+            top: '-120px',
+            right: '-80px',
+            filter: 'blur(4px)',
+            animation: 'floatPulse 14s ease-in-out infinite',
+        },
+        howBackdropGlow: {
+            position: 'absolute',
+            width: '260px',
+            height: '260px',
+            background: 'radial-gradient(circle at center, rgba(14, 165, 233, 0.25), transparent)',
+            bottom: '-140px',
+            left: '-90px',
+            filter: 'blur(6px)',
+            animation: 'glowDrift 18s ease-in-out infinite',
         },
         howItWorksTitle: {
-            fontSize: '2rem',
+            fontSize: '2.35rem',
             fontWeight: '700',
-            color: '#38bdf8',
-            marginBottom: '1.5rem',
+            color: '#0ea5e9',
+            textAlign: 'center',
+            marginBottom: '1rem',
         },
         howItWorksDescription: {
             color: '#d1d5db',
             fontSize: '1.15rem',
-            marginBottom: '2rem',
-            lineHeight: '1.6',
-        },
-        howItWorksList: {
-            listStyle: 'none',
-            padding: '0',
-            margin: '0 0 2rem 0',
-            textAlign: 'left',
+            margin: '0 auto 2.5rem',
+            lineHeight: '1.65',
             maxWidth: '600px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            textAlign: 'center',
         },
-        howItWorksListItem: {
-            marginBottom: '1rem',
-            color: '#d1d5db',
-            fontSize: '1.08rem',
+        howItWorksGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: '1.75rem',
+            position: 'relative',
+            zIndex: 1,
+        },
+        howStepCard: {
+            background: 'rgba(15, 23, 42, 0.75)',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            borderRadius: '1.15rem',
+            padding: '2rem',
             display: 'flex',
-            alignItems: 'flex-start',
-            gap: '0.5rem',
+            flexDirection: 'column',
+            gap: '1.1rem',
+            boxShadow: '0 25px 45px -28px rgba(14, 165, 233, 0.6)',
+            transition: 'transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
+            animation: 'floatPulse 10s ease-in-out infinite',
         },
-        checkmark: {
+        howStepCardHover: {
+            transform: 'translateY(-8px) scale(1.01)',
+            borderColor: 'rgba(56, 189, 248, 0.55)',
+            boxShadow: '0 35px 70px -40px rgba(14, 165, 233, 0.85)',
+        },
+        howStepTop: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+        },
+        howStepIcon: {
+            width: '3.25rem',
+            height: '3.25rem',
+            borderRadius: '0.9rem',
+            background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(14, 165, 233, 0.1))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.6rem',
             color: '#38bdf8',
-            fontSize: '1.2rem',
-            fontWeight: 'bold',
-            flexShrink: 0,
-            marginTop: '0.1rem',
+        },
+        howStepTitle: {
+            fontSize: '1.35rem',
+            fontWeight: '600',
+            color: '#e2e8f0',
+        },
+        howStepDescription: {
+            color: '#94a3b8',
+            lineHeight: '1.65',
+            fontSize: '0.98rem',
+        },
+        howStepAccent: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            padding: '0.5rem 0.9rem',
+            borderRadius: '9999px',
+            background: 'rgba(56, 189, 248, 0.18)',
+            color: '#38bdf8',
+            fontWeight: 600,
+            fontSize: '0.78rem',
+            letterSpacing: '0.05em',
         },
         howItWorksFooter: {
+            marginTop: '2.5rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+            justifyContent: 'center',
+            position: 'relative',
+            zIndex: 1,
+        },
+        howItWorksBadge: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'rgba(14, 165, 233, 0.12)',
             color: '#38bdf8',
-            fontWeight: '500',
-            fontSize: '1.1rem',
-            marginTop: '1.5rem',
+            borderRadius: '9999px',
+            padding: '0.5rem 1rem',
+            fontWeight: 600,
+            fontSize: '0.85rem',
+        },
+        howItWorksFooterText: {
+            color: '#cbd5f5',
+            fontSize: '0.95rem',
+            lineHeight: 1.6,
+            textAlign: 'center',
+            maxWidth: '540px',
+        },
+        howItWorksFooterCta: {
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            borderRadius: '9999px',
+            padding: '0.55rem 1.35rem',
+            color: '#38bdf8',
+            fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
         },
         sectionHeader: {
             fontSize: '2.35rem',
             fontWeight: '700',
             color: '#ffffff',
             textAlign: 'center',
-            marginBottom: '1rem',
         },
         sectionLead: {
             textAlign: 'center',
@@ -396,6 +486,136 @@ const LandingPage = () => {
             lineHeight: '1.6',
             fontSize: '0.95rem',
         },
+        useCaseGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: '2rem',
+        },
+        useCaseCard: {
+            background: 'rgba(30, 41, 59, 0.5)',
+            backdropFilter: 'blur(8px)',
+            padding: '2rem',
+            borderRadius: '1rem',
+            border: '1px solid #334155',
+            textAlign: 'center',
+            transition: 'transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease',
+        },
+        useCaseCardHover: {
+            transform: 'translateY(-6px)',
+            boxShadow: '0 30px 50px -25px rgba(14, 165, 233, 0.4)',
+            borderColor: 'rgba(56, 189, 248, 0.45)',
+        },
+        comparisonWrapper: {
+            background: 'rgba(15, 23, 42, 0.75)',
+            borderRadius: '1.2rem',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            padding: '2.75rem 2.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+        },
+        comparisonBackdropOrb: {
+            position: 'absolute',
+            width: '320px',
+            height: '320px',
+            top: '-160px',
+            left: '-120px',
+            background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.2), transparent)',
+            filter: 'blur(6px)',
+            zIndex: 0,
+        },
+        comparisonBackdropAura: {
+            position: 'absolute',
+            width: '260px',
+            height: '260px',
+            bottom: '-140px',
+            right: '-80px',
+            background: 'radial-gradient(circle at center, rgba(14, 165, 233, 0.18), transparent)',
+            filter: 'blur(8px)',
+            zIndex: 0,
+        },
+        comparisonIntro: {
+            textAlign: 'center',
+            maxWidth: '640px',
+            margin: '0 auto 2.5rem',
+            color: '#cbd5f5',
+            lineHeight: '1.7',
+        },
+        comparisonGrid: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: '1.75rem',
+            position: 'relative',
+            zIndex: 1,
+        },
+        comparisonCard: {
+            background: 'linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(14, 165, 233, 0.1))',
+            borderRadius: '1rem',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            padding: '1.75rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.85rem',
+            boxShadow: '0 25px 45px -30px rgba(14, 165, 233, 0.65)',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        },
+        comparisonCardHover: {
+            transform: 'translateY(-6px)',
+            boxShadow: '0 30px 60px -35px rgba(14, 165, 233, 0.8)',
+        },
+        comparisonHeader: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+        },
+        comparisonIconWrap: {
+            width: '2.75rem',
+            height: '2.75rem',
+            borderRadius: '0.9rem',
+            background: 'rgba(15, 23, 42, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.5rem',
+            color: '#38bdf8',
+        },
+        comparisonTitle: {
+            fontSize: '1.25rem',
+            fontWeight: '600',
+            color: '#0ea5e9',
+        },
+        comparisonDescription: {
+            color: '#dbeafe',
+            lineHeight: '1.6',
+            fontSize: '0.98rem',
+        },
+        comparisonHighlight: {
+            fontSize: '0.85rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            color: '#bae6fd',
+            fontWeight: 600,
+        },
+        comparisonFooter: {
+            marginTop: '2.5rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+            justifyContent: 'center',
+            color: '#94a3b8',
+            fontSize: '0.9rem',
+        },
+        comparisonTag: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            background: 'rgba(15, 23, 42, 0.8)',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            borderRadius: '9999px',
+            padding: '0.45rem 0.95rem',
+            color: '#bae6fd',
+            fontWeight: 600,
+            fontSize: '0.82rem',
+        },
     };
 
     const roadmapHighlights = [
@@ -452,9 +672,53 @@ const LandingPage = () => {
         },
     ];
 
+    const howItWorksSteps = [
+        {
+            icon: '🧭',
+            title: 'Set your intention',
+            description:
+                'Drop in with a daily intention, pick your priority lane, and let FocusFlow tailor the rhythm of your day.',
+            accent: 'Guided planning',
+        },
+        {
+            icon: '⏱️',
+            title: 'Launch deep-work loops',
+            description:
+                'Spin up immersive focus sessions with soundscapes, ritual reminders, and automatic status updates to your crew.',
+            accent: 'Adaptive timers',
+        },
+        {
+            icon: '📊',
+            title: 'Track momentum in real time',
+            description:
+                'See streaks, context switches, and energy trends lighting up in a single command centre—no manual logging required.',
+            accent: 'Live analytics',
+        },
+        {
+            icon: '🤝',
+            title: 'Close the loop with insights',
+            description:
+                'Share recaps, celebrate wins, and auto-sync learnings into the tools your team already lives in.',
+            accent: 'Autonomous follow-ups',
+        },
+    ];
+
     return (
-        <div style={styles.landingPage}>
-            <LandingNavbar />
+        <>
+            <style>{`
+                @keyframes floatPulse {
+                    0%, 100% { transform: translateY(0px) scale(1); opacity: 0.85; }
+                    50% { transform: translateY(-10px) scale(1.02); opacity: 1; }
+                }
+
+                @keyframes glowDrift {
+                    0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+                    50% { transform: translate(12px, -8px) scale(1.08); opacity: 0.9; }
+                    100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+                }
+            `}</style>
+            <div style={styles.landingPage}>
+                <LandingNavbar />
             {/* Hero Section */}
             <section style={styles.heroSection}>
                 <h1 style={styles.heroTitle}>
@@ -611,42 +875,46 @@ const LandingPage = () => {
                     }}>
                         Perfect For Everyone
                     </h2>
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                        gap: '2rem',
-                    }}>
+                    <div style={styles.useCaseGrid}>
                         {[
                             {
                                 icon: '🎓',
                                 title: 'Students',
                                 description: 'Ace your exams with focused study sessions and track your learning progress.',
+                                highlight: 'Study timers · Revision tags',
                             },
                             {
                                 icon: '💼',
                                 title: 'Freelancers',
                                 description: 'Track billable hours accurately and stay productive across multiple projects.',
+                                highlight: 'Client workspaces · Invoicing exports',
                             },
                             {
                                 icon: '🏠',
                                 title: 'Remote Workers',
                                 description: 'Maintain work-life balance at home with structured focus sessions.',
+                                highlight: 'Routine rituals · Work/life analytics',
                             },
                             {
                                 icon: '👥',
                                 title: 'Teams',
                                 description: 'Collaborate and stay aligned on projects with shared workspaces.',
+                                highlight: 'Shared dashboards · Accountability metrics',
                             },
                         ].map((useCase, index) => (
-                            <div key={index} style={{
-                                background: 'rgba(30, 41, 59, 0.5)',
-                                backdropFilter: 'blur(8px)',
-                                padding: '2rem',
-                                borderRadius: '1rem',
-                                border: '1px solid #334155',
-                                textAlign: 'center',
-                                transition: 'all 0.3s ease',
-                            }}>
+                            <div
+                                key={index}
+                                style={styles.useCaseCard}
+                                onMouseEnter={(e) => {
+                                    Object.assign(e.currentTarget.style, {
+                                        ...styles.useCaseCard,
+                                        ...styles.useCaseCardHover,
+                                    });
+                                }}
+                                onMouseLeave={(e) => {
+                                    Object.assign(e.currentTarget.style, styles.useCaseCard);
+                                }}
+                            >
                                 <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
                                     {useCase.icon}
                                 </div>
@@ -654,7 +922,7 @@ const LandingPage = () => {
                                     fontSize: '1.5rem',
                                     fontWeight: '600',
                                     color: '#38bdf8',
-                                    marginBottom: '1rem',
+                                    marginBottom: '0.75rem',
                                 }}>
                                     {useCase.title}
                                 </h3>
@@ -664,6 +932,21 @@ const LandingPage = () => {
                                 }}>
                                     {useCase.description}
                                 </p>
+                                <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.4rem',
+                                    marginTop: '1.25rem',
+                                    padding: '0.45rem 0.85rem',
+                                    borderRadius: '9999px',
+                                    background: 'rgba(56, 189, 248, 0.18)',
+                                    color: '#38bdf8',
+                                    fontSize: '0.82rem',
+                                    fontWeight: 600,
+                                }}>
+                                    <span role="img" aria-label="spark">✨</span>
+                                    {useCase.highlight}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -673,15 +956,15 @@ const LandingPage = () => {
             {/* Comparison Section */}
             <section style={{
                 padding: '5rem 2rem',
-                background: 'rgba(15, 23, 42, 0.5)',
+                background: 'rgba(15, 23, 42, 0.55)',
             }}>
-                <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
                     <h2 style={{
                         fontSize: '2.5rem',
                         fontWeight: '700',
                         color: '#ffffff',
                         textAlign: 'center',
-                        marginBottom: '3rem',
+                        marginBottom: '1rem',
                     }}>
                         Why Choose{' '}
                         <span style={{
@@ -693,74 +976,77 @@ const LandingPage = () => {
                             FocusFlow?
                         </span>
                     </h2>
-                    <div style={{
-                        background: 'rgba(30, 41, 59, 0.5)',
-                        backdropFilter: 'blur(8px)',
-                        borderRadius: '1rem',
-                        border: '1px solid #334155',
-                        overflow: 'hidden',
-                    }}>
-                        <table style={{
-                            width: '100%',
-                            borderCollapse: 'collapse',
-                        }}>
-                            <thead>
-                                <tr style={{ background: 'rgba(56, 189, 248, 0.1)' }}>
-                                    <th style={{
-                                        padding: '1.5rem',
-                                        textAlign: 'left',
-                                        color: '#ffffff',
-                                        fontWeight: '600',
-                                        fontSize: '1.1rem',
-                                    }}>Feature</th>
-                                    <th style={{
-                                        padding: '1.5rem',
-                                        textAlign: 'center',
-                                        color: '#38bdf8',
-                                        fontWeight: '700',
-                                        fontSize: '1.1rem',
-                                    }}>FocusFlow</th>
-                                    <th style={{
-                                        padding: '1.5rem',
-                                        textAlign: 'center',
-                                        color: '#94a3b8',
-                                        fontWeight: '600',
-                                        fontSize: '1.1rem',
-                                    }}>Competitors</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {[
-                                    { feature: 'Price', focusflow: 'Free Forever', competitors: '$10-20/month' },
-                                    { feature: 'No Ads', focusflow: '✓', competitors: '✗' },
-                                    { feature: 'Open Source', focusflow: '✓', competitors: '✗' },
-                                    { feature: 'Privacy First', focusflow: '✓', competitors: 'Limited' },
-                                    { feature: 'Unlimited Users', focusflow: '✓', competitors: 'Paid Tier' },
-                                ].map((row, index) => (
-                                    <tr key={index} style={{
-                                        borderTop: '1px solid #334155',
-                                    }}>
-                                        <td style={{
-                                            padding: '1.25rem 1.5rem',
-                                            color: '#d1d5db',
-                                            fontWeight: '500',
-                                        }}>{row.feature}</td>
-                                        <td style={{
-                                            padding: '1.25rem 1.5rem',
-                                            textAlign: 'center',
-                                            color: '#38bdf8',
-                                            fontWeight: '600',
-                                            fontSize: '1.1rem',
-                                        }}>{row.focusflow}</td>
-                                        <td style={{
-                                            padding: '1.25rem 1.5rem',
-                                            textAlign: 'center',
-                                            color: '#94a3b8',
-                                        }}>{row.competitors}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <p style={styles.comparisonIntro}>
+                        FocusFlow gives you enterprise-grade focus rituals without the enterprise price tag. We obsess over clarity, privacy, and velocity so you can stay in flow.
+                    </p>
+                    <div style={styles.comparisonWrapper}>
+                        <div style={styles.comparisonBackdropOrb} />
+                        <div style={styles.comparisonBackdropAura} />
+                        <div style={styles.comparisonGrid}>
+                            {[
+                                {
+                                    icon: '💸',
+                                    title: 'Free forever',
+                                    description: 'No paywalls, trials, or credit card. Every productivity primitive unlocked from day one.',
+                                    highlight: 'No hidden fees',
+                                },
+                                {
+                                    icon: '🛡️',
+                                    title: 'Privacy-first',
+                                    description: 'Local-first architecture keeps your data on your device. Export anytime—your data, your rules.',
+                                    highlight: 'Own your focus data',
+                                },
+                                {
+                                    icon: '🧠',
+                                    title: 'Designed with you',
+                                    description: 'Our roadmap is community-led. Join weekly office hours, ship features, and steer the product.',
+                                    highlight: 'Community roadmap',
+                                },
+                                {
+                                    icon: '⚡',
+                                    title: 'Effortless rituals',
+                                    description: 'From streaks to deep-work presets, FocusFlow removes friction so your routines stick for good.',
+                                    highlight: 'Habit automation',
+                                },
+                            ].map((card, index) => (
+                                <div
+                                    key={index}
+                                    style={styles.comparisonCard}
+                                    onMouseEnter={(e) => {
+                                        Object.assign(e.currentTarget.style, {
+                                            ...styles.comparisonCard,
+                                            ...styles.comparisonCardHover,
+                                        });
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        Object.assign(e.currentTarget.style, styles.comparisonCard);
+                                    }}
+                                >
+                                    <div style={styles.comparisonHeader}>
+                                        <div style={styles.comparisonIconWrap}>{card.icon}</div>
+                                        <div>
+                                            <span style={styles.comparisonHighlight}>{card.highlight}</span>
+                                            <h3 style={styles.comparisonTitle}>{card.title}</h3>
+                                        </div>
+                                    </div>
+                                    <p style={styles.comparisonDescription}>{card.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div style={styles.comparisonFooter}>
+                            <span style={styles.comparisonTag}>
+                                <span role="img" aria-label="folder">📁</span>
+                                Open-source stack
+                            </span>
+                            <span style={styles.comparisonTag}>
+                                <span role="img" aria-label="spark">✨</span>
+                                Weekly product drops
+                            </span>
+                            <span style={styles.comparisonTag}>
+                                <span role="img" aria-label="shield">🛡️</span>
+                                Security-first foundation
+                            </span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -950,6 +1236,8 @@ const LandingPage = () => {
             {/* How It Works Section */}
             <section style={styles.howItWorksSection}>
                 <div style={styles.howItWorksContainer}>
+                    <div style={styles.howBackdropOrb} />
+                    <div style={styles.howBackdropGlow} />
                     <h2 style={styles.howItWorksTitle}>
                         How{" "}
                         <span style={{
@@ -963,40 +1251,74 @@ const LandingPage = () => {
                         Works
                     </h2>
                     <p style={styles.howItWorksDescription}>
-                        Getting started is simple! Create your first task, set a
-                        timer, and watch your productivity soar. Easily organize
-                        your to-dos, track your progress, and collaborate with
-                        others—all from a clean, intuitive dashboard. Whether
-                        you're working solo or with a team, FocusFlow adapts to
-                        your workflow and helps you stay on track every step of
-                        the way.
+                        Every flow state follows a rhythm. FocusFlow wraps every stage—from intent-setting to celebration—in delightful, automated loops.
                     </p>
-                    <ul style={styles.howItWorksList}>
-                        <li style={styles.howItWorksListItem}>
-                            <span style={styles.checkmark}>✓</span>
-                            Sign up and personalize your workspace
-                        </li>
-                        <li style={styles.howItWorksListItem}>
-                            <span style={styles.checkmark}>✓</span>
-                            Add tasks and set priorities
-                        </li>
-                        <li style={styles.howItWorksListItem}>
-                            <span style={styles.checkmark}>✓</span>
-                            Use the built-in timer to stay focused
-                        </li>
-                        <li style={styles.howItWorksListItem}>
-                            <span style={styles.checkmark}>✓</span>
-                            Track your achievements and review insights
-                        </li>
-                        <li style={styles.howItWorksListItem}>
-                            <span style={styles.checkmark}>✓</span>
-                            Invite others to collaborate, if you wish
-                        </li>
-                    </ul>
-                    <p style={styles.howItWorksFooter}>
-                        Start now and discover how easy it is to take control of
-                        your time and tasks with FocusFlow!
+                    <div style={styles.howItWorksGrid}>
+                        {howItWorksSteps.map((step, index) => (
+                            <div
+                                key={step.title}
+                                style={{
+                                    ...styles.howStepCard,
+                                    animationDelay: `${index * 0.6}s`,
+                                }}
+                                onMouseEnter={(e) => {
+                                    Object.assign(e.currentTarget.style, {
+                                        ...styles.howStepCard,
+                                        ...styles.howStepCardHover,
+                                        animationDelay: `${index * 0.6}s`,
+                                    });
+                                }}
+                                onMouseLeave={(e) => {
+                                    Object.assign(e.currentTarget.style, {
+                                        ...styles.howStepCard,
+                                        animationDelay: `${index * 0.6}s`,
+                                    });
+                                }}
+                            >
+                                <div style={styles.howStepTop}>
+                                    <div style={styles.howStepIcon}>{step.icon}</div>
+                                    <div>
+                                        <span style={styles.howStepAccent}>{step.accent}</span>
+                                        <h3 style={styles.howStepTitle}>{step.title}</h3>
+                                    </div>
+                                </div>
+                                <p style={styles.howStepDescription}>{step.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <div style={styles.howItWorksFooter}>
+                        <p style={styles.howItWorksFooterText}>
+                            FocusFlow choreographs the rituals that keep teams aligned and humans energized—so every session ends with momentum.
+                        </p>
+                        <span style={styles.howItWorksBadge}>
+                            <span role="img" aria-label="clock">⏳</span>
+                            Ritual builder beta is open
+                        </span>
+                        <span style={styles.howItWorksFooterCta}>
+                            <span role="img" aria-label="rocket">🚀</span>
+                            Join the pilot waitlist
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Integrations Section */}
+            <section style={styles.integrationSection}>
+                <div style={styles.integrationContainer}>
+                    <h2 style={styles.sectionHeader}>Connect FocusFlow to your workflow</h2>
+                    <p style={styles.sectionLead}>
+                        Pair timers, rituals, and analytics with the tools you already love. These integrations are
+                        live or in beta—join the waitlist to test-drive the next wave.
                     </p>
+                    <div style={styles.integrationGrid}>
+                        {integrationPartners.map((partner, idx) => (
+                            <div key={idx} style={styles.integrationCard}>
+                                <div style={styles.integrationIcon}>{partner.icon}</div>
+                                <div style={styles.integrationTitle}>{partner.name}</div>
+                                <p style={styles.integrationDescription}>{partner.blurb}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -1027,26 +1349,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Integrations Section */}
-            <section style={styles.integrationSection}>
-                <div style={styles.integrationContainer}>
-                    <h2 style={styles.sectionHeader}>Connect FocusFlow to your workflow</h2>
-                    <p style={styles.sectionLead}>
-                        Pair timers, rituals, and analytics with the tools you already love. These integrations are
-                        live or in beta—join the waitlist to test-drive the next wave.
-                    </p>
-                    <div style={styles.integrationGrid}>
-                        {integrationPartners.map((partner, idx) => (
-                            <div key={idx} style={styles.integrationCard}>
-                                <div style={styles.integrationIcon}>{partner.icon}</div>
-                                <div style={styles.integrationTitle}>{partner.name}</div>
-                                <p style={styles.integrationDescription}>{partner.blurb}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             <LandingFooter />
             <AuthModals
                 isLoginOpen={isLoginOpen}
@@ -1054,6 +1356,7 @@ const LandingPage = () => {
                 onClose={handleCloseModal}
             />
         </div>
+        </>
     );
 };
 

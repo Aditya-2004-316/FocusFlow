@@ -4,423 +4,496 @@ import LandingFooter from "../LandingPage/LandingFooter";
 import "../styles/CardHover.css";
 
 const Features = () => {
-    const features = [
-        {
-            icon: "⏰",
-            title: "Focus Timer",
-            description:
-                "Customizable Pomodoro timer with focus and break sessions. Track your productivity and maintain a healthy work-life balance.",
-        },
-        {
-            icon: "📊",
-            title: "Productivity Analytics",
-            description:
-                "Detailed insights into your work patterns, focus sessions, and productivity trends. Make data-driven decisions to improve your workflow.",
-        },
-        {
-            icon: "👥",
-            title: "Community Features",
-            description:
-                "Connect with like-minded individuals, share your progress, and participate in productivity challenges with our growing community.",
-        },
-        {
-            icon: "📚",
-            title: "Resource Library",
-            description:
-                "Access a curated collection of productivity tips, articles, and guides to help you optimize your workflow and achieve your goals.",
-        },
-        {
-            icon: "🔔",
-            title: "Smart Notifications",
-            description:
-                "Customizable reminders and notifications to keep you on track and maintain your focus throughout the day.",
-        },
-        {
-            icon: "⚙️",
-            title: "Customizable Settings",
-            description:
-                "Personalize your experience with adjustable timer settings, themes, and preferences to match your workflow.",
-        },
-        {
-            icon: "📈",
-            title: "Progress Tracking",
-            description:
-                "Monitor your daily, weekly, and monthly progress with detailed statistics and visual representations of your achievements.",
-        },
-        {
-            icon: "🎯",
-            title: "Goal Setting",
-            description:
-                "Set and track your productivity goals, celebrate milestones, and continuously improve your focus and efficiency.",
-        },
-    ];
-
     const styles = {
-        landingPage: {
-            minHeight: '100vh',
-            background: 'linear-gradient(to bottom, #0f172a, #1e293b, #0f172a)',
-            color: '#ffffff',
+        page: {
+            minHeight: "100vh",
+            background: "linear-gradient(180deg, #060b18 0%, #101b33 55%, #060b18 100%)",
+            color: "#ffffff",
         },
-        featuresSection: {
-            padding: '5rem 2rem',
-            background: 'rgba(15, 23, 42, 0.5)',
+        hero: {
+            position: "relative",
+            padding: "6.5rem 2rem 4.5rem",
+            textAlign: "center",
+            overflow: "hidden",
         },
-        featuresContainer: {
-            maxWidth: '1200px',
-            margin: '0 auto',
+        heroGlow: {
+            position: "absolute",
+            inset: "-220px auto auto 50%",
+            transform: "translateX(-50%)",
+            width: "620px",
+            height: "620px",
+            background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.28), transparent 65%)",
+            filter: "blur(10px)",
         },
-        featuresTitle: {
-            fontSize: '2.5rem',
-            fontWeight: '700',
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: '3rem',
+        heroInner: {
+            maxWidth: "880px",
+            margin: "0 auto",
+            position: "relative",
+            zIndex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.75rem",
         },
-        featuresGrid: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '2rem',
-            marginTop: '3rem',
+        heroBadge: {
+            alignSelf: "center",
+            padding: "0.45rem 1.1rem",
+            borderRadius: "9999px",
+            border: "1px solid rgba(56, 189, 248, 0.35)",
+            background: "rgba(15, 23, 42, 0.65)",
+            fontSize: "0.85rem",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "#38bdf8",
+            fontWeight: 600,
         },
-        featureCard: {
-            background: 'rgba(30, 41, 59, 0.5)',
-            backdropFilter: 'blur(8px)',
-            padding: '2rem',
-            borderRadius: '1rem',
-            transition: 'all 0.3s ease',
-            border: '1px solid #334155',
+        heroTitle: {
+            fontSize: "3.1rem",
+            lineHeight: 1.1,
+            fontWeight: 800,
+            letterSpacing: "-0.03em",
+            margin: 0,
+            background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
         },
-        featureCardHover: {
-            transform: 'translateY(-4px)',
-            borderColor: 'rgba(167, 139, 250, 0.5)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        heroSubtitle: {
+            margin: "0 auto",
+            maxWidth: "46rem",
+            color: "#cbd5f5",
+            fontSize: "1.15rem",
+            lineHeight: 1.8,
         },
-        featureTitle: {
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#38bdf8',
-            marginBottom: '1rem',
+        heroMetrics: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "1.25rem",
         },
-        featureDescription: {
-            color: '#94a3b8',
-            lineHeight: '1.6',
+        heroMetric: {
+            minWidth: "180px",
+            padding: "1.15rem 1.35rem",
+            borderRadius: "1.1rem",
+            background: "rgba(24, 36, 58, 0.65)",
+            border: "1px solid rgba(148, 163, 184, 0.22)",
+            boxShadow: "0 22px 50px -32px rgba(56, 189, 248, 0.6)",
+            textAlign: "left",
         },
-        sectionHeader: {
-            fontSize: '2.15rem',
-            fontWeight: '700',
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: '0.75rem',
+        heroMetricValue: {
+            fontSize: "1.8rem",
+            fontWeight: 700,
+            color: "#38bdf8",
+            marginBottom: "0.2rem",
+        },
+        heroMetricLabel: {
+            color: "#8ea0c2",
+            fontSize: "0.95rem",
+        },
+        heroActions: {
+            display: "flex",
+            justifyContent: "center",
+            gap: "0.9rem",
+            flexWrap: "wrap",
+            marginTop: "0.5rem",
+        },
+        primaryButton: {
+            background: "linear-gradient(110deg, #38bdf8, #818cf8)",
+            color: "#0f172a",
+            border: "none",
+            padding: "0.95rem 2.6rem",
+            borderRadius: "9999px",
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            cursor: "pointer",
+            transition: "transform 0.25s ease, box-shadow 0.25s ease",
+            boxShadow: "0 28px 60px -34px rgba(56, 189, 248, 0.75)",
+        },
+        secondaryButton: {
+            background: "rgba(15, 23, 42, 0.82)",
+            color: "#38bdf8",
+            border: "1px solid rgba(56, 189, 248, 0.35)",
+            padding: "0.95rem 2.3rem",
+            borderRadius: "9999px",
+            fontWeight: 600,
+            fontSize: "1.02rem",
+            cursor: "pointer",
+            transition: "transform 0.25s ease, border-color 0.25s ease",
+        },
+        section: {
+            padding: "5rem 2rem",
+        },
+        container: {
+            maxWidth: "1180px",
+            margin: "0 auto",
+            position: "relative",
+            zIndex: 1,
+        },
+        sectionHeading: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+            alignItems: "center",
+            marginBottom: "3rem",
+            textAlign: "center",
+        },
+        sectionTitle: {
+            fontSize: "2.4rem",
+            fontWeight: 700,
+            color: "#f8fafc",
         },
         sectionLead: {
-            textAlign: 'center',
-            maxWidth: '38rem',
-            margin: '0 auto 3rem',
-            color: '#94a3b8',
-            fontSize: '1.05rem',
-            lineHeight: '1.6',
+            maxWidth: "40rem",
+            color: "#9fb2d6",
+            fontSize: "1.05rem",
+            lineHeight: 1.7,
         },
-        blueprintSection: {
-            padding: '4.5rem 2rem',
-            background: 'rgba(15, 23, 42, 0.65)',
+        featureGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "1.75rem",
         },
-        blueprintGrid: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '1.75rem',
+        featureCard: {
+            position: "relative",
+            padding: "1.9rem 1.75rem",
+            borderRadius: "1.1rem",
+            background: "rgba(21, 30, 48, 0.75)",
+            border: "1px solid rgba(56, 189, 248, 0.14)",
+            boxShadow: "0 22px 50px -34px rgba(56, 189, 248, 0.55)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.85rem",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
         },
-        blueprintCard: {
-            background: 'rgba(30, 41, 59, 0.4)',
-            borderRadius: '0.9rem',
-            border: '1px solid #334155',
-            padding: '1.75rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
-            boxShadow: '0 15px 35px -20px rgba(0, 0, 0, 0.35)',
+        featureIconWrap: {
+            width: "3rem",
+            height: "3rem",
+            borderRadius: "0.9rem",
+            background: "linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.08))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "1.75rem",
+            color: "#38bdf8",
         },
-        blueprintStep: {
-            fontSize: '0.85rem',
-            fontWeight: '700',
-            letterSpacing: '0.08em',
-            color: '#38bdf8',
+        featureTitle: {
+            fontSize: "1.25rem",
+            fontWeight: 600,
+            color: "#f1f5f9",
         },
-        blueprintTitle: {
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            color: '#ffffff',
+        featureBlurb: {
+            color: "#93a8cc",
+            fontSize: "0.98rem",
+            lineHeight: 1.6,
         },
-        blueprintDescription: {
-            color: '#cbd5f5',
-            fontSize: '0.9rem',
-            lineHeight: '1.6',
+        featureTag: {
+            alignSelf: "flex-start",
+            background: "rgba(56, 189, 248, 0.16)",
+            color: "#38bdf8",
+            borderRadius: "0.65rem",
+            padding: "0.35rem 0.75rem",
+            fontSize: "0.78rem",
+            letterSpacing: "0.08em",
+            fontWeight: 600,
+            textTransform: "uppercase",
         },
-        workflowSection: {
-            padding: '4.5rem 2rem',
-            background: 'rgba(10, 16, 28, 0.9)',
+        flowsSection: {
+            padding: "5rem 2rem",
+            background: "rgba(7, 13, 26, 0.85)",
         },
-        workflowGrid: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.75rem',
-            marginTop: '3rem',
+        flowGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "1.6rem",
+            marginTop: "2.75rem",
         },
-        workflowCard: {
-            background: 'rgba(30, 41, 59, 0.45)',
-            border: '1px solid #1f2937',
-            borderRadius: '1rem',
-            padding: '1.75rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
+        flowCard: {
+            padding: "1.8rem",
+            borderRadius: "1.1rem",
+            background: "rgba(17, 25, 43, 0.78)",
+            border: "1px solid rgba(99, 102, 241, 0.22)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.85rem",
+            position: "relative",
         },
-        workflowIcon: {
-            width: '2.75rem',
-            height: '2.75rem',
-            borderRadius: '0.75rem',
-            background: 'rgba(56, 189, 248, 0.12)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.5rem',
-            color: '#38bdf8',
+        flowIndex: {
+            position: "absolute",
+            top: "-18px",
+            left: "1.5rem",
+            padding: "0.35rem 0.9rem",
+            borderRadius: "999px",
+            background: "linear-gradient(135deg, rgba(96, 165, 250, 0.22), rgba(129, 140, 248, 0.22))",
+            color: "#c7d2fe",
+            fontWeight: 600,
+            fontSize: "0.85rem",
+            letterSpacing: "0.08em",
         },
-        workflowTitle: {
-            fontSize: '1.2rem',
-            fontWeight: '600',
-            color: '#e2e8f0',
+        flowTitle: {
+            fontSize: "1.18rem",
+            fontWeight: 600,
+            color: "#ebeefc",
         },
-        workflowDescription: {
-            color: '#94a3b8',
-            fontSize: '0.95rem',
-            lineHeight: '1.6',
+        flowDescription: {
+            color: "#8ca4d6",
+            fontSize: "0.95rem",
+            lineHeight: 1.65,
         },
-        workflowList: {
-            listStyle: 'disc',
-            paddingLeft: '1.5rem',
-            color: '#94a3b8',
-            fontSize: '0.85rem',
-            lineHeight: '1.6',
-            margin: 0,
+        integrationSection: {
+            padding: "4.5rem 2rem",
         },
-        comparisonSection: {
-            padding: '4.5rem 2rem',
-            background: 'rgba(15, 23, 42, 0.55)',
+        integrationBelt: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "1rem",
+            marginTop: "2.5rem",
         },
-        comparisonGrid: {
-            display: 'grid',
-            gap: '1.5rem',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+        integrationTag: {
+            padding: "0.75rem 1.1rem",
+            borderRadius: "0.85rem",
+            background: "rgba(15, 27, 46, 0.78)",
+            border: "1px solid rgba(56, 189, 248, 0.18)",
+            color: "#9fb2d6",
+            fontSize: "0.92rem",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
         },
-        comparisonCard: {
-            background: 'rgba(30, 41, 59, 0.4)',
-            borderRadius: '0.85rem',
-            border: '1px solid #334155',
-            padding: '1.5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
+        ctaSection: {
+            padding: "5.5rem 2rem 4.5rem",
         },
-        comparisonMetric: {
-            fontSize: '1.5rem',
-            fontWeight: '700',
-            color: '#38bdf8',
+        ctaInner: {
+            maxWidth: "760px",
+            margin: "0 auto",
+            padding: "3.1rem",
+            borderRadius: "1.6rem",
+            textAlign: "center",
+            background: "linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(129, 140, 248, 0.18))",
+            border: "1px solid rgba(56, 189, 248, 0.22)",
+            boxShadow: "0 38px 70px -38px rgba(56, 189, 248, 0.68)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
         },
-        comparisonCaption: {
-            color: '#94a3b8',
-            fontSize: '0.9rem',
-            lineHeight: '1.6',
+        ctaTitle: {
+            fontSize: "2.35rem",
+            fontWeight: 700,
+            color: "#eef6ff",
+            lineHeight: 1.25,
+        },
+        ctaDescription: {
+            color: "#cbd5f5",
+            fontSize: "1.05rem",
+            lineHeight: 1.75,
         },
     };
 
-    const featureBlueprints = [
+    const metrics = [
+        { value: "10k+", label: "Focus launches every day" },
+        { value: "4.8★", label: "Community rating across platforms" },
+        { value: "28%", label: "Average lift in deep-work hours" },
+    ];
+
+    const featureHighlights = [
         {
-            label: 'RITUAL',
-            title: 'Prime your deep-work block',
-            description:
-                'Lock in presets, mute notifications, and pull context notes into your workspace in under a minute.',
+            icon: "⏱️",
+            title: "Adaptive focus blocks",
+            blurb: "Preset rhythms respond to energy peaks and protect intentional downtime.",
+            tag: "Timers",
         },
         {
-            label: 'FOCUS',
-            title: 'Flow-ready timer controls',
-            description:
-                'Jump between saved presets, adjust on the fly, and capture quick break notes without stopping the clock.',
+            icon: "📊",
+            title: "Momentum telemetry",
+            blurb: "Real-time dashboards surface streaks, dips, and nudges to stay on course.",
+            tag: "Insights",
         },
         {
-            label: 'REFLECT',
-            title: 'Session review summaries',
-            description:
-                'Automatically logs win highlights, energy dips, and drastic focus changes so you can plan the next block smarter.',
+            icon: "🤝",
+            title: "Squad rituals",
+            blurb: "Shared rooms, async check-ins, and highlights keep crews accountable without pressure.",
+            tag: "Teams",
         },
         {
-            label: 'LEVEL UP',
-            title: 'Goal ladders & streak boosts',
-            description:
-                'Stack micro-goals under big outcomes. Visual streaks keep momentum while adaptive prompts prevent burnout.',
+            icon: "🪄",
+            title: "Automation recipes",
+            blurb: "Trigger updates to Slack, Notion, or email the moment a session wraps.",
+            tag: "Workflows",
+        },
+        {
+            icon: "🎯",
+            title: "Goal lanes",
+            blurb: "Translate quarterly objectives into weekly focus themes everyone can see.",
+            tag: "Planning",
+        },
+        {
+            icon: "🔐",
+            title: "Privacy-first by design",
+            blurb: "Own your data with granular controls and export whenever you need context elsewhere.",
+            tag: "Security",
         },
     ];
 
-    const workflowBundles = [
+    const flowMoments = [
         {
-            icon: '🧠',
-            title: 'Knowledge worker cockpit',
-            description:
-                'Designed for researchers and strategists juggling deep work and async collaboration.',
-            bullets: [
-                'Focus playlists and ambient noise controls',
-                'Notebook sync to stash meeting notes instantly',
-                'Context switch guardrails with smart reminders',
-            ],
+            title: "Plot your focus runway",
+            description: "Drop tasks into adaptive stacks and let FocusFlow suggest ideal slots for deep work.",
         },
         {
-            icon: '🎨',
-            title: 'Creator production lane',
-            description:
-                'Helps designers and makers cycle through ideation, execution, and reflection without losing spark.',
-            bullets: [
-                'Snapshot creative briefs and timelines per project',
-                'Auto-save inspiration boards for later focus blocks',
-                'Progress markers to share wins with collaborators',
-            ],
+            title: "Launch immersive sessions",
+            description: "Soundscapes, countdown cues, and distraction logging keep you rooted in the zone.",
         },
         {
-            icon: '📚',
-            title: 'Study sprint system',
-            description:
-                'Built for students chasing exam scores or certifications with consistent, high-impact reps.',
-            bullets: [
-                'Spaced repetition cues from each recap',
-                'Accountability scoreboard for cohort syncing',
-                'Reflection prompts tuned to subject mastery',
-            ],
+            title: "Review momentum in minutes",
+            description: "Daily recaps flag wins, blockers, and energy patterns—no spreadsheets required.",
+        },
+        {
+            title: "Celebrate as a crew",
+            description: "Ship highlights to your squad and keep streaks alive with lightweight rituals.",
         },
     ];
 
-    const proofPoints = [
-        {
-            metric: '92% shorter setup time',
-            caption: 'Users launch focus sessions in under 30 seconds by saving preferred rituals.',
-        },
-        {
-            metric: '8 hrs reclaimed monthly',
-            caption: 'Automations remove status pings and manual logging across teams.',
-        },
-        {
-            metric: '3x accountability lift',
-            caption: 'Goal ladders and streak insights triple weekly check-in completion.',
-        },
+    const integrations = [
+        "Slack pulses",
+        "Google Calendar",
+        "Notion sync",
+        "Linear issues",
+        "ClickUp boards",
+        "Zapier webhooks",
     ];
 
     return (
-        <div style={styles.landingPage}>
+        <div style={styles.page}>
             <LandingNavbar />
-            <main style={styles.featuresSection}>
-                <div style={styles.featuresContainer}>
-                    <h1 style={styles.featuresTitle}>
-                        Features
-                    </h1>
-                    <p
-                        style={{
-                            textAlign: "center",
-                            maxWidth: "36rem",
-                            margin: "0 auto 3rem",
-                            color: "#94a3b8",
-                            fontSize: "1.25rem",
-                            lineHeight: "1.6",
+            <section style={styles.hero}>
+                <div style={styles.heroGlow} />
+                <div style={styles.heroInner}>
+                    <span style={styles.heroBadge}>FocusFlow feature tour</span>
+                    <h1 style={styles.heroTitle}>Less noise, more signal for every focus ritual</h1>
+                    <p style={styles.heroSubtitle}>
+                        FocusFlow distills deep work, team rituals, and insights into cinematic views your crew actually enjoys opening.
+                    </p>
+                    <div style={styles.heroMetrics}>
+                        {metrics.map((metric) => (
+                            <div key={metric.label} style={styles.heroMetric}>
+                                <div style={styles.heroMetricValue}>{metric.value}</div>
+                                <div style={styles.heroMetricLabel}>{metric.label}</div>
+                            </div>
+                        ))}
+                    </div>
+                    <div style={styles.heroActions}>
+                        <button
+                            style={styles.primaryButton}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "translateY(-3px)";
+                                e.currentTarget.style.boxShadow = "0 36px 70px -36px rgba(56, 189, 248, 0.82)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "translateY(0px)";
+                                e.currentTarget.style.boxShadow = "0 28px 60px -34px rgba(56, 189, 248, 0.75)";
+                            }}
+                        >
+                            Launch free workspace
+                        </button>
+                        <button
+                            style={styles.secondaryButton}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "translateY(-3px)";
+                                e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.55)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "translateY(0px)";
+                                e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.35)";
+                            }}
+                        >
+                            Preview guided demo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section style={styles.section}>
+                <div style={styles.container}>
+                    <div style={styles.sectionHeading}>
+                        <span style={styles.sectionEyebrow}>Feature snapshots</span>
+                        <h2 style={styles.sectionTitle}>See what matters in a glance</h2>
+                        <p style={styles.sectionLead}>
+                            FocusFlow highlights your most powerful rituals with compact cards so teams can align without wading through paragraphs.
+                        </p>
+                    </div>
+                    <div style={styles.featureGrid}>
+                        {featureHighlights.map((feature) => (
+                            <div key={feature.title} style={styles.featureCard}>
+                                <div style={styles.featureIcon}>{feature.icon}</div>
+                                <div style={styles.featureTitle}>{feature.title}</div>
+                                <p style={styles.featureBlurb}>{feature.blurb}</p>
+                                <span style={styles.featureTag}>{feature.tag}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section style={styles.flowsSection}>
+                <div style={styles.container}>
+                    <div style={styles.sectionHeading}>
+                        <span style={styles.sectionEyebrow}>Workflow arc</span>
+                        <h2 style={styles.sectionTitle}>A calmer journey from planning to applause</h2>
+                        <p style={styles.sectionLead}>
+                            Follow the four rituals that keep momentum compounding—each one framed with just enough context to make the next step obvious.
+                        </p>
+                    </div>
+                    <div style={styles.flowGrid}>
+                        {flowMoments.map((moment, idx) => (
+                            <div key={moment.title} style={styles.flowCard}>
+                                <span style={styles.flowIndex}>{`Step ${idx + 1}`}</span>
+                                <div style={styles.flowTitle}>{moment.title}</div>
+                                <p style={styles.flowDescription}>{moment.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section style={styles.integrationSection}>
+                <div style={styles.container}>
+                    <div style={styles.sectionHeading}>
+                        <span style={styles.sectionEyebrow}>Integrations</span>
+                        <h2 style={styles.sectionTitle}>Plays nicely with your ecosystem</h2>
+                        <p style={styles.sectionLead}>
+                            Snap FocusFlow into the tools you already live in—no copy-paste gymnastics or relearning muscle memory.
+                        </p>
+                    </div>
+                    <div style={styles.integrationBelt}>
+                        {integrations.map((item) => (
+                            <span key={item} style={styles.integrationTag}>
+                                {item}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section style={styles.ctaSection}>
+                <div style={styles.ctaInner}>
+                    <h2 style={styles.ctaTitle}>Rehearse your highest-impact week in five minutes</h2>
+                    <p style={styles.ctaDescription}>
+                        Launch a workspace, invite your crew, and decide together what deserves protection. FocusFlow keeps the rhythm steady.
+                    </p>
+                    <button
+                        style={styles.primaryButton}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "translateY(-3px)";
+                            e.currentTarget.style.boxShadow = "0 36px 70px -36px rgba(56, 189, 248, 0.82)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0px)";
+                            e.currentTarget.style.boxShadow = "0 28px 60px -34px rgba(56, 189, 248, 0.75)";
                         }}
                     >
-                        Discover the powerful tools and features designed to
-                        help you stay focused, track your progress, and achieve
-                        your productivity goals.
-                    </p>
-                    <div style={styles.featuresGrid}>
-                        {features.map((feature, index) => (
-                            <div
-                                key={index} 
-                                className="hover-card"
-                                style={styles.featureCard}
-                            >
-                                <div
-                                    style={{
-                                        fontSize: "2.5rem",
-                                        marginBottom: "1rem",
-                                    }}
-                                >
-                                    {feature.icon}
-                                </div>
-                                <h3 style={styles.featureTitle}>
-                                    {feature.title}
-                                </h3>
-                                <p style={styles.featureDescription}>
-                                    {feature.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </main>
-
-            <section style={styles.blueprintSection}>
-                <div style={styles.featuresContainer}>
-                    <h2 style={styles.sectionHeader}>Feature blueprints</h2>
-                    <p style={styles.sectionLead}>
-                        Each flagship capability follows a repeatable loop—prime, focus, reflect, and level up. Mix and
-                        match what you need to keep momentum steady.
-                    </p>
-                    <div style={styles.blueprintGrid}>
-                        {featureBlueprints.map((item, idx) => (
-                            <div key={idx} style={styles.blueprintCard}>
-                                <span style={styles.blueprintStep}>{item.label}</span>
-                                <div style={styles.blueprintTitle}>{item.title}</div>
-                                <p style={styles.blueprintDescription}>{item.description}</p>
-                            </div>
-                        ))}
-                    </div>
+                        Start your focus lab
+                    </button>
                 </div>
             </section>
-
-            <section style={styles.workflowSection}>
-                <div style={styles.featuresContainer}>
-                    <h2 style={styles.sectionHeader}>Workflow bundles</h2>
-                    <p style={styles.sectionLead}>
-                        FocusFlow adapts to different kinds of makers. Start with a preset bundle, then fine-tune rituals,
-                        automations, and accountability nudges to match your day.
-                    </p>
-                    <div style={styles.workflowGrid}>
-                        {workflowBundles.map((bundle, idx) => (
-                            <div key={idx} style={styles.workflowCard}>
-                                <div style={styles.workflowIcon}>{bundle.icon}</div>
-                                <div style={styles.workflowTitle}>{bundle.title}</div>
-                                <p style={styles.workflowDescription}>{bundle.description}</p>
-                                <ul style={styles.workflowList}>
-                                    {bundle.bullets.map((bullet, bulletIdx) => (
-                                        <li key={bulletIdx}>{bullet}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <section style={styles.comparisonSection}>
-                <div style={styles.featuresContainer}>
-                    <h2 style={styles.sectionHeader}>Why teams stick with FocusFlow</h2>
-                    <p style={styles.sectionLead}>
-                        Beyond the feature checklist, FocusFlow wins by removing friction and reinforcing habits. These
-                        proof points come straight from customer reviews.
-                    </p>
-                    <div style={styles.comparisonGrid}>
-                        {proofPoints.map((point, idx) => (
-                            <div key={idx} style={styles.comparisonCard}>
-                                <div style={styles.comparisonMetric}>{point.metric}</div>
-                                <p style={styles.comparisonCaption}>{point.caption}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             <LandingFooter />
         </div>
     );

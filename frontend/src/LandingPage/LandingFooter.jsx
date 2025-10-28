@@ -198,6 +198,37 @@ const LandingFooter = () => {
                                     </li>
                                     <li style={{ marginBottom: "0.8rem" }}>
                                         <a
+                                            href="/product"
+                                            style={{
+                                                color: "#94a3b8",
+                                                textDecoration: "none",
+                                                transition:
+                                                    "color 0.2s, text-decoration 0.2s",
+                                                outline: "none",
+                                                border: "none",
+                                                ...(location.pathname ===
+                                                "/product"
+                                                    ? activeFooterLinkStyle
+                                                    : {}),
+                                            }}
+                                            onMouseOver={(e) =>
+                                                (e.currentTarget.style.color =
+                                                    "#38bdf8")
+                                            }
+                                            onMouseOut={(e) =>
+                                                (e.currentTarget.style.color =
+                                                    location.pathname ===
+                                                    "/product"
+                                                        ? "#38bdf8"
+                                                        : "#94a3b8")
+                                            }
+                                            tabIndex={-1}
+                                        >
+                                            Product Tour
+                                        </a>
+                                    </li>
+                                    <li style={{ marginBottom: "0.8rem" }}>
+                                        <a
                                             href="/updates"
                                             style={{
                                                 color: "#94a3b8",
