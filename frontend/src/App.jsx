@@ -424,24 +424,150 @@ function Dashboard() {
             color: "var(--color-gray-600)",
         },
         focusPlanSection: {
-            padding: "2rem",
             background: "var(--panel-bg)",
-            borderRadius: "1.2rem",
+            borderRadius: "1.35rem",
             border: "1px solid var(--input-border)",
-            boxShadow: "var(--shadow-md)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.75rem",
+            boxShadow: "var(--shadow-lg)",
+            padding: "2.25rem",
+            display: "grid",
+            gap: "2rem",
         },
         focusPlanHeader: {
             display: "flex",
             justifyContent: "space-between",
-            gap: "1.25rem",
+            gap: "1.5rem",
             flexWrap: "wrap",
+            alignItems: "center",
         },
-        focusPlanList: {
-            right: "2.25rem",
-            zIndex: 1000,
+        focusPlanGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "1.4rem",
+        },
+        focusPlanCard: {
+            background: "linear-gradient(135deg, rgba(14,165,233,0.08), rgba(99,102,241,0.08))",
+            border: "1px solid rgba(148,163,184,0.25)",
+            borderRadius: "1rem",
+            padding: "1.4rem",
+            display: "grid",
+            gap: "0.75rem",
+        },
+        focusPlanTime: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            fontSize: "0.9rem",
+            fontWeight: 600,
+            color: "var(--color-primary-700)",
+        },
+        focusPlanTitle: {
+            fontSize: "1.1rem",
+            fontWeight: 600,
+            color: "var(--color-gray-900)",
+        },
+        focusPlanDescription: {
+            fontSize: "0.95rem",
+            lineHeight: 1.6,
+            color: "var(--color-gray-600)",
+        },
+        focusPlanStatus: {
+            justifySelf: "flex-start",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.35rem",
+            borderRadius: "999px",
+            padding: "0.35rem 0.75rem",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+        },
+        focusPlanFooter: {
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
+            paddingTop: "1rem",
+            borderTop: "1px dashed rgba(148,163,184,0.35)",
+        },
+        focusPlanFooterNote: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            fontSize: "0.9rem",
+            color: "var(--color-gray-600)",
+        },
+        focusPlanFooterAction: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            background: "rgba(59,130,246,0.12)",
+            color: "var(--color-primary-700)",
+            border: "1px solid rgba(59,130,246,0.35)",
+            borderRadius: "999px",
+            padding: "0.55rem 1.1rem",
+            fontWeight: 600,
+            cursor: "pointer",
+        },
+        focusPlanAccent: {
+            position: "absolute",
+            inset: "auto -16px -16px auto",
+            width: "180px",
+            height: "180px",
+            background: "radial-gradient(circle at center, rgba(59,130,246,0.22), transparent 65%)",
+            pointerEvents: "none",
+            zIndex: 0,
+        },
+        momentumGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "1.4rem",
+        },
+        momentumCard: {
+            background: "var(--panel-bg)",
+            border: "1px solid var(--input-border)",
+            borderRadius: "1.2rem",
+            padding: "1.7rem",
+            display: "grid",
+            gap: "1rem",
+            boxShadow: "0 24px 60px -42px rgba(15,23,42,0.48)",
+        },
+        momentumHeader: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+        },
+        momentumTitle: {
+            fontSize: "1.1rem",
+            fontWeight: 600,
+            color: "var(--color-gray-900)",
+        },
+        momentumDescription: {
+            fontSize: "0.95rem",
+            lineHeight: 1.7,
+            color: "var(--color-gray-600)",
+        },
+        momentumTrend: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.35rem",
+            fontSize: "0.88rem",
+            fontWeight: 600,
+        },
+        momentumTrendPositive: {
+            color: "var(--color-primary-600)",
+        },
+        momentumTrendNegative: {
+            color: "#f87171",
+        },
+        momentumAction: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+            color: "var(--color-primary-600)",
         },
     };
 
@@ -741,29 +867,43 @@ function Dashboard() {
                                     View weekly planner
                                 </span>
                             </div>
-                            <div style={dashboardStyles.focusPlanList}>
-                                {dailyFocusPlan.map((block, idx) => {
-                                    const statusStyle =
-                                        planStatusStyles[block.status] || planStatusStyles["scheduled"];
+                            <div style={dashboardStyles.focusPlanGrid}>
+                                {dailyFocusPlan.map((step) => {
+                                    const statusTheme = planStatusStyles[step.status] || planStatusStyles.scheduled;
                                     return (
-                                        <div key={`${block.title}-${idx}`} style={dashboardStyles.focusPlanEntry}>
-                                            <div style={dashboardStyles.focusPlanMeta}>
-                                                <span style={dashboardStyles.focusPlanTime}>{block.time}</span>
-                                                <span
-                                                    style={{
-                                                        ...dashboardStyles.focusPlanBadge,
-                                                        background: statusStyle.background,
-                                                        color: statusStyle.color,
-                                                    }}
-                                                >
-                                                    {statusStyle.label}
-                                                </span>
-                                            </div>
-                                            <div style={dashboardStyles.focusPlanTitle}>{block.title}</div>
-                                            <p style={dashboardStyles.focusPlanDescription}>{block.description}</p>
-                                        </div>
+                                        <article key={step.time} style={dashboardStyles.focusPlanCard}>
+                                            <span style={dashboardStyles.focusPlanTime}>
+                                                <ClockIcon style={{ width: "0.95rem", height: "0.95rem" }} />
+                                                {step.time}
+                                            </span>
+                                            <h3 style={dashboardStyles.focusPlanTitle}>{step.title}</h3>
+                                            <p style={dashboardStyles.focusPlanDescription}>{step.description}</p>
+                                            <span
+                                                style={{
+                                                    ...dashboardStyles.focusPlanStatus,
+                                                    background: statusTheme.background,
+                                                    color: statusTheme.color,
+                                                }}
+                                            >
+                                                {statusTheme.label}
+                                            </span>
+                                        </article>
                                     );
                                 })}
+                            </div>
+                            <div style={dashboardStyles.focusPlanFooter}>
+                                <span style={dashboardStyles.focusPlanFooterNote}>
+                                    <ChartBarIcon style={{ width: "0.95rem", height: "0.95rem" }} />
+                                    Auto-syncs with presets and distraction logs
+                                </span>
+                                <button
+                                    type="button"
+                                    style={dashboardStyles.focusPlanFooterAction}
+                                    onClick={() => setActiveTab("timers")}
+                                >
+                                    <PlusIcon style={{ width: "0.9rem", height: "0.9rem" }} />
+                                    Add buffer block
+                                </button>
                             </div>
                         </section>
 
@@ -773,32 +913,59 @@ function Dashboard() {
                                 <p style={dashboardStyles.sectionLead}>{sectionIntro.momentum.lead}</p>
                             </header>
                             <div style={dashboardStyles.momentumGrid}>
-                                {momentumHighlights.map((item, idx) => {
-                                    const Icon = item.icon;
+                                {momentumHighlights.map((item) => {
                                     const TrendIcon =
-                                        item.trend.direction === "down"
-                                            ? ArrowTrendingDownIcon
-                                            : ArrowTrendingUpIcon;
-                                    const trendTint =
+                                        item.trend.direction === "down" ? ArrowTrendingDownIcon : ArrowTrendingUpIcon;
+                                    const trendTone =
                                         item.trend.direction === "down"
                                             ? dashboardStyles.momentumTrendNegative
                                             : dashboardStyles.momentumTrendPositive;
+                                    const ItemIcon = item.icon;
                                     return (
-                                        <div key={`${item.title}-${idx}`} style={dashboardStyles.momentumCard}>
+                                        <article key={item.title} style={dashboardStyles.momentumCard}>
                                             <div style={dashboardStyles.momentumHeader}>
-                                                <Icon style={{ width: "1.4rem", height: "1.4rem" }} />
-                                                <div style={dashboardStyles.momentumTitle}>{item.title}</div>
+                                                <div
+                                                    style={{
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        width: "2.8rem",
+                                                        height: "2.8rem",
+                                                        borderRadius: "0.95rem",
+                                                        background: "rgba(56,189,248,0.16)",
+                                                        color: "var(--color-primary-700)",
+                                                    }}
+                                                >
+                                                    <ItemIcon style={{ width: "1.25rem", height: "1.25rem" }} />
+                                                </div>
+                                                <span style={{ ...dashboardStyles.momentumTrend, ...trendTone }}>
+                                                    <TrendIcon style={{ width: "0.95rem", height: "0.95rem" }} />
+                                                    {item.trend.label}
+                                                </span>
                                             </div>
-                                            <p style={dashboardStyles.momentumDescription}>{item.description}</p>
-                                            <span style={{ ...dashboardStyles.momentumTrend, ...trendTint }}>
-                                                <TrendIcon style={{ width: "1rem", height: "1rem" }} />
-                                                {item.trend.label}
-                                            </span>
-                                            <span style={dashboardStyles.momentumAction}>
-                                                {item.action}
+                                            <div>
+                                                <h3 style={dashboardStyles.momentumTitle}>{item.title}</h3>
+                                                <p style={dashboardStyles.momentumDescription}>{item.description}</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                style={{
+                                                    display: "inline-flex",
+                                                    alignItems: "center",
+                                                    gap: "0.45rem",
+                                                    fontWeight: 600,
+                                                    fontSize: "0.9rem",
+                                                    color: "var(--color-primary-600)",
+                                                    border: "none",
+                                                    background: "transparent",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() => setActiveTab("timers")}
+                                            >
                                                 <ChevronRightIcon style={{ width: "1rem", height: "1rem" }} />
-                                            </span>
-                                        </div>
+                                                {item.action}
+                                            </button>
+                                        </article>
                                     );
                                 })}
                             </div>

@@ -1,355 +1,586 @@
 import React from "react";
+import {
+    FaHandshake,
+    FaShieldAlt,
+    FaUserCheck,
+    FaLock,
+    FaBalanceScale,
+    FaExclamationTriangle,
+    FaGavel,
+    FaEnvelope,
+    FaArrowRight,
+} from "react-icons/fa";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
 import "../styles/CardHover.css";
 
-const Terms = () => (
-    <div style={{ background: "#0f172a", minHeight: "100vh", color: "#ffffff" }}>
-        <LandingNavbar />
-        <section
-            style={{
-                padding: "5rem 2rem 2rem 2rem",
-                textAlign: "center",
-            }}
-        >
-            <h1
-                style={{
-                    fontSize: "2.5rem",
-                    fontWeight: 700,
-                    marginBottom: "1rem",
-                    background: "linear-gradient(to right, #38bdf8, #818cf8)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                }}
-            >
-                Terms of Service
-            </h1>
-            <p
-                style={{
-                    color: "#94a3b8",
-                    fontSize: "1.2rem",
-                    maxWidth: 600,
-                    margin: "0 auto",
-                    lineHeight: 1.6,
-                }}
-            >
-                Please read these terms carefully before using FocusFlow. By
-                accessing or using our service, you agree to these terms.
-            </p>
-        </section>
-        <main
-            style={{
-                maxWidth: 1200,
-                margin: "-2.5rem auto 2rem auto",
-                padding: "1rem",
-            }}
-        >
-            {/* Last Updated */}
-            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-                <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>
-                    Last Updated: January 23, 2025
-                </p>
-            </div>
+const heroStats = [
+    { label: "Last updated", value: "Jan 23, 2025", meta: "Version 2.1" },
+    { label: "Coverage", value: "Global", meta: "All plans" },
+    { label: "Refund window", value: "14 days", meta: "Premium tiers" },
+];
 
-            {/* Acceptance of Terms */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    📜 Acceptance of Terms
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    By accessing or using FocusFlow, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this service.
-                </p>
-            </div>
+const commitments = [
+    {
+        icon: <FaHandshake />,
+        title: "Mutual respect",
+        copy: "FocusFlow operates as a trust pact—clear expectations, clear accountability, shared wins.",
+    },
+    {
+        icon: <FaShieldAlt />,
+        title: "Safe workspace",
+        copy: "We maintain uptime, protect your data, and reserve rights to intervene when policy is breached.",
+    },
+    {
+        icon: <FaUserCheck />,
+        title: "Transparent changes",
+        copy: "Major updates come with advanced notice so you can review the new pact before it applies.",
+    },
+];
 
-            {/* Use of Service */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    ✅ Permitted Use
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    FocusFlow grants you a limited, non-exclusive, non-transferable license to use the service for personal or commercial productivity purposes.
-                </p>
-                <div style={{ display: "grid", gap: "1rem" }}>
-                    <div style={{ padding: "1rem", background: "rgba(15, 23, 42, 0.5)", borderRadius: "0.5rem", border: "1px solid #334155" }}>
-                        <h3 style={{ color: "#ffffff", fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem" }}>You May:</h3>
-                        <ul style={{ color: "#94a3b8", fontSize: "1rem", lineHeight: 1.8, paddingLeft: "1.5rem", margin: 0 }}>
-                            <li>Create an account and use FocusFlow for productivity tracking</li>
-                            <li>Customize your settings and preferences</li>
-                            <li>Share your productivity insights (if you choose)</li>
-                            <li>Use the service on multiple devices</li>
-                        </ul>
-                    </div>
-                    <div style={{ padding: "1rem", background: "rgba(15, 23, 42, 0.5)", borderRadius: "0.5rem", border: "1px solid #334155" }}>
-                        <h3 style={{ color: "#ffffff", fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem" }}>You May NOT:</h3>
-                        <ul style={{ color: "#94a3b8", fontSize: "1rem", lineHeight: 1.8, paddingLeft: "1.5rem", margin: 0 }}>
-                            <li>Attempt to hack, reverse engineer, or disrupt the service</li>
-                            <li>Use automated bots or scripts to abuse the service</li>
-                            <li>Share your account credentials with others</li>
-                            <li>Upload malicious content or spam</li>
-                            <li>Violate any applicable laws or regulations</li>
-                        </ul>
+const usageMatrix = {
+    allowed: [
+        "Create and manage personal or team workspaces",
+        "Customize rituals, notifications, and integrations",
+        "Export your data or share insights with collaborators",
+        "Access FocusFlow across multiple devices",
+    ],
+    restricted: [
+        "Reverse engineer or probe FocusFlow infrastructure",
+        "Automate usage with bots that bypass rate limits",
+        "Share credentials or resell the service",
+        "Upload harmful, unlawful, or infringing content",
+        "Violate any jurisdiction’s applicable laws while using FocusFlow",
+    ],
+};
+
+const accountDuties = [
+    "Provide accurate, up-to-date registration details",
+    "Maintain the confidentiality of passwords and API keys",
+    "Notify FocusFlow immediately if you suspect unauthorized access",
+    "Only maintain one free account per individual or organization",
+    "Avoid automated signups or scripted account creation",
+];
+
+const billingHighlights = [
+    {
+        title: "Free tier",
+        detail: "Core focus rituals remain free forever—no credit card required.",
+    },
+    {
+        title: "Premium plans",
+        detail: "Billed monthly or annually; pricing changes arrive with 30 days notice.",
+    },
+    {
+        title: "Refund policy",
+        detail: "If FocusFlow isn’t the right fit, request a refund within 14 days of purchase.",
+    },
+    {
+        title: "Cancellation",
+        detail: "Downgrade anytime—premium access continues through the current billing cycle.",
+    },
+];
+
+const enforcementSteps = [
+    {
+        label: "Warnings",
+        copy: "We’ll reach out about violations and give you a chance to resolve the issue quickly.",
+    },
+    {
+        label: "Suspension",
+        copy: "If problems persist, temporary account suspension protects the rest of the community.",
+    },
+    {
+        label: "Termination",
+        copy: "Serious or repeated violations can trigger account closure and data removal per policy.",
+    },
+];
+
+const legalSafeguards = [
+    {
+        icon: <FaLock />,
+        title: "Service ownership",
+        body: "FocusFlow’s platform, brand, and codebase remain intellectual property of FocusFlow.",
+    },
+    {
+        icon: <FaExclamationTriangle />,
+        title: "Warranty disclaimer",
+        body: "FocusFlow ships “as is” without guarantees of uninterrupted or error-free operation.",
+    },
+    {
+        icon: <FaBalanceScale />,
+        title: "Liability limits",
+        body: "Indirect, incidental, or consequential damages fall outside our obligations under the law.",
+    },
+    {
+        icon: <FaGavel />,
+        title: "Governing law",
+        body: "Disputes are handled under applicable jurisdictional law via arbitration or local courts.",
+    },
+];
+
+const styles = {
+    page: {
+        minHeight: "100vh",
+        background: "linear-gradient(188deg, #040915 0%, #101a31 55%, #050b18 100%)",
+        color: "#ffffff",
+    },
+    hero: {
+        position: "relative",
+        padding: "6.2rem 2rem 4.6rem",
+        overflow: "hidden",
+    },
+    heroGlow: {
+        position: "absolute",
+        inset: "-260px auto auto 50%",
+        transform: "translateX(-50%)",
+        width: "780px",
+        height: "780px",
+        background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.22), transparent 68%)",
+        filter: "blur(18px)",
+    },
+    container: {
+        maxWidth: "1100px",
+        margin: "0 auto",
+        position: "relative",
+        zIndex: 1,
+    },
+    heroInner: {
+        display: "grid",
+        gap: "1.8rem",
+        textAlign: "center",
+        justifyItems: "center",
+    },
+    heroBadge: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        padding: "0.55rem 1.2rem",
+        borderRadius: "9999px",
+        border: "1px solid rgba(56, 189, 248, 0.45)",
+        background: "rgba(15, 23, 42, 0.7)",
+        color: "#38bdf8",
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+        fontSize: "0.82rem",
+        fontWeight: 600,
+    },
+    heroTitle: {
+        fontSize: "3.15rem",
+        fontWeight: 800,
+        lineHeight: 1.12,
+        letterSpacing: "-0.03em",
+        margin: 0,
+        background: "linear-gradient(115deg, #38bdf8, #60a5fa, #a855f7)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+    },
+    heroLead: {
+        maxWidth: "46rem",
+        color: "#cbd5f5",
+        fontSize: "1.15rem",
+        lineHeight: 1.78,
+    },
+    statRow: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gap: "1.35rem",
+        width: "100%",
+    },
+    statCard: {
+        padding: "1.55rem",
+        borderRadius: "1.1rem",
+        background: "rgba(18, 28, 48, 0.82)",
+        border: "1px solid rgba(148, 163, 184, 0.25)",
+        boxShadow: "0 28px 55px -34px rgba(56, 189, 248, 0.55)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.45rem",
+        textAlign: "left",
+    },
+    statValue: {
+        fontSize: "1.92rem",
+        fontWeight: 700,
+        color: "#38bdf8",
+    },
+    statLabel: {
+        color: "#9fb2d6",
+        fontSize: "0.96rem",
+    },
+    statMeta: {
+        color: "#38bdf8",
+        fontSize: "0.82rem",
+        fontWeight: 600,
+    },
+    main: {
+        padding: "4.8rem 2rem 4.4rem",
+    },
+    section: {
+        marginBottom: "4.2rem",
+    },
+    sectionHeader: {
+        marginBottom: "2.2rem",
+        textAlign: "center",
+        display: "grid",
+        gap: "0.6rem",
+        justifyItems: "center",
+    },
+    sectionTitle: {
+        fontSize: "2.1rem",
+        fontWeight: 700,
+        color: "#f8fafc",
+    },
+    sectionLead: {
+        maxWidth: "46rem",
+        fontSize: "1.02rem",
+        lineHeight: 1.72,
+        color: "#94a3b8",
+    },
+    cardGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.55rem",
+    },
+    commitmentCard: {
+        padding: "1.8rem",
+        borderRadius: "1.15rem",
+        background: "rgba(12, 20, 36, 0.9)",
+        border: "1px solid rgba(129, 140, 248, 0.22)",
+        display: "grid",
+        gap: "0.7rem",
+    },
+    iconBadge: {
+        width: "2.6rem",
+        height: "2.6rem",
+        borderRadius: "0.85rem",
+        background: "rgba(56, 189, 248, 0.16)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#38bdf8",
+        fontSize: "1.3rem",
+    },
+    commitmentTitle: {
+        fontSize: "1.18rem",
+        fontWeight: 600,
+        color: "#f1f5f9",
+    },
+    commitmentCopy: {
+        color: "#9fb2d6",
+        fontSize: "0.95rem",
+        lineHeight: 1.65,
+    },
+    usageWrap: {
+        display: "grid",
+        gap: "1.4rem",
+    },
+    usagePanel: {
+        padding: "1.6rem",
+        borderRadius: "1.1rem",
+        background: "rgba(15, 24, 42, 0.84)",
+        border: "1px solid rgba(56, 189, 248, 0.22)",
+    },
+    usageHeading: {
+        fontSize: "1.15rem",
+        fontWeight: 600,
+        color: "#38bdf8",
+        marginBottom: "0.9rem",
+    },
+    bulletList: {
+        margin: 0,
+        paddingLeft: "1.2rem",
+        color: "#94a3b8",
+        fontSize: "0.95rem",
+        lineHeight: 1.7,
+    },
+    dutiesList: {
+        margin: 0,
+        paddingLeft: "1.2rem",
+        color: "#9fb2d6",
+        fontSize: "0.96rem",
+        lineHeight: 1.74,
+    },
+    billingGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.5rem",
+    },
+    billingCard: {
+        padding: "1.6rem",
+        borderRadius: "1.1rem",
+        background: "rgba(17, 26, 44, 0.78)",
+        border: "1px solid rgba(56, 189, 248, 0.2)",
+        display: "grid",
+        gap: "0.5rem",
+    },
+    billingTitle: {
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "#f1f5f9",
+    },
+    billingDetail: {
+        color: "#9fb2d6",
+        fontSize: "0.94rem",
+        lineHeight: 1.6,
+    },
+    enforcementList: {
+        display: "grid",
+        gap: "1.2rem",
+        marginTop: "1.6rem",
+    },
+    enforcementCard: {
+        padding: "1.6rem",
+        borderRadius: "1.1rem",
+        background: "rgba(12, 20, 36, 0.88)",
+        border: "1px solid rgba(129, 140, 248, 0.22)",
+        display: "grid",
+        gap: "0.45rem",
+    },
+    enforcementLabel: {
+        fontSize: "0.98rem",
+        fontWeight: 600,
+        color: "#38bdf8",
+    },
+    enforcementCopy: {
+        color: "#9fb2d6",
+        fontSize: "0.94rem",
+        lineHeight: 1.6,
+    },
+    legalGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.5rem",
+    },
+    legalCard: {
+        padding: "1.7rem",
+        borderRadius: "1.15rem",
+        background: "rgba(12, 20, 36, 0.88)",
+        border: "1px solid rgba(56, 189, 248, 0.22)",
+        display: "grid",
+        gap: "0.6rem",
+    },
+    legalTitle: {
+        fontSize: "1.1rem",
+        fontWeight: 600,
+        color: "#f8fafc",
+    },
+    legalBody: {
+        color: "#9fb2d6",
+        fontSize: "0.95rem",
+        lineHeight: 1.65,
+    },
+    contactCard: {
+        padding: "2.1rem",
+        borderRadius: "1.4rem",
+        background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.24))",
+        border: "1px solid rgba(56, 189, 248, 0.28)",
+        textAlign: "center",
+        display: "grid",
+        gap: "1rem",
+        color: "#e0f2fe",
+    },
+    contactBtn: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0.9rem 2.3rem",
+        borderRadius: "9999px",
+        background: "rgba(15, 23, 42, 0.82)",
+        border: "1px solid rgba(56, 189, 248, 0.35)",
+        color: "#38bdf8",
+        fontWeight: 600,
+        textDecoration: "none",
+        gap: "0.5rem",
+        transition: "transform 0.25s ease, border-color 0.25s ease",
+    },
+};
+
+const Terms = () => {
+    return (
+        <div style={styles.page}>
+            <LandingNavbar />
+            <section style={styles.hero}>
+                <div style={styles.heroGlow} />
+                <div style={styles.container}>
+                    <div style={styles.heroInner}>
+                        <span style={styles.heroBadge}>FocusFlow usage agreement</span>
+                        <h1 style={styles.heroTitle}>Terms of Service</h1>
+                        <p style={styles.heroLead}>
+                            Using FocusFlow means joining a community built on calm productivity. These terms explain the mutual
+                            expectations that keep every workspace respectful, resilient, and secure.
+                        </p>
+                        <div style={styles.statRow}>
+                            {heroStats.map((stat) => (
+                                <div key={stat.label} style={styles.statCard}>
+                                    <span style={styles.statValue}>{stat.value}</span>
+                                    <span style={styles.statLabel}>{stat.label}</span>
+                                    <span style={styles.statMeta}>{stat.meta}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            {/* User Accounts */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    👤 User Accounts
-                </h2>
-                <ul style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 2, paddingLeft: "1.5rem" }}>
-                    <li>You must provide accurate and complete information when creating an account</li>
-                    <li>You are responsible for maintaining the security of your account and password</li>
-                    <li>You must notify us immediately of any unauthorized access</li>
-                    <li>One person or entity may not maintain more than one free account</li>
-                    <li>Accounts registered by bots or automated methods are not permitted</li>
-                </ul>
-            </div>
-
-            {/* User Content */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    📝 User Content & Ownership
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    You retain all rights to the content you create and store in FocusFlow (tasks, notes, session data, etc.). However, you grant us a limited license to:
-                </p>
-                <ul style={{ color: "#94a3b8", fontSize: "1.05rem", lineHeight: 2, paddingLeft: "1.5rem" }}>
-                    <li>Store and display your content within the service</li>
-                    <li>Create anonymized analytics to improve FocusFlow</li>
-                    <li>Back up your data for disaster recovery</li>
-                </ul>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginTop: "1.5rem" }}>
-                    <strong style={{ color: "#ffffff" }}>You are responsible for:</strong> Ensuring your content does not violate any laws, infringe on intellectual property rights, or contain harmful material.
-                </p>
-            </div>
-
-            {/* Intellectual Property */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    ©️ Intellectual Property
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    The FocusFlow service, including its design, code, features, and branding, is owned by FocusFlow and protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, distribute, or create derivative works without our explicit permission.
-                </p>
-            </div>
-
-            {/* Payment & Subscriptions */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    💳 Payment & Subscriptions
-                </h2>
-                <div style={{ display: "grid", gap: "1rem" }}>
-                    {[
-                        { title: "Free Tier", desc: "FocusFlow offers a free tier with basic features available to all users." },
-                        { title: "Premium Plans", desc: "Premium subscriptions are billed monthly or annually. Prices are subject to change with 30 days notice." },
-                        { title: "Refunds", desc: "Refunds are available within 14 days of purchase if you're not satisfied with the service." },
-                        { title: "Cancellation", desc: "You may cancel your subscription at any time. Access continues until the end of your billing period." },
-                    ].map((item, idx) => (
-                        <div key={idx} style={{ padding: "1rem", background: "rgba(15, 23, 42, 0.5)", borderRadius: "0.5rem", border: "1px solid #334155" }}>
-                            <h3 style={{ color: "#38bdf8", fontSize: "1.05rem", fontWeight: 600, marginBottom: "0.5rem" }}>
-                                {item.title}
-                            </h3>
-                            <p style={{ color: "#94a3b8", fontSize: "1rem", margin: 0 }}>
-                                {item.desc}
+            <main style={styles.main}>
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <h2 style={styles.sectionTitle}>The pact in plain language</h2>
+                            <p style={styles.sectionLead}>
+                                We built FocusFlow around reciprocity: we deliver reliable tools and transparent updates, you use
+                                them responsibly. Here’s the snapshot of how that plays out.
                             </p>
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div style={styles.cardGrid}>
+                            {commitments.map((item) => (
+                                <div key={item.title} style={styles.commitmentCard}>
+                                    <span style={styles.iconBadge}>{item.icon}</span>
+                                    <span style={styles.commitmentTitle}>{item.title}</span>
+                                    <p style={styles.commitmentCopy}>{item.copy}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-            {/* Termination */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    🚫 Termination
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1rem" }}>
-                    We reserve the right to suspend or terminate your account if you:
-                </p>
-                <ul style={{ color: "#94a3b8", fontSize: "1.05rem", lineHeight: 2, paddingLeft: "1.5rem", marginBottom: "1.5rem" }}>
-                    <li>Violate these Terms of Service</li>
-                    <li>Engage in fraudulent or illegal activities</li>
-                    <li>Abuse or harass other users or our team</li>
-                    <li>Fail to pay for premium services</li>
-                </ul>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    You may delete your account at any time from your account settings. Upon deletion, your data will be removed according to our Privacy Policy.
-                </p>
-            </div>
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <h2 style={styles.sectionTitle}>How you can—and can’t—use FocusFlow</h2>
+                            <p style={styles.sectionLead}>
+                                Stick to the playbook below to keep your account in good standing and the community healthy.
+                            </p>
+                        </div>
+                        <div style={styles.usageWrap}>
+                            <div style={styles.usagePanel}>
+                                <span style={styles.usageHeading}>Permitted use</span>
+                                <ul style={styles.bulletList}>
+                                    {usageMatrix.allowed.map((item) => (
+                                        <li key={item}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div style={styles.usagePanel}>
+                                <span style={styles.usageHeading}>Restricted activities</span>
+                                <ul style={styles.bulletList}>
+                                    {usageMatrix.restricted.map((item) => (
+                                        <li key={item}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-            {/* Disclaimers */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    ⚠️ Disclaimers & Limitations
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    <strong style={{ color: "#ffffff" }}>"AS IS" Service:</strong> FocusFlow is provided "as is" without warranties of any kind. We do not guarantee uninterrupted or error-free service.
-                </p>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    <strong style={{ color: "#ffffff" }}>Limitation of Liability:</strong> To the maximum extent permitted by law, FocusFlow shall not be liable for any indirect, incidental, or consequential damages arising from your use of the service.
-                </p>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    <strong style={{ color: "#ffffff" }}>Data Loss:</strong> While we implement regular backups, we are not responsible for data loss. You should maintain your own backups of important information.
-                </p>
-            </div>
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <h2 style={styles.sectionTitle}>Account responsibilities</h2>
+                            <p style={styles.sectionLead}>
+                                We protect your accounts with modern security, but the first layer is still you. Keep these guidelines
+                                close.
+                            </p>
+                        </div>
+                        <ul style={styles.dutiesList}>
+                            {accountDuties.map((duty) => (
+                                <li key={duty}>{duty}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
 
-            {/* Changes to Terms */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    📢 Changes to Terms
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    We may update these Terms of Service from time to time. We will notify you of significant changes via email or a prominent notice on our website. Your continued use of FocusFlow after changes constitutes acceptance of the updated terms.
-                </p>
-            </div>
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <h2 style={styles.sectionTitle}>Billing & subscriptions</h2>
+                            <p style={styles.sectionLead}>
+                                Fair pricing and flexible exits keep FocusFlow aligned with your needs. The essentials are below—dive
+                                into full details in your billing settings anytime.
+                            </p>
+                        </div>
+                        <div style={styles.billingGrid}>
+                            {billingHighlights.map((highlight) => (
+                                <div key={highlight.title} style={styles.billingCard}>
+                                    <span style={styles.billingTitle}>{highlight.title}</span>
+                                    <p style={styles.billingDetail}>{highlight.detail}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-            {/* Governing Law */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    ⚖️ Governing Law
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    These Terms shall be governed by and construed in accordance with applicable laws. Any disputes arising from these terms or your use of FocusFlow shall be resolved through binding arbitration or in the courts of the applicable jurisdiction.
-                </p>
-            </div>
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <h2 style={styles.sectionTitle}>Enforcement sequence</h2>
+                            <p style={styles.sectionLead}>
+                                We aim to resolve issues collaboratively. If boundaries continue to be crossed, this is the escalation
+                                playbook we follow.
+                            </p>
+                        </div>
+                        <div style={styles.enforcementList}>
+                            {enforcementSteps.map((step) => (
+                                <div key={step.label} style={styles.enforcementCard}>
+                                    <span style={styles.enforcementLabel}>{step.label}</span>
+                                    <span style={styles.enforcementCopy}>{step.copy}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-            {/* Contact */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    transition: "all 0.3s ease",
-                    textAlign: "center",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1rem" }}>
-                    📧 Questions About These Terms?
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    If you have any questions about these Terms of Service, please contact us:
-                </p>
-                <p style={{ color: "#ffffff", fontSize: "1.1rem", marginTop: "1rem" }}>
-                    Email: <a href="mailto:legal@focusflow.com" style={{ color: "#38bdf8", textDecoration: "underline", fontWeight: 600 }}>legal@focusflow.com</a>
-                </p>
-            </div>
-        </main>
-        <LandingFooter />
-    </div>
-);
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <h2 style={styles.sectionTitle}>Legal safety net</h2>
+                            <p style={styles.sectionLead}>
+                                These clauses clarify ownership, liability, and dispute handling. They mirror best practices across
+                                modern SaaS pacts.
+                            </p>
+                        </div>
+                        <div style={styles.legalGrid}>
+                            {legalSafeguards.map((item) => (
+                                <div key={item.title} style={styles.legalCard}>
+                                    <span style={styles.iconBadge}>{item.icon}</span>
+                                    <span style={styles.legalTitle}>{item.title}</span>
+                                    <p style={styles.legalBody}>{item.body}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.contactCard}>
+                            <h2 style={{ fontSize: "2rem", fontWeight: 700, margin: 0 }}>Questions about these terms?</h2>
+                            <p style={{ color: "#cbd5f5", fontSize: "1rem", lineHeight: 1.7, margin: 0 }}>
+                                Our legal desk answers within two business days. Include links or context so we can help faster.
+                            </p>
+                            <a
+                                href="mailto:legal@focusflow.com"
+                                style={styles.contactBtn}
+                                onMouseEnter={(event) => {
+                                    event.currentTarget.style.transform = "translateY(-3px)";
+                                    event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.55)";
+                                }}
+                                onMouseLeave={(event) => {
+                                    event.currentTarget.style.transform = "translateY(0px)";
+                                    event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.35)";
+                                }}
+                            >
+                                <FaEnvelope /> legal@focusflow.com <FaArrowRight />
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <LandingFooter />
+        </div>
+    );
+};
 
 export default Terms;

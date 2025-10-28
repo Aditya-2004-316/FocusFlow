@@ -48,12 +48,39 @@ const DashboardCommunity = () => {
         margin: 0,
     };
 
-    const subtitleStyle = {
-        fontSize: "1.08rem",
+    const subtitleLeadStyle = {
+        fontSize: "1.05rem",
         color: "var(--color-gray-600)",
-        lineHeight: 1.7,
-        maxWidth: "44rem",
-        marginTop: "0.4rem",
+        lineHeight: 1.68,
+        marginTop: "0.6rem",
+        maxWidth: "50rem",
+    };
+
+    const subtitleGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: "1.15rem 1.5rem",
+        marginTop: "1.35rem",
+    };
+
+    const subtitleCardStyle = {
+        display: "grid",
+        gap: "0.35rem",
+        paddingRight: "1rem",
+    };
+
+    const subtitleHeadingStyle = {
+        fontSize: "0.9rem",
+        fontWeight: 600,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+        color: "var(--color-primary-700)",
+    };
+
+    const subtitleTextStyle = {
+        fontSize: "0.96rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.65,
     };
 
     const tabsStyle = {
@@ -117,20 +144,33 @@ const DashboardCommunity = () => {
         flexShrink: 0,
     };
 
-    const buttonStyle = {
+    const quickGridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: "1rem",
+    };
+
+    const quickActionButtonStyle = {
         background: "linear-gradient(to right, #38bdf8, #60a5fa)",
         color: "#0f172a",
-        padding: "0.85rem 1.9rem",
+        padding: "0.9rem 1.2rem",
         borderRadius: "9999px",
         fontSize: "1rem",
         fontWeight: 700,
-        display: "inline-flex",
+        display: "flex",
         alignItems: "center",
-        gap: "0.6rem",
-        cursor: "pointer",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        justifyContent: "center",
+        gap: "0.75rem",
         border: "none",
         boxShadow: "0 16px 30px -20px rgba(56, 189, 248, 0.6)",
+        cursor: "pointer",
+        width: "100%",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    };
+
+    const quickActionIconStyle = {
+        width: "1.25rem",
+        height: "1.25rem",
     };
 
     const userCardStyle = {
@@ -409,14 +449,39 @@ const DashboardCommunity = () => {
     return (
         <div style={containerStyle}>
             <div style={innerStyle}>
-            {/* Header */}
-            <div style={headerStyle}>
-                <h1 style={titleStyle}>Community Hub</h1>
-                <p style={subtitleStyle}>
-                    Connect with fellow productivity enthusiasts, join study
-                    groups, and track your achievements!
-                </p>
-            </div>
+                {/* Header */}
+                <div style={headerStyle}>
+                    <h1 style={titleStyle}>Community Hub</h1>
+                    <p style={subtitleLeadStyle}>
+                        Connect with fellow productivity enthusiasts, align with the right cohorts, and track your shared milestones.
+                    </p>
+                    <div style={subtitleGridStyle}>
+                        <div style={subtitleCardStyle}>
+                            <span style={subtitleHeadingStyle}>Study circles</span>
+                            <span style={subtitleTextStyle}>
+                                Discover accountability pods and interest-aligned groups that match your current sprint or habit focus.
+                            </span>
+                        </div>
+                        <div style={subtitleCardStyle}>
+                            <span style={subtitleHeadingStyle}>Momentum highlights</span>
+                            <span style={subtitleTextStyle}>
+                                See weekly wins, upcoming events, and trending discussions to stay plugged into the energy of the community.
+                            </span>
+                        </div>
+                        <div style={subtitleCardStyle}>
+                            <span style={subtitleHeadingStyle}>Mentor access</span>
+                            <span style={subtitleTextStyle}>
+                                Drop into office hours, request feedback, and learn from mentors who specialise in the routines you’re building.
+                            </span>
+                        </div>
+                        <div style={subtitleCardStyle}>
+                            <span style={subtitleHeadingStyle}>Challenge cadence</span>
+                            <span style={subtitleTextStyle}>
+                                Join focus jams and streak challenges to keep your practice sharp and celebrate progress in real time.
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
             {/* Tabs */}
             <div style={tabsStyle}>
@@ -635,47 +700,21 @@ const DashboardCommunity = () => {
                         >
                             Quick Actions
                         </h2>
-                        <div
-                            style={{
-                                display: "flex",
-                                gap: "1rem",
-                                flexWrap: "wrap",
-                            }}
-                        >
-                            <button style={buttonStyle}>
-                                <UserGroupIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
+                        <div style={quickGridStyle}>
+                            <button type="button" style={quickActionButtonStyle}>
+                                <UserGroupIcon style={quickActionIconStyle} />
                                 Join Study Group
                             </button>
-                            <button style={buttonStyle}>
-                                <TrophyIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
+                            <button type="button" style={quickActionButtonStyle}>
+                                <TrophyIcon style={quickActionIconStyle} />
                                 View Achievements
                             </button>
-                            <button style={buttonStyle}>
-                                <ChatBubbleLeftRightIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
+                            <button type="button" style={quickActionButtonStyle}>
+                                <ChatBubbleLeftRightIcon style={quickActionIconStyle} />
                                 Start Discussion
                             </button>
-                            <button style={buttonStyle}>
-                                <CalendarIcon
-                                    style={{
-                                        width: "1.25rem",
-                                        height: "1.25rem",
-                                    }}
-                                />
+                            <button type="button" style={quickActionButtonStyle}>
+                                <CalendarIcon style={quickActionIconStyle} />
                                 Schedule Session
                             </button>
                         </div>

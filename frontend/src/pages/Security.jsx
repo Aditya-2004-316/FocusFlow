@@ -1,409 +1,515 @@
 import React from "react";
+import {
+    FaShieldAlt,
+    FaLock,
+    FaFingerprint,
+    FaServer,
+    FaCodeBranch,
+    FaTools,
+    FaEye,
+    FaBolt,
+    FaClipboardCheck,
+    FaUserShield,
+    FaEnvelope,
+    FaArrowRight,
+} from "react-icons/fa";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
 import "../styles/CardHover.css";
 
-const Security = () => (
-    <div style={{ background: "#0f172a", minHeight: "100vh", color: "#ffffff" }}>
-        <LandingNavbar />
-        <section
-            style={{
-                padding: "5rem 2rem 2rem 2rem",
-                textAlign: "center",
-            }}
-        >
-            <h1
-                style={{
-                    fontSize: "2.5rem",
-                    fontWeight: 700,
-                    marginBottom: "1rem",
-                    background: "linear-gradient(to right, #38bdf8, #818cf8)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                }}
-            >
-                Security
-            </h1>
-            <p
-                style={{
-                    color: "#94a3b8",
-                    fontSize: "1.2rem",
-                    maxWidth: 600,
-                    margin: "0 auto",
-                    lineHeight: 1.6,
-                }}
-            >
-                Learn how FocusFlow keeps your data safe and secure.
-            </p>
-        </section>
-        <main
-            style={{
-                maxWidth: 1200,
-                margin: "-2.5rem auto 2rem auto",
-                padding: "1rem",
-            }}
-        >
-            {/* Security Overview */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    🔒 Our Security Commitment
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7 }}>
-                    At FocusFlow, security is not an afterthought—it's built into every layer of our infrastructure. We implement industry-leading security practices to protect your data, ensure privacy, and maintain the trust you place in us.
-                </p>
-            </div>
+const heroStats = [
+    { value: "AES-256 + TLS 1.3", label: "Encryption standard" },
+    { value: "99.95%", label: "SLO uptime" },
+    { value: "< 1 hour", label: "Critical response window" },
+];
 
-            {/* Data Encryption */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    🔐 Data Encryption
-                </h2>
-                <div style={{ display: "grid", gap: "1.5rem" }}>
-                    {[
-                        {
-                            title: "Encryption in Transit",
-                            icon: "🚀",
-                            desc: "All data transmitted between your device and our servers is encrypted using TLS 1.3 (Transport Layer Security), the same technology used by banks and financial institutions."
-                        },
-                        {
-                            title: "Encryption at Rest",
-                            icon: "💾",
-                            desc: "Your data is encrypted using AES-256 encryption when stored in our databases. This military-grade encryption ensures your data is unreadable even if physical storage is compromised."
-                        },
-                        {
-                            title: "Password Security",
-                            icon: "🔑",
-                            desc: "Passwords are hashed using bcrypt with salt, making them virtually impossible to reverse-engineer. We never store your password in plain text."
-                        },
-                    ].map((item, idx) => (
-                        <div key={idx} style={{
-                            padding: "1.5rem",
-                            background: "rgba(15, 23, 42, 0.5)",
-                            borderRadius: "0.75rem",
-                            border: "1px solid #334155",
-                        }}>
-                            <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>{item.icon}</div>
-                            <h3 style={{ color: "#ffffff", fontSize: "1.15rem", fontWeight: 600, marginBottom: "0.75rem" }}>
-                                {item.title}
-                            </h3>
-                            <p style={{ color: "#94a3b8", fontSize: "1rem", lineHeight: 1.7, margin: 0 }}>
-                                {item.desc}
+const defenseHighlights = [
+    {
+        icon: <FaShieldAlt />,
+        tag: "Zero trust",
+        title: "Layered perimeter",
+        copy: "Multi-region firewalls, strict VPC isolation, and traffic inspection keep threats outside your workspace.",
+    },
+    {
+        icon: <FaLock />,
+        tag: "Encryption",
+        title: "Keys stay locked",
+        copy: "AES-256 at rest, TLS 1.3 in transit, hardware-backed key rotation, and scoped secrets management.",
+    },
+    {
+        icon: <FaFingerprint />,
+        tag: "Access",
+        title: "Least privilege access",
+        copy: "Role-based permissions, enforced MFA, and device fingerprinting so only verified teammates get in.",
+    },
+    {
+        icon: <FaUserShield />,
+        tag: "People",
+        title: "Trained responders",
+        copy: "Annual security training, background checks, and on-call rotations for 24/7 human coverage.",
+    },
+];
+
+const architectureLayers = [
+    {
+        icon: <FaServer />,
+        title: "Segregated infrastructure",
+        blurb: "Prod, staging, and analytics live in isolated VPCs with private networking and strict ingress policies.",
+    },
+    {
+        icon: <FaCodeBranch />,
+        title: "Immutable delivery",
+        blurb: "Signed containers deploy through gated CI/CD with automated security scans on every change.",
+    },
+    {
+        icon: <FaTools />,
+        title: "Change governance",
+        blurb: "Four-eyes approvals, audit trails, and rollback snapshots keep releases accountable and reversible.",
+    },
+    {
+        icon: <FaLock />,
+        title: "Data lifecycle",
+        blurb: "Granular retention schedules, anonymized analytics, and secure shredding after deletion windows lapse.",
+    },
+];
+
+const monitoringPlaybook = [
+    {
+        icon: <FaEye />,
+        label: "Detect",
+        copy: "Streaming logs feed a managed SIEM with anomaly detection and threat intel enrichment in real time.",
+    },
+    {
+        icon: <FaBolt />,
+        label: "Respond",
+        copy: "Pager rotations fire within minutes, with predefined runbooks and cross-functional war rooms on standby.",
+    },
+    {
+        icon: <FaClipboardCheck />,
+        label: "Recover",
+        copy: "Point-in-time restores, post-incident reviews, and customer-facing summaries within 24 hours of closure.",
+    },
+];
+
+const complianceBadges = [
+    { icon: <FaClipboardCheck />, title: "GDPR & CCPA", desc: "Data subject rights workflows and regional hosting options." },
+    { icon: <FaUserShield />, title: "SOC 2 Type II", desc: "Audited controls in progress with quarterly external reviews." },
+    { icon: <FaShieldAlt />, title: "OWASP Top 10", desc: "Continuous coverage against the most common web threats." },
+    { icon: <FaLock />, title: "SAML & SCIM", desc: "Enterprise identity federation and automated provisioning." },
+];
+
+const sharedDuties = [
+    "Use unique, 12+ character passwords or SSO with enforced MFA.",
+    "Limit access to least privilege roles and review membership quarterly.",
+    "Report suspicious logins or phishing immediately to our response desk.",
+    "Keep browsers, extensions, and devices patched to the latest version.",
+    "Export data securely and delete local files that are no longer required.",
+];
+
+const styles = {
+    page: {
+        minHeight: "100vh",
+        background: "linear-gradient(188deg, #040915 0%, #101a31 55%, #050b18 100%)",
+        color: "#ffffff",
+    },
+    hero: {
+        position: "relative",
+        padding: "6.3rem 2rem 4.6rem",
+        overflow: "hidden",
+    },
+    heroGlow: {
+        position: "absolute",
+        inset: "-280px auto auto 50%",
+        transform: "translateX(-50%)",
+        width: "820px",
+        height: "820px",
+        background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.24), transparent 68%)",
+        filter: "blur(18px)",
+    },
+    container: {
+        maxWidth: "1100px",
+        margin: "0 auto",
+        position: "relative",
+        zIndex: 1,
+    },
+    heroInner: {
+        display: "grid",
+        gap: "1.85rem",
+        textAlign: "center",
+        justifyItems: "center",
+    },
+    heroBadge: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.45rem",
+        padding: "0.55rem 1.25rem",
+        borderRadius: "9999px",
+        border: "1px solid rgba(56, 189, 248, 0.45)",
+        background: "rgba(15, 23, 42, 0.72)",
+        color: "#38bdf8",
+        letterSpacing: "0.14em",
+        fontSize: "0.82rem",
+        fontWeight: 600,
+        textTransform: "uppercase",
+    },
+    heroTitle: {
+        fontSize: "3.15rem",
+        fontWeight: 800,
+        letterSpacing: "-0.03em",
+        margin: 0,
+        lineHeight: 1.1,
+        background: "linear-gradient(115deg, #38bdf8, #60a5fa, #a855f7)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+    },
+    heroLead: {
+        maxWidth: "42rem",
+        color: "#cbd5f5",
+        fontSize: "1.16rem",
+        lineHeight: 1.78,
+    },
+    statRow: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "1.25rem",
+        width: "100%",
+    },
+    statCard: {
+        padding: "1.55rem",
+        borderRadius: "1.15rem",
+        background: "rgba(18, 28, 48, 0.82)",
+        border: "1px solid rgba(148, 163, 184, 0.25)",
+        boxShadow: "0 30px 68px -42px rgba(56, 189, 248, 0.6)",
+        display: "grid",
+        gap: "0.4rem",
+    },
+    statValue: {
+        fontSize: "1.28rem",
+        fontWeight: 600,
+        color: "#38bdf8",
+    },
+    statLabel: {
+        color: "#9fb2d6",
+        fontSize: "0.92rem",
+        lineHeight: 1.5,
+    },
+    main: {
+        padding: "4.8rem 2rem 4.4rem",
+    },
+    section: {
+        marginBottom: "4.2rem",
+    },
+    sectionHeader: {
+        textAlign: "center",
+        display: "grid",
+        gap: "0.6rem",
+        marginBottom: "2.2rem",
+        justifyItems: "center",
+    },
+    eyebrow: {
+        fontSize: "0.82rem",
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        color: "rgba(148, 163, 184, 0.88)",
+        fontWeight: 600,
+    },
+    sectionTitle: {
+        fontSize: "2.12rem",
+        fontWeight: 700,
+        color: "#f8fafc",
+    },
+    sectionLead: {
+        maxWidth: "44rem",
+        color: "#9fb2d6",
+        fontSize: "1.02rem",
+        lineHeight: 1.72,
+    },
+    cardGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "1.6rem",
+    },
+    card: {
+        padding: "1.85rem",
+        borderRadius: "1.2rem",
+        background: "rgba(17, 26, 44, 0.82)",
+        border: "1px solid rgba(56, 189, 248, 0.22)",
+        display: "grid",
+        gap: "0.75rem",
+    },
+    cardIcon: {
+        width: "2.8rem",
+        height: "2.8rem",
+        borderRadius: "0.85rem",
+        background: "rgba(56, 189, 248, 0.16)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#38bdf8",
+        fontSize: "1.4rem",
+    },
+    cardTag: {
+        fontSize: "0.78rem",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color: "#38bdf8",
+        fontWeight: 600,
+    },
+    cardTitle: {
+        fontSize: "1.18rem",
+        fontWeight: 600,
+        color: "#f1f5f9",
+    },
+    cardCopy: {
+        color: "#94a3b8",
+        fontSize: "0.95rem",
+        lineHeight: 1.68,
+    },
+    architectureGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+        gap: "1.5rem",
+    },
+    architectureCard: {
+        padding: "1.8rem",
+        borderRadius: "1.2rem",
+        background: "rgba(12, 20, 36, 0.9)",
+        border: "1px solid rgba(129, 140, 248, 0.24)",
+        display: "grid",
+        gap: "0.7rem",
+    },
+    monitoringGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "1.5rem",
+    },
+    monitoringCard: {
+        padding: "1.75rem",
+        borderRadius: "1.15rem",
+        background: "rgba(15, 23, 42, 0.82)",
+        border: "1px solid rgba(56, 189, 248, 0.2)",
+        display: "grid",
+        gap: "0.65rem",
+        textAlign: "center",
+    },
+    monitoringLabel: {
+        fontSize: "0.88rem",
+        fontWeight: 600,
+        color: "#38bdf8",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+    },
+    badgeGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "1.4rem",
+    },
+    badgeCard: {
+        padding: "1.65rem",
+        borderRadius: "1.1rem",
+        background: "rgba(17, 25, 43, 0.88)",
+        border: "1px solid rgba(56, 189, 248, 0.2)",
+        display: "grid",
+        gap: "0.6rem",
+        textAlign: "center",
+    },
+    dutyList: {
+        margin: 0,
+        paddingLeft: "1.15rem",
+        color: "#9fb2d6",
+        fontSize: "0.95rem",
+        lineHeight: 1.7,
+    },
+    contactCard: {
+        padding: "2.2rem",
+        borderRadius: "1.4rem",
+        background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.24))",
+        border: "1px solid rgba(56, 189, 248, 0.28)",
+        textAlign: "center",
+        display: "grid",
+        gap: "1rem",
+        color: "#e0f2fe",
+    },
+    contactBtn: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+        padding: "0.9rem 2.3rem",
+        borderRadius: "9999px",
+        background: "rgba(15, 23, 42, 0.82)",
+        border: "1px solid rgba(56, 189, 248, 0.35)",
+        color: "#38bdf8",
+        fontWeight: 600,
+        textDecoration: "none",
+        transition: "transform 0.25s ease, border-color 0.25s ease",
+    },
+};
+
+const Security = () => {
+    return (
+        <div style={styles.page}>
+            <LandingNavbar />
+            <section style={styles.hero}>
+                <div style={styles.heroGlow} />
+                <div style={styles.container}>
+                    <div style={styles.heroInner}>
+                        <span style={styles.heroBadge}>Security center</span>
+                        <h1 style={styles.heroTitle}>Calm, continuous protection</h1>
+                        <p style={styles.heroLead}>
+                            FocusFlow is engineered for privacy-first teams who ship fast. Every layer—from code to human response—is
+                            hardened so your rituals stay productive and protected.
+                        </p>
+                        <div style={styles.statRow}>
+                            {heroStats.map((stat) => (
+                                <div key={stat.label} style={styles.statCard}>
+                                    <span style={styles.statValue}>{stat.value}</span>
+                                    <span style={styles.statLabel}>{stat.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <main style={styles.main}>
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <span style={styles.eyebrow}>Defense in depth</span>
+                            <h2 style={styles.sectionTitle}>Security is a shared ritual, not a checklist</h2>
+                            <p style={styles.sectionLead}>
+                                Our layered controls keep the perimeter tight, the data encrypted, and access continuously verified—so
+                                your team can focus on work, not worry.
                             </p>
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div style={styles.cardGrid}>
+                            {defenseHighlights.map((card) => (
+                                <div key={card.title} style={styles.card}>
+                                    <span style={styles.cardIcon}>{card.icon}</span>
+                                    <span style={styles.cardTag}>{card.tag}</span>
+                                    <span style={styles.cardTitle}>{card.title}</span>
+                                    <p style={styles.cardCopy}>{card.copy}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-            {/* Infrastructure Security */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    🏛️ Infrastructure Security
-                </h2>
-                <ul style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 2, paddingLeft: "1.5rem" }}>
-                    <li><strong style={{ color: "#ffffff" }}>Cloud Hosting:</strong> Hosted on enterprise-grade cloud infrastructure with 99.9% uptime SLA</li>
-                    <li><strong style={{ color: "#ffffff" }}>DDoS Protection:</strong> Advanced protection against distributed denial-of-service attacks</li>
-                    <li><strong style={{ color: "#ffffff" }}>Firewall:</strong> Web Application Firewall (WAF) to block malicious traffic</li>
-                    <li><strong style={{ color: "#ffffff" }}>Network Isolation:</strong> Database and application servers run in isolated private networks</li>
-                    <li><strong style={{ color: "#ffffff" }}>Regular Updates:</strong> All systems are kept up-to-date with the latest security patches</li>
-                </ul>
-            </div>
-
-            {/* Access Control */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    🚪 Access Control & Authentication
-                </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1.75rem" }}>
-                    {[
-                        { icon: "🔐", title: "Multi-Factor Authentication", headline: "Layered sign-in", desc: "Offer optional 2FA via authenticator apps or SMS so high-impact accounts stay protected." },
-                        { icon: "🔑", title: "Session Management", headline: "Smart session limits", desc: "Idle sessions expire automatically and can be revoked instantly from the dashboard." },
-                        { icon: "🚫", title: "Role-Based Access", headline: "Principle of least privilege", desc: "Granular roles keep administrative abilities scoped only to what teammates need." },
-                        { icon: "📱", title: "Device Management", headline: "Visibility across devices", desc: "Review active device fingerprints, terminate logins, and flag anomalies in one place." },
-                    ].map((item, idx) => (
-                        <div
-                            key={idx}
-                            style={{
-                                padding: "1.5rem",
-                                background: "rgba(15, 23, 42, 0.6)",
-                                borderRadius: "0.9rem",
-                                border: "1px solid rgba(56, 189, 248, 0.18)",
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "0.65rem",
-                                boxShadow: "0 18px 45px -30px rgba(56, 189, 248, 0.35)",
-                            }}
-                        >
-                            <div style={{ fontSize: "2.35rem" }}>{item.icon}</div>
-                            <div>
-                                <h3 style={{ color: "#e2e8f0", fontSize: "1.15rem", fontWeight: 600, marginBottom: "0.35rem" }}>
-                                    {item.title}
-                                </h3>
-                                <span style={{ color: "#38bdf8", fontSize: "0.9rem", fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase" }}>
-                                    {item.headline}
-                                </span>
-                            </div>
-                            <p style={{ color: "#94a3b8", fontSize: "0.96rem", lineHeight: 1.6, margin: 0 }}>
-                                {item.desc}
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <span style={styles.eyebrow}>Architecture blueprint</span>
+                            <h2 style={styles.sectionTitle}>Infrastructure designed for resilience</h2>
+                            <p style={styles.sectionLead}>
+                                From code commit to data archive, we engineer for isolation, observability, and rapid recovery.
                             </p>
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div style={styles.architectureGrid}>
+                            {architectureLayers.map((layer) => (
+                                <div key={layer.title} style={styles.architectureCard}>
+                                    <span style={styles.cardIcon}>{layer.icon}</span>
+                                    <span style={styles.cardTitle}>{layer.title}</span>
+                                    <p style={styles.cardCopy}>{layer.blurb}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-            {/* Monitoring & Response */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    📊 Monitoring & Incident Response
-                </h2>
-                <div style={{ display: "grid", gap: "1rem" }}>
-                    {[
-                        { title: "24/7 Monitoring", desc: "Continuous monitoring of all systems for suspicious activity and anomalies" },
-                        { title: "Automated Alerts", desc: "Real-time alerts for security events trigger immediate investigation" },
-                        { title: "Audit Logs", desc: "Comprehensive logging of all access and changes to your data" },
-                        { title: "Incident Response Plan", desc: "Documented procedures to quickly respond to and mitigate security incidents" },
-                    ].map((item, idx) => (
-                        <div key={idx} style={{
-                            padding: "1rem",
-                            background: "rgba(15, 23, 42, 0.5)",
-                            borderRadius: "0.5rem",
-                            border: "1px solid #334155",
-                        }}>
-                            <h3 style={{ color: "#38bdf8", fontSize: "1.05rem", fontWeight: 600, marginBottom: "0.5rem" }}>
-                                {item.title}
-                            </h3>
-                            <p style={{ color: "#94a3b8", fontSize: "1rem", margin: 0 }}>
-                                {item.desc}
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <span style={styles.eyebrow}>Monitoring & response</span>
+                            <h2 style={styles.sectionTitle}>Always-on coverage with human expertise</h2>
+                            <p style={styles.sectionLead}>
+                                Automation catches the noise, responders handle the nuance—ensuring transparency from detection to
+                                resolution.
                             </p>
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div style={styles.monitoringGrid}>
+                            {monitoringPlaybook.map((item) => (
+                                <div key={item.label} style={styles.monitoringCard}>
+                                    <span style={styles.cardIcon}>{item.icon}</span>
+                                    <span style={styles.monitoringLabel}>{item.label}</span>
+                                    <p style={styles.cardCopy}>{item.copy}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-            {/* Data Backup & Recovery */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    💾 Data Backup & Disaster Recovery
-                </h2>
-                <ul style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 2, paddingLeft: "1.5rem" }}>
-                    <li><strong style={{ color: "#ffffff" }}>Automated Backups:</strong> Daily encrypted backups of all user data</li>
-                    <li><strong style={{ color: "#ffffff" }}>Geographic Redundancy:</strong> Backups stored in multiple geographic locations</li>
-                    <li><strong style={{ color: "#ffffff" }}>Point-in-Time Recovery:</strong> Ability to restore data to specific timestamps</li>
-                    <li><strong style={{ color: "#ffffff" }}>Disaster Recovery Plan:</strong> Tested procedures to restore service within 4 hours</li>
-                </ul>
-            </div>
-
-            {/* Compliance & Certifications */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    ✅ Compliance & Standards
-                </h2>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
-                    {[
-                        { title: "GDPR Compliant", desc: "Full compliance with EU data protection regulations" },
-                        { title: "CCPA Compliant", desc: "Adherence to California privacy laws" },
-                        { title: "SOC 2 Type II", desc: "Working towards certification (in progress)" },
-                        { title: "OWASP Top 10", desc: "Protection against common web vulnerabilities" },
-                    ].map((item, idx) => (
-                        <div key={idx} style={{
-                            padding: "1.5rem",
-                            background: "rgba(15, 23, 42, 0.5)",
-                            borderRadius: "0.75rem",
-                            border: "1px solid #334155",
-                            textAlign: "center",
-                        }}>
-                            <h3 style={{ color: "#ffffff", fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.75rem" }}>
-                                {item.title}
-                            </h3>
-                            <p style={{ color: "#94a3b8", fontSize: "0.95rem" }}>
-                                {item.desc}
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <span style={styles.eyebrow}>Compliance & trust</span>
+                            <h2 style={styles.sectionTitle}>Standards today, certifications tomorrow</h2>
+                            <p style={styles.sectionLead}>
+                                FocusFlow aligns with global data protection frameworks and is actively expanding third-party
+                                attestations.
                             </p>
                         </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Security Testing */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    🔍 Security Testing & Audits
-                </h2>
-                <ul style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 2, paddingLeft: "1.5rem" }}>
-                    <li><strong style={{ color: "#ffffff" }}>Penetration Testing:</strong> Regular third-party security assessments</li>
-                    <li><strong style={{ color: "#ffffff" }}>Vulnerability Scanning:</strong> Automated daily scans for known vulnerabilities</li>
-                    <li><strong style={{ color: "#ffffff" }}>Code Reviews:</strong> Security-focused code reviews before deployment</li>
-                    <li><strong style={{ color: "#ffffff" }}>Bug Bounty Program:</strong> Rewards for responsible disclosure of security issues</li>
-                </ul>
-            </div>
-
-            {/* Your Responsibility */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    marginBottom: "2rem",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-                    👤 Your Security Responsibilities
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    While we implement robust security measures, your cooperation is essential:
-                </p>
-                <div style={{ display: "grid", gap: "1rem" }}>
-                    {[
-                        { icon: "🔑", title: "Use Strong Passwords", desc: "Create unique, complex passwords (12+ characters with mixed case, numbers, symbols)" },
-                        { icon: "🚫", title: "Never Share Credentials", desc: "Don't share your password or login details with anyone" },
-                        { icon: "📱", title: "Enable 2FA", desc: "Turn on two-factor authentication for extra protection" },
-                        { icon: "⚠️", title: "Report Suspicious Activity", desc: "Contact us immediately if you notice anything unusual" },
-                        { icon: "🔄", title: "Keep Software Updated", desc: "Use the latest version of your browser and operating system" },
-                        { icon: "🚪", title: "Log Out on Shared Devices", desc: "Always log out when using public or shared computers" },
-                    ].map((item, idx) => (
-                        <div key={idx} style={{
-                            padding: "1rem",
-                            background: "rgba(15, 23, 42, 0.5)",
-                            borderRadius: "0.5rem",
-                            border: "1px solid #334155",
-                            display: "flex",
-                            gap: "1rem",
-                            alignItems: "start",
-                        }}>
-                            <div style={{ fontSize: "2rem", flexShrink: 0 }}>{item.icon}</div>
-                            <div>
-                                <h3 style={{ color: "#ffffff", fontSize: "1.05rem", fontWeight: 600, marginBottom: "0.5rem" }}>
-                                    {item.title}
-                                </h3>
-                                <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
-                                    {item.desc}
-                                </p>
-                            </div>
+                        <div style={styles.badgeGrid}>
+                            {complianceBadges.map((badge) => (
+                                <div key={badge.title} style={styles.badgeCard}>
+                                    <span style={styles.cardIcon}>{badge.icon}</span>
+                                    <span style={styles.cardTitle}>{badge.title}</span>
+                                    <p style={styles.cardCopy}>{badge.desc}</p>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </div>
+                    </div>
+                </section>
 
-            {/* Report Security Issue */}
-            <div
-                className="hover-card"
-                style={{
-                    background: "rgba(30, 41, 59, 0.5)",
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "1rem",
-                    border: "1px solid #334155",
-                    padding: "2rem",
-                    transition: "all 0.3s ease",
-                    textAlign: "center",
-                }}
-            >
-                <h2 style={{ color: "#38bdf8", fontWeight: 600, fontSize: "1.5rem", marginBottom: "1rem" }}>
-                    🚨 Report a Security Issue
-                </h2>
-                <p style={{ color: "#94a3b8", fontSize: "1.08rem", lineHeight: 1.7, marginBottom: "1.5rem" }}>
-                    Found a security vulnerability? We appreciate responsible disclosure and will respond within 24 hours.
-                </p>
-                <p style={{ color: "#ffffff", fontSize: "1.1rem" }}>
-                    Email: <a href="mailto:security@focusflow.com" style={{ color: "#38bdf8", textDecoration: "underline", fontWeight: 600 }}>security@focusflow.com</a>
-                </p>
-                <p style={{ color: "#94a3b8", fontSize: "0.95rem", marginTop: "1rem" }}>
-                    Please include detailed information about the vulnerability and steps to reproduce it.
-                </p>
-            </div>
-        </main>
-        <LandingFooter />
-    </div>
-);
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeader}>
+                            <span style={styles.eyebrow}>Shared responsibilities</span>
+                            <h2 style={styles.sectionTitle}>Security is stronger when we partner</h2>
+                            <p style={styles.sectionLead}>
+                                We handle the platform; you keep your workspace hygiene sharp. Follow these best practices to lock things
+                                down.
+                            </p>
+                        </div>
+                        <ul style={styles.dutyList}>
+                            {sharedDuties.map((duty) => (
+                                <li key={duty}>{duty}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
+
+                <section style={styles.section}>
+                    <div style={styles.container}>
+                        <div style={styles.contactCard}>
+                            <h2 style={{ fontSize: "2rem", fontWeight: 700, margin: 0 }}>Need to flag a concern?</h2>
+                            <p style={{ color: "#cbd5f5", fontSize: "1rem", lineHeight: 1.7, margin: 0 }}>
+                                Report potential issues or request copies of our latest security reports. We respond within one business
+                                day.
+                            </p>
+                            <a
+                                href="mailto:security@focusflow.com"
+                                style={styles.contactBtn}
+                                onMouseEnter={(event) => {
+                                    event.currentTarget.style.transform = "translateY(-3px)";
+                                    event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.55)";
+                                }}
+                                onMouseLeave={(event) => {
+                                    event.currentTarget.style.transform = "translateY(0px)";
+                                    event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.35)";
+                                }}
+                            >
+                                <FaEnvelope /> security@focusflow.com <FaArrowRight />
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <LandingFooter />
+        </div>
+    );
+};
 
 export default Security;

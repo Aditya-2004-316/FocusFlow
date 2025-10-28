@@ -1,225 +1,358 @@
 import React, { useState } from "react";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import {
+    FaChevronDown,
+    FaChevronUp,
+    FaSearch,
+    FaHeadset,
+    FaQuestionCircle,
+    FaStopwatch,
+    FaChartLine,
+    FaShieldAlt,
+} from "react-icons/fa";
 import "../styles/CardHover.css";
 
-const faqCategories = {
-    "Getting Started": [
-        {
-            question: "What is FocusFlow?",
-            answer: "FocusFlow is a platform to help you manage your time and stay productive.",
-        },
-        {
-            question: "Is FocusFlow free?",
-            answer: "Yes! All features are free to use.",
-        },
-        {
-            question: "Do I need to create an account?",
-            answer: "No account is required to use the basic features. However, creating an account lets you save your progress and access your data from any device.",
-        },
-    ],
-    "Using the Timer": [
-        {
-            question: "How do I use the timer?",
-            answer: "Go to the dashboard, set your session, and start focusing!",
-        },
-        {
-            question: "Can I customize timer durations?",
-            answer: "Yes! You can customize your focus session length, short break duration, and long break duration in the settings.",
-        },
-        {
-            question: "What is the Pomodoro technique?",
-            answer: "The Pomodoro Technique is a time management method that uses a timer to break work into intervals (traditionally 25 minutes) separated by short breaks. FocusFlow implements this technique with customizable intervals.",
-        },
-    ],
-    "Data & Analytics": [
-        {
-            question: "How is my data stored?",
-            answer: "Your data is securely stored in encrypted databases with regular backups. We use industry-standard security practices to protect your information.",
-        },
-        {
-            question: "Can I export my data?",
-            answer: "Yes! You can export your focus session history, statistics, and analytics in CSV or JSON format from your account settings.",
-        },
-    ],
-    "Privacy & Security": [
-        {
-            question: "Is my data private?",
-            answer: "Yes, your data is stored securely and is only accessible to you. This project does not share your data with anyone.",
-        },
-        {
-            question: "Can I delete my account?",
-            answer: "Yes, you can permanently delete your account and all associated data at any time from your account settings. This action is irreversible.",
-        },
-    ],
-    "Features & Functionality": [
-        {
-            question: "Can I use FocusFlow for studying?",
-            answer: "Absolutely! FocusFlow is designed for students and anyone who wants to improve their focus and productivity.",
-        },
-        {
-            question: "Does FocusFlow have a mobile app?",
-            answer: "Mobile apps for iOS and Android are currently in development. You can use the web version on mobile browsers in the meantime.",
-        },
-        {
-            question: "Is there a dark mode?",
-            answer: "Yes! FocusFlow has a beautiful dark mode that's enabled by default. You can toggle between light and dark themes in your settings.",
-        },
-    ],
-    "Community & Support": [
-        {
-            question: "Can I contribute to FocusFlow?",
-            answer: "Yes! This is an open student project. You can suggest features, report bugs, or contribute code on our GitHub page.",
-        },
-        {
-            question: "How can I give feedback?",
-            answer: "We welcome your feedback! Visit the Community page or email us at focusflow@studentproject.com.",
-        },
-        {
-            question: "Where can I report bugs?",
-            answer: "You can report bugs on our GitHub Issues page or email us at support@focusflow.com. Please include as much detail as possible.",
-        },
-    ],
-};
+const quickGlances = [
+    {
+        label: "Timer basics",
+        icon: <FaStopwatch />,
+        summary: "Customize sessions, breaks, and reminders in under a minute.",
+        target: "getting-started",
+    },
+    {
+        label: "Analytics exports",
+        icon: <FaChartLine />,
+        summary: "Download focus history in CSV or JSON straight from settings.",
+        target: "data-analytics",
+    },
+    {
+        label: "Privacy controls",
+        icon: <FaShieldAlt />,
+        summary: "Delete data anytime—your focus logs stay yours.",
+        target: "privacy-security",
+    },
+];
 
-// Flatten for backward compatibility
-const faqs = Object.values(faqCategories).flat();
+const faqSections = [
+    {
+        key: "getting-started",
+        title: "Getting started",
+        hint: "Launch FocusFlow in minutes",
+        items: [
+            {
+                question: "What is FocusFlow?",
+                answer: "FocusFlow is a platform to help you manage your time and stay productive.",
+            },
+            {
+                question: "Is FocusFlow free?",
+                answer: "Yes! All features are free to use.",
+            },
+            {
+                question: "Do I need to create an account?",
+                answer:
+                    "No account is required for the basics. Creating one lets you save progress and access sessions from any device.",
+            },
+        ],
+    },
+    {
+        key: "timer",
+        title: "Using the timer",
+        hint: "Dial-in your deep work rhythm",
+        items: [
+            {
+                question: "How do I use the timer?",
+                answer: "Head to the dashboard, set your session, and start focusing—no extra setup required.",
+            },
+            {
+                question: "Can I customize timer durations?",
+                answer:
+                    "Yes. Tune your focus length, short breaks, and long resets from the timer settings panel.",
+            },
+            {
+                question: "What is the Pomodoro technique?",
+                answer:
+                    "It’s a time management method using focused intervals separated by breaks. FocusFlow implements it with customizable pacing.",
+            },
+        ],
+    },
+    {
+        key: "data-analytics",
+        title: "Data & analytics",
+        hint: "Understand your momentum",
+        items: [
+            {
+                question: "How is my data stored?",
+                answer:
+                    "Your data lives in encrypted databases with regular backups and industry-standard security practices.",
+            },
+            {
+                question: "Can I export my data?",
+                answer:
+                    "Yes. Export focus history, streaks, and analytics as CSV or JSON right from account settings.",
+            },
+        ],
+    },
+    {
+        key: "privacy-security",
+        title: "Privacy & security",
+        hint: "Your rituals, your data",
+        items: [
+            {
+                question: "Is my data private?",
+                answer:
+                    "Absolutely. Only you can access your logs, and we never share or sell data—ever.",
+            },
+            {
+                question: "Can I delete my account?",
+                answer:
+                    "Yes. Delete your account and all associated data at any time from settings. The action is instant and irreversible.",
+            },
+        ],
+    },
+    {
+        key: "features",
+        title: "Features & functionality",
+        hint: "Make FocusFlow yours",
+        items: [
+            {
+                question: "Can I use FocusFlow for studying?",
+                answer:
+                    "Absolutely. FocusFlow is designed for students, teams, and anyone building a sustainable focus habit.",
+            },
+            {
+                question: "Does FocusFlow have a mobile app?",
+                answer:
+                    "Native apps are in development. For now, the web experience runs smoothly in mobile browsers.",
+            },
+            {
+                question: "Is there a dark mode?",
+                answer:
+                    "Yes. Dark mode is enabled by default, and you can toggle themes in settings whenever you like.",
+            },
+        ],
+    },
+    {
+        key: "community-support",
+        title: "Community & support",
+        hint: "Plug into the collective",
+        items: [
+            {
+                question: "Can I contribute to FocusFlow?",
+                answer:
+                    "Yes. Suggest features, triage bugs, or ship PRs through our open GitHub roadmap.",
+            },
+            {
+                question: "How can I give feedback?",
+                answer:
+                    "Drop a note on the Community page or email focusflow@studentproject.com—we read every message.",
+            },
+            {
+                question: "Where can I report bugs?",
+                answer:
+                    "File GitHub issues or email support@focusflow.com. Include steps to reproduce so we can jump on it fast.",
+            },
+        ],
+    },
+];
+
+const supportHighlights = [
+    {
+        title: "Live office hours",
+        copy: "Join weekly sessions with the team for walk-throughs and workflow audits.",
+        link: "mailto:focusflow@studentproject.com?subject=Office%20Hours",
+        cta: "Reserve a seat",
+    },
+    {
+        title: "Documentation library",
+        copy: "Explore in-depth guides and playbooks covering rituals, analytics, and integrations.",
+        link: "/resources",
+        cta: "Browse guides",
+    },
+];
 
 const styles = {
     page: {
         minHeight: "100vh",
-        background: "linear-gradient(180deg, #0b1120 0%, #111c33 55%, #0b1120 100%)",
+        background: "linear-gradient(185deg, #040915 0%, #101a31 55%, #040915 100%)",
         color: "#ffffff",
     },
-    container: {
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "0 1.5rem",
-    },
     hero: {
-        padding: "6rem 1.5rem 4rem",
+        position: "relative",
+        padding: "6rem 2rem 4.6rem",
+        overflow: "hidden",
+    },
+    heroGlow: {
+        position: "absolute",
+        inset: "-220px auto auto 50%",
+        transform: "translateX(-50%)",
+        width: "760px",
+        height: "760px",
+        background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.2), transparent 68%)",
+        filter: "blur(16px)",
+    },
+    container: {
+        maxWidth: "1120px",
+        margin: "0 auto",
+        position: "relative",
+        zIndex: 1,
+    },
+    heroInner: {
         textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1.6rem",
+        alignItems: "center",
+    },
+    heroBadge: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.45rem",
+        padding: "0.5rem 1rem",
+        borderRadius: "9999px",
+        border: "1px solid rgba(56, 189, 248, 0.45)",
+        background: "rgba(15, 23, 42, 0.7)",
+        color: "#38bdf8",
+        fontSize: "0.85rem",
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+        fontWeight: 600,
     },
     heroTitle: {
-        fontSize: "3.1rem",
+        fontSize: "3.05rem",
         fontWeight: 800,
         letterSpacing: "-0.03em",
-        marginBottom: "1rem",
-    },
-    heroGradient: {
         background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
+        margin: 0,
     },
     heroLead: {
-        fontSize: "1.18rem",
-        lineHeight: 1.75,
+        maxWidth: "44rem",
         color: "#cbd5f5",
-        maxWidth: "40rem",
-        margin: "0 auto",
-    },
-    heroStats: {
-        marginTop: "3.5rem",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "1.5rem",
-        justifyContent: "center",
-    },
-    heroStat: {
-        minWidth: "220px",
-        padding: "1.4rem 1.7rem",
-        borderRadius: "1.25rem",
-        background: "rgba(30, 41, 59, 0.55)",
-        border: "1px solid rgba(148, 163, 184, 0.2)",
-        boxShadow: "0 18px 50px -32px rgba(56, 189, 248, 0.65)",
-    },
-    heroStatValue: {
-        fontSize: "1.9rem",
-        fontWeight: 700,
-        color: "#38bdf8",
-        marginBottom: "0.25rem",
-    },
-    heroStatLabel: {
-        color: "#94a3b8",
-        fontSize: "0.95rem",
-        lineHeight: 1.6,
+        fontSize: "1.14rem",
+        lineHeight: 1.74,
     },
     searchBar: {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
         maxWidth: "620px",
-        margin: "3rem auto 0",
-        position: "relative",
+        width: "100%",
+        background: "rgba(12, 20, 36, 0.88)",
+        borderRadius: "1rem",
+        border: "1px solid rgba(56, 189, 248, 0.32)",
+        padding: "0.65rem 0.85rem",
+        boxShadow: "0 22px 55px -32px rgba(56, 189, 248, 0.55)",
+    },
+    searchIcon: {
+        color: "#38bdf8",
+        fontSize: "1.2rem",
     },
     searchInput: {
-        width: "100%",
-        padding: "1rem 1.1rem",
-        borderRadius: "0.9rem",
-        border: "1px solid rgba(148, 163, 184, 0.25)",
-        background: "rgba(15, 23, 42, 0.75)",
+        flex: 1,
+        background: "transparent",
+        border: "none",
         color: "#e2e8f0",
-        fontSize: "1rem",
+        fontSize: "1.02rem",
         outline: "none",
-        boxShadow: "0 15px 45px -30px rgba(56, 189, 248, 0.6)",
     },
-    content: {
-        marginTop: "-2.5rem",
-        paddingBottom: "5rem",
+    quickGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "1.4rem",
+        marginTop: "3rem",
     },
-    filtersRow: {
+    quickCard: {
+        padding: "1.45rem",
+        borderRadius: "1.1rem",
+        background: "rgba(17, 26, 44, 0.78)",
+        border: "1px solid rgba(129, 140, 248, 0.25)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.6rem",
+        transition: "transform 0.25s ease, border-color 0.25s ease",
+        cursor: "pointer",
+    },
+    quickIcon: {
+        width: "2.5rem",
+        height: "2.5rem",
+        borderRadius: "0.8rem",
+        background: "rgba(56, 189, 248, 0.16)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#38bdf8",
+        fontSize: "1.2rem",
+    },
+    quickLabel: {
+        fontWeight: 600,
+        fontSize: "1.05rem",
+        color: "#f8fafc",
+    },
+    quickSummary: {
+        color: "#9fb2d6",
+        fontSize: "0.92rem",
+        lineHeight: 1.6,
+    },
+    main: {
+        padding: "4.6rem 2rem 4.8rem",
+    },
+    pillRow: {
         display: "flex",
         flexWrap: "wrap",
         gap: "0.75rem",
         justifyContent: "center",
-        marginBottom: "2.5rem",
+        marginBottom: "3rem",
     },
-    filterButton: (active) => ({
-        padding: "0.55rem 1.15rem",
+    pillButton: (active) => ({
+        padding: "0.6rem 1.25rem",
         borderRadius: "9999px",
         border: `1px solid ${active ? "rgba(56, 189, 248, 0.55)" : "rgba(148, 163, 184, 0.25)"}`,
-        background: active ? "rgba(56, 189, 248, 0.18)" : "rgba(15, 23, 42, 0.7)",
+        background: active ? "rgba(56, 189, 248, 0.2)" : "rgba(13, 20, 36, 0.75)",
         color: active ? "#e2e8f0" : "#94a3b8",
         fontWeight: active ? 600 : 500,
-        fontSize: "0.92rem",
+        fontSize: "0.94rem",
         cursor: "pointer",
-        transition: "transform 0.2s ease, border-color 0.2s ease",
+        transition: "transform 0.22s ease, border-color 0.22s ease",
     }),
     sectionBlock: {
-        marginBottom: "3.75rem",
+        marginBottom: "3.5rem",
     },
     sectionHeader: {
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: "1.5rem",
+        alignItems: "center",
         flexWrap: "wrap",
-        gap: "0.75rem",
+        gap: "0.8rem",
+        marginBottom: "1.6rem",
     },
     sectionTitle: {
-        fontSize: "1.6rem",
+        fontSize: "1.65rem",
         fontWeight: 700,
-        color: "#e0f2fe",
+        color: "#f1f5f9",
     },
     sectionHint: {
         color: "#94a3b8",
-        fontSize: "0.95rem",
+        fontSize: "0.96rem",
     },
     faqCard: {
-        background: "rgba(15, 23, 42, 0.75)",
-        borderRadius: "1.1rem",
+        padding: "1.7rem 1.85rem",
+        borderRadius: "1.15rem",
+        background: "rgba(12, 20, 36, 0.88)",
         border: "1px solid rgba(56, 189, 248, 0.22)",
-        padding: "1.6rem 1.75rem",
-        marginBottom: "1.2rem",
+        marginBottom: "1.05rem",
         transition: "transform 0.25s ease, border-color 0.25s ease",
     },
     faqCardActive: {
-        borderColor: "rgba(96, 165, 250, 0.6)",
+        borderColor: "rgba(96, 165, 250, 0.55)",
         transform: "translateY(-4px)",
     },
     questionRow: {
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
+        alignItems: "center",
         gap: "1rem",
         cursor: "pointer",
     },
@@ -230,178 +363,260 @@ const styles = {
     },
     answerText: {
         marginTop: "0.9rem",
-        color: "#94a3b8",
-        lineHeight: 1.7,
-        fontSize: "1rem",
+        color: "#9fb2d6",
+        lineHeight: 1.72,
+        fontSize: "0.98rem",
     },
     resultsLabel: {
         textAlign: "center",
         color: "#94a3b8",
-        marginBottom: "1.75rem",
+        marginBottom: "1.8rem",
+        fontSize: "0.98rem",
+    },
+    supportSection: {
+        marginTop: "4.2rem",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gap: "1.4rem",
     },
     supportCard: {
-        marginTop: "3.25rem",
-        padding: "1.75rem",
-        borderRadius: "1rem",
-        textAlign: "center",
-        background: "rgba(15, 23, 42, 0.75)",
-        border: "1px solid rgba(56, 189, 248, 0.25)",
-        color: "#94a3b8",
-        lineHeight: 1.7,
+        padding: "1.9rem",
+        borderRadius: "1.2rem",
+        background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.22))",
+        border: "1px solid rgba(56, 189, 248, 0.26)",
+        boxShadow: "0 28px 60px -34px rgba(56, 189, 248, 0.55)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.9rem",
     },
-    link: {
+    supportTitle: {
+        fontSize: "1.18rem",
+        fontWeight: 700,
+        color: "#eef6ff",
+    },
+    supportCopy: {
+        color: "#cbdefc",
+        fontSize: "0.96rem",
+        lineHeight: 1.65,
+    },
+    supportLink: {
+        alignSelf: "flex-start",
+        color: "#0f172a",
+        fontWeight: 600,
+        padding: "0.55rem 1.2rem",
+        borderRadius: "9999px",
+        background: "rgba(255, 255, 255, 0.92)",
+        textDecoration: "none",
+        fontSize: "0.95rem",
+    },
+    helpBanner: {
+        marginTop: "3.6rem",
+        padding: "2.4rem",
+        borderRadius: "1.4rem",
+        background: "rgba(15, 23, 42, 0.75)",
+        border: "1px solid rgba(56, 189, 248, 0.26)",
+        textAlign: "center",
+        lineHeight: 1.7,
+        color: "#9fb2d6",
+    },
+    helpLink: {
         color: "#38bdf8",
         fontWeight: 600,
-        textDecoration: "underline",
     },
 };
 
-const heroStats = [
-    {
-        value: "180+",
-        label: "Daily questions resolved",
-    },
-    {
-        value: "2m",
-        label: "Average response time",
-    },
-    {
-        value: "4.9/5",
-        label: "Support satisfaction score",
-    },
-];
+const searchIndex = faqSections.flatMap((section) =>
+    section.items.map((item) => ({ ...item, section: section.title, key: section.key }))
+);
+
+const filterOptions = [{ label: "All", key: "all" }, ...faqSections.map((section) => ({ label: section.title, key: section.key }))];
 
 const FAQ = () => {
-    const [openIdx, setOpenIdx] = useState(null);
+    const [openQuestion, setOpenQuestion] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [activeFilter, setActiveFilter] = useState("all");
 
-    const filteredFaqs = faqs.filter(faq => 
-        faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const renderFaqCard = (faq, idx) => {
-        const isActive = openIdx === idx;
-        return (
-            <div
-                key={idx}
-                className="hover-card"
-                style={{
-                    ...styles.faqCard,
-                    ...(isActive ? styles.faqCardActive : {}),
-                }}
-            >
-                <div
-                    style={styles.questionRow}
-                    onClick={() => setOpenIdx(isActive ? null : idx)}
-                >
-                    <span style={styles.questionText}>{faq.question}</span>
-                    {isActive ? (
-                        <FaChevronUp style={{ color: "#38bdf8", fontSize: "1.15rem" }} />
-                    ) : (
-                        <FaChevronDown style={{ color: "#60a5fa", fontSize: "1.15rem" }} />
-                    )}
-                </div>
-                {isActive && <div style={styles.answerText}>{faq.answer}</div>}
-            </div>
-        );
+    const handleToggle = (id) => {
+        setOpenQuestion((prev) => (prev === id ? null : id));
     };
+
+    const listToRender = searchTerm
+        ? searchIndex.filter((item) => {
+              const term = searchTerm.toLowerCase();
+              return item.question.toLowerCase().includes(term) || item.answer.toLowerCase().includes(term);
+          })
+        : faqSections.filter((section) => activeFilter === "all" || section.key === activeFilter);
 
     return (
         <div style={styles.page}>
             <LandingNavbar />
             <section style={styles.hero}>
+                <div style={styles.heroGlow} />
                 <div style={styles.container}>
-                    <h1 style={styles.heroTitle}>
-                        Your FocusFlow <span style={styles.heroGradient}>knowledge base</span>
-                    </h1>
-                    <p style={styles.heroLead}>
-                        Clarity in minutes—not support tickets. Browse answers, learn best practices, and tap into the rituals that keep teams on track.
-                    </p>
-                    <div style={styles.heroStats}>
-                        {heroStats.map((stat) => (
-                            <div key={stat.label} style={styles.heroStat}>
-                                <div style={styles.heroStatValue}>{stat.value}</div>
-                                <div style={styles.heroStatLabel}>{stat.label}</div>
-                            </div>
-                        ))}
-                    </div>
-                    <div style={styles.searchBar}>
-                        <input
-                            type="text"
-                            placeholder="Search keywords like timer, export, or community..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            style={styles.searchInput}
-                        />
+                    <div style={styles.heroInner}>
+                        <span style={styles.heroBadge}>
+                            <FaQuestionCircle /> Support center
+                        </span>
+                        <h1 style={styles.heroTitle}>Answers that keep your flow uninterrupted</h1>
+                        <p style={styles.heroLead}>
+                            Search the playbook, explore most-asked rituals, and get unstuck fast. No tickets required—just
+                            signals from the FocusFlow collective.
+                        </p>
+                        <div style={styles.searchBar}>
+                            <FaSearch style={styles.searchIcon} />
+                            <input
+                                style={styles.searchInput}
+                                type="text"
+                                placeholder="Search timer setup, exports, privacy, or anything else..."
+                                value={searchTerm}
+                                onChange={(event) => {
+                                    setSearchTerm(event.target.value);
+                                    setActiveFilter("all");
+                                    setOpenQuestion(null);
+                                }}
+                            />
+                        </div>
+                        <div style={styles.quickGrid}>
+                            {quickGlances.map((quick) => (
+                                <div
+                                    key={quick.label}
+                                    className="hover-card"
+                                    style={styles.quickCard}
+                                    onClick={() => {
+                                        setActiveFilter(quick.target);
+                                        setSearchTerm("");
+                                        setOpenQuestion(null);
+                                        const targetEl = document.getElementById(`faq-${quick.target}`);
+                                        if (targetEl) {
+                                            targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                                        }
+                                    }}
+                                    onMouseEnter={(event) => {
+                                        event.currentTarget.style.transform = "translateY(-4px)";
+                                        event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.4)";
+                                    }}
+                                    onMouseLeave={(event) => {
+                                        event.currentTarget.style.transform = "translateY(0px)";
+                                        event.currentTarget.style.borderColor = "rgba(129, 140, 248, 0.25)";
+                                    }}
+                                >
+                                    <span style={styles.quickIcon}>{quick.icon}</span>
+                                    <span style={styles.quickLabel}>{quick.label}</span>
+                                    <p style={styles.quickSummary}>{quick.summary}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <main style={styles.content}>
-                <div style={{ ...styles.container }}>
-                    <div style={styles.filtersRow}>
-                        {["All", ...Object.keys(faqCategories)].map((category) => (
-                            <button
-                                key={category}
-                                onClick={() => {
-                                    setSelectedCategory(category);
-                                    setOpenIdx(null);
-                                }}
-                                style={styles.filterButton(selectedCategory === category)}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = "translateY(-2px)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = "translateY(0px)";
-                                }}
-                            >
-                                {category}
-                            </button>
-                        ))}
-                    </div>
+            <main style={styles.main}>
+                <div style={styles.container}>
+                    {!searchTerm && (
+                        <div style={styles.pillRow}>
+                            {filterOptions.map((option) => (
+                                <button
+                                    key={option.key}
+                                    style={styles.pillButton(activeFilter === option.key)}
+                                    onClick={() => {
+                                        setActiveFilter(option.key);
+                                        setSearchTerm("");
+                                        setOpenQuestion(null);
+                                    }}
+                                    onMouseEnter={(event) => {
+                                        event.currentTarget.style.transform = "translateY(-3px)";
+                                    }}
+                                    onMouseLeave={(event) => {
+                                        event.currentTarget.style.transform = "translateY(0px)";
+                                    }}
+                                >
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     {searchTerm ? (
                         <>
                             <p style={styles.resultsLabel}>
-                                Found {filteredFaqs.length} result{filteredFaqs.length !== 1 ? "s" : ""} for "{searchTerm}"
+                                Found {listToRender.length} result{listToRender.length !== 1 ? "s" : ""} for "{searchTerm}"
                             </p>
-                            {filteredFaqs.map((faq, idx) => renderFaqCard(faq, idx))}
+                            {listToRender.map((faq, index) => {
+                                const id = `${faq.key}-${index}`;
+                                const isOpen = openQuestion === id;
+                                return (
+                                    <div
+                                        key={id}
+                                        className="hover-card"
+                                        style={{
+                                            ...styles.faqCard,
+                                            ...(isOpen ? styles.faqCardActive : {}),
+                                        }}
+                                    >
+                                        <div style={styles.questionRow} onClick={() => handleToggle(id)}>
+                                            <span style={styles.questionText}>{faq.question}</span>
+                                            {isOpen ? (
+                                                <FaChevronUp style={{ color: "#38bdf8", fontSize: "1.1rem" }} />
+                                            ) : (
+                                                <FaChevronDown style={{ color: "#60a5fa", fontSize: "1.1rem" }} />
+                                            )}
+                                        </div>
+                                        {isOpen && <div style={styles.answerText}>{faq.answer}</div>}
+                                    </div>
+                                );
+                            })}
                         </>
-                    ) : selectedCategory === "All" ? (
-                        Object.entries(faqCategories).map(([category, questions]) => (
-                            <div key={category} style={styles.sectionBlock}>
+                    ) : (
+                        listToRender.map((section) => (
+                            <div id={`faq-${section.key}`} key={section.key} style={styles.sectionBlock}>
                                 <div style={styles.sectionHeader}>
-                                    <div style={styles.sectionTitle}>{category}</div>
-                                    <div style={styles.sectionHint}>{questions.length} questions</div>
+                                    <h2 style={styles.sectionTitle}>{section.title}</h2>
+                                    <span style={styles.sectionHint}>{section.hint}</span>
                                 </div>
-                                {questions.map((faq) => {
-                                    const idx = faqs.findIndex((item) => item.question === faq.question);
-                                    return renderFaqCard(faq, idx);
+                                {section.items.map((faq, index) => {
+                                    const id = `${section.key}-${index}`;
+                                    const isOpen = openQuestion === id;
+                                    return (
+                                        <div
+                                            key={id}
+                                            className="hover-card"
+                                            style={{
+                                                ...styles.faqCard,
+                                                ...(isOpen ? styles.faqCardActive : {}),
+                                            }}
+                                        >
+                                            <div style={styles.questionRow} onClick={() => handleToggle(id)}>
+                                                <span style={styles.questionText}>{faq.question}</span>
+                                                {isOpen ? (
+                                                    <FaChevronUp style={{ color: "#38bdf8", fontSize: "1.1rem" }} />
+                                                ) : (
+                                                    <FaChevronDown style={{ color: "#60a5fa", fontSize: "1.1rem" }} />
+                                                )}
+                                            </div>
+                                            {isOpen && <div style={styles.answerText}>{faq.answer}</div>}
+                                        </div>
+                                    );
                                 })}
                             </div>
                         ))
-                    ) : (
-                        <div style={styles.sectionBlock}>
-                            <div style={styles.sectionHeader}>
-                                <div style={styles.sectionTitle}>{selectedCategory}</div>
-                                <div style={styles.sectionHint}>{faqCategories[selectedCategory].length} questions</div>
-                            </div>
-                            {faqCategories[selectedCategory].map((faq) => {
-                                const idx = faqs.findIndex((item) => item.question === faq.question);
-                                return renderFaqCard(faq, idx);
-                            })}
-                        </div>
                     )}
 
-                    <div style={styles.supportCard}>
-                        Can't find your question? {" "}
-                        <a href="/community" style={styles.link}>
-                            Visit the Community page
-                        </a>{" "}
-                        or email us at {" "}
-                        <a href="mailto:focusflow@studentproject.com" style={styles.link}>
+                    <div style={styles.supportSection}>
+                        {supportHighlights.map((support) => (
+                            <div key={support.title} style={styles.supportCard}>
+                                <div style={styles.supportTitle}>{support.title}</div>
+                                <p style={styles.supportCopy}>{support.copy}</p>
+                                <a href={support.link} style={styles.supportLink}>
+                                    {support.cta}
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={styles.helpBanner}>
+                        <FaHeadset style={{ color: "#38bdf8", fontSize: "1.4rem", marginRight: "0.4rem" }} />
+                        Still need a hand? Chat with the crew in our <a href="/community" style={styles.helpLink}>Community hub</a> or email
+                        <a href="mailto:focusflow@studentproject.com" style={{ ...styles.helpLink, marginLeft: "0.35rem" }}>
                             focusflow@studentproject.com
                         </a>
                         .
