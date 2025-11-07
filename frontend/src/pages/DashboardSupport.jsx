@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FaEnvelope, FaQuestionCircle, FaUsers } from "react-icons/fa";
+import React, { useMemo, useState } from "react";
+import { FaEnvelope, FaQuestionCircle, FaUsers, FaClock, FaCheckCircle, FaHeadset } from "react-icons/fa";
 
 const supportOptions = [
     {
@@ -7,168 +7,436 @@ const supportOptions = [
         description:
             "Reach out to our team for personalized help with your account or features.",
         link: "mailto:support@focusflow.com",
-        icon: (
-            <FaEnvelope
-                style={{
-                    color: "var(--color-primary-600)",
-                    fontSize: "1.7rem",
-                    marginRight: "0.7rem",
-                }}
-            />
-        ),
+        icon: <FaEnvelope />,
+        responseTime: "Under 12 hours",
     },
     {
         title: "Help Center",
         description: "Browse FAQs, guides, and troubleshooting tips.",
         link: "/dashboard/guides",
-        icon: (
-            <FaQuestionCircle
-                style={{
-                    color: "var(--color-cyan-700)",
-                    fontSize: "1.7rem",
-                    marginRight: "0.7rem",
-                }}
-            />
-        ),
+        icon: <FaQuestionCircle />,
+        responseTime: "Self-serve",
     },
     {
         title: "Community Forum",
         description: "Ask questions, share tips, and connect with other users.",
         link: "/dashboard/community",
-        icon: (
-            <FaUsers
-                style={{
-                    color: "var(--color-primary-400)",
-                    fontSize: "1.7rem",
-                    marginRight: "0.7rem",
-                }}
-            />
-        ),
+        icon: <FaUsers />,
+        responseTime: "Real-time peers",
     },
 ];
 
-const pageBackgroundStyle = {
+const supportHighlights = [
+    "Live product walkthroughs",
+    "Weekly office hours",
+    "Status page updates",
+    "Priority response for teams",
+];
+
+const pageWrapperStyle = {
     minHeight: "100vh",
-    background: "var(--color-gray-50)",
+    padding: "4.5rem 1.75rem 5rem",
+    background: "var(--color-white)",
+    color: "var(--color-gray-900)",
 };
 
 const containerStyle = {
-    maxWidth: "76rem",
+    maxWidth: "1120px",
     margin: "0 auto",
-    padding: "2rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "3rem",
 };
 
-const headerStyle = {
-    background:
-        "linear-gradient(to right, var(--color-primary-500), var(--color-cyan-400))",
-    borderRadius: "1rem",
-    padding: "2rem",
-    marginBottom: "2rem",
-    color: "var(--color-white)",
-    boxShadow:
-        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-};
-
-const titleStyle = {
-    fontSize: "2rem",
-    fontWeight: 700,
-    marginBottom: "0.5rem",
-};
-
-const subtitleStyle = {
-    fontSize: "1.125rem",
-    opacity: 0.9,
-};
-
-const optionsGridStyle = {
+const heroSectionStyle = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "2.75rem",
+    alignItems: "stretch",
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.5rem",
+    padding: "2.75rem",
+    boxShadow: "var(--shadow-lg)",
+};
+
+const heroLeftColumnStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.85rem",
+};
+
+const heroContentStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.25rem",
+};
+
+const heroBadgeStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    fontSize: "0.85rem",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    color: "var(--color-primary-600)",
+    background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(14, 165, 233, 0.06))",
+    padding: "0.35rem 0.85rem",
+    borderRadius: "999px",
+    width: "fit-content",
+};
+
+const heroTitleStyle = {
+    fontSize: "clamp(2rem, 4vw, 2.6rem)",
+    fontWeight: 800,
+    letterSpacing: "-0.04em",
+    lineHeight: 1.15,
+    color: "var(--color-gray-900)",
+};
+
+const heroSubtitleStyle = {
+    fontSize: "1.05rem",
+    color: "var(--color-gray-600)",
+    lineHeight: 1.7,
+    maxWidth: "34rem",
+};
+
+const heroActionsStyle = {
+    display: "flex",
+    gap: "0.75rem",
+    flexWrap: "wrap",
+};
+
+const heroPrimaryButtonStyle = {
+    background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
+    color: "#0f172a",
+    padding: "0.85rem 1.9rem",
+    borderRadius: "999px",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    border: "none",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.6rem",
+    boxShadow: "0 16px 32px rgba(8, 145, 178, 0.28)",
+};
+
+const heroSecondaryButtonStyle = {
+    background: "transparent",
+    color: "var(--color-primary-600)",
+    padding: "0.85rem 1.75rem",
+    borderRadius: "999px",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    border: "1px solid var(--color-primary-300)",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+};
+
+const heroPrimaryButtonHoverStyle = {
+    ...heroPrimaryButtonStyle,
+    transform: "scale(1.05)",
+    boxShadow: "0 20px 40px rgba(8, 145, 178, 0.4)",
+    background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
+};
+
+const heroSecondaryButtonHoverStyle = {
+    ...heroSecondaryButtonStyle,
+    background: "rgba(56, 189, 248, 0.1)",
+    borderColor: "var(--color-primary-500)",
+};
+
+const heroRightColumnStyle = {
+    display: "flex",
+    flexDirection: "column",
     gap: "1.5rem",
 };
 
-const optionCardStyle = {
+const highlightPanelStyle = {
     background: "var(--panel-bg)",
-    borderRadius: "0.75rem",
-    padding: "1.5rem",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    border: "1px solid var(--color-gray-200)",
-    transition: "all 0.2s ease-in-out",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.25rem",
+    padding: "1.75rem",
+    boxShadow: "var(--shadow-soft)",
     display: "flex",
     flexDirection: "column",
-    cursor: "pointer",
+    gap: "1rem",
+};
+
+const highlightListStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "0.85rem",
+};
+
+const highlightChipStyle = {
+    background: "var(--color-white)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1rem",
+    padding: "0.75rem 1rem",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    color: "var(--color-gray-700)",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.6rem",
+    boxShadow: "var(--shadow-soft)",
+};
+
+const highlightStatValueStyle = {
+    width: "1rem",
+    height: "1rem",
+    color: "var(--color-primary-600)",
+    flexShrink: 0,
+};
+
+const sectionHeaderStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+};
+
+const sectionTitleStyle = {
+    fontSize: "1.65rem",
+    fontWeight: 700,
+    color: "var(--color-gray-900)",
+};
+
+const supportGridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    gap: "2rem",
+};
+
+const supportCardStyle = {
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1rem",
+    overflow: "hidden",
+    boxShadow: "var(--shadow-soft)",
+    display: "flex",
+    flexDirection: "column",
     textDecoration: "none",
 };
 
-const optionCardHoverStyle = {
-    transform: "translateY(-2px)",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+const supportHeaderStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.85rem",
+    padding: "1.5rem 1.75rem 0.85rem",
 };
 
-const optionIconContainerStyle = {
-    width: "2.5rem",
-    height: "2.5rem",
-    borderRadius: "0.5rem",
-    background: "var(--color-primary-50)",
+const supportIconStyle = {
+    width: "2.6rem",
+    height: "2.6rem",
+    borderRadius: "0.85rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: "1rem",
+    background: "rgba(56, 189, 248, 0.12)",
+    color: "var(--color-primary-600)",
+    fontSize: "1.4rem",
 };
 
-const optionTitleStyle = {
-    fontSize: "1.125rem",
-    fontWeight: 600,
-    color: "var(--color-gray-900)",
-    marginBottom: "0.5rem",
+const supportContentStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+    padding: "0 1.75rem 1.75rem",
+    flex: 1,
 };
 
-const optionDescStyle = {
-    fontSize: "0.875rem",
+const supportTitleStyle = {
+    fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
+    fontWeight: 700,
+    color: "var(--color-primary-700)",
+    margin: 0,
+    letterSpacing: "-0.3px",
+};
+
+const supportDescStyle = {
+    fontSize: "1rem",
     color: "var(--color-gray-600)",
     lineHeight: 1.6,
+    margin: 0,
 };
 
+const supportFooterStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "0.75rem",
+    marginTop: "1.25rem",
+    paddingTop: "1rem",
+    borderTop: "1px solid var(--input-border)",
+    flexWrap: "wrap",
+};
 
-// Add new responsive styles for icon
-const iconStyle = {
-    fontSize: "clamp(1.5rem, 3vw, 1.7rem)", // Responsive icon size
+const responseTagStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.4rem",
+    fontSize: "0.85rem",
+    fontWeight: 500,
+    color: "var(--color-primary-600)",
+    background: "rgba(56, 189, 248, 0.12)",
+    borderRadius: "999px",
+    padding: "0.35rem 0.85rem",
+    width: "fit-content",
+};
+
+const readMoreStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    color: "var(--color-primary-600)",
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    textDecoration: "none",
+};
+
+const readMoreHoverStyle = {
+    ...readMoreStyle,
+    textDecoration: "underline",
+    color: "var(--color-primary-700)",
 };
 
 const DashboardSupport = () => {
+    const [primaryButtonHovered, setPrimaryButtonHovered] = useState(false);
+    const [secondaryButtonHovered, setSecondaryButtonHovered] = useState(false);
     const [cardHovered, setCardHovered] = useState(null);
 
+    const responseLabels = useMemo(
+        () => Array.from(new Set(supportOptions.map((item) => item.responseTime))),
+        []
+    );
+
     return (
-        <>
-            <div style={pageBackgroundStyle} />
+        <section style={pageWrapperStyle}>
             <div style={containerStyle}>
-                <div style={headerStyle}>
-                    <h1 style={titleStyle}>Support & Help</h1>
-                    <p style={subtitleStyle}>
-                        Need help? Find answers, contact our team, or connect
-                        with the FocusFlow community.
-                    </p>
-                </div>
-                <div style={optionsGridStyle}>
-                    {supportOptions.map((option, idx) => (
-                        <a
-                            key={idx}
-                            href={option.link}
-                            style={
-                                cardHovered === idx
-                                    ? { ...optionCardStyle, ...optionCardHoverStyle }
-                                    : optionCardStyle
-                            }
-                            onMouseEnter={() => setCardHovered(idx)}
-                            onMouseLeave={() => setCardHovered(null)}
-                        >
-                            <div style={optionIconContainerStyle}>{option.icon}</div>
-                            <div style={optionTitleStyle}>{option.title}</div>
-                            <div style={optionDescStyle}>{option.description}</div>
-                        </a>
-                    ))}
-                </div>
+                <section style={heroSectionStyle}>
+                    <div style={heroLeftColumnStyle}>
+                        <div style={heroContentStyle}>
+                            <span style={heroBadgeStyle}>
+                                <FaEnvelope style={{ width: "1rem", height: "1rem" }} />
+                                Support Resources
+                            </span>
+                            <h1 style={heroTitleStyle}>Get help in moments</h1>
+                            <p style={heroSubtitleStyle}>
+                                Find the best way to reach our team, troubleshoot issues, or tap into
+                                the FocusFlow community. Whether you prefer guided resources or direct support,
+                                we've got you covered with fast, reliable responses.
+                            </p>
+                        </div>
+                        <div style={heroActionsStyle}>
+                            <a
+                                href="#support"
+                                style={
+                                    primaryButtonHovered
+                                        ? heroPrimaryButtonHoverStyle
+                                        : heroPrimaryButtonStyle
+                                }
+                                onMouseEnter={() => setPrimaryButtonHovered(true)}
+                                onMouseLeave={() => setPrimaryButtonHovered(false)}
+                            >
+                                View Support Options
+                            </a>
+                            <a
+                                href="#highlights"
+                                style={
+                                    secondaryButtonHovered
+                                        ? heroSecondaryButtonHoverStyle
+                                        : heroSecondaryButtonStyle
+                                }
+                                onMouseEnter={() => setSecondaryButtonHovered(true)}
+                                onMouseLeave={() => setSecondaryButtonHovered(false)}
+                            >
+                                Check Service Status
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style={heroRightColumnStyle}>
+                        <div style={highlightPanelStyle} id="highlights">
+                            <div style={sectionHeaderStyle}>
+                                <span style={heroBadgeStyle}>
+                                    <FaClock style={{ width: "1rem", height: "1rem" }} />
+                                    Response times
+                                </span>
+                                <h2 style={sectionTitleStyle}>Know what to expect</h2>
+                            </div>
+                            <div style={highlightListStyle}>
+                                {responseLabels.map((label) => (
+                                    <div key={label} style={highlightChipStyle}>
+                                        <FaCheckCircle style={highlightStatValueStyle} />
+                                        <span>{label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="support" style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
+                    <div style={sectionHeaderStyle}>
+                        <span style={heroBadgeStyle}>
+                            <FaHeadset style={{ width: "1rem", height: "1rem" }} />
+                            Choose a channel
+                        </span>
+                        <h2 style={sectionTitleStyle}>Find the right support path</h2>
+                    </div>
+                    <div style={supportGridStyle}>
+                        {supportOptions.map((option, idx) => (
+                            <a
+                                key={option.title}
+                                href={option.link}
+                                style={
+                                    cardHovered === idx
+                                        ? { ...supportCardStyle, transform: "translateY(-4px)", boxShadow: "0 16px 32px rgba(14, 165, 233, 0.18)" }
+                                        : supportCardStyle
+                                }
+                                onMouseEnter={() => setCardHovered(idx)}
+                                onMouseLeave={() => setCardHovered(null)}
+                            >
+                                <div style={supportHeaderStyle}>
+                                    <div style={supportIconStyle}>{option.icon}</div>
+                                    <div style={responseTagStyle}>{option.responseTime}</div>
+                                </div>
+                                <div style={supportContentStyle}>
+                                    <h3 style={supportTitleStyle}>{option.title}</h3>
+                                    <p style={supportDescStyle}>{option.description}</p>
+                                    <div style={supportFooterStyle}>
+                                        <span style={{ ...responseTagStyle, margin: 0 }}>
+                                            {option.responseTime}
+                                        </span>
+                                        <span style={readMoreStyle}>
+                                            Learn more
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M5 12h14" />
+                                                <path d="m12 5 7 7-7 7" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </section>
             </div>
-        </>
+        </section>
     );
 };
 

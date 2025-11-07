@@ -97,17 +97,17 @@ const DashboardCommunity = () => {
         color: "var(--color-gray-600)",
         cursor: "pointer",
         borderRadius: "0.75rem",
-        border: "1px solid var(--color-gray-200)",
-        background: "var(--color-gray-100)",
+        border: "1px solid rgba(148,163,184,0.24)",
+        background: "rgba(148,163,184,0.14)",
         transition: "all 0.2s ease",
     };
 
     const activeTabStyle = {
         ...tabStyle,
-        background: "var(--color-primary-100)",
+        background: "rgba(59,130,246,0.2)",
         color: "var(--color-primary-700)",
-        border: "1px solid var(--color-primary-300)",
-        boxShadow: "var(--shadow-md)",
+        border: "1px solid rgba(56,189,248,0.4)",
+        boxShadow: "0 18px 32px -28px rgba(56,189,248,0.55)",
     };
 
     const cardStyle = {
@@ -174,22 +174,22 @@ const DashboardCommunity = () => {
     };
 
     const userCardStyle = {
-        background: "var(--color-gray-50)",
+        background: "rgba(15,23,42,0.75)",
         borderRadius: "1rem",
-        border: "1px solid var(--color-gray-200)",
+        border: "1px solid rgba(56,189,248,0.2)",
         padding: "1.2rem",
         display: "flex",
         alignItems: "center",
         gap: "1rem",
         marginBottom: "1rem",
-        boxShadow: "var(--shadow-soft)",
+        boxShadow: "0 20px 45px -30px rgba(15,23,42,0.6)",
     };
 
     const avatarStyle = {
         width: "3rem",
         height: "3rem",
         borderRadius: "50%",
-        background: "var(--color-primary-100)",
+        background: "linear-gradient(130deg, rgba(59,130,246,0.22), rgba(14,165,233,0.22))",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -218,18 +218,18 @@ const DashboardCommunity = () => {
     const mentorshipGridStyle = {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: "1.5rem",
+        gap: "1.85rem",
     };
 
     const mentorshipCardStyle = {
         background: "var(--panel-bg)",
         borderRadius: "1.05rem",
-        padding: "1.6rem",
+        padding: "1.75rem",
         border: "1px solid var(--input-border)",
         boxShadow: "var(--shadow-md)",
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
+        gap: "1rem",
     };
 
     const mentorshipHeaderStyle = {
@@ -242,7 +242,7 @@ const DashboardCommunity = () => {
         width: "3rem",
         height: "3rem",
         borderRadius: "50%",
-        background: "var(--color-primary-100)",
+        background: "linear-gradient(130deg, rgba(59,130,246,0.22), rgba(14,165,233,0.22))",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -253,18 +253,19 @@ const DashboardCommunity = () => {
 
     const mentorshipMetaStyle = {
         display: "flex",
-        gap: "0.5rem",
+        gap: "0.55rem",
         flexWrap: "wrap",
         fontSize: "0.85rem",
         fontWeight: 600,
         color: "var(--color-primary-600)",
+        marginTop: "0.35rem",
     };
 
     const mentorshipTagStyle = {
         padding: "0.25rem 0.75rem",
         borderRadius: "9999px",
-        background: "var(--color-primary-100)",
-        border: "1px solid var(--color-primary-200)",
+        background: "rgba(59,130,246,0.18)",
+        border: "1px solid rgba(56,189,248,0.35)",
     };
 
     const mentorshipBioStyle = {
@@ -327,7 +328,7 @@ const DashboardCommunity = () => {
     const spotlightTagStyle = {
         padding: "0.25rem 0.75rem",
         borderRadius: "9999px",
-        background: "var(--color-primary-100)",
+        background: "rgba(59,130,246,0.18)",
     };
 
     const eventSectionStyle = {
@@ -375,6 +376,16 @@ const DashboardCommunity = () => {
         fontSize: "0.85rem",
         fontWeight: 600,
         color: "var(--color-primary-600)",
+    };
+
+    const eventBadgeStyle = {
+        padding: "0.25rem 0.75rem",
+        borderRadius: "9999px",
+        background: "rgba(59,130,246,0.18)",
+        border: "1px solid rgba(56,189,248,0.35)",
+        color: "var(--color-primary-700)",
+        fontSize: "0.75rem",
+        fontWeight: 600,
     };
 
     const communityMentors = [
@@ -791,16 +802,7 @@ const DashboardCommunity = () => {
                                 <div key={idx} style={eventCardStyle}>
                                     <div style={eventMetaStyle}>
                                         <span>{event.date}</span>
-                                        <span
-                                            style={{
-                                                padding: "0.25rem 0.75rem",
-                                                borderRadius: "9999px",
-                                                background: "var(--color-primary-50)",
-                                                color: "var(--color-primary-700)",
-                                                fontSize: "0.75rem",
-                                                fontWeight: 600,
-                                            }}
-                                        >
+                                        <span style={eventBadgeStyle}>
                                             Live session
                                         </span>
                                     </div>

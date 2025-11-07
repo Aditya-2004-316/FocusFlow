@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     EnvelopeIcon,
     PhoneIcon,
@@ -6,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import FocusFlowLogo from "../assets/focusflowlogo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Footer = () => {
     const containerStyle = {
@@ -93,12 +94,20 @@ const Footer = () => {
         borderRadius: "50%",
         backgroundColor: "var(--color-primary-400)",
         transition: "all 0.2s ease-in-out",
+        pointerEvents: "none",
     };
 
     const listItemHoverMarker = {
         ...listItemMarker,
         backgroundColor: "var(--color-primary-600)",
         transform: "scale(1.2)",
+    };
+
+    const listItemActiveMarker = {
+        ...listItemMarker,
+        backgroundColor: "var(--color-white)",
+        transform: "scale(1.35)",
+        boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.18)",
     };
 
     const contactListStyle = {
@@ -118,13 +127,25 @@ const Footer = () => {
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        padding: "0.5rem 0",
+        padding: "0.5rem 0.75rem",
         position: "relative",
     };
 
     const linkHoverStyle = {
-        color: "var(--color-primary-200)",
+        color: "var(--color-primary-50)",
         transform: "translateX(0.25rem)",
+        background: "linear-gradient(135deg, rgba(125, 211, 252, 0.25), rgba(14, 165, 233, 0.12))",
+        borderRadius: "0.75rem",
+        boxShadow: "0 10px 20px rgba(14, 165, 233, 0.18)",
+    };
+
+    const activeLinkStyle = {
+        color: "var(--color-primary-50)",
+        fontWeight: 600,
+        background: "linear-gradient(135deg, rgba(59, 130, 246, 0.32), rgba(56, 189, 248, 0.18))",
+        transform: "translateX(0.25rem)",
+        borderRadius: "0.75rem",
+        boxShadow: "0 14px 28px rgba(56, 189, 248, 0.22)",
     };
 
     const contactItemStyle = {
@@ -201,30 +222,44 @@ const Footer = () => {
         }
     `;
 
-    const handleLinkHover = (e) => {
-        const marker = e.currentTarget.previousElementSibling;
-        if (marker) {
-            Object.assign(e.currentTarget.style, linkHoverStyle);
-            Object.assign(marker.style, listItemHoverMarker);
+    const location = useLocation();
+    const [hoveredLink, setHoveredLink] = useState(null);
+
+    const handleMouseEnter = (path) => setHoveredLink(path);
+    const handleMouseLeave = () => setHoveredLink(null);
+
+    const isActivePath = (path) =>
+        location.pathname === path || location.pathname.startsWith(`${path}/`);
+
+    const getLinkStyles = (path) => {
+        const baseStyle = { ...linkStyle };
+        if (hoveredLink === path) {
+            Object.assign(baseStyle, linkHoverStyle);
         }
+        if (isActivePath(path)) {
+            Object.assign(baseStyle, activeLinkStyle);
+        }
+        return baseStyle;
     };
 
-    const handleLinkLeave = (e) => {
-        const marker = e.currentTarget.previousElementSibling;
-        if (marker) {
-            Object.assign(e.currentTarget.style, linkStyle);
-            Object.assign(marker.style, listItemMarker);
+    const getMarkerStyles = (path) => {
+        const baseStyle = { ...listItemMarker };
+        if (isActivePath(path)) {
+            Object.assign(baseStyle, listItemActiveMarker);
         }
+        if (hoveredLink === path) {
+            Object.assign(baseStyle, listItemHoverMarker);
+        }
+        return baseStyle;
     };
 
-    // Remove section hover handlers and props
-    // const handleSectionHover = (e) => {
-    //     Object.assign(e.currentTarget.style, sectionHoverStyle);
-    // };
-
-    // const handleSectionLeave = (e) => {
-    //     Object.assign(e.currentTarget.style, sectionStyle);
-    // };
+    const getLinkProps = (path) => ({
+        style: getLinkStyles(path),
+        onMouseEnter: () => handleMouseEnter(path),
+        onMouseLeave: handleMouseLeave,
+        onFocus: () => handleMouseEnter(path),
+        onBlur: handleMouseLeave,
+    });
 
     return (
         <footer style={containerStyle}>
@@ -250,12 +285,10 @@ const Footer = () => {
                             <h3 style={sectionHeadingStyle}>Product</h3>
                             <ul style={listStyle}>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/features")}></div>
                                     <Link
                                         to="/dashboard/features"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/features")}
                                     >
                                         Features
                                         <ArrowRightIcon
@@ -267,12 +300,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/faq")}></div>
                                     <Link
                                         to="/dashboard/faq"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/faq")}
                                     >
                                         FAQ
                                         <ArrowRightIcon
@@ -295,12 +326,10 @@ const Footer = () => {
                             <h3 style={sectionHeadingStyle}>Resources</h3>
                             <ul style={listStyle}>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/blog")}></div>
                                     <Link
                                         to="/dashboard/blog"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/blog")}
                                     >
                                         Blog
                                         <ArrowRightIcon
@@ -312,12 +341,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/guides")}></div>
                                     <Link
                                         to="/dashboard/guides"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/guides")}
                                     >
                                         Guides
                                         <ArrowRightIcon
@@ -329,12 +356,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/support")}></div>
                                     <Link
                                         to="/dashboard/support"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/support")}
                                     >
                                         Support
                                         <ArrowRightIcon
@@ -357,12 +382,10 @@ const Footer = () => {
                             <h3 style={sectionHeadingStyle}>Company</h3>
                             <ul style={listStyle}>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/about")}></div>
                                     <Link
                                         to="/dashboard/about"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/about")}
                                     >
                                         About
                                         <ArrowRightIcon
@@ -374,12 +397,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/careers")}></div>
                                     <Link
                                         to="/dashboard/careers"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/careers")}
                                     >
                                         Careers
                                         <ArrowRightIcon
@@ -391,12 +412,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/contact")}></div>
                                     <Link
                                         to="/dashboard/contact"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/contact")}
                                     >
                                         Contact
                                         <ArrowRightIcon
@@ -419,12 +438,10 @@ const Footer = () => {
                             <h3 style={sectionHeadingStyle}>Legal</h3>
                             <ul style={listStyle}>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/privacy")}></div>
                                     <Link
                                         to="/dashboard/privacy"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/privacy")}
                                     >
                                         Privacy
                                         <ArrowRightIcon
@@ -436,12 +453,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/terms")}></div>
                                     <Link
                                         to="/dashboard/terms"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/terms")}
                                     >
                                         Terms
                                         <ArrowRightIcon
@@ -453,12 +468,10 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li style={listItemStyle}>
-                                    <div style={listItemMarker}></div>
+                                    <div style={getMarkerStyles("/dashboard/cookies")}></div>
                                     <Link
                                         to="/dashboard/cookies"
-                                        style={linkStyle}
-                                        onMouseEnter={handleLinkHover}
-                                        onMouseLeave={handleLinkLeave}
+                                        {...getLinkProps("/dashboard/cookies")}
                                     >
                                         Cookies
                                         <ArrowRightIcon
@@ -477,10 +490,16 @@ const Footer = () => {
                 <div style={bottomStyle} className="footer-bottom">
                     <div>© 2025 FocusFlow. All rights reserved.</div>
                     <div style={bottomLinksStyle} className="footer-links">
-                        <Link to="/privacy-policy" style={linkStyle}>
+                        <Link
+                            to="/privacy-policy"
+                            {...getLinkProps("/privacy-policy")}
+                        >
                             Privacy Policy
                         </Link>
-                        <Link to="/terms-of-service" style={linkStyle}>
+                        <Link
+                            to="/terms-of-service"
+                            {...getLinkProps("/terms-of-service")}
+                        >
                             Terms of Service
                         </Link>
                     </div>

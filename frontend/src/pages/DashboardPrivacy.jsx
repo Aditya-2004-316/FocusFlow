@@ -1,266 +1,626 @@
-import React, { useState } from "react";
-import { FaLock } from "react-icons/fa";
+import React, { useMemo, useState } from "react";
+import {
+    FaLock,
+    FaShieldAlt,
+    FaUserShield,
+    FaFileExport,
+    FaClipboardCheck,
+    FaLightbulb,
+    FaCheckCircle,
+    FaBalanceScale,
+    FaPaperPlane,
+    FaStream,
+    FaToolbox,
+} from "react-icons/fa";
 
-const pageBackgroundStyle = {
+const privacyHighlights = [
+    "Zero data resale or advertising",
+    "Encryption at rest and in transit",
+    "Role-based access for teammates",
+    "Transparent retention controls",
+];
+
+const assuranceChips = [
+    "GDPR-ready workflows",
+    "CCPA compliant",
+    "Student-friendly privacy",
+    "Audited every quarter",
+];
+
+const privacyAreas = [
+    {
+        badge: "Collection",
+        title: "Data we capture",
+        summary:
+            "Only the essentials: session timing, productivity trends, and preferences needed to power your dashboard.",
+        detail:
+            "No marketing trackers or invasive telemetry. We anonymize diagnostic events and never sell or trade personal information.",
+        meta: "Minimal-by-design",
+        icon: <FaShieldAlt />,
+        linkLabel: "Review collection notes",
+        link: "#",
+    },
+    {
+        badge: "Control",
+        title: "Your rights, your choices",
+        summary:
+            "Export, amend, or delete data in a few clicks—whether you manage solo or on a team workspace.",
+        detail:
+            "Self-serve tools live in settings. Prefer human help? Reach our privacy desk and expect a response within 48 hours.",
+        meta: "Self-serve portal",
+        icon: <FaUserShield />,
+        linkLabel: "Manage privacy preferences",
+        link: "#",
+    },
+    {
+        badge: "Security",
+        title: "How we protect",
+        summary:
+            "Industry-standard encryption, least-privilege access, and continuous monitoring keep sessions secure.",
+        detail:
+            "All traffic uses TLS 1.2+, secrets are vaulted, and our student teams complete quarterly security check-ins.",
+        meta: "Encryption + audits",
+        icon: <FaLock />,
+        linkLabel: "View security practices",
+        link: "#",
+    },
+    {
+        badge: "Retention",
+        title: "How long we store",
+        summary:
+            "FocusFlow only keeps activity while it is useful to you. Old workspaces archive gracefully, then delete.",
+        detail:
+            "Inactive accounts purge after 24 months, and you can trigger full deletion instantly from settings.",
+        meta: "You control the timeline",
+        icon: <FaFileExport />,
+        linkLabel: "See retention timeline",
+        link: "#",
+    },
+];
+
+const requestChannels = [
+    "24-hour acknowledgement for privacy tickets",
+    "Downloadable machine-readable exports",
+    "Deletion confirmations sent automatically",
+    "Human review for nuanced cases",
+];
+
+const pageWrapperStyle = {
     minHeight: "100vh",
-    width: "99vw",
-    background:
-        "linear-gradient(120deg, var(--color-cyan-50) 0%, var(--color-primary-100) 100%)",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    zIndex: -1,
+    padding: "4.5rem 1.75rem 5rem",
+    background: "var(--color-white)",
+    color: "var(--color-gray-900)",
 };
 
 const containerStyle = {
-    maxWidth: 900,
-    margin: "2.5rem auto",
-    padding: "2.5rem",
-    background: "rgba(255,255,255,0.85)",
-    borderRadius: "2rem",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-    backdropFilter: "blur(4px)",
-    position: "relative",
-};
-
-const accentBarStyle = {
-    height: "6px",
-    width: "100px",
-    background:
-        "linear-gradient(90deg, var(--color-primary-400), var(--color-cyan-400))",
-    borderRadius: "3px",
-    margin: "0 auto 0.8rem auto",
-    boxShadow: "0 2px 12px 0 rgba(0,0,0,0.10)",
-};
-
-const heroStyle = {
-    background:
-        "linear-gradient(100deg, var(--color-primary-700) 0%, var(--color-cyan-100) 60%, var(--color-primary-200) 100%)",
-    color: "var(--color-primary-800)",
-    borderRadius: "1.5rem",
-    padding: "2.5rem 2rem 2rem 2rem",
-    marginBottom: "2.5rem",
-    boxShadow: "0 4px 32px 0 rgba(0,0,0,0.10)",
-    position: "relative",
-    textAlign: "center",
-};
-
-const iconCircleStyle = {
-    background:
-        "linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-primary-100) 100%)",
-    borderRadius: "50%",
-    width: "4.5rem",
-    height: "4.5rem",
+    maxWidth: "1120px",
+    margin: "0 auto",
     display: "flex",
+    flexDirection: "column",
+    gap: "3rem",
+};
+
+const heroSectionStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "2.75rem",
+    alignItems: "stretch",
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.5rem",
+    padding: "2.75rem",
+    boxShadow: "var(--shadow-lg)",
+};
+
+const heroLeftColumnStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.85rem",
+};
+
+const heroContentStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.25rem",
+};
+
+const heroBadgeStyle = {
+    display: "inline-flex",
     alignItems: "center",
-    justifyContent: "center",
-    margin: "0 auto 0.1rem auto",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    transition: "transform 0.18s, filter 0.18s",
+    gap: "0.5rem",
+    fontSize: "0.85rem",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
+    color: "var(--color-primary-600)",
+    background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(14, 165, 233, 0.06))",
+    padding: "0.35rem 0.85rem",
+    borderRadius: "999px",
+    width: "fit-content",
 };
 
-const iconCircleHoverStyle = {
-    transform: "scale(1.08)",
-    filter: "brightness(1.12)",
+const heroTitleStyle = {
+    fontSize: "clamp(2rem, 4vw, 2.6rem)",
+    fontWeight: 800,
+    letterSpacing: "-0.04em",
+    lineHeight: 1.15,
+    color: "var(--color-gray-900)",
 };
 
-const titleStyle = {
-    fontSize: "2.3rem",
-    fontWeight: 900,
-    color: "var(--color-primary-900)",
-    margin: 0,
-    letterSpacing: "-1px",
-    textShadow: "0 2px 8px rgba(0,0,0,0.10)",
-    textAlign: "center",
-    fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
-    lineHeight: 1.1,
-    marginTop: 0,
+const heroSubtitleStyle = {
+    fontSize: "1.05rem",
+    color: "var(--color-gray-600)",
+    lineHeight: 1.7,
+    maxWidth: "34rem",
 };
 
-const subtitleStyle = {
-    color: "var(--color-cyan-900)",
-    fontSize: "1.18rem",
-    maxWidth: 600,
-    margin: "1.2rem auto 0 auto",
-    fontWeight: 500,
-    lineHeight: 1.6,
-    textAlign: "center",
+const heroActionsStyle = {
+    display: "flex",
+    gap: "0.75rem",
+    flexWrap: "wrap",
 };
 
-const mainStyle = {
-    maxWidth: 700,
-    margin: "-2.5rem auto 2.5rem auto",
-    padding: "1.5rem",
-    background: "rgba(255,255,255,0.92)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+const heroPrimaryButtonStyle = {
+    background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
+    color: "#0f172a",
+    padding: "0.85rem 1.9rem",
+    borderRadius: "999px",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    border: "none",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.6rem",
+    boxShadow: "0 16px 32px rgba(8, 145, 178, 0.28)",
 };
 
-const sectionCardStyle = {
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,0.96) 60%, var(--color-cyan-50) 100%)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.16), 0 1.5px 8px rgba(0,0,0,0.08)",
-    padding: "2rem 1.5rem",
-    marginBottom: "1.5rem",
-    border: "2.5px solid var(--color-primary-200)",
-    position: "relative",
-    overflow: "hidden",
-    transition: "transform 0.18s, box-shadow 0.18s, border 0.18s",
+const heroSecondaryButtonStyle = {
+    background: "transparent",
+    color: "var(--color-primary-600)",
+    padding: "0.85rem 1.75rem",
+    borderRadius: "999px",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    border: "1px solid var(--color-primary-300)",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
 };
 
-const sectionCardHoverStyle = {
-    transform: "translateY(-3px) scale(1.01)",
-    boxShadow: "0 16px 48px rgba(0,0,0,0.22), 0 2px 12px rgba(0,0,0,0.10)",
-    border: "2.5px solid var(--color-primary-400)",
+const heroPrimaryButtonHoverStyle = {
+    ...heroPrimaryButtonStyle,
+    transform: "scale(1.05)",
+    boxShadow: "0 20px 40px rgba(8, 145, 178, 0.4)",
+    background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
 };
 
-const sectionTitleStyle = {
-    fontSize: "1.35rem",
-    fontWeight: 700,
-    color: "var(--color-primary-700)",
-    margin: "0 0 1rem 0",
+const heroSecondaryButtonHoverStyle = {
+    ...heroSecondaryButtonStyle,
+    background: "rgba(56, 189, 248, 0.1)",
+    borderColor: "var(--color-primary-500)",
+};
+
+const heroRightColumnStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
+};
+
+const highlightPanelStyle = {
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.25rem",
+    padding: "1.75rem",
+    boxShadow: "var(--shadow-soft)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+};
+
+const highlightListStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "0.85rem",
+};
+
+const highlightChipStyle = {
+    background: "var(--color-white)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1rem",
+    padding: "0.75rem 1rem",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    color: "var(--color-gray-700)",
     display: "flex",
     alignItems: "center",
     gap: "0.6rem",
-    letterSpacing: "-0.5px",
+    boxShadow: "var(--shadow-soft)",
 };
 
-const sectionIconStyle = {
-    display: "inline-block",
-    width: 10,
-    height: 10,
-    borderRadius: "50%",
-    background: "var(--color-primary-500)",
-    marginRight: 6,
+const highlightStatValueStyle = {
+    width: "1rem",
+    height: "1rem",
+    color: "var(--color-primary-600)",
+    flexShrink: 0,
 };
 
-const textStyle = {
-    fontSize: "1.05rem",
-    color: "var(--color-gray-800)",
-    marginBottom: 0,
-    lineHeight: 1.7,
+const sectionHeaderStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+};
+
+const sectionTitleStyle = {
+    fontSize: "1.65rem",
+    fontWeight: 700,
+    color: "var(--color-gray-900)",
+};
+
+const sectionWrapperStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.75rem",
+};
+
+const cardsGridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(430px, 1fr))",
+    gap: "2rem",
+    maxWidth: "900px",
+    margin: "0 auto",
+};
+
+const cardStyle = {
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1rem",
+    overflow: "hidden",
+    boxShadow: "var(--shadow-soft)",
+    display: "flex",
+    flexDirection: "column",
+    textDecoration: "none",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+};
+
+const cardHoverStyle = {
+    transform: "translateY(-6px)",
+    boxShadow: "0 20px 32px rgba(15, 118, 110, 0.18)",
+    borderColor: "var(--color-primary-300)",
+};
+
+const cardHeaderStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.85rem",
+    padding: "1.5rem 1.75rem 0.75rem",
+};
+
+const cardIconStyle = {
+    width: "2.6rem",
+    height: "2.6rem",
+    borderRadius: "0.85rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "rgba(56, 189, 248, 0.12)",
+    color: "var(--color-primary-600)",
+    fontSize: "1.4rem",
+};
+
+const cardBadgeStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.4rem",
+    fontSize: "0.85rem",
     fontWeight: 500,
+    color: "var(--color-primary-600)",
+    background: "rgba(56, 189, 248, 0.12)",
+    borderRadius: "999px",
+    padding: "0.35rem 0.85rem",
 };
 
-const infoBoxStyle = {
-    marginTop: "2.5rem",
-    color: "#4b5563",
+const cardContentStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.9rem",
+    padding: "0 1.75rem 1.75rem",
+    flex: 1,
+};
+
+const cardTitleStyle = {
+    fontSize: "clamp(1.15rem, 2.5vw, 1.3rem)",
+    fontWeight: 700,
+    color: "var(--color-primary-700)",
+    margin: 0,
+    letterSpacing: "-0.3px",
+};
+
+const cardSummaryStyle = {
     fontSize: "1rem",
-    background:
-        "linear-gradient(90deg, var(--color-primary-50) 60%, var(--color-cyan-50) 100%)",
-    borderRadius: "0.75rem",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    padding: "1.2rem 1.5rem",
-    textAlign: "center",
-    border: "1px solid var(--color-primary-100)",
+    color: "var(--color-gray-600)",
+    lineHeight: 1.6,
+    margin: 0,
+};
+
+const cardDetailStyle = {
+    fontSize: "0.95rem",
+    color: "var(--color-gray-500)",
+    lineHeight: 1.6,
+};
+
+const cardFooterStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "0.75rem",
+    marginTop: "1.25rem",
+    paddingTop: "1rem",
+    borderTop: "1px solid var(--input-border)",
+    flexWrap: "wrap",
+};
+
+const cardMetaStyle = {
+    fontSize: "0.85rem",
+    color: "var(--color-gray-500)",
     fontWeight: 500,
+};
+
+const readMoreStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    color: "var(--color-primary-600)",
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    textDecoration: "none",
+};
+
+const readMoreHoverStyle = {
+    ...readMoreStyle,
+    textDecoration: "underline",
+    color: "var(--color-primary-700)",
+};
+
+const valuePanelsGridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "1.5rem",
+};
+
+const valuePanelTitleStyle = {
+    fontSize: "1.25rem",
+    fontWeight: 700,
+    color: "var(--color-gray-900)",
+    margin: 0,
+};
+
+const valueListStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+};
+
+const valueItemStyle = {
+    display: "flex",
+    gap: "0.6rem",
+    alignItems: "flex-start",
+    color: "var(--color-gray-600)",
+    lineHeight: 1.5,
+    fontSize: "0.95rem",
 };
 
 const DashboardPrivacy = () => {
-    const [iconHovered, setIconHovered] = useState(false);
+    const [primaryButtonHovered, setPrimaryButtonHovered] = useState(false);
+    const [secondaryButtonHovered, setSecondaryButtonHovered] = useState(false);
     const [cardHovered, setCardHovered] = useState(null);
+    const [readMoreHovered, setReadMoreHovered] = useState({});
 
-    const privacySections = [
-        {
-            title: "Data Collection",
-            content:
-                "We only collect the data necessary to provide you with the best experience. This includes your timer sessions, productivity metrics, and account information. Your personal information is never sold or shared with third parties without your explicit consent.",
-        },
-        {
-            title: "Your Rights",
-            content:
-                "You have complete control over your data. You can request to view, update, export, or permanently delete your data at any time. We provide easy-to-use tools in your dashboard settings to manage your privacy preferences and data retention.",
-        },
-        {
-            title: "Security Measures",
-            content:
-                "We use industry-standard security measures including encryption, secure servers, and regular security audits to protect your data. All data transmission is encrypted using TLS, and we follow best practices for data storage and access control.",
-        },
-        {
-            title: "Data Retention",
-            content:
-                "We retain your data only as long as necessary to provide our services or as required by law. You can delete your account and all associated data at any time. Inactive accounts are automatically purged after 2 years of inactivity.",
-        },
-    ];
+    const rightsList = useMemo(
+        () => [
+            "Export data anytime from settings",
+            "Granular consent controls",
+            "Workspace-level privacy options",
+            "Dedicated privacy support channel",
+        ],
+        []
+    );
 
     return (
-        <>
-            <div style={pageBackgroundStyle} />
+        <section style={pageWrapperStyle}>
             <div style={containerStyle}>
-                <section style={heroStyle}>
-                    <div style={accentBarStyle} />
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            marginBottom: "1.2rem",
-                        }}
-                    >
-                        <div
-                            style={
-                                iconHovered
-                                    ? {
-                                          ...iconCircleStyle,
-                                          ...iconCircleHoverStyle,
-                                      }
-                                    : iconCircleStyle
-                            }
-                            onMouseEnter={() => setIconHovered(true)}
-                            onMouseLeave={() => setIconHovered(false)}
-                        >
-                            <FaLock
-                                style={{
-                                    fontSize: "2.5rem",
-                                    color: "var(--color-white)",
-                                }}
-                            />
+                <section style={heroSectionStyle}>
+                    <div style={heroLeftColumnStyle}>
+                        <div style={heroContentStyle}>
+                            <span style={heroBadgeStyle}>
+                                <FaLock style={{ width: "1rem", height: "1rem" }} />
+                                Privacy
+                            </span>
+                            <h1 style={heroTitleStyle}>Your data, your rules</h1>
+                            <p style={heroSubtitleStyle}>
+                                FocusFlow treats privacy as a core feature, not fine print. Individuals and teams can customize retention, rights, and visibility without slowing down their workday.
+                                Explore the safeguards that keep every session secure.
+                            </p>
                         </div>
-                        <h1 style={titleStyle}>Privacy Policy</h1>
+                        <div style={heroActionsStyle}>
+                            <a
+                                href="#policy"
+                                style={
+                                    primaryButtonHovered
+                                        ? heroPrimaryButtonHoverStyle
+                                        : heroPrimaryButtonStyle
+                                }
+                                onMouseEnter={() => setPrimaryButtonHovered(true)}
+                                onMouseLeave={() => setPrimaryButtonHovered(false)}
+                            >
+                                Review full policy
+                            </a>
+                            <a
+                                href="#requests"
+                                style={
+                                    secondaryButtonHovered
+                                        ? heroSecondaryButtonHoverStyle
+                                        : heroSecondaryButtonStyle
+                                }
+                                onMouseEnter={() => setSecondaryButtonHovered(true)}
+                                onMouseLeave={() => setSecondaryButtonHovered(false)}
+                            >
+                                Manage data requests
+                            </a>
+                        </div>
                     </div>
-                    <p style={subtitleStyle}>
-                        Your privacy is important to us. Learn how we protect
-                        your data and keep your information safe.
-                    </p>
-                </section>
-                <main style={mainStyle}>
-                    {privacySections.map((section, idx) => (
-                        <div
-                            key={idx}
-                            style={
-                                cardHovered === idx
-                                    ? {
-                                          ...sectionCardStyle,
-                                          ...sectionCardHoverStyle,
-                                      }
-                                    : sectionCardStyle
-                            }
-                            onMouseEnter={() => setCardHovered(idx)}
-                            onMouseLeave={() => setCardHovered(null)}
-                        >
-                            <div style={sectionTitleStyle}>
-                                <span style={sectionIconStyle} />
-                                <FaLock style={{ marginRight: "0.3rem" }} />
-                                {section.title}
+
+                    <div style={heroRightColumnStyle}>
+                        <div style={highlightPanelStyle}>
+                            <div style={sectionHeaderStyle}>
+                                <span style={heroBadgeStyle}>
+                                    <FaShieldAlt style={{ width: "1rem", height: "1rem" }} />
+                                    Privacy focus
+                                </span>
+                                <h2 style={sectionTitleStyle}>What guides our policy</h2>
                             </div>
-                            <div style={textStyle}>{section.content}</div>
+                            <div style={highlightListStyle}>
+                                {privacyHighlights.map((item) => (
+                                    <div key={item} style={highlightChipStyle}>
+                                        <FaCheckCircle style={highlightStatValueStyle} />
+                                        <span>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    ))}
-                    <div style={infoBoxStyle}>
-                        Have questions about your privacy?{" "}
-                        <span
-                            style={{
-                                color: "var(--color-primary-600)",
-                                fontWeight: 600,
-                            }}
-                        >
-                            Contact our privacy team from your dashboard.
-                        </span>
                     </div>
-                </main>
+                </section>
+
+                <section id="policy" style={sectionWrapperStyle}>
+                    <div style={sectionHeaderStyle}>
+                        <span style={heroBadgeStyle}>
+                            <FaBalanceScale style={{ width: "1rem", height: "1rem" }} />
+                            Policy pillars
+                        </span>
+                        <h2 style={sectionTitleStyle}>How FocusFlow protects your information</h2>
+                    </div>
+                    <div style={cardsGridStyle}>
+                        {privacyAreas.map((area, idx) => (
+                            <a
+                                key={area.title}
+                                href={area.link}
+                                style={
+                                    cardHovered === idx
+                                        ? { ...cardStyle, ...cardHoverStyle }
+                                        : cardStyle
+                                }
+                                onMouseEnter={() => {
+                                    setCardHovered(idx);
+                                    setReadMoreHovered((prev) => ({
+                                        ...prev,
+                                        [area.title]: true,
+                                    }));
+                                }}
+                                onMouseLeave={() => {
+                                    setCardHovered(null);
+                                    setReadMoreHovered((prev) => ({
+                                        ...prev,
+                                        [area.title]: false,
+                                    }));
+                                }}
+                            >
+                                <div style={cardHeaderStyle}>
+                                    <div style={cardIconStyle}>{area.icon}</div>
+                                    <div style={cardBadgeStyle}>{area.badge}</div>
+                                </div>
+                                <div style={cardContentStyle}>
+                                    <h3 style={cardTitleStyle}>{area.title}</h3>
+                                    <p style={cardSummaryStyle}>{area.summary}</p>
+                                    <div style={cardDetailStyle}>{area.detail}</div>
+                                    <div style={cardFooterStyle}>
+                                        <span style={cardMetaStyle}>{area.meta}</span>
+                                        <span
+                                            style={
+                                                readMoreHovered[area.title]
+                                                    ? readMoreHoverStyle
+                                                    : readMoreStyle
+                                            }
+                                        >
+                                            {area.linkLabel}
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M5 12h14" />
+                                                <path d="m12 5 7 7-7 7" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </section>
+
+                <section id="requests" style={sectionWrapperStyle}>
+                    <div style={sectionHeaderStyle}>
+                        <span style={heroBadgeStyle}>
+                            <FaPaperPlane style={{ width: "1rem", height: "1rem" }} />
+                            Data requests
+                        </span>
+                        <h2 style={sectionTitleStyle}>What to expect when you reach out</h2>
+                    </div>
+                    <div style={valuePanelsGridStyle}>
+                        <div style={highlightPanelStyle}>
+                            <span style={heroBadgeStyle}>
+                                <FaStream style={{ width: "1rem", height: "1rem" }} />
+                                Response flow
+                            </span>
+                            <h3 style={valuePanelTitleStyle}>How we handle privacy tickets</h3>
+                            <div style={valueListStyle}>
+                                {requestChannels.map((item) => (
+                                    <div key={item} style={valueItemStyle}>
+                                        <FaClipboardCheck
+                                            style={{
+                                                width: "1rem",
+                                                height: "1rem",
+                                                color: "var(--color-primary-500)",
+                                                marginTop: "0.15rem",
+                                            }}
+                                        />
+                                        <span>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div style={highlightPanelStyle}>
+                            <span style={heroBadgeStyle}>
+                                <FaToolbox style={{ width: "1rem", height: "1rem" }} />
+                                Your toolkit
+                            </span>
+                            <h3 style={valuePanelTitleStyle}>Self-service controls</h3>
+                            <div style={valueListStyle}>
+                                {rightsList.map((item) => (
+                                    <div key={item} style={valueItemStyle}>
+                                        <FaLightbulb
+                                            style={{
+                                                width: "1rem",
+                                                height: "1rem",
+                                                color: "var(--color-primary-500)",
+                                                marginTop: "0.15rem",
+                                            }}
+                                        />
+                                        <span>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </>
+        </section>
     );
 };
 

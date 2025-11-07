@@ -1,332 +1,407 @@
-import React, { useState } from "react";
-import {
-    FaEnvelope,
-    FaPaperPlane,
-    FaPhone,
-    FaMapMarkerAlt,
-    FaCheckCircle,
-} from "react-icons/fa";
+import React, { useMemo, useState } from "react";
+import { FaEnvelope, FaPaperPlane, FaPhone, FaMapMarkerAlt, FaHeadset, FaCheckCircle, FaUsers } from "react-icons/fa";
 
-const pageBackgroundStyle = {
+const contactChannels = [
+    {
+        title: "Email our team",
+        description: "support@focusflow.com",
+        detail: "We typically respond within 12 hours",
+        link: "mailto:support@focusflow.com",
+        icon: <FaEnvelope />,
+        type: "Direct support",
+    },
+    {
+        title: "Schedule a call",
+        description: "+1 (555) 123-4567",
+        detail: "Mon–Fri · 9AM – 5PM EST",
+        link: "tel:+15551234567",
+        icon: <FaPhone />,
+        type: "Live conversation",
+    },
+    {
+        title: "Visit our workspace",
+        description: "FocusFlow HQ · Remote-first",
+        detail: "Join our quarterly community meetups",
+        link: "https://maps.google.com",
+        icon: <FaMapMarkerAlt />,
+        type: "Community",
+    },
+];
+
+const supportHighlights = [
+    "24/7 status page updates",
+    "Weekly onboarding webinars",
+    "Hands-on productivity clinics",
+    "Dedicated workspace setup help",
+];
+
+const pageWrapperStyle = {
     minHeight: "100vh",
-    width: "100vw",
-    background:
-        "linear-gradient(120deg, var(--color-cyan-50) 0%, var(--color-primary-100) 100%)",
-    position: "fixed",
-    top: 0,
-    left: 0,
-    zIndex: -1,
+    padding: "4.5rem 1.75rem 5rem",
+    background: "var(--color-white)",
+    color: "var(--color-gray-900)",
 };
 
 const containerStyle = {
-    width: "95%",
-    maxWidth: "900px",
-    margin: "2.5rem auto",
-    padding: "clamp(1.5rem, 4vw, 2.5rem)",
-    background: "rgba(255,255,255,0.85)",
-    borderRadius: "clamp(1rem, 3vw, 2rem)",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-    backdropFilter: "blur(4px)",
-    position: "relative",
+    maxWidth: "1120px",
+    margin: "0 auto",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    boxSizing: "border-box",
+    gap: "3rem",
 };
 
-const accentBarStyle = {
-    height: "6px",
-    width: "100px",
-    background:
-        "linear-gradient(90deg, var(--color-primary-400), var(--color-cyan-400))",
-    borderRadius: "3px",
-    margin: "0 auto 0.8rem auto",
-    boxShadow: "0 2px 12px 0 rgba(0,0,0,0.10)",
-};
-
-const heroStyle = {
-    background:
-        "linear-gradient(100deg, var(--color-primary-700) 0%, var(--color-cyan-100) 60%, var(--color-primary-200) 100%)",
-    color: "var(--color-primary-800)",
-    borderRadius: "1.5rem",
-    padding: "clamp(1.5rem, 4vw, 2.5rem)",
-    width: "100%",
-    boxSizing: "border-box",
-    marginBottom: "2.5rem",
-    boxShadow: "0 4px 32px 0 rgba(0,0,0,0.10)",
-    position: "relative",
-    textAlign: "center",
-};
-
-const iconCircleStyle = {
-    background:
-        "linear-gradient(135deg, var(--color-cyan-100) 0%, var(--color-primary-100) 100%)",
-    borderRadius: "50%",
-    width: "clamp(3.5rem, 6vw, 4.5rem)",
-    height: "clamp(3.5rem, 6vw, 4.5rem)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "0 auto 0.1rem auto",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    transition: "transform 0.18s, filter 0.18s",
-};
-
-const iconCircleHoverStyle = {
-    transform: "scale(1.08)",
-    filter: "brightness(1.12)",
-};
-
-const titleStyle = {
-    fontSize: "clamp(1.8rem, 4vw, 2.3rem)",
-    fontWeight: 900,
-    color: "var(--color-primary-900)",
-    margin: 0,
-    letterSpacing: "-1px",
-    textShadow: "0 2px 8px rgba(0,0,0,0.10)",
-    textAlign: "center",
-    fontFamily: "'Inter', 'Segoe UI', Arial, sans-serif",
-};
-
-const subtitleStyle = {
-    color: "var(--color-cyan-900)",
-    fontSize: "clamp(1rem, 2vw, 1.18rem)",
-    maxWidth: "600px",
-    margin: "1.2rem auto 0 auto",
-    fontWeight: 500,
-    lineHeight: 1.6,
-    textAlign: "center",
-    padding: "0 clamp(0.5rem, 2vw, 1rem)",
-    boxSizing: "border-box",
-};
-
-const mainStyle = {
-    width: "100%",
-    maxWidth: "700px",
-    margin: "-2.5rem auto 2.5rem auto",
-    padding: "clamp(1rem, 3vw, 1.5rem)",
-    background: "rgba(255,255,255,0.92)",
-    borderRadius: "1.5rem",
-    boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    boxSizing: "border-box",
-};
-
-const contactInfoStyle = {
+const heroSectionStyle = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: "1.5rem",
-    marginBottom: "2.5rem",
-    width: "100%",
-    justifyItems: "center",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "2.75rem",
+    alignItems: "stretch",
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.5rem",
+    padding: "2.75rem",
+    boxShadow: "var(--shadow-lg)",
 };
 
-const infoCardStyle = {
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,0.96) 60%, var(--color-cyan-50) 100%)",
-    borderRadius: "1rem",
-    padding: "1.5rem",
-    border: "2px solid var(--color-primary-200)",
-    transition: "transform 0.18s, box-shadow 0.18s, border 0.18s",
-    cursor: "pointer",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-    width: "100%",
-    maxWidth: "300px",
-    textAlign: "center",
+const heroLeftColumnStyle = {
     display: "flex",
     flexDirection: "column",
+    gap: "1.85rem",
+};
+
+const heroContentStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.25rem",
+};
+
+const heroBadgeStyle = {
+    display: "inline-flex",
     alignItems: "center",
-};
-
-const infoCardHoverStyle = {
-    transform: "translateY(-4px)",
-    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-    border: "2px solid var(--color-primary-400)",
-};
-
-const infoIconStyle = {
-    fontSize: "1.8rem",
+    gap: "0.5rem",
+    fontSize: "0.85rem",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.08em",
     color: "var(--color-primary-600)",
-    marginBottom: "1rem",
+    background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(14, 165, 233, 0.06))",
+    padding: "0.35rem 0.85rem",
+    borderRadius: "999px",
+    width: "fit-content",
+};
+
+const heroTitleStyle = {
+    fontSize: "clamp(2rem, 4vw, 2.6rem)",
+    fontWeight: 800,
+    letterSpacing: "-0.04em",
+    lineHeight: 1.15,
+    color: "var(--color-gray-900)",
+};
+
+const heroSubtitleStyle = {
+    fontSize: "1.05rem",
+    color: "var(--color-gray-600)",
+    lineHeight: 1.7,
+    maxWidth: "34rem",
+};
+
+const heroActionsStyle = {
+    display: "flex",
+    gap: "0.75rem",
+    flexWrap: "wrap",
+};
+
+const heroPrimaryButtonStyle = {
+    background: "linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700))",
+    color: "#0f172a",
+    padding: "0.85rem 1.9rem",
+    borderRadius: "999px",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    border: "none",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.6rem",
+    boxShadow: "0 16px 32px rgba(8, 145, 178, 0.28)",
+};
+
+const heroSecondaryButtonStyle = {
+    background: "transparent",
+    color: "var(--color-primary-600)",
+    padding: "0.85rem 1.75rem",
+    borderRadius: "999px",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    border: "1px solid var(--color-primary-300)",
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+};
+
+const heroPrimaryButtonHoverStyle = {
+    ...heroPrimaryButtonStyle,
+    transform: "scale(1.05)",
+    boxShadow: "0 20px 40px rgba(8, 145, 178, 0.4)",
+    background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
+};
+
+const heroSecondaryButtonHoverStyle = {
+    ...heroSecondaryButtonStyle,
+    background: "rgba(56, 189, 248, 0.1)",
+    borderColor: "var(--color-primary-500)",
+};
+
+const heroRightColumnStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
+};
+
+const highlightPanelStyle = {
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.25rem",
+    padding: "1.75rem",
+    boxShadow: "var(--shadow-soft)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+};
+
+const highlightListStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "0.85rem",
+};
+
+const highlightChipStyle = {
+    background: "var(--color-white)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1rem",
+    padding: "0.75rem 1rem",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    color: "var(--color-gray-700)",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    width: "3rem",
-    height: "3rem",
-    background:
-        "linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-cyan-50) 100%)",
-    borderRadius: "50%",
-    border: "2px solid var(--color-primary-200)",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-    transition: "transform 0.2s ease",
+    gap: "0.6rem",
+    boxShadow: "var(--shadow-soft)",
 };
 
-const infoTitleStyle = {
-    fontSize: "1.1rem",
-    fontWeight: 700,
-    color: "var(--color-primary-700)",
-    marginBottom: "0.5rem",
+const highlightStatValueStyle = {
+    width: "1rem",
+    height: "1rem",
+    color: "var(--color-primary-600)",
+    flexShrink: 0,
 };
 
-const infoTextStyle = {
-    fontSize: "1rem",
-    color: "var(--color-gray-700)",
-    lineHeight: 1.5,
+const sectionHeaderStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
 };
 
 const sectionTitleStyle = {
-    fontSize: "clamp(1.2rem, 2.5vw, 1.4rem)",
+    fontSize: "1.65rem",
     fontWeight: 700,
-    color: "var(--color-primary-700)",
-    margin: "0 0 1.5rem 0",
+    color: "var(--color-gray-900)",
+};
+
+const channelsGridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+    gap: "2rem",
+};
+
+const channelCardStyle = {
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1rem",
+    overflow: "hidden",
+    boxShadow: "var(--shadow-soft)",
+    display: "flex",
+    flexDirection: "column",
+    textDecoration: "none",
+};
+
+const channelHeaderStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.85rem",
+    padding: "1.5rem 1.75rem 0.85rem",
+};
+
+const channelIconStyle = {
+    width: "2.6rem",
+    height: "2.6rem",
+    borderRadius: "0.85rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "0.7rem",
-    textAlign: "center",
-    width: "100%",
+    background: "rgba(56, 189, 248, 0.12)",
+    color: "var(--color-primary-600)",
+    fontSize: "1.4rem",
 };
 
-const formStyle = {
+const channelTypeStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.4rem",
+    fontSize: "0.85rem",
+    fontWeight: 500,
+    color: "var(--color-primary-600)",
+    background: "rgba(56, 189, 248, 0.12)",
+    borderRadius: "999px",
+    padding: "0.35rem 0.85rem",
+    width: "fit-content",
+};
+
+const channelContentStyle = {
     display: "flex",
     flexDirection: "column",
+    gap: "0.75rem",
+    padding: "0 1.75rem 1.75rem",
+    flex: 1,
+};
+
+const channelTitleStyle = {
+    fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
+    fontWeight: 700,
+    color: "var(--color-primary-700)",
+    margin: 0,
+    letterSpacing: "-0.3px",
+};
+
+const channelDescriptionStyle = {
+    fontSize: "1rem",
+    color: "var(--color-gray-600)",
+    lineHeight: 1.6,
+    margin: 0,
+};
+
+const channelFooterStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "0.75rem",
+    marginTop: "1.25rem",
+    paddingTop: "1rem",
+    borderTop: "1px solid var(--input-border)",
+    flexWrap: "wrap",
+};
+
+const readMoreStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    color: "var(--color-primary-600)",
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    textDecoration: "none",
+};
+
+const readMoreHoverStyle = {
+    ...readMoreStyle,
+    textDecoration: "underline",
+    color: "var(--color-primary-700)",
+};
+
+const formContainerStyle = {
+    background: "var(--panel-bg)",
+    border: "1px solid var(--input-border)",
+    borderRadius: "1.5rem",
+    padding: "2.5rem",
+    boxShadow: "var(--shadow-lg)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "2rem",
+};
+
+const formGridStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
     gap: "1.5rem",
-    width: "100%",
-    maxWidth: "500px",
-    margin: "0 auto",
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, var(--color-cyan-25) 50%, var(--color-primary-25) 100%)",
-    padding: "clamp(1.5rem, 3vw, 2rem)",
-    borderRadius: "1.2rem",
-    border: "2px solid var(--color-primary-100)",
-    boxShadow:
-        "0 8px 24px rgba(0,0,0,0.08), inset 0 1px 3px rgba(255,255,255,0.8)",
-    position: "relative",
-    boxSizing: "border-box",
 };
 
 const inputGroupStyle = {
     display: "flex",
     flexDirection: "column",
-    gap: "0.5rem",
-    width: "100%",
+    gap: "0.6rem",
 };
 
 const labelStyle = {
-    fontSize: "clamp(0.85rem, 1.8vw, 0.9rem)",
-    fontWeight: 700,
-    color: "var(--color-primary-800)",
-    marginBottom: "0.5rem",
-    textAlign: "left",
-    letterSpacing: "0.3px",
-    textShadow: "0 1px 2px rgba(0,0,0,0.05)",
+    fontSize: "0.85rem",
+    fontWeight: 600,
+    color: "var(--color-gray-600)",
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
 };
 
 const inputStyle = {
-    padding: "clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.2rem)",
-    borderRadius: "0.75rem",
-    border: "2px solid var(--color-primary-150)",
-    fontSize: "clamp(0.9rem, 2vw, 1rem)",
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%)",
+    padding: "0.85rem 1rem",
+    borderRadius: "0.85rem",
+    border: "1px solid var(--input-border)",
+    fontSize: "0.95rem",
+    background: "var(--color-white)",
     color: "var(--color-gray-900)",
-    transition: "all 0.2s ease",
+    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
     outline: "none",
-    width: "100%",
-    boxSizing: "border-box",
-    boxShadow: "inset 0 2px 4px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.05)",
 };
 
 const inputFocusStyle = {
     borderColor: "var(--color-primary-400)",
-    boxShadow:
-        "0 0 0 3px rgba(59, 130, 246, 0.1), inset 0 2px 4px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.08)",
-    background:
-        "linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(251,252,254,1) 100%)",
-    transform: "translateY(-1px)",
+    boxShadow: "0 0 0 4px rgba(56, 189, 248, 0.15)",
 };
 
 const textareaStyle = {
     ...inputStyle,
-    minHeight: "120px",
+    minHeight: "140px",
     resize: "vertical",
-    fontFamily: "inherit",
 };
 
-const buttonStyle = {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.7rem",
-    background: "var(--color-primary-600)",
-    color: "white",
-    border: "2px solid var(--color-primary-600)",
-    borderRadius: "0.75rem",
-    padding: "clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)",
-    fontWeight: 700,
-    fontSize: "clamp(0.9rem, 2vw, 1rem)",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-    marginTop: "0.5rem",
-    width: "fit-content",
-    alignSelf: "center",
-    letterSpacing: "0.3px",
+const heroPrimaryButtonCompactStyle = {
+    ...heroPrimaryButtonStyle,
+    alignSelf: "flex-start",
 };
 
-const buttonHoverStyle = {
-    background: "var(--color-primary-700)",
-    borderColor: "var(--color-primary-700)",
-    transform: "translateY(-2px)",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+const heroPrimaryButtonCompactHoverStyle = {
+    ...heroPrimaryButtonHoverStyle,
+    alignSelf: "flex-start",
 };
 
 const successMessageStyle = {
-    background:
-        "linear-gradient(135deg, var(--color-primary-50), var(--color-cyan-50))",
-    border: "2px solid var(--color-primary-200)",
-    borderRadius: "1rem",
-    padding: "1.5rem",
-    marginTop: "1.5rem",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
     gap: "1rem",
+    background: "linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(14, 165, 233, 0.12))",
+    border: "1px solid rgba(14, 165, 233, 0.3)",
+    borderRadius: "1rem",
+    padding: "1.25rem 1.5rem",
     color: "var(--color-primary-700)",
     fontWeight: 600,
-    boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-    width: "100%",
-    boxSizing: "border-box",
-    textAlign: "center",
-    flexDirection: "column",
-};
-
-const successMessageContentStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "1rem",
-    flexWrap: "wrap",
-    justifyContent: "center",
 };
 
 const DashboardContact = () => {
     const [form, setForm] = useState({ name: "", email: "", message: "" });
     const [submitted, setSubmitted] = useState(false);
-    const [iconHovered, setIconHovered] = useState(false);
-    const [buttonHovered, setButtonHovered] = useState(false);
-    const [cardHovered, setCardHovered] = useState(null);
+    const [primaryButtonHovered, setPrimaryButtonHovered] = useState(false);
+    const [secondaryButtonHovered, setSecondaryButtonHovered] = useState(false);
+    const [readMoreHovered, setReadMoreHovered] = useState({});
     const [focusedInput, setFocusedInput] = useState(null);
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+    const channelTypes = useMemo(
+        () => Array.from(new Set(contactChannels.map((channel) => channel.type))),
+        []
+    );
+
+    const handleChange = (event) => {
+        setForm({ ...form, [event.target.name]: event.target.value });
     };
 
     const handleSubmit = () => {
         if (form.name && form.email && form.message) {
             setSubmitted(true);
-            // Reset form after 3 seconds
             setTimeout(() => {
                 setForm({ name: "", email: "", message: "" });
                 setSubmitted(false);
@@ -334,227 +409,222 @@ const DashboardContact = () => {
         }
     };
 
-    const contactInfo = [
-        {
-            title: "Email",
-            text: "support@focusflow.com",
-            description: "Send us an email anytime",
-        },
-        {
-            title: "Phone",
-            text: "+1 (555) 123-4567",
-            description: "Mon-Fri, 9AM-5PM EST",
-        },
-    ];
-
     return (
-        <>
-            <div style={pageBackgroundStyle} />
+        <section style={pageWrapperStyle}>
             <div style={containerStyle}>
-                <section style={heroStyle}>
-                    <div style={accentBarStyle} />
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            marginBottom: "1.2rem",
-                        }}
-                    >
-                        <div
-                            style={
-                                iconHovered
-                                    ? {
-                                          ...iconCircleStyle,
-                                          ...iconCircleHoverStyle,
-                                      }
-                                    : iconCircleStyle
-                            }
-                            onMouseEnter={() => setIconHovered(true)}
-                            onMouseLeave={() => setIconHovered(false)}
-                        >
-                            <FaEnvelope
-                                style={{
-                                    fontSize: "clamp(2rem, 4vw, 2.5rem)",
-                                    color: "white",
-                                }}
-                            />
+                <section style={heroSectionStyle}>
+                    <div style={heroLeftColumnStyle}>
+                        <div style={heroContentStyle}>
+                            <span style={heroBadgeStyle}>
+                                <FaEnvelope style={{ width: "1rem", height: "1rem" }} />
+                                Contact
+                            </span>
+                            <h1 style={heroTitleStyle}>We’re here to help you focus</h1>
+                            <p style={heroSubtitleStyle}>
+                                Reach out for product support, onboarding help, or partnership
+                                opportunities. The FocusFlow team loves hearing how we can make your
+                                workday smoother.
+                            </p>
                         </div>
-                        <h1 style={titleStyle}>Contact Us</h1>
+                        <div style={heroActionsStyle}>
+                            <a
+                                href="#channels"
+                                style={
+                                    primaryButtonHovered
+                                        ? heroPrimaryButtonHoverStyle
+                                        : heroPrimaryButtonStyle
+                                }
+                                onMouseEnter={() => setPrimaryButtonHovered(true)}
+                                onMouseLeave={() => setPrimaryButtonHovered(false)}
+                            >
+                                Explore contact options
+                            </a>
+                            <a
+                                href="#contact-form"
+                                style={
+                                    secondaryButtonHovered
+                                        ? heroSecondaryButtonHoverStyle
+                                        : heroSecondaryButtonStyle
+                                }
+                                onMouseEnter={() => setSecondaryButtonHovered(true)}
+                                onMouseLeave={() => setSecondaryButtonHovered(false)}
+                            >
+                                Send a message
+                            </a>
+                        </div>
                     </div>
-                    <p style={subtitleStyle}>
-                        Have a question or feedback? Reach out to the FocusFlow
-                        team below. We'd love to hear from you!
-                    </p>
+
+                    <div style={heroRightColumnStyle}>
+                        <div style={highlightPanelStyle}>
+                            <div style={sectionHeaderStyle}>
+                                <span style={heroBadgeStyle}>
+                                    <FaHeadset style={{ width: "1rem", height: "1rem" }} />
+                                    Service levels
+                                </span>
+                                <h2 style={sectionTitleStyle}>Choose the right channel</h2>
+                            </div>
+                            <div style={highlightListStyle}>
+                                {channelTypes.map((type) => (
+                                    <div key={type} style={highlightChipStyle}>
+                                        <FaCheckCircle style={highlightStatValueStyle} />
+                                        <span>{type}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
-                <main style={mainStyle}>
-                    {/* Contact Information Cards */}
-                    <div style={contactInfoStyle}>
-                        {contactInfo.map((info, idx) => (
-                            <div
-                                key={idx}
-                                style={
-                                    cardHovered === idx
-                                        ? {
-                                              ...infoCardStyle,
-                                              ...infoCardHoverStyle,
-                                          }
-                                        : infoCardStyle
+                <section id="channels" style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
+                    <div style={sectionHeaderStyle}>
+                        <span style={heroBadgeStyle}>
+                            <FaUsers style={{ width: "1rem", height: "1rem" }} />
+                            Reach us directly
+                        </span>
+                        <h2 style={sectionTitleStyle}>Pick the best channel for you</h2>
+                    </div>
+                    <div style={channelsGridStyle}>
+                        {contactChannels.map((channel) => (
+                            <a
+                                key={channel.title}
+                                href={channel.link}
+                                style={channelCardStyle}
+                                onMouseEnter={() =>
+                                    setReadMoreHovered({
+                                        ...readMoreHovered,
+                                        [channel.title]: true,
+                                    })
                                 }
-                                onMouseEnter={() => setCardHovered(idx)}
-                                onMouseLeave={() => setCardHovered(null)}
+                                onMouseLeave={() =>
+                                    setReadMoreHovered({
+                                        ...readMoreHovered,
+                                        [channel.title]: false,
+                                    })
+                                }
                             >
-                                <div style={infoIconStyle}>
-                                    {idx === 0 ? <FaEnvelope /> : <FaPhone />}
+                                <div style={channelHeaderStyle}>
+                                    <div style={channelIconStyle}>{channel.icon}</div>
+                                    <div style={channelTypeStyle}>{channel.type}</div>
                                 </div>
-                                <div style={infoTitleStyle}>{info.title}</div>
-                                <div style={infoTextStyle}>
-                                    <strong>{info.text}</strong>
-                                    <br />
-                                    <span
-                                        style={{
-                                            fontSize:
-                                                "clamp(0.85rem, 1.8vw, 0.9rem)",
-                                            opacity: 0.8,
-                                        }}
-                                    >
-                                        {info.description}
-                                    </span>
+                                <div style={channelContentStyle}>
+                                    <h3 style={channelTitleStyle}>{channel.title}</h3>
+                                    <p style={channelDescriptionStyle}>{channel.description}</p>
+                                    <div style={channelFooterStyle}>
+                                        <span style={{ fontSize: "0.85rem", color: "var(--color-gray-500)" }}>
+                                            {channel.detail}
+                                        </span>
+                                        <span
+                                            style={
+                                                readMoreHovered[channel.title]
+                                                    ? readMoreHoverStyle
+                                                    : readMoreStyle
+                                            }
+                                        >
+                                            Learn more
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M5 12h14" />
+                                                <path d="m12 5 7 7-7 7" />
+                                            </svg>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         ))}
                     </div>
+                </section>
 
-                    {/* Contact Form */}
-                    <div
-                        style={{
-                            ...sectionTitleStyle,
-                            marginBottom: "2rem",
-                            position: "relative",
-                        }}
-                    >
-                        <div
-                            style={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "0",
-                                right: "0",
-                                height: "2px",
-                                background:
-                                    "linear-gradient(90deg, transparent 0%, var(--color-primary-200) 30%, var(--color-primary-300) 50%, var(--color-primary-200) 70%, transparent 100%)",
-                                zIndex: -1,
-                                transform: "translateY(-50%)",
-                            }}
-                        ></div>
-                        <div
-                            style={{
-                                background: "rgba(255,255,255,0.9)",
-                                padding: "0 1rem",
-                                borderRadius: "0.5rem",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.7rem",
-                            }}
-                        >
-                            <FaPaperPlane style={{ fontSize: "1.2rem" }} />
-                            Send us a Message
-                        </div>
+                <section id="contact-form" style={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
+                    <div style={sectionHeaderStyle}>
+                        <span style={heroBadgeStyle}>
+                            <FaPaperPlane style={{ width: "1rem", height: "1rem" }} />
+                            Send a note
+                        </span>
+                        <h2 style={sectionTitleStyle}>We’ll get back within a day</h2>
                     </div>
-
-                    <div style={formStyle}>
-                        <div style={inputGroupStyle}>
-                            <div style={labelStyle}>Your Name</div>
-                            <input
-                                style={
-                                    focusedInput === "name"
-                                        ? { ...inputStyle, ...inputFocusStyle }
-                                        : inputStyle
-                                }
-                                type="text"
-                                name="name"
-                                placeholder="Enter your full name"
-                                value={form.name}
-                                onChange={handleChange}
-                                onFocus={() => setFocusedInput("name")}
-                                onBlur={() => setFocusedInput(null)}
-                            />
+                    <div style={formContainerStyle}>
+                        <div style={formGridStyle}>
+                            <div style={inputGroupStyle}>
+                                <label style={labelStyle}>Your name</label>
+                                <input
+                                    style={
+                                        focusedInput === "name"
+                                            ? { ...inputStyle, ...inputFocusStyle }
+                                            : inputStyle
+                                    }
+                                    name="name"
+                                    placeholder="Alex Productivity"
+                                    value={form.name}
+                                    onChange={handleChange}
+                                    onFocus={() => setFocusedInput("name")}
+                                    onBlur={() => setFocusedInput(null)}
+                                />
+                            </div>
+                            <div style={inputGroupStyle}>
+                                <label style={labelStyle}>Email address</label>
+                                <input
+                                    style={
+                                        focusedInput === "email"
+                                            ? { ...inputStyle, ...inputFocusStyle }
+                                            : inputStyle
+                                    }
+                                    name="email"
+                                    type="email"
+                                    placeholder="alex@company.com"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    onFocus={() => setFocusedInput("email")}
+                                    onBlur={() => setFocusedInput(null)}
+                                />
+                            </div>
                         </div>
-
                         <div style={inputGroupStyle}>
-                            <div style={labelStyle}>Your Email</div>
-                            <input
-                                style={
-                                    focusedInput === "email"
-                                        ? { ...inputStyle, ...inputFocusStyle }
-                                        : inputStyle
-                                }
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email address"
-                                value={form.email}
-                                onChange={handleChange}
-                                onFocus={() => setFocusedInput("email")}
-                                onBlur={() => setFocusedInput(null)}
-                            />
-                        </div>
-
-                        <div style={inputGroupStyle}>
-                            <div style={labelStyle}>Your Message</div>
+                            <label style={labelStyle}>How can we help?</label>
                             <textarea
                                 style={
                                     focusedInput === "message"
-                                        ? {
-                                              ...textareaStyle,
-                                              ...inputFocusStyle,
-                                          }
+                                        ? { ...textareaStyle, ...inputFocusStyle }
                                         : textareaStyle
                                 }
                                 name="message"
-                                placeholder="Tell us how we can help you..."
+                                placeholder="Tell us about your goals, blockers, or feedback."
                                 value={form.message}
                                 onChange={handleChange}
                                 onFocus={() => setFocusedInput("message")}
                                 onBlur={() => setFocusedInput(null)}
                             />
                         </div>
-
-                        <button
+                        <a
                             style={
-                                buttonHovered
-                                    ? { ...buttonStyle, ...buttonHoverStyle }
-                                    : buttonStyle
+                                primaryButtonHovered
+                                    ? heroPrimaryButtonCompactHoverStyle
+                                    : heroPrimaryButtonCompactStyle
                             }
-                            onMouseEnter={() => setButtonHovered(true)}
-                            onMouseLeave={() => setButtonHovered(false)}
+                            onMouseEnter={() => setPrimaryButtonHovered(true)}
+                            onMouseLeave={() => setPrimaryButtonHovered(false)}
                             onClick={handleSubmit}
                         >
-                            <FaPaperPlane style={{ fontSize: "0.9rem" }} />
-                            Send Message
-                        </button>
-                    </div>
-
-                    {submitted && (
-                        <div style={successMessageStyle}>
-                            <div style={successMessageContentStyle}>
-                                <FaCheckCircle
-                                    style={{
-                                        fontSize: "1.5rem",
-                                        color: "var(--color-primary-600)",
-                                    }}
-                                />
-                                <div>
-                                    <strong>Message sent successfully!</strong>
-                                    <br />
-                                    Thank you for reaching out. We'll get back
-                                    to you within 24 hours.
-                                </div>
+                            <FaPaperPlane style={{ fontSize: "0.95rem" }} />
+                            Send message
+                        </a>
+                        {submitted && (
+                            <div style={successMessageStyle}>
+                                <FaCheckCircle style={{ fontSize: "1.1rem" }} />
+                                Message received! We’ll get back to you shortly.
                             </div>
-                        </div>
-                    )}
-                </main>
+                        )}
+                    </div>
+                </section>
             </div>
-        </>
+        </section>
     );
 };
 
