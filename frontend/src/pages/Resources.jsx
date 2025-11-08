@@ -10,26 +10,32 @@ import {
     VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 
-const heroTags = ["Guides", "Templates", "Workshops", "Community picks"];
+const heroTags = ["🎯 Focus sprints", "🎬 Replay vault", "🧱 Template wall", "🌈 Community picks"];
+
+const heroSpotlights = [
+    { key: "start", icon: "✨", title: "Start here", caption: "FocusFlow 101 in minutes" },
+    { key: "vault", icon: "🎥", title: "Watch party", caption: "Workshops on demand" },
+    { key: "kit", icon: "🧰", title: "Grab the kit", caption: "Plug-and-play templates" },
+];
 
 const resourceLibrary = [
     {
         id: "resource-1",
         title: "Getting started with FocusFlow",
-        description: "Set up timers, distraction logging, and dashboards in under 15 minutes.",
+        description: "Spin up timers, capture distractions, and read stats in minutes.",
         type: "guide",
         icon: BookOpenIcon,
         level: "Beginner",
         duration: "15 min read",
         tags: ["Onboarding", "Timers", "Basics"],
         content:
-            "Welcome to FocusFlow! This guide walks you through configuring your timer presets, logging distractions in a single click, and reading trends in the Statistics view.\n\n1) Calibrate focus, short break, and long break durations.\n2) Pin the distraction capture panel so it is one shortcut away.\n3) End the day with a lightweight retrospective to keep tomorrow frictionless.",
-        bullets: ["Customize presets with auto-start options", "Capture distractions without losing flow", "Review streaks and highs/lows each evening"],
+            "Welcome to FocusFlow! This playbook covers calibrating presets, capturing distractions in one tap, and reviewing stats without friction.\n\n1) Tune focus + break durations to match your rhythm.\n2) Keep the distraction capture panel pinned for instant logging.\n3) Close the day with a 3-minute retro so tomorrow stays light.",
+        bullets: ["Preset sprint setup", "One-tap distraction log", "End-of-day retro"],
     },
     {
         id: "resource-2",
         title: "Mastering the Pomodoro technique",
-        description: "Video walkthrough of high-output teams using Pomodoro the modern way.",
+        description: "Video peek into modern Pomodoro teams.",
         type: "video",
         icon: VideoCameraIcon,
         level: "Intermediate",
@@ -40,7 +46,7 @@ const resourceLibrary = [
     {
         id: "resource-3",
         title: "Advanced focus techniques",
-        description: "Deep work tactics for engineers, writers, and product teams.",
+        description: "Deep work moves for builders and makers.",
         type: "article",
         icon: LightBulbIcon,
         level: "Advanced",
@@ -53,7 +59,7 @@ const resourceLibrary = [
     {
         id: "resource-4",
         title: "Productivity templates pack",
-        description: "Download pre-built agendas, review docs, and async update sheets.",
+        description: "Plug-and-play agendas, review docs, and async updates.",
         type: "template",
         icon: DocumentTextIcon,
         level: "All levels",
@@ -62,20 +68,20 @@ const resourceLibrary = [
     {
         id: "resource-5",
         title: "Time management fundamentals",
-        description: "Foundation series on prioritising, sequencing tasks, and staying accountable.",
+        description: "Prioritise, plan, and stay accountable without burnout.",
         type: "guide",
         icon: AcademicCapIcon,
         level: "Beginner",
         duration: "25 min read",
         tags: ["Time management", "Planning", "Habits"],
         content:
-            "Use outcome-first planning to connect weekly goals to daily focus blocks. Blend weekly reviews with daily shutdown rituals so nothing slips through the cracks.",
-        bullets: ["Outcome-first planning", "Simple capture + triage", "Weekly + daily reviews that stick"],
+            "Use outcome-first planning to link weekly goals to daily focus blocks. Blend quick capture with restful shutdown rituals so nothing slips.",
+        bullets: ["Outcome-first planning", "Capture + triage loop", "Weekly reset ritual"],
     },
     {
         id: "resource-6",
         title: "Productivity workshop replay",
-        description: "Watch the live session on sustainable focus habits and energy audits.",
+        description: "Replay on sustainable focus habits and energy resets.",
         type: "video",
         icon: PresentationChartLineIcon,
         level: "Intermediate",
@@ -88,39 +94,39 @@ const resourceLibrary = [
 const learningTracks = [
     {
         title: "Kickstart FocusFlow",
-        duration: "7-day plan",
-        description: "Pair structured focus blocks with effortless reflection rituals to build momentum fast.",
-        outline: ["Day 1-2 · Configure presets and baseline metrics", "Day 3-4 · Capture distractions + run micro retros", "Day 5-7 · Ship a weekly review and reset"],
+        duration: "7-day burst",
+        vibe: "Launch your focus streak with playful daily cues.",
+        moments: ["Tune presets", "Capture sparks", "Weekly reset party"],
     },
     {
         title: "Deep work accelerator",
         duration: "14-day sprint",
-        description: "Protect big project energy with long-form focus windows and energy audits.",
-        outline: ["Week 1 · Map milestones + guard calendar", "Week 2 · Automate prep + reduce context switching", "Final retro · Celebrate wins + adjust rituals"],
+        vibe: "Protect big project energy with long-form focus rituals.",
+        moments: ["Map milestones", "Guard calendar", "Celebrate ship"],
     },
     {
         title: "Creative recharge",
         duration: "Weekend reset",
-        description: "Blend light structure with creative play so Monday starts charged, not drained.",
-        outline: ["Sat AM · Inspiration sweep + intention setting", "Sat PM · Guided creative block with playlist", "Sun · Reflection walk + journal prompts"],
+        vibe: "Blend structure with playful prompts to return fired up.",
+        moments: ["Inspiration sweep", "Guided jam", "Reflection walk"],
     },
 ];
 
 const resourceBundles = [
     {
         title: "Deep work toolkit",
-        description: "Templates and prompts to double down on immersive creation without overwhelm.",
-        items: ["Focus block agenda", "Context switch minimiser checklist", "Ambient playlists to cue entry"],
+        punchline: "Go heads-down without the burnout.",
+        goodies: ["Focus agenda", "Context shield", "Ambient cues"],
     },
     {
         title: "Study sprint pack",
-        description: "Keep exam prep on rails with accountability trackers and reflection loops.",
-        items: ["30-day accountability tracker", "Active recall flashcard guide", "Weekly improvement retro"],
+        punchline: "Keep exam prep on rails with playful accountability.",
+        goodies: ["Sprint tracker", "Flashcard guide", "Weekly retro"],
     },
     {
         title: "Team focus library",
-        description: "Help squads sync asynchronously with minimal meetings and maximum clarity.",
-        items: ["Stand-up notes canvas", "Async handoff checklist", "Retro board starter"],
+        punchline: "Sync async teams with crystal-clear handoffs.",
+        goodies: ["Stand-up canvas", "Handoff checklist", "Retro board"],
     },
 ];
 
@@ -129,19 +135,19 @@ const communitySignals = [
         icon: "🚀",
         title: "Creators using templates",
         metric: "2.4k downloads",
-        description: "Side-project builders rely on the template wall to launch faster with less friction.",
+        description: "Builders grab the template wall to launch faster with less friction.",
     },
     {
         icon: "🎧",
         title: "Focus playlists shared",
         metric: "48 mixes",
-        description: "Community-sourced playlists cover mellow lo-fi, binaural beats, and rain room vibes.",
+        description: "Community playlists span lo-fi, binaural beats, and rain room vibes.",
     },
     {
         icon: "📝",
         title: "Guides bookmarked",
         metric: "6.3k saves",
-        description: "Most-loved guides dive into distraction-proof workflows and energy mapping.",
+        description: "Most-loved guides dive into distraction-proof workflows and energy maps.",
     },
 ];
 
@@ -153,45 +159,122 @@ const categories = [
     { key: "template", label: "Templates" },
 ];
 
+const categoryIcons = {
+    guide: "📘",
+    video: "🎬",
+    article: "🧠",
+    template: "🧩",
+};
+
+const resourceStats = categories
+    .filter((category) => category.key !== "all")
+    .map((category) => ({
+        key: category.key,
+        label: category.label,
+        icon: categoryIcons[category.key] || "✨",
+        count: resourceLibrary.filter((resource) => resource.type === category.key).length,
+    }));
+
+const resourceTypeLabels = {
+    guide: "Guide",
+    video: "Video",
+    article: "Article",
+    template: "Template",
+};
+
 const styles = {
     page: {
         minHeight: "100vh",
-        background: "var(--color-white)",
-        color: "var(--color-gray-900)",
+        background: "linear-gradient(180deg, #030b18 0%, #0b1529 55%, #030b18 100%)",
+        color: "#e2e8f0",
         transition: "background 0.3s ease, color 0.3s ease",
-        padding: "4.5rem 1.75rem 5rem",
+        padding: "4.8rem 1.85rem 5.4rem",
     },
     container: {
-        maxWidth: "1100px",
+        maxWidth: "1180px",
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",
-        gap: "2.75rem",
+        gap: "3rem",
+        position: "relative",
+        zIndex: 1,
     },
     hero: {
-        borderRadius: "1.5rem",
-        padding: "2.85rem",
-        background: "linear-gradient(136deg, rgba(56,189,248,0.16), rgba(129,140,248,0.22))",
-        border: "1px solid rgba(56,189,248,0.26)",
-        boxShadow: "0 30px 82px -50px rgba(56,189,248,0.55)",
+        position: "relative",
+        borderRadius: "1.6rem",
+        padding: "3.4rem",
+        background: "linear-gradient(136deg, rgba(56,189,248,0.18), rgba(129,140,248,0.26))",
+        border: "1px solid rgba(56,189,248,0.32)",
+        boxShadow: "0 52px 140px -80px rgba(56,189,248,0.72)",
         display: "grid",
-        gap: "1.55rem",
+        gap: "2rem",
+        overflow: "hidden",
+    },
+    heroGlow: {
+        position: "absolute",
+        inset: "-25% -35%",
+        background: "radial-gradient(circle at 20% 20%, rgba(59,130,246,0.4), transparent 60%)",
+        filter: "blur(42px)",
+        opacity: 0.9,
+    },
+    heroContent: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+        gap: "2.4rem",
+        position: "relative",
+        zIndex: 1,
+    },
+    heroHeadline: {
+        display: "grid",
+        gap: "1.4rem",
+    },
+    heroPillRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        flexWrap: "wrap",
+    },
+    heroEyebrow: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.3rem 0.68rem",
+        borderRadius: "999px",
+        background: "rgba(59,130,246,0.2)",
+        color: "#f0f9ff",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+    },
+    heroPill: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.3rem",
+        padding: "0.3rem 0.75rem",
+        borderRadius: "999px",
+        background: "rgba(94,234,212,0.2)",
+        color: "#99f6e4",
+        fontSize: "0.75rem",
+        fontWeight: 600,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
     },
     heroTitle: {
-        fontSize: "2.35rem",
+        fontSize: "2.5rem",
         fontWeight: 700,
-        lineHeight: 1.2,
+        lineHeight: 1.18,
         margin: 0,
-        background: "linear-gradient(110deg, #38bdf8, #818cf8)",
+        background: "linear-gradient(110deg, #f8fafc, #bae6fd)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
     },
     heroLead: {
-        fontSize: "1.08rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.75,
-        maxWidth: "48rem",
+        fontSize: "1.05rem",
+        color: "#b6caf1",
+        lineHeight: 1.72,
+        maxWidth: "32rem",
     },
     heroTags: {
         display: "flex",
@@ -202,39 +285,160 @@ const styles = {
         display: "inline-flex",
         alignItems: "center",
         gap: "0.35rem",
-        padding: "0.42rem 0.9rem",
+        padding: "0.42rem 0.95rem",
         borderRadius: "9999px",
-        background: "rgba(15,23,42,0.14)",
-        color: "var(--color-primary-700)",
+        background: "rgba(15,23,42,0.32)",
+        color: "#dbeafe",
         fontSize: "0.82rem",
         fontWeight: 600,
-        letterSpacing: "0.06em",
+        letterSpacing: "0.08em",
         textTransform: "uppercase",
+        boxShadow: "inset 0 0 0 1px rgba(148,163,184,0.28)",
+    },
+    heroSpotlights: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gap: "1.1rem",
+    },
+    heroSpotlightCard: {
+        borderRadius: "1.05rem",
+        border: "1px solid rgba(148,163,184,0.26)",
+        background: "rgba(8, 17, 34, 0.72)",
+        boxShadow: "0 24px 60px -44px rgba(56,189,248,0.55)",
+        padding: "1.1rem 1.2rem",
+        display: "grid",
+        gap: "0.55rem",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    },
+    heroSpotlightCardHover: {
+        transform: "translateY(-4px)",
+        boxShadow: "0 36px 90px -60px rgba(56,189,248,0.65)",
+        borderColor: "rgba(56,189,248,0.35)",
+    },
+    heroSpotlightIcon: {
+        fontSize: "1.2rem",
+    },
+    heroSpotlightTitle: {
+        fontSize: "1rem",
+        fontWeight: 600,
+        color: "#f8fafc",
+    },
+    heroSpotlightCaption: {
+        fontSize: "0.88rem",
+        color: "#9fb2d6",
+        lineHeight: 1.5,
     },
     section: {
-        borderRadius: "1.25rem",
-        border: "1px solid var(--input-border)",
-        background: "var(--panel-bg)",
-        boxShadow: "var(--shadow-lg)",
-        padding: "2.35rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1.6rem",
+        borderRadius: "1.4rem",
+        border: "1px solid rgba(56,189,248,0.16)",
+        background: "rgba(7, 14, 28, 0.85)",
+        boxShadow: "0 45px 110px -70px rgba(14,165,233,0.55)",
+        padding: "2.75rem",
+        display: "grid",
+        gap: "1.9rem",
+        position: "relative",
+        overflow: "hidden",
+    },
+    sectionAccent: {
+        position: "absolute",
+        inset: "-20% 50%",
+        width: "320px",
+        height: "320px",
+        background: "radial-gradient(circle, rgba(56,189,248,0.18), transparent 70%)",
+        transform: "translateX(-50%)",
+        filter: "blur(40px)",
+        opacity: 0.9,
+        pointerEvents: "none",
     },
     sectionHeader: {
         display: "grid",
         gap: "0.45rem",
+        position: "relative",
+        zIndex: 1,
+    },
+    sectionEyebrow: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.32rem 0.75rem",
+        borderRadius: "999px",
+        background: "rgba(59,130,246,0.16)",
+        color: "#38bdf8",
+        fontSize: "0.78rem",
+        fontWeight: 600,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
     },
     sectionTitle: {
-        fontSize: "1.6rem",
+        fontSize: "1.7rem",
         fontWeight: 700,
-        color: "var(--color-gray-900)",
+        color: "#f8fafc",
     },
     sectionLead: {
-        fontSize: "1rem",
-        color: "var(--color-gray-600)",
+        fontSize: "0.98rem",
+        color: "#9fb2d6",
         lineHeight: 1.68,
-        maxWidth: "46rem",
+        maxWidth: "40rem",
+    },
+    sectionCard: {
+        borderRadius: "1.15rem",
+        border: "1px solid rgba(56,189,248,0.16)",
+        background: "rgba(8, 16, 31, 0.78)",
+        boxShadow: "0 34px 82px -60px rgba(14,165,233,0.45)",
+        padding: "1.95rem",
+        display: "grid",
+        gap: "1.25rem",
+    },
+    statGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+        gap: "1rem",
+    },
+    statCard: {
+        borderRadius: "1rem",
+        border: "1px solid rgba(56,189,248,0.2)",
+        background: "rgba(9, 18, 34, 0.75)",
+        padding: "0.95rem 1.1rem",
+        display: "grid",
+        gap: "0.35rem",
+        boxShadow: "0 24px 64px -48px rgba(56,189,248,0.55)",
+    },
+    statLabelRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.45rem",
+        color: "#cbd5f5",
+        fontSize: "0.82rem",
+        fontWeight: 600,
+    },
+    statValue: {
+        fontSize: "1.35rem",
+        fontWeight: 700,
+        color: "#f8fafc",
+    },
+    tagRow: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.45rem",
+    },
+    emptyState: {
+        display: "grid",
+        gap: "0.6rem",
+        justifyItems: "center",
+        padding: "3.2rem 2.4rem",
+        borderRadius: "1.15rem",
+        border: "1px dashed rgba(148,163,184,0.35)",
+        background: "rgba(9, 18, 34, 0.82)",
+        boxShadow: "0 28px 70px -50px rgba(56,189,248,0.4)",
+    },
+    emptyStateTitle: {
+        fontSize: "1.05rem",
+        fontWeight: 600,
+        color: "#f8fafc",
+    },
+    emptyStateSubtitle: {
+        color: "#8ea0c2",
+        fontSize: "0.95rem",
     },
     searchPanel: {
         display: "grid",
@@ -242,13 +446,14 @@ const styles = {
     },
     searchInput: {
         width: "100%",
-        padding: "0.85rem 1.15rem",
-        borderRadius: "0.85rem",
-        border: "1px solid var(--input-border)",
-        background: "var(--input-bg)",
-        color: "var(--color-gray-900)",
+        padding: "0.95rem 1.2rem",
+        borderRadius: "0.95rem",
+        border: "1px solid rgba(56,189,248,0.22)",
+        background: "rgba(9, 18, 34, 0.85)",
+        color: "#e2e8f0",
         fontSize: "1rem",
         outline: "none",
+        boxShadow: "0 18px 42px -30px rgba(56,189,248,0.45)",
     },
     filterBar: {
         display: "flex",
@@ -256,60 +461,75 @@ const styles = {
         gap: "0.65rem",
     },
     filterChip: {
-        padding: "0.55rem 1.2rem",
-        borderRadius: "0.9rem",
+        padding: "0.6rem 1.25rem",
+        borderRadius: "0.95rem",
         fontWeight: 600,
         fontSize: "0.95rem",
-        border: "1px solid rgba(148,163,184,0.24)",
-        background: "rgba(148,163,184,0.14)",
-        color: "var(--color-gray-600)",
+        border: "1px solid rgba(148,163,184,0.28)",
+        background: "rgba(15,23,42,0.35)",
+        color: "#cbd5f5",
         cursor: "pointer",
-        transition: "all 0.18s ease",
+        transition: "all 0.2s ease",
     },
     filterChipActive: {
-        background: "rgba(59,130,246,0.2)",
-        color: "var(--color-primary-700)",
-        border: "1px solid rgba(56,189,248,0.4)",
-        boxShadow: "0 18px 32px -28px rgba(56,189,248,0.55)",
+        background: "rgba(56,189,248,0.22)",
+        color: "#38bdf8",
+        border: "1px solid rgba(56,189,248,0.45)",
+        boxShadow: "0 22px 48px -32px rgba(56,189,248,0.6)",
     },
     resourceGrid: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: "1.5rem",
+        gap: "1.6rem",
     },
     resourceCard: {
-        borderRadius: "1.15rem",
-        border: "1px solid var(--input-border)",
-        background: "var(--panel-bg)",
-        boxShadow: "var(--shadow-md)",
-        padding: "1.75rem",
+        borderRadius: "1.2rem",
+        border: "1px solid rgba(56,189,248,0.2)",
+        background: "rgba(12, 22, 40, 0.9)",
+        boxShadow: "0 36px 95px -62px rgba(56,189,248,0.55)",
+        padding: "1.9rem",
         display: "grid",
-        gap: "0.95rem",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        gap: "1.05rem",
+        transition: "transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease",
+        transform: "translateY(0)",
     },
     resourceCardHover: {
-        transform: "translateY(-4px)",
-        boxShadow: "0 24px 55px -32px rgba(56,189,248,0.45)",
+        transform: "translateY(-6px)",
+        boxShadow: "0 48px 125px -70px rgba(56,189,248,0.65)",
+        borderColor: "rgba(56,189,248,0.38)",
     },
     resourceHeader: {
         display: "flex",
         alignItems: "center",
         gap: "1rem",
     },
+    resourceTypePill: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.45rem",
+        padding: "0.35rem 0.75rem",
+        borderRadius: "999px",
+        background: "rgba(56,189,248,0.16)",
+        color: "#38bdf8",
+        fontSize: "0.78rem",
+        fontWeight: 600,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+    },
     resourceIcon: {
-        width: "2.75rem",
-        height: "2.75rem",
-        borderRadius: "0.85rem",
-        background: "rgba(59,130,246,0.18)",
-        color: "var(--color-primary-600)",
+        width: "2.85rem",
+        height: "2.85rem",
+        borderRadius: "0.95rem",
+        background: "linear-gradient(135deg, rgba(56,189,248,0.32), rgba(129,140,248,0.28))",
+        color: "#0ea5e9",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
     },
     resourceTitle: {
-        fontSize: "1.1rem",
+        fontSize: "1.18rem",
         fontWeight: 600,
-        color: "var(--color-gray-900)",
+        color: "#f8fafc",
     },
     resourceMeta: {
         display: "flex",
@@ -318,85 +538,147 @@ const styles = {
         gap: "0.75rem",
         fontSize: "0.85rem",
         fontWeight: 600,
-        color: "var(--color-primary-600)",
+        color: "#38bdf8",
     },
     resourceDescription: {
         fontSize: "0.95rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.7,
+        color: "#9fb2d6",
+        lineHeight: 1.72,
     },
     tagPill: {
-        padding: "0.32rem 0.9rem",
+        padding: "0.35rem 0.95rem",
         borderRadius: "9999px",
-        background: "rgba(15,23,42,0.12)",
-        color: "var(--color-gray-600)",
-        fontSize: "0.8rem",
+        background: "rgba(15,23,42,0.45)",
+        color: "#cbd5f5",
+        fontSize: "0.78rem",
+        fontWeight: 600,
+    },
+    tagPillSoft: {
+        padding: "0.32rem 0.8rem",
+        borderRadius: "999px",
+        background: "rgba(59,130,246,0.16)",
+        color: "#cfe1ff",
+        fontSize: "0.78rem",
         fontWeight: 600,
     },
     cardAction: {
         alignSelf: "flex-start",
         display: "inline-flex",
         alignItems: "center",
-        gap: "0.5rem",
-        padding: "0.65rem 1.4rem",
-        borderRadius: "0.9rem",
-        border: "1px solid rgba(56,189,248,0.35)",
-        background: "rgba(59,130,246,0.18)",
-        color: "var(--color-primary-700)",
+        gap: "0.55rem",
+        padding: "0.7rem 1.5rem",
+        borderRadius: "0.95rem",
+        border: "1px solid rgba(56,189,248,0.32)",
+        background: "linear-gradient(130deg, rgba(56,189,248,0.2), rgba(14,165,233,0.18))",
+        color: "#38bdf8",
         fontWeight: 600,
-        fontSize: "0.92rem",
+        fontSize: "0.94rem",
         cursor: "pointer",
-        transition: "all 0.18s ease",
+        transition: "all 0.2s ease",
     },
     cardActionHover: {
-        background: "rgba(59,130,246,0.28)",
-        borderColor: "rgba(56,189,248,0.45)",
-        transform: "translateY(-2px)",
-        boxShadow: "0 16px 40px -26px rgba(56,189,248,0.6)",
+        background: "linear-gradient(130deg, rgba(56,189,248,0.28), rgba(14,165,233,0.26))",
+        borderColor: "rgba(56,189,248,0.48)",
+        transform: "translateY(-3px)",
+        boxShadow: "0 26px 64px -40px rgba(56,189,248,0.6)",
     },
     highlightGrid: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-        gap: "1.5rem",
+        gap: "1.6rem",
     },
     highlightCard: {
-        borderRadius: "1.05rem",
-        border: "1px solid var(--input-border)",
-        background: "var(--panel-bg)",
-        boxShadow: "var(--shadow-md)",
-        padding: "1.7rem",
+        borderRadius: "1.2rem",
+        border: "1px solid rgba(56,189,248,0.18)",
+        background: "rgba(12, 22, 40, 0.88)",
+        boxShadow: "0 32px 90px -58px rgba(56,189,248,0.55)",
+        padding: "1.85rem",
         display: "grid",
-        gap: "0.85rem",
+        gap: "0.95rem",
+        transition: "transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease",
+        transform: "translateY(0)",
     },
     highlightHeader: {
         display: "flex",
         alignItems: "center",
-        gap: "0.8rem",
+        gap: "0.9rem",
     },
     highlightIcon: {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "0.85rem",
-        background: "rgba(59,130,246,0.18)",
-        color: "var(--color-primary-600)",
+        width: "2.6rem",
+        height: "2.6rem",
+        borderRadius: "0.95rem",
+        background: "linear-gradient(135deg, rgba(56,189,248,0.32), rgba(129,140,248,0.28))",
+        color: "#38bdf8",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "1.25rem",
+        fontSize: "1.2rem",
+    },
+    highlightTitle: {
+        fontSize: "1.18rem",
+        fontWeight: 600,
+        color: "#f8fafc",
+    },
+    highlightBadge: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        fontSize: "0.82rem",
+        fontWeight: 600,
+        color: "#38bdf8",
+    },
+    highlightMoments: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.45rem",
+    },
+    highlightMomentChip: {
+        padding: "0.32rem 0.78rem",
+        borderRadius: "999px",
+        background: "rgba(56,189,248,0.18)",
+        color: "#e0f2fe",
+        fontSize: "0.78rem",
+        fontWeight: 600,
+    },
+    highlightMetric: {
+        fontSize: "0.85rem",
+        fontWeight: 600,
+        color: "#38bdf8",
+    },
+    highlightCardHover: {
+        transform: "translateY(-6px)",
+        boxShadow: "0 48px 120px -70px rgba(56,189,248,0.62)",
+        borderColor: "rgba(56,189,248,0.32)",
+    },
+    highlightEmoji: {
+        fontSize: "1.3rem",
     },
     highlightDescription: {
-        fontSize: "0.92rem",
-        color: "var(--color-gray-600)",
-        lineHeight: 1.65,
+        fontSize: "0.94rem",
+        color: "#9fb2d6",
+        lineHeight: 1.68,
+    },
+    goodiesRow: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.5rem",
+    },
+    goodiesChip: {
+        padding: "0.35rem 0.85rem",
+        borderRadius: "0.85rem",
+        background: "rgba(14,165,233,0.22)",
+        color: "#cffafe",
+        fontSize: "0.78rem",
+        fontWeight: 600,
     },
     list: {
         margin: 0,
         paddingLeft: "1.2rem",
         display: "grid",
-        gap: "0.45rem",
-        color: "var(--color-gray-600)",
+        gap: "0.48rem",
+        color: "#9fb2d6",
         fontSize: "0.9rem",
-        lineHeight: 1.6,
+        lineHeight: 1.62,
     },
 };
 
@@ -502,221 +784,342 @@ const Resources = () => {
         if (!resource) return null;
         if (resource.type === "video" && resource.videoUrl) {
             return (
-                <iframe
-                    title={resource.title}
-                    src={resource.videoUrl}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    style={{ width: "100%", height: "320px", borderRadius: "1rem" }}
-                />
+                <div style={{ display: "grid", gap: "1.25rem" }}>
+                    <div style={{ position: "relative", paddingBottom: "56.25%", borderRadius: "1rem", overflow: "hidden" }}>
+                        <iframe
+                            title={resource.title}
+                            src={resource.videoUrl}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            style={{
+                                position: "absolute",
+                                inset: 0,
+                                width: "100%",
+                                height: "100%",
+                                border: "none",
+                            }}
+                        />
+                    </div>
+                    <p style={{ color: "var(--color-gray-700)", lineHeight: 1.7 }}>{resource.description}</p>
+                </div>
             );
         }
 
-        if (resource.content) {
-            return resource.content.split("\n\n").map((paragraph, index) => (
-                <p key={paragraph.slice(0, 12) + index} style={{ color: "var(--color-gray-700)", lineHeight: 1.7 }}>
-                    {paragraph}
-                </p>
-            ));
-        }
+        const contentParagraphs = Array.isArray(resource.content)
+            ? resource.content
+            : typeof resource.content === "string"
+            ? resource.content
+                  .split("\n")
+                  .map((paragraph) => paragraph.trim())
+                  .filter(Boolean)
+            : [];
 
-        return <p style={{ color: "var(--color-gray-600)" }}>More details coming soon.</p>;
+        return (
+            <div style={{ display: "grid", gap: "1rem" }}>
+                <p style={{ color: "var(--color-gray-700)", lineHeight: 1.7 }}>{resource.description}</p>
+                {contentParagraphs.length > 0 && (
+                    <div style={{ display: "grid", gap: "0.85rem", color: "var(--color-gray-600)", lineHeight: 1.68 }}>
+                        {contentParagraphs.map((paragraph, index) => (
+                            <p key={`${resource.id}-paragraph-${index}`} style={{ margin: 0 }}>
+                                {paragraph}
+                            </p>
+                        ))}
+                    </div>
+                )}
+                {contentParagraphs.length === 0 && resource.type !== "template" && (
+                    <p style={{ margin: 0, color: "var(--color-gray-600)" }}>
+                        Full details are coming soon. For now, explore the quick takeaways below.
+                    </p>
+                )}
+            </div>
+        );
     };
 
     return (
         <div style={styles.page}>
             <div style={styles.container}>
                 <section style={styles.hero}>
-                    <h1 style={styles.heroTitle}>Resource library</h1>
-                    <p style={styles.heroLead}>
-                        Curated playbooks, replays, and toolkits that keep your focus practice evolving. Explore by format, search by topic, and save what keeps momentum high.
-                    </p>
-                    <div style={styles.heroTags}>
-                        {heroTags.map((tag) => (
-                            <span key={tag} style={styles.heroTag}>
-                                {tag}
-                            </span>
-                        ))}
+                    <div style={styles.heroGlow} />
+                    <div style={styles.heroContent}>
+                        <div style={styles.heroHeadline}>
+                            <div style={styles.heroPillRow}>
+                                <span style={styles.heroEyebrow}>FocusFlow vault</span>
+                                <span style={styles.heroPill}>Always fresh</span>
+                            </div>
+                            <h1 style={styles.heroTitle}>Find your next focus boost</h1>
+                            <p style={styles.heroLead}>
+                                Bite-sized playbooks, remixable templates, and on-demand jams. Dip in, grab what’s fun, and get back to creating.
+                            </p>
+                            <div style={styles.heroTags}>
+                                {heroTags.map((tag) => (
+                                    <span key={tag} style={styles.heroTag}>
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div style={styles.heroSpotlights}>
+                            {heroSpotlights.map((spotlight) => (
+                                <div
+                                    key={spotlight.key}
+                                    style={styles.heroSpotlightCard}
+                                    onMouseEnter={(event) =>
+                                        Object.assign(event.currentTarget.style, styles.heroSpotlightCardHover)
+                                    }
+                                    onMouseLeave={(event) =>
+                                        Object.assign(event.currentTarget.style, styles.heroSpotlightCard)
+                                    }
+                                >
+                                    <span style={styles.heroSpotlightIcon}>{spotlight.icon}</span>
+                                    <span style={styles.heroSpotlightTitle}>{spotlight.title}</span>
+                                    <span style={styles.heroSpotlightCaption}>{spotlight.caption}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </section>
 
                 <section style={styles.section}>
+                    <div style={styles.sectionAccent} />
                     <div style={styles.sectionHeader}>
+                        <span style={styles.sectionEyebrow}>Search the stash</span>
                         <h2 style={styles.sectionTitle}>Explore resources</h2>
                         <p style={styles.sectionLead}>
-                            Filter by format or use quick search to surface the guides and workshops that match your current focus goal.
+                            Quick filters + playful tags keep the library feeling light. Swap categories or search by vibe.
                         </p>
                     </div>
-                    <div style={styles.searchPanel}>
-                        <input
-                            type="text"
-                            placeholder="Search guides, videos, templates..."
-                            value={query}
-                            onChange={(event) => setQuery(event.target.value)}
-                            style={styles.searchInput}
-                        />
-                        <div style={styles.filterBar}>
-                            {categories.map((category) => (
-                                <button
-                                    key={category.key}
-                                    type="button"
-                                    style={
-                                        activeCategory === category.key
-                                            ? { ...styles.filterChip, ...styles.filterChipActive }
-                                            : styles.filterChip
-                                    }
-                                    onClick={() => setActiveCategory(category.key)}
-                                >
-                                    {category.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div style={styles.resourceGrid}>
-                        {filteredResources.map((resource) => (
-                            <div
-                                key={resource.id}
-                                style={styles.resourceCard}
-                                onMouseEnter={(event) => Object.assign(event.currentTarget.style, styles.resourceCardHover)}
-                                onMouseLeave={(event) => Object.assign(event.currentTarget.style, styles.resourceCard)}
-                            >
-                                <div style={styles.resourceHeader}>
-                                    <div style={styles.resourceIcon}>{renderResourceIcon(resource)}</div>
-                                    <div>
-                                        <div style={styles.resourceTitle}>{resource.title}</div>
-                                        <div style={styles.resourceMeta}>
-                                            <span>{resource.level}</span>
-                                            {resource.duration && <span>{resource.duration}</span>}
-                                        </div>
-                                    </div>
+                    <div style={styles.statGrid}>
+                        {resourceStats.map((stat) => (
+                            <div key={stat.key} style={styles.statCard}>
+                                <div style={styles.statLabelRow}>
+                                    <span>{stat.icon}</span>
+                                    <span>{stat.label}</span>
                                 </div>
-                                <p style={styles.resourceDescription}>{resource.description}</p>
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
-                                    {(resource.tags || []).map((tag) => (
-                                        <span key={`${resource.id}-${tag}`} style={styles.tagPill}>
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                                <button
-                                    type="button"
-                                    style={styles.cardAction}
-                                    onMouseEnter={(event) => Object.assign(event.currentTarget.style, styles.cardActionHover)}
-                                    onMouseLeave={(event) => Object.assign(event.currentTarget.style, styles.cardAction)}
-                                    onClick={() => handleResourceAction(resource)}
-                                >
-                                    {resource.type === "video" && <PlayCircleIcon style={{ width: "1rem", height: "1rem" }} />}
-                                    {resource.type === "template" && <ArrowDownTrayIcon style={{ width: "1rem", height: "1rem" }} />}
-                                    {resource.type !== "video" && resource.type !== "template" && (
-                                        <BookOpenIcon style={{ width: "1rem", height: "1rem" }} />
-                                    )}
-                                    {resource.type === "template"
-                                        ? "Download"
-                                        : resource.type === "video"
-                                        ? "Watch"
-                                        : "Read"}
-                                </button>
+                                <span style={styles.statValue}>{stat.count}</span>
                             </div>
                         ))}
-                        {filteredResources.length === 0 && (
-                            <div
-                                style={{
-                                    display: "grid",
-                                    gap: "0.5rem",
-                                    justifyItems: "center",
-                                    padding: "3rem 2rem",
-                                    borderRadius: "1.1rem",
-                                    border: "1px dashed var(--color-gray-200)",
-                                    background: "var(--panel-bg)",
-                                }}
-                            >
-                                <span style={{ fontSize: "1.05rem", fontWeight: 600 }}>No matches yet</span>
-                                <span style={{ color: "var(--color-gray-600)", fontSize: "0.95rem" }}>
-                                    Try a different keyword or reset the filters.
-                                </span>
+                    </div>
+                    <div style={styles.sectionCard}>
+                        <div style={styles.searchPanel}>
+                            <input
+                                type="text"
+                                placeholder="Search guides, videos, templates..."
+                                value={query}
+                                onChange={(event) => setQuery(event.target.value)}
+                                style={styles.searchInput}
+                            />
+                            <div style={styles.filterBar}>
+                                {categories.map((category) => (
+                                    <button
+                                        key={category.key}
+                                        type="button"
+                                        style={
+                                            activeCategory === category.key
+                                                ? { ...styles.filterChip, ...styles.filterChipActive }
+                                                : styles.filterChip
+                                        }
+                                        onClick={() => setActiveCategory(category.key)}
+                                    >
+                                        {categoryIcons[category.key] && category.key !== "all" && (
+                                            <span>{categoryIcons[category.key]}</span>
+                                        )}
+                                        {category.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {filteredResources.length > 0 ? (
+                            <div style={styles.resourceGrid}>
+                                {filteredResources.map((resource) => (
+                                    <div
+                                        key={resource.id}
+                                        style={styles.resourceCard}
+                                        onMouseEnter={(event) =>
+                                            Object.assign(event.currentTarget.style, styles.resourceCardHover)
+                                        }
+                                        onMouseLeave={(event) =>
+                                            Object.assign(event.currentTarget.style, styles.resourceCard)
+                                        }
+                                    >
+                                        <div style={styles.resourceHeader}>
+                                            <div style={styles.resourceIcon}>{renderResourceIcon(resource)}</div>
+                                            <div style={{ display: "grid", gap: "0.45rem" }}>
+                                                <div style={styles.resourceTitle}>{resource.title}</div>
+                                                <div style={styles.resourceMeta}>
+                                                    {resourceTypeLabels[resource.type] && (
+                                                        <span style={styles.resourceTypePill}>
+                                                            {resourceTypeLabels[resource.type]}
+                                                        </span>
+                                                    )}
+                                                    {resource.level && <span>{resource.level}</span>}
+                                                    {resource.duration && <span>{resource.duration}</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p style={styles.resourceDescription}>{resource.description}</p>
+                                        {Array.isArray(resource.tags) && resource.tags.length > 0 && (
+                                            <div style={styles.tagRow}>
+                                                {resource.tags.slice(0, 3).map((tag) => (
+                                                    <span key={`${resource.id}-${tag}`} style={styles.tagPillSoft}>
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                                {resource.tags.length > 3 && (
+                                                    <span style={styles.tagPillSoft}>+{resource.tags.length - 3}</span>
+                                                )}
+                                            </div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            style={styles.cardAction}
+                                            onMouseEnter={(event) =>
+                                                Object.assign(event.currentTarget.style, styles.cardActionHover)
+                                            }
+                                            onMouseLeave={(event) =>
+                                                Object.assign(event.currentTarget.style, styles.cardAction)
+                                            }
+                                            onClick={() => handleResourceAction(resource)}
+                                        >
+                                            {resource.type === "template" ? (
+                                                <>
+                                                    <ArrowDownTrayIcon style={{ width: "1rem", height: "1rem" }} />
+                                                    Download kit
+                                                </>
+                                            ) : (
+                                                <>View resource</>
+                                            )}
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div style={styles.emptyState}>
+                                <div style={{ fontSize: "1.8rem" }}>🔍</div>
+                                <div style={styles.emptyStateTitle}>No matches yet</div>
+                                <div style={styles.emptyStateSubtitle}>
+                                    Try another keyword or browse a different category.
+                                </div>
                             </div>
                         )}
                     </div>
                 </section>
 
                 <section style={styles.section}>
+                    <div style={styles.sectionAccent} />
                     <div style={styles.sectionHeader}>
+                        <span style={styles.sectionEyebrow}>Mini adventures</span>
                         <h2 style={styles.sectionTitle}>Learning tracks</h2>
                         <p style={styles.sectionLead}>
-                            Structured sequences that mix focus blocks, reviews, and accountability prompts.
+                            Pick a track, follow the tiny prompts, and stack wins without the overwhelm.
                         </p>
                     </div>
                     <div style={styles.highlightGrid}>
                         {learningTracks.map((track) => (
-                            <div key={track.title} style={styles.highlightCard}>
+                            <div
+                                key={track.title}
+                                style={styles.highlightCard}
+                                onMouseEnter={(event) =>
+                                    Object.assign(event.currentTarget.style, styles.highlightCardHover)
+                                }
+                                onMouseLeave={(event) =>
+                                    Object.assign(event.currentTarget.style, styles.highlightCard)
+                                }
+                            >
                                 <div style={styles.highlightHeader}>
                                     <div style={styles.highlightIcon}>
                                         <BookOpenIcon style={{ width: "1.25rem", height: "1.25rem" }} />
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: "1.18rem", fontWeight: 600 }}>{track.title}</div>
-                                        <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--color-primary-600)" }}>
-                                            {track.duration}
-                                        </span>
+                                        <div style={styles.highlightTitle}>{track.title}</div>
+                                        <span style={styles.highlightBadge}>{track.duration}</span>
                                     </div>
                                 </div>
-                                <p style={styles.highlightDescription}>{track.description}</p>
-                                <ul style={styles.list}>
-                                    {track.outline.map((item) => (
-                                        <li key={`${track.title}-${item}`}>{item}</li>
+                                <p style={styles.highlightDescription}>{track.vibe}</p>
+                                <div style={styles.highlightMoments}>
+                                    {track.moments.map((moment) => (
+                                        <span key={`${track.title}-${moment}`} style={styles.highlightMomentChip}>
+                                            {moment}
+                                        </span>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 <section style={styles.section}>
+                    <div style={styles.sectionAccent} />
                     <div style={styles.sectionHeader}>
+                        <span style={styles.sectionEyebrow}>Bundle + go</span>
                         <h2 style={styles.sectionTitle}>Resource bundles</h2>
                         <p style={styles.sectionLead}>
-                            Downloadable kits that bundle templates, checklists, and prompts ready for immediate use.
+                            Grab a bundle, drop it into your flow, and keep things feeling fresh.
                         </p>
                     </div>
                     <div style={styles.highlightGrid}>
                         {resourceBundles.map((bundle) => (
-                            <div key={bundle.title} style={styles.highlightCard}>
+                            <div
+                                key={bundle.title}
+                                style={styles.highlightCard}
+                                onMouseEnter={(event) =>
+                                    Object.assign(event.currentTarget.style, styles.highlightCardHover)
+                                }
+                                onMouseLeave={(event) =>
+                                    Object.assign(event.currentTarget.style, styles.highlightCard)
+                                }
+                            >
                                 <div style={styles.highlightHeader}>
                                     <div style={styles.highlightIcon}>
                                         <DocumentTextIcon style={{ width: "1.25rem", height: "1.25rem" }} />
                                     </div>
-                                    <div style={{ fontSize: "1.18rem", fontWeight: 600 }}>{bundle.title}</div>
+                                    <div>
+                                        <div style={styles.highlightTitle}>{bundle.title}</div>
+                                        <span style={styles.highlightBadge}>Ready-made kit</span>
+                                    </div>
                                 </div>
-                                <p style={styles.highlightDescription}>{bundle.description}</p>
-                                <ul style={styles.list}>
-                                    {bundle.items.map((item) => (
-                                        <li key={`${bundle.title}-${item}`}>{item}</li>
+                                <p style={styles.highlightDescription}>{bundle.punchline}</p>
+                                <div style={styles.goodiesRow}>
+                                    {bundle.goodies.map((goodie) => (
+                                        <span key={`${bundle.title}-${goodie}`} style={styles.goodiesChip}>
+                                            {goodie}
+                                        </span>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 <section style={styles.section}>
+                    <div style={styles.sectionAccent} />
                     <div style={styles.sectionHeader}>
+                        <span style={styles.sectionEyebrow}>Signals from the crew</span>
                         <h2 style={styles.sectionTitle}>Community signals</h2>
                         <p style={styles.sectionLead}>
-                            Real-time proof of how builders and study crews apply these tools week over week.
+                            Real moments from the community—proof that playful productivity actually sticks.
                         </p>
                     </div>
                     <div style={styles.highlightGrid}>
                         {communitySignals.map((signal) => (
-                            <div key={signal.title} style={styles.highlightCard}>
+                            <div
+                                key={signal.title}
+                                style={styles.highlightCard}
+                                onMouseEnter={(event) =>
+                                    Object.assign(event.currentTarget.style, styles.highlightCardHover)
+                                }
+                                onMouseLeave={(event) =>
+                                    Object.assign(event.currentTarget.style, styles.highlightCard)
+                                }
+                            >
                                 <div style={styles.highlightHeader}>
-                                    <div style={styles.highlightIcon}>{signal.icon}</div>
+                                    <div style={styles.highlightIcon}>
+                                        <span style={styles.highlightEmoji}>{signal.icon}</span>
+                                    </div>
                                     <div>
-                                        <div style={{ fontSize: "1.18rem", fontWeight: 600 }}>{signal.title}</div>
-                                        <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--color-primary-600)" }}>
-                                            {signal.metric}
-                                        </span>
+                                        <div style={styles.highlightTitle}>{signal.title}</div>
+                                        <span style={styles.highlightMetric}>{signal.metric}</span>
                                     </div>
                                 </div>
                                 <p style={styles.highlightDescription}>{signal.description}</p>

@@ -1292,7 +1292,7 @@ const FocusTimer = () => {
                     </div>
                 </section>
 
-                <section style={styles.section}>
+                {/* <section style={styles.section}>
                     <div>
                         <h2 style={styles.sectionHeading}>Recovery keeps momentum sustainable</h2>
                         <p style={styles.sectionLead}>
@@ -1307,7 +1307,7 @@ const FocusTimer = () => {
                             </div>
                         ))}
                     </div>
-                </section>
+                </section> */}
             </div>
         </div>
     );

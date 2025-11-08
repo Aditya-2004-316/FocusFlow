@@ -52,6 +52,9 @@ const Features = () => {
             fontWeight: 800,
             letterSpacing: "-0.03em",
             margin: 0,
+            color: "#ffffff",
+        },
+        heroTitleHighlight: {
             background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -131,15 +134,35 @@ const Features = () => {
         sectionHeading: {
             display: "flex",
             flexDirection: "column",
-            gap: "0.75rem",
+            gap: "0.85rem",
             alignItems: "center",
             marginBottom: "3rem",
             textAlign: "center",
+        },
+        sectionEyebrow: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.35rem 0.95rem",
+            borderRadius: "999px",
+            border: "1px solid rgba(56, 189, 248, 0.3)",
+            background: "rgba(15, 23, 42, 0.65)",
+            color: "#38bdf8",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
         },
         sectionTitle: {
             fontSize: "2.4rem",
             fontWeight: 700,
             color: "#f8fafc",
+        },
+        sectionDivider: {
+            width: "64px",
+            height: "2px",
+            borderRadius: "999px",
+            background: "linear-gradient(90deg, rgba(56, 189, 248, 0.8), rgba(129, 140, 248, 0.8))",
         },
         sectionLead: {
             maxWidth: "40rem",
@@ -149,8 +172,9 @@ const Features = () => {
         },
         featureGrid: {
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
             gap: "1.75rem",
+            alignItems: "stretch",
         },
         featureCard: {
             position: "relative",
@@ -164,19 +188,17 @@ const Features = () => {
             gap: "0.85rem",
             transition: "transform 0.3s ease, box-shadow 0.3s ease",
         },
-        featureIconWrap: {
-            width: "3rem",
-            height: "3rem",
-            borderRadius: "0.9rem",
-            background: "linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.08))",
+        featureHeader: {
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            fontSize: "1.75rem",
-            color: "#38bdf8",
+            gap: "0.9rem",
+        },
+        featureIcon: {
+            fontSize: "2.2rem",
+            lineHeight: 1,
         },
         featureTitle: {
-            fontSize: "1.25rem",
+            fontSize: "1.28rem",
             fontWeight: 600,
             color: "#f1f5f9",
         },
@@ -331,6 +353,24 @@ const Features = () => {
             blurb: "Own your data with granular controls and export whenever you need context elsewhere.",
             tag: "Security",
         },
+        {
+            icon: "🧠",
+            title: "Clarity analytics",
+            blurb: "Energy trends and streak health surface in one pulse so teams know where to adjust to meet their needs.",
+            tag: "Analytics",
+        },
+        {
+            icon: "🛡️",
+            title: "Distraction guard",
+            blurb: "Adaptive shields mute noise and spotlight high-impact work when your focus window begins.",
+            tag: "Protection",
+        },
+        {
+            icon: "📆",
+            title: "Rhythm scheduler",
+            blurb: "Auto-sequence focus, breaks, and recovery slots that align with your crew's shared calendar.",
+            tag: "Scheduling",
+        },
     ];
 
     const flowMoments = [
@@ -368,7 +408,9 @@ const Features = () => {
                 <div style={styles.heroGlow} />
                 <div style={styles.heroInner}>
                     <span style={styles.heroBadge}>FocusFlow feature tour</span>
-                    <h1 style={styles.heroTitle}>Less noise, more signal for every focus ritual</h1>
+                    <h1 style={styles.heroTitle}>
+                        Less noise, <span style={styles.heroTitleHighlight}>more signal</span> for every focus ritual
+                    </h1>
                     <p style={styles.heroSubtitle}>
                         FocusFlow distills deep work, team rituals, and insights into cinematic views your crew actually enjoys opening.
                     </p>
@@ -416,6 +458,7 @@ const Features = () => {
                     <div style={styles.sectionHeading}>
                         <span style={styles.sectionEyebrow}>Feature snapshots</span>
                         <h2 style={styles.sectionTitle}>See what matters in a glance</h2>
+                        <span style={styles.sectionDivider} aria-hidden="true" />
                         <p style={styles.sectionLead}>
                             FocusFlow highlights your most powerful rituals with compact cards so teams can align without wading through paragraphs.
                         </p>
@@ -423,8 +466,12 @@ const Features = () => {
                     <div style={styles.featureGrid}>
                         {featureHighlights.map((feature) => (
                             <div key={feature.title} style={styles.featureCard}>
-                                <div style={styles.featureIcon}>{feature.icon}</div>
-                                <div style={styles.featureTitle}>{feature.title}</div>
+                                <div style={styles.featureHeader}>
+                                    <span style={styles.featureIcon} aria-hidden="true">
+                                        {feature.icon}
+                                    </span>
+                                    <span style={styles.featureTitle}>{feature.title}</span>
+                                </div>
                                 <p style={styles.featureBlurb}>{feature.blurb}</p>
                                 <span style={styles.featureTag}>{feature.tag}</span>
                             </div>
@@ -438,6 +485,7 @@ const Features = () => {
                     <div style={styles.sectionHeading}>
                         <span style={styles.sectionEyebrow}>Workflow arc</span>
                         <h2 style={styles.sectionTitle}>A calmer journey from planning to applause</h2>
+                        <span style={styles.sectionDivider} aria-hidden="true" />
                         <p style={styles.sectionLead}>
                             Follow the four rituals that keep momentum compounding—each one framed with just enough context to make the next step obvious.
                         </p>
@@ -459,6 +507,7 @@ const Features = () => {
                     <div style={styles.sectionHeading}>
                         <span style={styles.sectionEyebrow}>Integrations</span>
                         <h2 style={styles.sectionTitle}>Plays nicely with your ecosystem</h2>
+                        <span style={styles.sectionDivider} aria-hidden="true" />
                         <p style={styles.sectionLead}>
                             Snap FocusFlow into the tools you already live in—no copy-paste gymnastics or relearning muscle memory.
                         </p>

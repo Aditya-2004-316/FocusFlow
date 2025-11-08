@@ -45,6 +45,8 @@ import {
     ArrowTrendingDownIcon,
     ChevronRightIcon,
     ChevronLeftIcon,
+    MusicalNoteIcon,
+    Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 // import Login from "./pages/Login";
 // import Register from "./pages/Register";
@@ -524,6 +526,70 @@ function Dashboard() {
             fontWeight: 600,
             cursor: "pointer",
         },
+        companionSection: {
+            background: "var(--panel-bg)",
+            borderRadius: "1.25rem",
+            border: "1px solid var(--input-border)",
+            boxShadow: "var(--shadow-lg)",
+            padding: "2.25rem",
+            display: "grid",
+            gap: "1.8rem",
+        },
+        companionHeader: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.55rem",
+            maxWidth: "40rem",
+        },
+        companionGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "1.3rem",
+        },
+        companionCard: {
+            borderRadius: "1.1rem",
+            border: "1px solid rgba(148,163,184,0.24)",
+            background: "linear-gradient(130deg, rgba(59,130,246,0.12), rgba(14,165,233,0.1))",
+            boxShadow: "0 26px 64px -48px rgba(15,23,42,0.45)",
+            padding: "1.55rem",
+            display: "grid",
+            gap: "0.95rem",
+        },
+        companionIcon: {
+            width: "2.6rem",
+            height: "2.6rem",
+            borderRadius: "0.85rem",
+            background: "rgba(59,130,246,0.18)",
+            color: "var(--color-primary-700)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        companionTitle: {
+            fontSize: "1.1rem",
+            fontWeight: 600,
+            color: "var(--color-gray-900)",
+        },
+        companionDescription: {
+            fontSize: "0.95rem",
+            lineHeight: 1.6,
+            color: "var(--color-gray-600)",
+        },
+        companionButton: {
+            justifySelf: "flex-start",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            padding: "0.6rem 1.2rem",
+            borderRadius: "0.9rem",
+            border: "1px solid rgba(59,130,246,0.35)",
+            background: "rgba(59,130,246,0.15)",
+            color: "var(--color-primary-700)",
+            fontWeight: 600,
+            cursor: "pointer",
+            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+            boxShadow: "0 18px 42px -30px rgba(56,189,248,0.45)",
+        },
         focusPlanAccent: {
             position: "absolute",
             inset: "auto -16px -16px auto",
@@ -620,6 +686,33 @@ function Dashboard() {
             delta: "New record!",
             trend: "up",
             icon: FireIcon,
+        },
+    ];
+
+    const companionTools = [
+        {
+            title: "Focus music",
+            description: "Launch curated ambient mixes that keep deep work immersive without hijacking attention.",
+            Icon: MusicalNoteIcon,
+            cta: "Play mix",
+        },
+        {
+            title: "Smart nudges",
+            description: "Gentle prompts surface only when a block is ending or a break is overdue.",
+            Icon: BellAlertIcon,
+            cta: "Enable nudges",
+        },
+        {
+            title: "Session analytics",
+            description: "Watch streaks, averages, and focus/break balance update in real time.",
+            Icon: ChartBarIcon,
+            cta: "View dashboard",
+        },
+        {
+            title: "Quick adjustments",
+            description: "Tweak durations or auto-start behaviour mid-cycle without losing momentum.",
+            Icon: Cog6ToothIcon,
+            cta: "Open presets",
         },
     ];
 
@@ -784,6 +877,46 @@ function Dashboard() {
                                 {badge}
                             </span>
                         ))}
+                    </div>
+                </section>
+
+                <section style={dashboardStyles.companionSection}>
+                    <div style={dashboardStyles.companionHeader}>
+                        <h2 style={dashboardStyles.sectionTitle}>Companion tools</h2>
+                        <p style={dashboardStyles.sectionLead}>
+                            Spin up supportive helpers in a tap—from vibe-setting playlists to analytics that keep habits sharp.
+                        </p>
+                    </div>
+                    <div style={dashboardStyles.companionGrid}>
+                        {companionTools.map((tool) => {
+                            const ToolIcon = tool.Icon;
+                            return (
+                                <article key={tool.title} style={dashboardStyles.companionCard}>
+                                    <div style={dashboardStyles.companionIcon}>
+                                        <ToolIcon style={{ width: "1.25rem", height: "1.25rem" }} />
+                                    </div>
+                                    <h3 style={dashboardStyles.companionTitle}>{tool.title}</h3>
+                                    <p style={dashboardStyles.companionDescription}>{tool.description}</p>
+                                    <button
+                                        type="button"
+                                        style={dashboardStyles.companionButton}
+                                        onClick={() => setActiveTab("timers")}
+                                        onMouseEnter={(event) =>
+                                            Object.assign(event.currentTarget.style, {
+                                                transform: "translateY(-3px)",
+                                                boxShadow: "0 26px 56px -32px rgba(59,130,246,0.5)",
+                                            })
+                                        }
+                                        onMouseLeave={(event) =>
+                                            Object.assign(event.currentTarget.style, dashboardStyles.companionButton)
+                                        }
+                                    >
+                                        <ChevronRightIcon style={{ width: "1rem", height: "1rem" }} />
+                                        {tool.cta}
+                                    </button>
+                                </article>
+                            );
+                        })}
                     </div>
                 </section>
 

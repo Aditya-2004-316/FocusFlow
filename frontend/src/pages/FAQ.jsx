@@ -222,11 +222,14 @@ const styles = {
         fontSize: "3.05rem",
         fontWeight: 800,
         letterSpacing: "-0.03em",
+        color: "#ffffff",
+        margin: 0,
+    },
+    heroTitleHighlight: {
         background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
-        margin: 0,
     },
     heroLead: {
         maxWidth: "44rem",
@@ -260,40 +263,47 @@ const styles = {
     },
     quickGrid: {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-        gap: "1.4rem",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        gap: "1.25rem",
         marginTop: "3rem",
+        alignItems: "stretch",
     },
     quickCard: {
-        padding: "1.45rem",
-        borderRadius: "1.1rem",
-        background: "rgba(17, 26, 44, 0.78)",
-        border: "1px solid rgba(129, 140, 248, 0.25)",
+        padding: "1.6rem 1.75rem",
+        borderRadius: "1.2rem",
+        background: "rgba(12, 20, 36, 0.9)",
+        border: "1px solid rgba(56, 189, 248, 0.3)",
         display: "flex",
         flexDirection: "column",
-        gap: "0.6rem",
+        gap: "0.7rem",
         transition: "transform 0.25s ease, border-color 0.25s ease",
         cursor: "pointer",
+        boxShadow: "0 26px 60px -34px rgba(56, 189, 248, 0.55)",
+    },
+    quickHeader: {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.8rem",
     },
     quickIcon: {
-        width: "2.5rem",
-        height: "2.5rem",
-        borderRadius: "0.8rem",
-        background: "rgba(56, 189, 248, 0.16)",
+        width: "2.7rem",
+        height: "2.7rem",
+        borderRadius: "0.85rem",
+        background: "rgba(56, 189, 248, 0.18)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         color: "#38bdf8",
-        fontSize: "1.2rem",
+        fontSize: "1.3rem",
     },
     quickLabel: {
         fontWeight: 600,
-        fontSize: "1.05rem",
+        fontSize: "1.08rem",
         color: "#f8fafc",
     },
     quickSummary: {
         color: "#9fb2d6",
-        fontSize: "0.92rem",
+        fontSize: "0.94rem",
         lineHeight: 1.6,
     },
     main: {
@@ -376,27 +386,27 @@ const styles = {
     supportSection: {
         marginTop: "4.2rem",
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         gap: "1.4rem",
     },
     supportCard: {
         padding: "1.9rem",
-        borderRadius: "1.2rem",
-        background: "linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.22))",
-        border: "1px solid rgba(56, 189, 248, 0.26)",
-        boxShadow: "0 28px 60px -34px rgba(56, 189, 248, 0.55)",
+        borderRadius: "1.25rem",
+        background: "linear-gradient(135deg, rgba(10, 20, 36, 0.92), rgba(17, 30, 54, 0.92))",
+        border: "1px solid rgba(56, 189, 248, 0.24)",
+        boxShadow: "0 26px 60px -36px rgba(56, 189, 248, 0.5)",
         display: "flex",
         flexDirection: "column",
-        gap: "0.9rem",
+        gap: "1rem",
     },
     supportTitle: {
-        fontSize: "1.18rem",
+        fontSize: "1.2rem",
         fontWeight: 700,
-        color: "#eef6ff",
+        color: "#f1f5f9",
     },
     supportCopy: {
-        color: "#cbdefc",
-        fontSize: "0.96rem",
+        color: "#9fb2d6",
+        fontSize: "0.97rem",
         lineHeight: 1.65,
     },
     supportLink: {
@@ -405,9 +415,10 @@ const styles = {
         fontWeight: 600,
         padding: "0.55rem 1.2rem",
         borderRadius: "9999px",
-        background: "rgba(255, 255, 255, 0.92)",
+        background: "linear-gradient(135deg, #38bdf8, #60a5fa)",
         textDecoration: "none",
         fontSize: "0.95rem",
+        boxShadow: "0 16px 32px -24px rgba(56, 189, 248, 0.55)",
     },
     helpBanner: {
         marginTop: "3.6rem",
@@ -457,7 +468,9 @@ const FAQ = () => {
                         <span style={styles.heroBadge}>
                             <FaQuestionCircle /> Support center
                         </span>
-                        <h1 style={styles.heroTitle}>Answers that keep your flow uninterrupted</h1>
+                        <h1 style={styles.heroTitle}>
+                            Answers that <span style={styles.heroTitleHighlight}>keep your flow</span> uninterrupted
+                        </h1>
                         <p style={styles.heroLead}>
                             Search the playbook, explore most-asked rituals, and get unstuck fast. No tickets required—just
                             signals from the FocusFlow collective.
@@ -497,11 +510,13 @@ const FAQ = () => {
                                     }}
                                     onMouseLeave={(event) => {
                                         event.currentTarget.style.transform = "translateY(0px)";
-                                        event.currentTarget.style.borderColor = "rgba(129, 140, 248, 0.25)";
+                                        event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.3)";
                                     }}
                                 >
-                                    <span style={styles.quickIcon}>{quick.icon}</span>
-                                    <span style={styles.quickLabel}>{quick.label}</span>
+                                    <div style={styles.quickHeader}>
+                                        <span style={styles.quickIcon}>{quick.icon}</span>
+                                        <span style={styles.quickLabel}>{quick.label}</span>
+                                    </div>
                                     <p style={styles.quickSummary}>{quick.summary}</p>
                                 </div>
                             ))}

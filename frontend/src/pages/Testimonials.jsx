@@ -1,6 +1,7 @@
 import React from "react";
 import LandingNavbar from "../LandingPage/LandingNavbar";
 import LandingFooter from "../LandingPage/LandingFooter";
+import { FaLayerGroup, FaPalette, FaGraduationCap } from "react-icons/fa";
 import "../styles/CardHover.css";
 
 const marqueeLogos = [
@@ -71,6 +72,7 @@ const successStats = [
 const industryPanels = [
     {
         title: "High-performing product teams",
+        icon: FaLayerGroup,
         points: [
             "Protect deep work time with calendar sync",
             "Run async stand-ups with ritual templates",
@@ -79,6 +81,7 @@ const industryPanels = [
     },
     {
         title: "Creatives & makers",
+        icon: FaPalette,
         points: [
             "Blend focus blocks with wellness resets",
             "Log inspiration snippets right from breaks",
@@ -87,6 +90,7 @@ const industryPanels = [
     },
     {
         title: "Students & educators",
+        icon: FaGraduationCap,
         points: [
             "Plan revision cycles with adaptive timers",
             "Track active recall vs. passive study time",
@@ -103,7 +107,7 @@ const Testimonials = () => {
             color: "#ffffff",
         },
         hero: {
-            padding: "6.5rem 2rem 4.5rem",
+            padding: "5.5rem 2rem 4rem",
             textAlign: "center",
             position: "relative",
             overflow: "hidden",
@@ -126,7 +130,7 @@ const Testimonials = () => {
             fontSize: "3.25rem",
             fontWeight: 800,
             letterSpacing: "-0.035em",
-            marginBottom: "1.25rem",
+            marginBottom: "1rem",
         },
         heroHighlight: {
             background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
@@ -136,11 +140,11 @@ const Testimonials = () => {
         },
         heroSubtitle: {
             fontSize: "1.22rem",
-            lineHeight: 1.78,
+            lineHeight: 1.72,
             color: "#cbd5f5",
         },
         marquee: {
-            marginTop: "3.25rem",
+            marginTop: "2.5rem",
             display: "flex",
             justifyContent: "center",
             gap: "1.75rem",
@@ -151,7 +155,7 @@ const Testimonials = () => {
             textTransform: "uppercase",
         },
         heroStats: {
-            marginTop: "3.5rem",
+            marginTop: "2.75rem",
             display: "flex",
             flexWrap: "wrap",
             gap: "1.35rem",
@@ -177,7 +181,7 @@ const Testimonials = () => {
             fontSize: "0.95rem",
         },
         section: {
-            padding: "5rem 2rem",
+            padding: "4rem 2rem",
         },
         container: {
             maxWidth: "1200px",
@@ -186,7 +190,7 @@ const Testimonials = () => {
         statGrid: {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: "1.75rem",
+            gap: "1.5rem",
         },
         statCard: {
             background: "rgba(30, 41, 59, 0.55)",
@@ -214,10 +218,10 @@ const Testimonials = () => {
             lineHeight: 1.6,
         },
         quoteGrid: {
-            marginTop: "3.25rem",
+            marginTop: "2.5rem",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "1.85rem",
+            gap: "1.7rem",
         },
         quoteCard: {
             background: "rgba(17, 24, 39, 0.78)",
@@ -259,46 +263,96 @@ const Testimonials = () => {
             fontSize: "0.92rem",
         },
         panelSection: {
-            background: "rgba(10, 15, 26, 0.85)",
-            borderRadius: "1.35rem",
-            border: "1px solid rgba(148, 163, 184, 0.18)",
-            padding: "3.2rem",
+            position: "relative",
+            background: "linear-gradient(140deg, rgba(8, 17, 35, 0.92), rgba(13, 25, 46, 0.85))",
+            borderRadius: "1.5rem",
+            border: "1px solid rgba(56, 189, 248, 0.2)",
+            padding: "2.9rem",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "2.25rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "2rem",
+            boxShadow: "0 40px 90px -45px rgba(15, 118, 110, 0.35)",
+            overflow: "hidden",
+        },
+        panelSectionGlow: {
+            position: "absolute",
+            inset: "-120px auto auto -160px",
+            width: "420px",
+            height: "420px",
+            background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.18), transparent 65%)",
+            filter: "blur(12px)",
+            opacity: 0.9,
         },
         panelCard: {
+            position: "relative",
             display: "flex",
             flexDirection: "column",
+            gap: "1.05rem",
+            padding: "1.9rem 2rem",
+            borderRadius: "1.25rem",
+            background: "rgba(7, 14, 28, 0.82)",
+            border: "1px solid rgba(148, 163, 184, 0.18)",
+            boxShadow: "0 26px 60px -40px rgba(56, 189, 248, 0.55)",
+            transition: "transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease",
+        },
+        panelHeader: {
+            display: "flex",
+            alignItems: "center",
             gap: "1rem",
         },
+        panelBadge: {
+            width: "3rem",
+            height: "3rem",
+            borderRadius: "0.95rem",
+            background: "linear-gradient(135deg, rgba(56, 189, 248, 0.26), rgba(129, 140, 248, 0.24))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#38bdf8",
+            fontSize: "1.4rem",
+        },
         panelTitle: {
-            fontSize: "1.13rem",
-            fontWeight: 600,
-            color: "#e2e8f0",
+            fontSize: "1.22rem",
+            fontWeight: 700,
+            color: "#f8fafc",
         },
         panelList: {
             margin: 0,
-            paddingLeft: "1.25rem",
-            color: "#94a3b8",
+            padding: 0,
+            listStyle: "none",
+            display: "grid",
+            gap: "0.65rem",
+        },
+        panelListItem: {
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "0.7rem",
+            color: "#9fb2d6",
             fontSize: "0.95rem",
-            lineHeight: 1.65,
+            lineHeight: 1.6,
+        },
+        panelBullet: {
+            width: "0.55rem",
+            height: "0.55rem",
+            borderRadius: "999px",
+            background: "linear-gradient(135deg, #38bdf8, #60a5fa)",
+            marginTop: "0.45rem",
+            flexShrink: 0,
         },
         ctaBlock: {
             textAlign: "center",
-            marginTop: "4.25rem",
         },
         ctaTitle: {
-            fontSize: "2.2rem",
+            fontSize: "2.15rem",
             fontWeight: 700,
             color: "#ffffff",
-            marginBottom: "1rem",
+            marginBottom: "0.85rem",
         },
         ctaDescription: {
             color: "#94a3b8",
-            maxWidth: "560px",
-            margin: "0 auto 2rem",
-            lineHeight: 1.72,
+            maxWidth: "520px",
+            margin: "0 auto 1.6rem",
+            lineHeight: 1.65,
         },
         ctaButton: {
             display: "inline-flex",
@@ -365,12 +419,34 @@ const Testimonials = () => {
             <section style={styles.section}>
                 <div style={styles.container}>
                     <div style={styles.panelSection}>
+                        <span style={styles.panelSectionGlow} aria-hidden="true" />
                         {industryPanels.map((panel) => (
-                            <div key={panel.title} style={styles.panelCard}>
-                                <div style={styles.panelTitle}>{panel.title}</div>
+                            <div
+                                key={panel.title}
+                                style={styles.panelCard}
+                                onMouseEnter={(event) => {
+                                    event.currentTarget.style.transform = "translateY(-6px)";
+                                    event.currentTarget.style.boxShadow = "0 32px 70px -36px rgba(56, 189, 248, 0.65)";
+                                    event.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.35)";
+                                }}
+                                onMouseLeave={(event) => {
+                                    event.currentTarget.style.transform = "translateY(0px)";
+                                    event.currentTarget.style.boxShadow = "0 26px 60px -40px rgba(56, 189, 248, 0.55)";
+                                    event.currentTarget.style.borderColor = "rgba(148, 163, 184, 0.18)";
+                                }}
+                            >
+                                <div style={styles.panelHeader}>
+                                    <span style={styles.panelBadge}>
+                                        <panel.icon />
+                                    </span>
+                                    <div style={styles.panelTitle}>{panel.title}</div>
+                                </div>
                                 <ul style={styles.panelList}>
                                     {panel.points.map((point) => (
-                                        <li key={point}>{point}</li>
+                                        <li key={point} style={styles.panelListItem}>
+                                            <span style={styles.panelBullet} />
+                                            <span>{point}</span>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>

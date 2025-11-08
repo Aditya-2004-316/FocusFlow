@@ -31,11 +31,28 @@ connectDB();
 app.use(helmet());
 
 // CORS configuration
+const parseOrigins = (value, fallback = []) => {
+    if (!value) {
+        return fallback;
+    }
+    return value
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean);
+};
+
+const allowedOrigins =
+    process.env.NODE_ENV === "production"
+        ? parseOrigins(process.env.CORS_ORIGIN_PROD)
+        : parseOrigins(process.env.CORS_ORIGIN, ["http://localhost:3000", "http://localhost:5173"]);
+
 const corsOptions = {
-    origin:
-        process.env.NODE_ENV === "production"
-            ? process.env.CORS_ORIGIN_PROD
-            : process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
     optionsSuccessStatus: 200,
 };

@@ -32,6 +32,11 @@ const LandingPage = () => {
         setIsRegisterOpen(true);
         setIsLoginOpen(false);
     };
+
+    const handleLoginClick = () => {
+        setIsLoginOpen(true);
+        setIsRegisterOpen(false);
+    };
     const handleCloseModal = () => {
         setIsLoginOpen(false);
         setIsRegisterOpen(false);
@@ -40,71 +45,202 @@ const LandingPage = () => {
     // Define all styles inline with dark theme from LandingPageOption1
     const styles = {
         landingPage: {
-            minHeight: '100vh',
-            background: 'linear-gradient(to bottom, #0f172a, #1e293b, #0f172a)',
-            color: '#ffffff',
+            minHeight: "100vh",
+            background: "linear-gradient(180deg, #060b18 0%, #101b33 55%, #060b18 100%)",
+            color: "#ffffff",
         },
         heroSection: {
-            padding: '6rem 2rem 4rem',
-            textAlign: 'center',
-            maxWidth: '1200px',
-            margin: '0 auto',
+            position: "relative",
+            padding: "6rem 2rem 4.5rem",
+            textAlign: "center",
+            overflow: "hidden",
+        },
+        heroGlow: {
+            position: "absolute",
+            inset: "-220px auto auto 50%",
+            transform: "translateX(-50%)",
+            width: "660px",
+            height: "660px",
+            background: "radial-gradient(circle at center, rgba(56, 189, 248, 0.25), transparent 65%)",
+            filter: "blur(12px)",
+        },
+        heroInner: {
+            maxWidth: "880px",
+            margin: "0 auto",
+            position: "relative",
+            zIndex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.7rem",
+            alignItems: "center",
+        },
+        heroBadge: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.5rem 1.1rem",
+            borderRadius: "9999px",
+            border: "1px solid rgba(56, 189, 248, 0.35)",
+            background: "rgba(15, 23, 42, 0.65)",
+            color: "#38bdf8",
+            fontSize: "0.82rem",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            fontWeight: 600,
         },
         heroTitle: {
-            fontSize: '3.5rem',
-            fontWeight: '800',
-            color: '#ffffff',
-            marginBottom: '1.5rem',
-            lineHeight: '1.2',
+            fontSize: "3.2rem",
+            lineHeight: 1.1,
+            fontWeight: 800,
+            letterSpacing: "-0.03em",
+            margin: 0,
+            color: "#ffffff",
+        },
+        heroTitleHighlight: {
+            background: "linear-gradient(120deg, #38bdf8, #60a5fa, #94a3ff)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
         },
         heroSubtitle: {
-            fontSize: '1.25rem',
-            color: '#94a3b8',
-            marginBottom: '3rem',
-            maxWidth: '600px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            lineHeight: '1.6',
+            margin: "0 auto",
+            maxWidth: "46rem",
+            color: "#cbd5f5",
+            fontSize: "1.18rem",
+            lineHeight: 1.78,
         },
         heroButtons: {
-            display: 'flex',
-            gap: '1rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            display: "flex",
+            gap: "0.95rem",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            marginTop: "0.5rem",
         },
         heroBtnPrimary: {
-            background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
-            color: '#ffffff',
-            padding: '1rem 2rem',
-            borderRadius: '9999px',
-            fontWeight: '600',
-            fontSize: '1.125rem',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            textDecoration: 'none',
-            display: 'inline-block',
-            boxShadow: '0 10px 15px -3px rgba(14, 165, 233, 0.1), 0 4px 6px -2px rgba(14, 165, 233, 0.05)',
+            background: "linear-gradient(110deg, #38bdf8, #818cf8)",
+            color: "#0f172a",
+            padding: "0.95rem 2.5rem",
+            borderRadius: "9999px",
+            fontWeight: 700,
+            fontSize: "1.05rem",
+            border: "none",
+            cursor: "pointer",
+            transition: "transform 0.25s ease, box-shadow 0.25s ease",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.45rem",
+            boxShadow: "0 28px 60px -34px rgba(56, 189, 248, 0.75)",
         },
         heroBtnPrimaryHover: {
-            background: 'linear-gradient(to right, #0284c7, #0284c7)',
-            transform: 'translateY(-2px)',
-            boxShadow: '0 20px 25px -5px rgba(14, 165, 233, 0.3), 0 10px 10px -5px rgba(14, 165, 233, 0.1)',
+            transform: "translateY(-3px)",
+            boxShadow: "0 36px 70px -36px rgba(56, 189, 248, 0.82)",
+        },
+        heroBtnSecondary: {
+            background: "rgba(15, 23, 42, 0.82)",
+            color: "#38bdf8",
+            border: "1px solid rgba(56, 189, 248, 0.35)",
+            padding: "0.95rem 2.3rem",
+            borderRadius: "9999px",
+            fontWeight: 600,
+            fontSize: "1.02rem",
+            cursor: "pointer",
+            transition: "transform 0.25s ease, border-color 0.25s ease",
+        },
+        heroBtnSecondaryHover: {
+            transform: "translateY(-3px)",
+            borderColor: "rgba(56, 189, 248, 0.55)",
+        },
+        heroMetrics: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "1.25rem",
+        },
+        heroMetric: {
+            minWidth: "190px",
+            padding: "1.2rem 1.4rem",
+            borderRadius: "1.1rem",
+            background: "rgba(24, 36, 58, 0.65)",
+            border: "1px solid rgba(148, 163, 184, 0.22)",
+            boxShadow: "0 22px 50px -32px rgba(56, 189, 248, 0.6)",
+            textAlign: "left",
+        },
+        heroMetricValue: {
+            fontSize: "1.8rem",
+            fontWeight: 700,
+            color: "#38bdf8",
+            marginBottom: "0.2rem",
+        },
+        heroMetricLabel: {
+            color: "#8ea0c2",
+            fontSize: "0.95rem",
+        },
+        section: {
+            padding: "5rem 2rem",
+        },
+        container: {
+            maxWidth: "1180px",
+            margin: "0 auto",
+            position: "relative",
+            zIndex: 1,
+        },
+        sectionHeading: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.85rem",
+            alignItems: "center",
+            marginBottom: "3rem",
+            textAlign: "center",
+        },
+        sectionEyebrow: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            padding: "0.35rem 0.95rem",
+            borderRadius: "999px",
+            border: "1px solid rgba(56, 189, 248, 0.3)",
+            background: "rgba(15, 23, 42, 0.65)",
+            color: "#38bdf8",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+        },
+        sectionTitle: {
+            fontSize: "2.45rem",
+            fontWeight: 700,
+            color: "#f8fafc",
+        },
+        sectionDivider: {
+            width: "64px",
+            height: "2px",
+            borderRadius: "999px",
+            background: "linear-gradient(90deg, rgba(56, 189, 248, 0.8), rgba(129, 140, 248, 0.8))",
+        },
+        sectionLead: {
+            maxWidth: "40rem",
+            color: "#94a3b8",
+            fontSize: "1.08rem",
+            lineHeight: 1.7,
+            textAlign: "center",
+            margin: "0 auto 3rem",
+        },
+        sectionLeadWide: {
+            textAlign: 'center',
+            maxWidth: '40rem',
+            margin: '0 auto 3rem',
+            color: '#94a3b8',
+            fontSize: '1.1rem',
+            lineHeight: '1.7',
         },
         featuresSection: {
-            padding: '5rem 2rem',
-            background: 'rgba(15, 23, 42, 0.5)',
+            padding: "5rem 2rem",
+            background: "rgba(15, 23, 42, 0.5)",
         },
         featuresContainer: {
-            maxWidth: '1200px',
-            margin: '0 auto',
-        },
-        featuresTitle: {
-            fontSize: '2.5rem',
-            fontWeight: '700',
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: '3rem',
+            maxWidth: "1180px",
+            margin: "0 auto",
         },
         featuresGrid: {
             display: 'grid',
@@ -143,13 +279,6 @@ const LandingPage = () => {
             maxWidth: '1200px',
             margin: '0 auto',
         },
-        testimonialsTitle: {
-            fontSize: '2.5rem',
-            fontWeight: '700',
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: '3rem',
-        },
         testimonialsGrid: {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -186,7 +315,7 @@ const LandingPage = () => {
         },
         ctaSection: {
             padding: '5rem 2rem',
-            background: 'linear-gradient(to right, #0ea5e9, #0ea5e9)',
+            background: 'linear-gradient(130deg, #12335a 0%, #0f2743 55%, #0a1c32 100%)',
             textAlign: 'center',
         },
         ctaContainer: {
@@ -378,14 +507,6 @@ const LandingPage = () => {
             color: '#ffffff',
             textAlign: 'center',
         },
-        sectionLead: {
-            textAlign: 'center',
-            maxWidth: '40rem',
-            margin: '0 auto 3rem',
-            color: '#94a3b8',
-            fontSize: '1.1rem',
-            lineHeight: '1.7',
-        },
         roadmapSection: {
             padding: '5rem 2rem',
             background: 'rgba(15, 23, 42, 0.55)',
@@ -441,69 +562,250 @@ const LandingPage = () => {
             marginTop: '0.5rem',
         },
         integrationSection: {
-            padding: '5rem 2rem',
-            background: 'rgba(10, 15, 26, 0.85)',
+            position: 'relative',
+            padding: '5.2rem 2rem 5.6rem',
+            background: 'linear-gradient(180deg, rgba(5, 11, 23, 0.94) 0%, rgba(9, 20, 36, 0.9) 100%)',
+            overflow: 'hidden',
         },
         integrationContainer: {
-            maxWidth: '1100px',
+            maxWidth: '1180px',
             margin: '0 auto',
+            position: 'relative',
+            zIndex: 1,
+        },
+        integrationBackdropLeft: {
+            position: 'absolute',
+            top: '-180px',
+            left: '-160px',
+            width: '440px',
+            height: '440px',
+            background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.26), transparent 68%)',
+            filter: 'blur(20px)',
+            opacity: 0.8,
+            pointerEvents: 'none',
+        },
+        integrationBackdropRight: {
+            position: 'absolute',
+            bottom: '-220px',
+            right: '-140px',
+            width: '420px',
+            height: '420px',
+            background: 'radial-gradient(circle at center, rgba(129, 140, 248, 0.24), transparent 70%)',
+            filter: 'blur(24px)',
+            opacity: 0.75,
+            pointerEvents: 'none',
         },
         integrationGrid: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1.5rem',
-            marginTop: '3rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '1.8rem',
+            marginTop: '3.2rem',
         },
         integrationCard: {
-            background: 'rgba(30, 41, 59, 0.45)',
-            borderRadius: '0.85rem',
-            border: '1px solid #1f2937',
-            padding: '1.75rem 1.5rem',
+            position: 'relative',
+            padding: '2.2rem 2rem',
+            borderRadius: '1.2rem',
+            background: 'rgba(15, 23, 42, 0.82)',
+            border: '1px solid rgba(56, 189, 248, 0.2)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem',
-            alignItems: 'flex-start',
-            boxShadow: '0 15px 35px -18px rgba(0,0,0,0.4)',
+            gap: '1.05rem',
+            boxShadow: '0 34px 85px -46px rgba(14, 165, 233, 0.58)',
+            overflow: 'hidden',
+            transition: 'transform 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease',
+            transform: 'translateY(0)',
+            borderColor: 'rgba(56, 189, 248, 0.2)',
+        },
+        integrationCardGlow: {
+            position: 'absolute',
+            inset: '-35% 15% auto -30%',
+            width: '260px',
+            height: '260px',
+            background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.28), transparent 70%)',
+            filter: 'blur(18px)',
+            opacity: 0.75,
+        },
+        integrationCardHover: {
+            transform: 'translateY(-9px)',
+            boxShadow: '0 52px 120px -52px rgba(56, 189, 248, 0.72)',
+            borderColor: 'rgba(56, 189, 248, 0.36)',
+        },
+        integrationCardTop: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem',
         },
         integrationIcon: {
-            width: '2.5rem',
-            height: '2.5rem',
-            borderRadius: '0.75rem',
-            background: 'rgba(56, 189, 248, 0.15)',
+            width: '3rem',
+            height: '3rem',
+            borderRadius: '1rem',
+            background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.32), rgba(129, 140, 248, 0.3))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.5rem',
-            color: '#38bdf8',
+            fontSize: '1.7rem',
+            color: '#0ea5e9',
+        },
+        integrationStatus: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.35rem 0.85rem',
+            borderRadius: '9999px',
+            background: 'rgba(56, 189, 248, 0.16)',
+            color: '#bae6fd',
+            fontSize: '0.78rem',
+            fontWeight: 600,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
         },
         integrationTitle: {
-            fontSize: '1.15rem',
+            fontSize: '1.25rem',
             fontWeight: '600',
-            color: '#e2e8f0',
+            color: '#f8fafc',
         },
         integrationDescription: {
-            color: '#94a3b8',
-            lineHeight: '1.6',
-            fontSize: '0.95rem',
+            color: '#9fb2d6',
+            lineHeight: '1.65',
+            fontSize: '0.97rem',
+        },
+        statsGrid: {
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "1.5rem",
+        },
+        statCard: {
+            background: "rgba(30, 41, 59, 0.55)",
+            border: "1px solid rgba(148, 163, 184, 0.22)",
+            borderRadius: "1.1rem",
+            padding: "1.8rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.45rem",
+            boxShadow: "0 24px 55px -32px rgba(14, 165, 233, 0.45)",
+        },
+        statValue: {
+            fontSize: "2.4rem",
+            fontWeight: 700,
+            color: "#38bdf8",
+        },
+        statLabel: {
+            color: "#94a3b8",
+            fontSize: "0.98rem",
+        },
+        useCaseSection: {
+            position: 'relative',
+            padding: '5rem 2rem',
+            background: 'rgba(6, 12, 24, 0.9)',
+            overflow: 'hidden',
+        },
+        useCaseContainer: {
+            maxWidth: '1200px',
+            margin: '0 auto',
+            position: 'relative',
+            zIndex: 1,
+        },
+        useCaseBackdropAura: {
+            position: 'absolute',
+            inset: '-220px auto auto -160px',
+            width: '480px',
+            height: '480px',
+            background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.22), transparent 70%)',
+            filter: 'blur(16px)',
+            opacity: 0.85,
+            pointerEvents: 'none',
+        },
+        useCaseBackdropHalo: {
+            position: 'absolute',
+            inset: 'auto -220px -260px auto',
+            width: '420px',
+            height: '420px',
+            background: 'radial-gradient(circle at center, rgba(129, 140, 248, 0.2), transparent 72%)',
+            filter: 'blur(22px)',
+            opacity: 0.75,
+            pointerEvents: 'none',
         },
         useCaseGrid: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '1.9rem',
         },
         useCaseCard: {
-            background: 'rgba(30, 41, 59, 0.5)',
-            backdropFilter: 'blur(8px)',
-            padding: '2rem',
-            borderRadius: '1rem',
-            border: '1px solid #334155',
-            textAlign: 'center',
+            position: 'relative',
+            background: 'rgba(15, 23, 42, 0.82)',
+            backdropFilter: 'blur(12px)',
+            padding: '2.4rem 2.1rem',
+            borderRadius: '1.35rem',
+            border: '1px solid rgba(56, 189, 248, 0.22)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.1rem',
+            boxShadow: '0 40px 90px -42px rgba(14, 165, 233, 0.65)',
+            overflow: 'hidden',
             transition: 'transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease',
+            transform: 'translateY(0)',
+            borderColor: 'rgba(56, 189, 248, 0.22)',
+        },
+        useCaseCardGlow: {
+            position: 'absolute',
+            inset: '-40% 10% auto -30%',
+            width: '320px',
+            height: '320px',
+            background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.25), transparent 70%)',
+            filter: 'blur(18px)',
+            opacity: 0.75,
         },
         useCaseCardHover: {
-            transform: 'translateY(-6px)',
-            boxShadow: '0 30px 50px -25px rgba(14, 165, 233, 0.4)',
-            borderColor: 'rgba(56, 189, 248, 0.45)',
+            transform: 'translateY(-10px)',
+            boxShadow: '0 55px 120px -48px rgba(56, 189, 248, 0.7)',
+            borderColor: 'rgba(56, 189, 248, 0.38)',
+        },
+        useCaseHeader: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+        },
+        useCaseIconWrap: {
+            width: '3.25rem',
+            height: '3.25rem',
+            borderRadius: '1rem',
+            background: 'linear-gradient(140deg, rgba(56, 189, 248, 0.32), rgba(129, 140, 248, 0.28))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.9rem',
+            color: '#38bdf8',
+        },
+        useCaseTitle: {
+            fontSize: '1.45rem',
+            fontWeight: 600,
+            color: '#f1f5f9',
+        },
+        useCaseDescription: {
+            color: '#9fb2d6',
+            lineHeight: 1.75,
+            fontSize: '0.98rem',
+        },
+        useCaseTagRow: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.45rem',
+        },
+        useCaseTag: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.45rem 0.9rem',
+            borderRadius: '9999px',
+            background: 'rgba(56, 189, 248, 0.18)',
+            color: '#38bdf8',
+            fontSize: '0.8rem',
+            fontWeight: 600,
+            letterSpacing: '0.04em',
+        },
+        useCaseSpark: {
+            fontSize: '0.85rem',
         },
         comparisonWrapper: {
             background: 'rgba(15, 23, 42, 0.75)',
@@ -618,6 +920,19 @@ const LandingPage = () => {
         },
     };
 
+    const heroMetrics = [
+        { value: "10K+", label: "Creators in focus" },
+        { value: "500K+", label: "Ritual sessions logged" },
+        { value: "95%", label: "Satisfaction score" },
+    ];
+
+    const socialProofStats = [
+        { value: "10,000+", label: "Active users" },
+        { value: "500,000+", label: "Focus sessions completed" },
+        { value: "95%", label: "User satisfaction rate" },
+        { value: "50+", label: "Countries worldwide" },
+    ];
+
     const roadmapHighlights = [
         {
             phase: 'Q4 · 2025',
@@ -649,24 +964,32 @@ const LandingPage = () => {
         {
             icon: '🔄',
             name: 'Calendar sync',
+            status: 'Live now',
+            highlights: 'Google & Outlook · Time audits',
             blurb:
                 'Auto-block focus sessions on Google or Outlook, and reflect completed timers back to your calendar for time auditing.',
         },
         {
             icon: '💬',
             name: 'Slack & Teams',
+            status: 'Live now',
+            highlights: 'Focus mode pings · Notification snooze',
             blurb:
                 'Signal when you enter focus mode, snooze notifications, and share quick wins without leaving your collaboration apps.',
         },
         {
             icon: '📝',
             name: 'Notion & Docs',
+            status: 'In beta',
+            highlights: 'Embed timers · Log reflections',
             blurb:
-                'Embed live focus timers, log reflections as pages, and push session notes directly into your knowledge base.',
+                'Embed live focus timers, log reflections as pages, and push session notes directly into your knowledge base and access them later.',
         },
         {
             icon: '⚙️',
             name: 'Automation hooks',
+            status: 'Coming soon',
+            highlights: 'Zapier recipes · Webhook triggers',
             blurb:
                 'Use Zapier and webhooks to trigger rituals—spin up playlists, toggle smart lights, or log tasks in your favorite tool.',
         },
@@ -719,107 +1042,91 @@ const LandingPage = () => {
             `}</style>
             <div style={styles.landingPage}>
                 <LandingNavbar />
-            {/* Hero Section */}
-            <section style={styles.heroSection}>
-                <h1 style={styles.heroTitle}>
-                    Unlock Your Productivity with{" "}
-                    <span style={{
-                        background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text'
-                    }}>
-                        FocusFlow
-                    </span>
-                </h1>
-                <p style={styles.heroSubtitle}>
-                    FocusFlow is your all-in-one platform for task management
-                    and time tracking. Achieve more, stress less—always free,
-                    with no hidden fees.
-                </p>
-                <div style={styles.heroButtons}>
-                    <button
-                        style={styles.heroBtnPrimary}
-                        onClick={handleRegisterClick}
-                        onMouseEnter={(e) => {
-                            Object.assign(e.currentTarget.style, styles.heroBtnPrimaryHover);
-                        }}
-                        onMouseLeave={(e) => {
-                            Object.assign(e.currentTarget.style, styles.heroBtnPrimary);
-                        }}
-                    >
-                        Get Started
-                    </button>
-                </div>
-            </section>
+                {/* Hero Section */}
+                <section style={styles.heroSection}>
+                    <div style={styles.heroGlow} />
+                    <div style={styles.heroInner}>
+                        <span style={styles.heroBadge}>Focus rituals reimagined</span>
+                        <h1 style={styles.heroTitle}>
+                            Unlock your productivity with <span style={styles.heroTitleHighlight}>FocusFlow</span>
+                        </h1>
+                        <p style={styles.heroSubtitle}>
+                            Run distraction-proof sessions, sync rituals with your crew, and ship momentum without a single paywall. FocusFlow keeps your rhythm steady.
+                        </p>
+                        <div style={styles.heroButtons}>
+                            <button
+                                style={styles.heroBtnPrimary}
+                                onClick={handleRegisterClick}
+                                onMouseEnter={(e) => {
+                                    Object.assign(e.currentTarget.style, { ...styles.heroBtnPrimary, ...styles.heroBtnPrimaryHover });
+                                }}
+                                onMouseLeave={(e) => {
+                                    Object.assign(e.currentTarget.style, styles.heroBtnPrimary);
+                                }}
+                            >
+                                Launch free workspace
+                            </button>
+                            <button
+                                style={styles.heroBtnSecondary}
+                                onClick={handleLoginClick}
+                                onMouseEnter={(e) => {
+                                    Object.assign(e.currentTarget.style, { ...styles.heroBtnSecondary, ...styles.heroBtnSecondaryHover });
+                                }}
+                                onMouseLeave={(e) => {
+                                    Object.assign(e.currentTarget.style, styles.heroBtnSecondary);
+                                }}
+                            >
+                                Preview guided demo
+                            </button>
+                        </div>
+                        <div style={styles.heroMetrics}>
+                            {heroMetrics.map((metric) => (
+                                <div key={metric.label} style={styles.heroMetric}>
+                                    <div style={styles.heroMetricValue}>{metric.value}</div>
+                                    <div style={styles.heroMetricLabel}>{metric.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
             {/* Statistics/Social Proof Section */}
-            <section style={{
-                padding: '4rem 2rem',
-                background: 'rgba(15, 23, 42, 0.5)',
-                textAlign: 'center',
-            }}>
-                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                    <h2 style={{
-                        fontSize: '2rem',
-                        fontWeight: '700',
-                        color: '#ffffff',
-                        marginBottom: '3rem',
-                    }}>
-                        Trusted by Productivity Enthusiasts
-                    </h2>
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                        gap: '2rem',
-                    }}>
-                        {[
-                            { number: '10,000+', label: 'Active Users' },
-                            { number: '500,000+', label: 'Focus Sessions Completed' },
-                            { number: '95%', label: 'User Satisfaction Rate' },
-                            { number: '50+', label: 'Countries Worldwide' },
-                        ].map((stat, index) => (
-                            <div key={index} style={{
-                                background: 'rgba(30, 41, 59, 0.5)',
-                                backdropFilter: 'blur(8px)',
-                                padding: '2rem',
-                                borderRadius: '1rem',
-                                border: '1px solid #334155',
-                            }}>
-                                <div style={{
-                                    fontSize: '2.5rem',
-                                    fontWeight: '800',
-                                    color: '#38bdf8',
-                                    marginBottom: '0.5rem',
-                                }}>
-                                    {stat.number}
+                <section style={{
+                    padding: "4.5rem 2rem",
+                    background: "rgba(15, 23, 42, 0.58)",
+                    textAlign: "center",
+                }}>
+                    <div style={styles.container}>
+                        <div style={styles.sectionHeading}>
+                            <span style={styles.sectionEyebrow}>Momentum snapshot</span>
+                            <h2 style={styles.sectionTitle}>Teams already protecting their focus</h2>
+                            <span style={styles.sectionDivider} aria-hidden="true" />
+                            <p style={styles.sectionLead}>
+                                Join a community that logs every ritual with clarity—no hidden fees, no limits, just steady progress.
+                            </p>
+                        </div>
+                        <div style={styles.statsGrid}>
+                            {socialProofStats.map((stat) => (
+                                <div key={stat.label} style={styles.statCard}>
+                                    <span style={styles.statValue}>{stat.value}</span>
+                                    <span style={styles.statLabel}>{stat.label}</span>
                                 </div>
-                                <div style={{
-                                    fontSize: '1rem',
-                                    color: '#94a3b8',
-                                }}>
-                                    {stat.label}
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
             {/* Features Section */}
             <section style={styles.featuresSection}>
                 <div style={styles.featuresContainer}>
-                    <h2 style={styles.featuresTitle}>
-                        Why Choose{" "}
-                        <span style={{
-                            background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text'
-                        }}>
-                            FocusFlow?
-                        </span>
-                    </h2>
+                    <div style={styles.sectionHeading}>
+                        <span style={styles.sectionEyebrow}>Why FocusFlow</span>
+                        <h2 style={styles.sectionTitle}>Choose rituals that respect your attention</h2>
+                        <span style={styles.sectionDivider} aria-hidden="true" />
+                        <p style={styles.sectionLead}>
+                            Automate deep work loops, surface insights instantly, and keep every collaborator aligned without the busywork.
+                        </p>
+                    </div>
                     <div style={styles.featuresGrid}>
                         {[
                             {
@@ -861,20 +1168,18 @@ const LandingPage = () => {
             </section>
 
             {/* Use Cases Section */}
-            <section style={{
-                padding: '5rem 2rem',
-                background: 'rgba(15, 23, 42, 0.8)',
-            }}>
-                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                    <h2 style={{
-                        fontSize: '2.5rem',
-                        fontWeight: '700',
-                        color: '#ffffff',
-                        textAlign: 'center',
-                        marginBottom: '3rem',
-                    }}>
-                        Perfect For Everyone
-                    </h2>
+            <section style={styles.useCaseSection}>
+                <div style={styles.useCaseBackdropAura} />
+                <div style={styles.useCaseBackdropHalo} />
+                <div style={styles.useCaseContainer}>
+                    <div style={styles.sectionHeading}>
+                        <span style={styles.sectionEyebrow}>Perfect for everyone</span>
+                        <h2 style={styles.sectionTitle}>Pick the lane that matches your focus ritual</h2>
+                        <span style={styles.sectionDivider} aria-hidden="true" />
+                        <p style={styles.sectionLead}>
+                            Whether you’re studying for finals or steering a global team, FocusFlow flexes to your cadence.
+                        </p>
+                    </div>
                     <div style={styles.useCaseGrid}>
                         {[
                             {
@@ -915,38 +1220,20 @@ const LandingPage = () => {
                                     Object.assign(e.currentTarget.style, styles.useCaseCard);
                                 }}
                             >
-                                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-                                    {useCase.icon}
+                                <span style={styles.useCaseCardGlow} aria-hidden="true" />
+                                <div style={styles.useCaseHeader}>
+                                    <span style={styles.useCaseIconWrap}>{useCase.icon}</span>
+                                    <h3 style={styles.useCaseTitle}>{useCase.title}</h3>
                                 </div>
-                                <h3 style={{
-                                    fontSize: '1.5rem',
-                                    fontWeight: '600',
-                                    color: '#38bdf8',
-                                    marginBottom: '0.75rem',
-                                }}>
-                                    {useCase.title}
-                                </h3>
-                                <p style={{
-                                    color: '#94a3b8',
-                                    lineHeight: '1.6',
-                                }}>
-                                    {useCase.description}
-                                </p>
-                                <span style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '0.4rem',
-                                    marginTop: '1.25rem',
-                                    padding: '0.45rem 0.85rem',
-                                    borderRadius: '9999px',
-                                    background: 'rgba(56, 189, 248, 0.18)',
-                                    color: '#38bdf8',
-                                    fontSize: '0.82rem',
-                                    fontWeight: 600,
-                                }}>
-                                    <span role="img" aria-label="spark">✨</span>
-                                    {useCase.highlight}
-                                </span>
+                                <p style={styles.useCaseDescription}>{useCase.description}</p>
+                                <div style={styles.useCaseTagRow}>
+                                    {useCase.highlight.split('·').map((tag, idx) => (
+                                        <span key={idx} style={styles.useCaseTag}>
+                                            <span style={styles.useCaseSpark} role="img" aria-label="spark">✨</span>
+                                            {tag.trim()}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -966,14 +1253,14 @@ const LandingPage = () => {
                         textAlign: 'center',
                         marginBottom: '1rem',
                     }}>
-                        Why Choose{' '}
+                        Why teams switch to{' '}
                         <span style={{
                             background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
                         }}>
-                            FocusFlow?
+                            FocusFlow
                         </span>
                     </h2>
                     <p style={styles.comparisonIntro}>
@@ -1142,63 +1429,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
-            <section style={styles.testimonialsSection}>
-                <div style={styles.testimonialsContainer}>
-                    <h2 style={styles.testimonialsTitle}>
-                        Loved by Our{" "}
-                        <span style={{
-                            background: 'linear-gradient(to right, #38bdf8, #60a5fa)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text'
-                        }}>
-                            Community
-                        </span>
-                    </h2>
-                    <div style={styles.testimonialsGrid}>
-                        {[
-                            {
-                                quote: "FocusFlow is the best productivity tool I've ever used. No paywalls, just pure value!",
-                                author: "Sarah Johnson",
-                                role: "Project Manager",
-                            },
-                            {
-                                quote: "Finally, a platform that gives me everything I need to stay organized—without asking for my credit card.",
-                                author: "Michael Chen",
-                                role: "Software Developer",
-                            },
-                            {
-                                quote: "As a freelancer, FocusFlow helps me stay on top of my work and deadlines.",
-                                author: "Emily Rodriguez",
-                                role: "Freelance Designer",
-                            },
-                        ].map((testimonial, index) => (
-                            <div 
-                                key={index} 
-                                style={styles.testimonialCard}
-                                onMouseEnter={(e) => {
-                                    Object.assign(e.currentTarget.style, {...styles.testimonialCard, ...styles.testimonialCardHover});
-                                }}
-                                onMouseLeave={(e) => {
-                                    Object.assign(e.currentTarget.style, styles.testimonialCard);
-                                }}
-                            >
-                                <blockquote style={styles.testimonialQuote}>
-                                    "{testimonial.quote}"
-                                </blockquote>
-                                <div style={styles.testimonialAuthor}>
-                                    {testimonial.author}
-                                </div>
-                                <div style={styles.testimonialRole}>
-                                    {testimonial.role}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* CTA Section */}
             <section style={styles.ctaSection}>
                 <div style={styles.ctaContainer}>
@@ -1304,25 +1534,54 @@ const LandingPage = () => {
 
             {/* Integrations Section */}
             <section style={styles.integrationSection}>
+                <div style={styles.integrationBackdropLeft} />
+                <div style={styles.integrationBackdropRight} />
                 <div style={styles.integrationContainer}>
-                    <h2 style={styles.sectionHeader}>Connect FocusFlow to your workflow</h2>
-                    <p style={styles.sectionLead}>
-                        Pair timers, rituals, and analytics with the tools you already love. These integrations are
-                        live or in beta—join the waitlist to test-drive the next wave.
-                    </p>
+                    <div style={styles.sectionHeading}>
+                        <span style={styles.sectionEyebrow}>Workflow companions</span>
+                        <h2 style={styles.sectionTitle}>Connect FocusFlow to your favourite tools</h2>
+                        <span style={styles.sectionDivider} aria-hidden="true" />
+                        <p style={styles.sectionLeadWide}>
+                            Pair timers, rituals, and analytics with the platforms you already love. Ship automations, share status, and keep momentum synced everywhere.
+                        </p>
+                    </div>
                     <div style={styles.integrationGrid}>
                         {integrationPartners.map((partner, idx) => (
-                            <div key={idx} style={styles.integrationCard}>
-                                <div style={styles.integrationIcon}>{partner.icon}</div>
-                                <div style={styles.integrationTitle}>{partner.name}</div>
+                            <div
+                                key={partner.name}
+                                style={styles.integrationCard}
+                                onMouseEnter={(e) => {
+                                    Object.assign(e.currentTarget.style, { ...styles.integrationCard, ...styles.integrationCardHover });
+                                }}
+                                onMouseLeave={(e) => {
+                                    Object.assign(e.currentTarget.style, styles.integrationCard);
+                                }}
+                            >
+                                <span style={styles.integrationCardGlow} aria-hidden="true" />
+                                <div style={styles.integrationCardTop}>
+                                    <span style={styles.integrationIcon}>{partner.icon}</span>
+                                    <span style={styles.integrationStatus}>
+                                        <span role="img" aria-label="spark">✨</span>
+                                        {partner.status}
+                                    </span>
+                                </div>
+                                <h3 style={styles.integrationTitle}>{partner.name}</h3>
                                 <p style={styles.integrationDescription}>{partner.blurb}</p>
+                                <div style={styles.useCaseTagRow}>
+                                    {partner.highlights.split('·').map((tag, tagIdx) => (
+                                        <span key={tagIdx} style={styles.useCaseTag}>
+                                            <span style={styles.useCaseSpark} role="img" aria-label="spark">⚡</span>
+                                            {tag.trim()}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Product Roadmap Section */}
+            {/* Product Roadmap Section
             <section style={styles.roadmapSection}>
                 <div style={styles.roadmapContainer}>
                     <h2 style={styles.sectionHeader}>What’s next for FocusFlow</h2>
@@ -1347,7 +1606,7 @@ const LandingPage = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             <LandingFooter />
             <AuthModals
