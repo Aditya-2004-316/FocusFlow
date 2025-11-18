@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 import {
     UserCircleIcon,
@@ -17,19 +18,21 @@ import {
 
 const Profile = () => {
     const [activeTab, setActiveTab] = useState("overview");
+    const { user } = useAuth();
 
-    // Mock user data - replace with actual user data from your auth system
-    const user = {
-        name: "John Doe",
-        email: "john.doe@example.com",
-        role: "Premium User",
-        joinDate: "January 2024",
-        avatar: "/avatars/default.jpg",
-        focusTime: "156h 30m",
-        sessions: 87,
-        tasksCompleted: 234,
-        streak: 7,
-    };
+    const displayName = user
+        ? user.firstName
+            ? `${user.firstName}${user.lastName ? " " + user.lastName : ""}`
+            : user.username || user.email || "Account"
+        : "Account";
+    const displayEmail = user?.email || "";
+    const displayRole = user?.isEmailVerified ? "Verified member" : "Member";
+    const joinDate = user?.createdAt
+        ? new Date(user.createdAt).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+          })
+        : "";
 
     const containerStyle = {
         minWidth: "64rem",
@@ -270,9 +273,12 @@ const Profile = () => {
                         <UserCircleIcon style={avatarIconStyle} />
                     </div>
                     <div style={profileInfoStyle}>
-                        <h2 style={userNameStyle}>{user.name}</h2>
-                        <p style={userEmailStyle}>{user.email}</p>
-                        <p style={userRoleStyle}>{user.role}</p>
+                        <h2 style={userNameStyle}>{displayName}</h2>
+                        {displayEmail && <p style={userEmailStyle}>{displayEmail}</p>}
+                        <p style={userRoleStyle}>
+                            {displayRole}
+                            {joinDate && ` · Joined ${joinDate}`}
+                        </p>
                     </div>
                     <button style={editButtonStyle}>
                         <PencilIcon style={avatarIconStyle} />
@@ -286,28 +292,28 @@ const Profile = () => {
                         <div style={statIconStyle}>
                             <ClockIcon />
                         </div>
-                        <div style={statValueStyle}>{user.focusTime}</div>
+                        <div style={statValueStyle}>{"—"}</div>
                         <div style={statLabelStyle}>Total Focus Time</div>
                     </div>
                     <div style={statCardStyle}>
                         <div style={statIconStyle}>
                             <ChartBarIcon />
                         </div>
-                        <div style={statValueStyle}>{user.sessions}</div>
+                        <div style={statValueStyle}>{"—"}</div>
                         <div style={statLabelStyle}>Focus Sessions</div>
                     </div>
                     <div style={statCardStyle}>
                         <div style={statIconStyle}>
                             <TrophyIcon />
                         </div>
-                        <div style={statValueStyle}>{user.tasksCompleted}</div>
+                        <div style={statValueStyle}>{"—"}</div>
                         <div style={statLabelStyle}>Tasks Completed</div>
                     </div>
                     <div style={statCardStyle}>
                         <div style={statIconStyle}>
                             <ShieldCheckIcon />
                         </div>
-                        <div style={statValueStyle}>{user.streak}</div>
+                        <div style={statValueStyle}>{"—"}</div>
                         <div style={statLabelStyle}>Day Streak</div>
                     </div>
                 </div>

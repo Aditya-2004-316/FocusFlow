@@ -26,8 +26,12 @@ export const protect = async (req, res, next) => {
 
     let token;
 
-    // Check for token in headers
-    if (
+    // Check for token in cookies (preferred)
+    if (req.cookies && req.cookies.accessToken) {
+        token = req.cookies.accessToken;
+    }
+    // Fallback to Authorization header
+    else if (
         req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer")
     ) {
@@ -58,8 +62,10 @@ export const protect = async (req, res, next) => {
             return;
         }
 
-        // Check if user is email verified (optional - can be made required)
-        if (!user.isEmailVerified) {
+        // Check if user is email verified (only enforced in production)
+        const requireVerifiedEmail = process.env.NODE_ENV === "production";
+
+        if (requireVerifiedEmail && !user.isEmailVerified) {
             res.status(401).json({
                 success: false,
                 error: "Please verify your email address",
@@ -100,7 +106,12 @@ export const optionalAuth = async (req, res, next) => {
 
     let token;
 
-    if (
+    // Check cookies first
+    if (req.cookies && req.cookies.accessToken) {
+        token = req.cookies.accessToken;
+    }
+    // Then check header
+    else if (
         req.headers.authorization &&
         req.headers.authorization.startsWith("Bearer")
     ) {

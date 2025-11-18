@@ -21,9 +21,8 @@ import FocusFlowLogo from "../assets/focusflowlogo.png";
 const Header = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const { logout } = useAuth();
+    const { user, logout, isAuthenticated } = useAuth();
     const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         // Default to dark mode for authenticated users
@@ -46,16 +45,9 @@ const Header = () => {
         localStorage.setItem("theme", next ? "dark" : "light");
     };
 
-    // Mock user data - replace with actual user data from your auth system
-    const user = {
-        name: "John Doe",
-        email: "john.doe@example.com",
-        avatar: "/avatars/default.jpg",
-        role: "Premium User",
-    };
-
     const handleLogout = () => {
         logout();
+        setIsProfileOpen(false);
         navigate("/");
     };
 
@@ -198,39 +190,76 @@ const Header = () => {
                 <button style={buttonStyle}>
                     <BellIcon style={{ width: "1.5rem", height: "1.5rem" }} />
                 </button>
-                <div style={{ position: "relative" }}>
-                    <button
-                        style={profileButtonStyle}
-                        onClick={() => setIsProfileOpen((prev) => !prev)}
-                    >
-                        <UserCircleIcon
-                            style={{ width: "2rem", height: "2rem" }}
-                        />
-                    </button>
-                    {isProfileOpen && (
-                        <div style={dropdownStyle}>
-                            <div style={dropdownHeaderStyle}>
-                                <p
-                                    style={{
-                                        fontWeight: 600,
-                                        color: "var(--color-gray-900)",
+                {isAuthenticated && user && (
+                    <div style={{ position: "relative" }}>
+                        <button
+                            style={profileButtonStyle}
+                            onClick={() => setIsProfileOpen((prev) => !prev)}
+                        >
+                            <UserCircleIcon
+                                style={{ width: "2rem", height: "2rem" }}
+                            />
+                        </button>
+                        {isProfileOpen && (
+                            <div style={dropdownStyle}>
+                                <div style={dropdownHeaderStyle}>
+                                    <p
+                                        style={{
+                                            fontWeight: 600,
+                                            color: "var(--color-gray-900)",
+                                        }}
+                                    >
+                                        {user.firstName || user.username || user.email}
+                                    </p>
+                                    {user.email && (
+                                        <p
+                                            style={{
+                                                fontSize: "0.875rem",
+                                                color: "var(--color-gray-600)",
+                                            }}
+                                        >
+                                            {user.email}
+                                        </p>
+                                    )}
+                                </div>
+                                <Link
+                                    to="/profile"
+                                    style={dropdownItemStyle}
+                                    onMouseEnter={(e) =>
+                                        Object.assign(e.currentTarget.style, dropdownItemHoverStyle)
+                                    }
+                                    onMouseLeave={(e) => {
+                                        Object.assign(e.currentTarget.style, dropdownItemStyle);
                                     }}
+                                    onClick={() => setIsProfileOpen(false)}
                                 >
-                                    {user.name}
-                                </p>
-                                <p
+                                    <UserIcon style={dropdownItemIconStyle} />
+                                    <span>Profile</span>
+                                </Link>
+                                <div style={dropdownDividerStyle} />
+                                <button
+                                    type="button"
                                     style={{
-                                        fontSize: "0.875rem",
-                                        color: "var(--color-gray-600)",
+                                        ...dropdownItemStyle,
+                                        width: "100%",
+                                        border: "none",
+                                        background: "transparent",
                                     }}
+                                    onMouseEnter={(e) =>
+                                        Object.assign(e.currentTarget.style, dropdownItemHoverStyle)
+                                    }
+                                    onMouseLeave={(e) => {
+                                        Object.assign(e.currentTarget.style, dropdownItemStyle);
+                                    }}
+                                    onClick={handleLogout}
                                 >
-                                    {user.email}
-                                </p>
+                                    <ArrowRightOnRectangleIcon style={dropdownItemIconStyle} />
+                                    <span>Logout</span>
+                                </button>
                             </div>
-                            {/* Add dropdown items here */}
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
+                )}
             </div>
         </header>
     );

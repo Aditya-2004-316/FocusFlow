@@ -1,46 +1,50 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LandingNavbar from "./LandingNavbar";
 import LandingFooter from "./LandingFooter";
-import AuthModals from "./AuthModals";
+// import AuthModals from "./AuthModals";
 
 const LandingPage = () => {
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+    const navigate = useNavigate();
+    // const [isLoginOpen, setIsLoginOpen] = useState(false);
+    // const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
     // Listen for modal open events (for cross-component consistency)
-    React.useEffect(() => {
-        const handleOpenLoginModal = () => {
-            setIsLoginOpen(true);
-            setIsRegisterOpen(false);
-        };
-        const handleOpenRegisterModal = () => {
-            setIsRegisterOpen(true);
-            setIsLoginOpen(false);
-        };
-        window.addEventListener("openLoginModal", handleOpenLoginModal);
-        window.addEventListener("openRegisterModal", handleOpenRegisterModal);
-        return () => {
-            window.removeEventListener("openLoginModal", handleOpenLoginModal);
-            window.removeEventListener(
-                "openRegisterModal",
-                handleOpenRegisterModal
-            );
-        };
-    }, []);
+    // React.useEffect(() => {
+    //     const handleOpenLoginModal = () => {
+    //         setIsLoginOpen(true);
+    //         setIsRegisterOpen(false);
+    //     };
+    //     const handleOpenRegisterModal = () => {
+    //         setIsRegisterOpen(true);
+    //         setIsLoginOpen(false);
+    //     };
+    //     window.addEventListener("openLoginModal", handleOpenLoginModal);
+    //     window.addEventListener("openRegisterModal", handleOpenRegisterModal);
+    //     return () => {
+    //         window.removeEventListener("openLoginModal", handleOpenLoginModal);
+    //         window.removeEventListener(
+    //             "openRegisterModal",
+    //             handleOpenRegisterModal
+    //         );
+    //     };
+    // }, []);
 
     const handleRegisterClick = () => {
-        setIsRegisterOpen(true);
-        setIsLoginOpen(false);
+        navigate("/signup");
+        // setIsRegisterOpen(true);
+        // setIsLoginOpen(false);
     };
 
     const handleLoginClick = () => {
-        setIsLoginOpen(true);
-        setIsRegisterOpen(false);
+        navigate("/login");
+        // setIsLoginOpen(true);
+        // setIsRegisterOpen(false);
     };
-    const handleCloseModal = () => {
-        setIsLoginOpen(false);
-        setIsRegisterOpen(false);
-    };
+    // const handleCloseModal = () => {
+    //     setIsLoginOpen(false);
+    //     setIsRegisterOpen(false);
+    // };
 
     // Define all styles inline with dark theme from LandingPageOption1
     const styles = {
@@ -1609,11 +1613,13 @@ const LandingPage = () => {
             </section> */}
 
             <LandingFooter />
+            {/**
             <AuthModals
                 isLoginOpen={isLoginOpen}
                 isRegisterOpen={isRegisterOpen}
                 onClose={handleCloseModal}
             />
+            **/}
         </div>
         </>
     );

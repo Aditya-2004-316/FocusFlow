@@ -20,6 +20,7 @@ import {
     SignalIcon,
     PlusIcon,
     MinusIcon,
+    LightBulbIcon,
 } from "@heroicons/react/24/outline";
 
 const heroBadges = ["Adaptive presets", "Break reminders", "Session analytics"];
@@ -1074,6 +1075,40 @@ const FocusTimer = () => {
                         </div>
                     </div>
                 </section>
+
+                <div style={{
+                    background: "linear-gradient(110deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1))",
+                    borderRadius: "1.25rem",
+                    padding: "1.5rem 1.75rem",
+                    border: "1px solid rgba(139, 92, 246, 0.25)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1.25rem",
+                    boxShadow: "0 10px 30px -10px rgba(139, 92, 246, 0.2)",
+                    maxWidth: "1120px",
+                    margin: "0 auto",
+                }}>
+                    <LightBulbIcon style={{ width: "2.5rem", height: "2.5rem", color: "#8b5cf6", flexShrink: 0 }} />
+                    <div>
+                        <p style={{
+                            margin: 0,
+                            fontSize: "1.1rem",
+                            fontWeight: 600,
+                            color: "var(--color-gray-900)",
+                            lineHeight: 1.5,
+                        }}>
+                            💡 Tip: For best results, start with a relaxation activity before your focus session.
+                        </p>
+                        <p style={{
+                            margin: "0.35rem 0 0",
+                            fontSize: "0.95rem",
+                            color: "var(--color-gray-600)",
+                            lineHeight: 1.5,
+                        }}>
+                            Visit the Dashboard's "Relax Before You Focus" section to try meditation, music, affirmations, and more.
+                        </p>
+                    </div>
+                </div>
 
                 <section style={{ ...styles.section, gap: "2rem" }}>
                     <div style={styles.timerShell}>

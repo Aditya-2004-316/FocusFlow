@@ -1,35 +1,36 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import AuthModals from "./AuthModals";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+// import AuthModals from "./AuthModals";
 import FocusFlowLogo from "../assets/focusflowlogo.png";
 
 const LandingNavbar = () => {
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+    const navigate = useNavigate();
+    // const [isLoginOpen, setIsLoginOpen] = useState(false);
+    // const [isRegisterOpen, setIsRegisterOpen] = useState(false);
     const location = useLocation();
-
-    useEffect(() => {
-        const handleOpenLoginModal = () => {
-            setIsLoginOpen(true);
-            setIsRegisterOpen(false);
-        };
-
-        const handleOpenRegisterModal = () => {
-            setIsRegisterOpen(true);
-            setIsLoginOpen(false);
-        };
-
-        window.addEventListener("openLoginModal", handleOpenLoginModal);
-        window.addEventListener("openRegisterModal", handleOpenRegisterModal);
-
-        return () => {
-            window.removeEventListener("openLoginModal", handleOpenLoginModal);
-            window.removeEventListener(
-                "openRegisterModal",
-                handleOpenRegisterModal
-            );
-        };
-    }, []);
+    //
+    // useEffect(() => {
+    //     const handleOpenLoginModal = () => {
+    //         setIsLoginOpen(true);
+    //         setIsRegisterOpen(false);
+    //     };
+    //
+    //     const handleOpenRegisterModal = () => {
+    //         setIsRegisterOpen(true);
+    //         setIsLoginOpen(false);
+    //     };
+    //
+    //     window.addEventListener("openLoginModal", handleOpenLoginModal);
+    //     window.addEventListener("openRegisterModal", handleOpenRegisterModal);
+    //
+    //     return () => {
+    //         window.removeEventListener("openLoginModal", handleOpenLoginModal);
+    //         window.removeEventListener(
+    //             "openRegisterModal",
+    //             handleOpenRegisterModal
+    //         );
+    //     };
+    // }, []);
 
     const navStyle = {
         display: "flex",
@@ -130,19 +131,21 @@ const LandingNavbar = () => {
     };
 
     const handleLoginClick = () => {
-        setIsLoginOpen(true);
-        setIsRegisterOpen(false);
+        navigate("/login");
+        // setIsLoginOpen(true);
+        // setIsRegisterOpen(false);
     };
 
     const handleRegisterClick = () => {
-        setIsRegisterOpen(true);
-        setIsLoginOpen(false);
+        navigate("/signup");
+        // setIsRegisterOpen(true);
+        // setIsLoginOpen(false);
     };
 
-    const handleCloseModal = () => {
-        setIsLoginOpen(false);
-        setIsRegisterOpen(false);
-    };
+    // const handleCloseModal = () => {
+    //     setIsLoginOpen(false);
+    //     setIsRegisterOpen(false);
+    // };
 
     return (
         <nav style={navStyle}>
@@ -307,11 +310,13 @@ const LandingNavbar = () => {
                 </button>
             </div>
 
+            {/*
             <AuthModals
                 isLoginOpen={isLoginOpen}
                 isRegisterOpen={isRegisterOpen}
                 onClose={handleCloseModal}
             />
+            */}
         </nav>
     );
 };

@@ -47,12 +47,18 @@ import {
     ChevronLeftIcon,
     MusicalNoteIcon,
     Cog6ToothIcon,
+    LightBulbIcon,
+    SparklesIcon,
+    PencilSquareIcon,
+    PaintBrushIcon,
 } from "@heroicons/react/24/outline";
 // import Login from "./pages/Login";
 // import Register from "./pages/Register";
 // import ForgotPassword from "./pages/ForgotPassword";
 // import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
 import LandingPage from "./LandingPage/LandingPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
@@ -78,10 +84,17 @@ import DashboardBlog from "./pages/DashboardBlog.jsx";
 import DashboardGuides from "./pages/DashboardGuides.jsx";
 import DashboardSupport from "./pages/DashboardSupport.jsx";
 import DashboardCommunity from "./pages/DashboardCommunity.jsx";
+import MusicRelaxation from "./components/relaxation/MusicRelaxation.jsx";
+import MeditationRelaxation from "./components/relaxation/MeditationRelaxation.jsx";
+import ThoughtDumpRelaxation from "./components/relaxation/ThoughtDumpRelaxation.jsx";
+import CalmingGameRelaxation from "./components/relaxation/CalmingGameRelaxation.jsx";
+import DoodlePadRelaxation from "./components/relaxation/DoodlePadRelaxation.jsx";
+import AffirmationsRelaxation from "./components/relaxation/AffirmationsRelaxation.jsx";
 
 const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
 
 function Dashboard() {
+    const { user } = useAuth();
     const [distractions, setDistractions] = useState(() => {
         const saved = localStorage.getItem("distractions");
         return saved ? JSON.parse(saved) : [];
@@ -90,6 +103,13 @@ function Dashboard() {
     const [activeTab, setActiveTab] = useState("overview");
     const [filterText, setFilterText] = useState("");
     const [isSyncing, setIsSyncing] = useState(false);
+    const [activeRelaxationModal, setActiveRelaxationModal] = useState(null);
+
+    const displayName = user
+        ? user.firstName
+            ? `${user.firstName}${user.lastName ? " " + user.lastName : ""}`
+            : user.username || user.email || "there"
+        : "";
 
     useEffect(() => {
         localStorage.setItem("distractions", JSON.stringify(distractions));
@@ -849,7 +869,17 @@ function Dashboard() {
                 <section style={dashboardStyles.hero}>
                     <div>
                         <h1 style={dashboardStyles.heroTitle}>
-                            Welcome back, <span style={dashboardStyles.heroAccent}>your focus lab awaits</span>
+                            {displayName ? (
+                                <>
+                                    Welcome back, {" "}
+                                    <span style={dashboardStyles.heroAccent}>{displayName}</span>
+                                </>
+                            ) : (
+                                <>
+                                    Welcome back, {" "}
+                                    <span style={dashboardStyles.heroAccent}>your focus lab awaits</span>
+                                </>
+                            )}
                         </h1>
                         <p style={dashboardStyles.heroLead}>
                             Shape your day with calibrated sessions, mindful breaks, and community accountability—everything you need to keep momentum compounding.
@@ -913,6 +943,84 @@ function Dashboard() {
                                     >
                                         <ChevronRightIcon style={{ width: "1rem", height: "1rem" }} />
                                         {tool.cta}
+                                    </button>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                <section style={dashboardStyles.companionSection}>
+                    <div style={dashboardStyles.companionHeader}>
+                        <h2 style={dashboardStyles.sectionTitle}>🕯 Relax Before You Focus</h2>
+                        <p style={dashboardStyles.sectionLead}>
+                            Take a mindful moment to prepare your mind and body for deep, focused work. 
+                            Choose an activity that helps you transition into a calm, productive state.
+                        </p>
+                    </div>
+                    <div style={dashboardStyles.companionGrid}>
+                        {[
+                            {
+                                title: "🎧 Music / Soundscapes",
+                                description: "Launch curated ambient mixes that keep deep work immersive without hijacking attention.",
+                                Icon: MusicalNoteIcon,
+                                modal: "music",
+                            },
+                            {
+                                title: "🧘 Mini Meditation",
+                                description: "Gentle prompts to center yourself and bring clarity before starting your session.",
+                                Icon: SparklesIcon,
+                                modal: "meditation",
+                            },
+                            {
+                                title: "📝 Thought Dump",
+                                description: "Clear mental clutter by writing down lingering thoughts and worries.",
+                                Icon: PencilSquareIcon,
+                                modal: "thoughtDump",
+                            },
+                            {
+                                title: "🎮 Calming Game",
+                                description: "Gently engage your mind with soothing interactive experiences.",
+                                Icon: Cog6ToothIcon,
+                                modal: "calmingGame",
+                            },
+                            {
+                                title: "🎨 Doodle Pad",
+                                description: "Express yourself freely on a simple drawing canvas to relax and unwind.",
+                                Icon: PaintBrushIcon,
+                                modal: "doodlePad",
+                            },
+                            {
+                                title: "💬 Affirmations",
+                                description: "Read positive intentions and affirmations to boost confidence and focus.",
+                                Icon: SparklesIcon,
+                                modal: "affirmations",
+                            },
+                        ].map((activity) => {
+                            const ActivityIcon = activity.Icon;
+                            return (
+                                <article key={activity.title} style={dashboardStyles.companionCard}>
+                                    <div style={dashboardStyles.companionIcon}>
+                                        <ActivityIcon style={{ width: "1.25rem", height: "1.25rem" }} />
+                                    </div>
+                                    <h3 style={dashboardStyles.companionTitle}>{activity.title}</h3>
+                                    <p style={dashboardStyles.companionDescription}>{activity.description}</p>
+                                    <button
+                                        type="button"
+                                        style={dashboardStyles.companionButton}
+                                        onClick={() => setActiveRelaxationModal(activity.modal)}
+                                        onMouseEnter={(event) =>
+                                            Object.assign(event.currentTarget.style, {
+                                                transform: "translateY(-3px)",
+                                                boxShadow: "0 26px 56px -32px rgba(59,130,246,0.5)",
+                                            })
+                                        }
+                                        onMouseLeave={(event) =>
+                                            Object.assign(event.currentTarget.style, dashboardStyles.companionButton)
+                                        }
+                                    >
+                                        <ChevronRightIcon style={{ width: "1rem", height: "1rem" }} />
+                                        Try it
                                     </button>
                                 </article>
                             );
@@ -1120,7 +1228,41 @@ function Dashboard() {
                     </>
                 )}
 
-                {activeTab === "timers" && <Timer />}
+                {activeTab === "timers" && (
+                    <>
+                        <div style={{
+                            background: "linear-gradient(110deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1))",
+                            borderRadius: "1rem",
+                            padding: "1.25rem 1.5rem",
+                            border: "1px solid rgba(139, 92, 246, 0.25)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "1rem",
+                            marginBottom: "2rem",
+                            boxShadow: "0 10px 30px -10px rgba(139, 92, 246, 0.2)",
+                        }}>
+                            <LightBulbIcon style={{ width: "2rem", height: "2rem", color: "#8b5cf6", flexShrink: 0 }} />
+                            <div>
+                                <p style={{
+                                    margin: 0,
+                                    fontSize: "1.05rem",
+                                    fontWeight: 600,
+                                    color: "var(--color-gray-900)",
+                                }}>
+                                    💡 Tip: For best results, start with a relaxation activity before your focus session.
+                                </p>
+                                <p style={{
+                                    margin: "0.25rem 0 0",
+                                    fontSize: "0.9rem",
+                                    color: "var(--color-gray-600)",
+                                }}>
+                                    Scroll up to try a pre-focus relaxation activity.
+                                </p>
+                            </div>
+                        </div>
+                        <Timer />
+                    </>
+                )}
                 {activeTab === "stats" && <Stats />}
                 {activeTab === "distractions" && (
                     <section style={dashboardStyles.section}>
@@ -1211,6 +1353,31 @@ function Dashboard() {
                         />
                     </div>
                 )}
+
+                <MusicRelaxation
+                    isOpen={activeRelaxationModal === "music"}
+                    onClose={() => setActiveRelaxationModal(null)}
+                />
+                <MeditationRelaxation
+                    isOpen={activeRelaxationModal === "meditation"}
+                    onClose={() => setActiveRelaxationModal(null)}
+                />
+                <ThoughtDumpRelaxation
+                    isOpen={activeRelaxationModal === "thoughtDump"}
+                    onClose={() => setActiveRelaxationModal(null)}
+                />
+                <CalmingGameRelaxation
+                    isOpen={activeRelaxationModal === "calmingGame"}
+                    onClose={() => setActiveRelaxationModal(null)}
+                />
+                <DoodlePadRelaxation
+                    isOpen={activeRelaxationModal === "doodlePad"}
+                    onClose={() => setActiveRelaxationModal(null)}
+                />
+                <AffirmationsRelaxation
+                    isOpen={activeRelaxationModal === "affirmations"}
+                    onClose={() => setActiveRelaxationModal(null)}
+                />
             </div>
         </div>
     );
@@ -1224,6 +1391,8 @@ function App() {
                 <div className="App">
                     <Routes>
                         <Route path="/" element={<LandingPage />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
                         <Route
                             path="/dashboard"
                             element={
