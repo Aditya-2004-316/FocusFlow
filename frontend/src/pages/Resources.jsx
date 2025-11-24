@@ -3,6 +3,7 @@ import {
     AcademicCapIcon,
     ArrowDownTrayIcon,
     BookOpenIcon,
+    ChartBarIcon,
     DocumentTextIcon,
     LightBulbIcon,
     PlayCircleIcon,
@@ -10,7 +11,7 @@ import {
     VideoCameraIcon,
 } from "@heroicons/react/24/outline";
 
-const heroTags = ["🎯 Focus sprints", "🎬 Replay vault", "🧱 Template wall", "🌈 Community picks"];
+const heroTags = ["Quick filters", "Templates free", "Swap categories"];
 
 const heroSpotlights = [
     { key: "start", icon: "✨", title: "Start here", caption: "FocusFlow 101 in minutes" },
@@ -185,8 +186,8 @@ const resourceTypeLabels = {
 const styles = {
     page: {
         minHeight: "100vh",
-        background: "linear-gradient(180deg, #030b18 0%, #0b1529 55%, #030b18 100%)",
-        color: "#e2e8f0",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
         transition: "background 0.3s ease, color 0.3s ease",
         padding: "4.8rem 1.85rem 5.4rem",
     },
@@ -200,139 +201,204 @@ const styles = {
         zIndex: 1,
     },
     hero: {
-        position: "relative",
         borderRadius: "1.6rem",
-        padding: "3.4rem",
-        background: "linear-gradient(136deg, rgba(56,189,248,0.18), rgba(129,140,248,0.26))",
-        border: "1px solid rgba(56,189,248,0.32)",
-        boxShadow: "0 52px 140px -80px rgba(56,189,248,0.72)",
+        padding: "3.1rem",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-lg)",
         display: "grid",
-        gap: "2rem",
+        gap: "2.2rem",
+        position: "relative",
         overflow: "hidden",
+        color: "var(--color-gray-900)",
     },
     heroGlow: {
-        position: "absolute",
-        inset: "-25% -35%",
-        background: "radial-gradient(circle at 20% 20%, rgba(59,130,246,0.4), transparent 60%)",
-        filter: "blur(42px)",
-        opacity: 0.9,
+        display: "none",
     },
-    heroContent: {
+    heroLayout: {
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-        gap: "2.4rem",
+        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+        gap: "1.6rem",
+        alignItems: "stretch",
         position: "relative",
         zIndex: 1,
     },
-    heroHeadline: {
-        display: "grid",
-        gap: "1.4rem",
-    },
-    heroPillRow: {
+    heroLeft: {
         display: "flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        flexWrap: "wrap",
+        flexDirection: "column",
+        gap: "1.2rem",
+        width: "100%",
+        maxWidth: "520px",
     },
-    heroEyebrow: {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.35rem",
-        padding: "0.3rem 0.68rem",
-        borderRadius: "999px",
-        background: "rgba(59,130,246,0.2)",
-        color: "#f0f9ff",
-        fontSize: "0.75rem",
-        fontWeight: 600,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
+    heroActionCard: {
+        display: "grid",
+        gap: "0.9rem",
+        padding: "1.15rem 1.3rem",
+        borderRadius: "1.25rem",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-md)",
+        alignSelf: "start",
     },
-    heroPill: {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.3rem",
-        padding: "0.3rem 0.75rem",
-        borderRadius: "999px",
-        background: "rgba(94,234,212,0.2)",
-        color: "#99f6e4",
-        fontSize: "0.75rem",
-        fontWeight: 600,
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
+    heroRight: {
+        display: "grid",
+        gap: "1rem",
+        width: "100%",
+        justifySelf: "start",
+        maxWidth: "430px",
     },
     heroTitle: {
-        fontSize: "2.5rem",
+        fontSize: "2.65rem",
         fontWeight: 700,
-        lineHeight: 1.18,
-        margin: 0,
-        background: "linear-gradient(110deg, #f8fafc, #bae6fd)",
+        lineHeight: 1.12,
+        background: "linear-gradient(to right, #38bdf8, #818cf8)",
         WebkitBackgroundClip: "text",
         WebkitTextFillColor: "transparent",
         backgroundClip: "text",
+        margin: 0,
     },
     heroLead: {
-        fontSize: "1.05rem",
-        color: "#b6caf1",
-        lineHeight: 1.72,
-        maxWidth: "32rem",
+        fontSize: "1.08rem",
+        color: "var(--color-gray-600)",
+        lineHeight: 1.75,
+        maxWidth: "44rem",
+        margin: "0.5rem 0 0",
     },
-    heroTags: {
+    badgeRow: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.45rem",
+    },
+    badge: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.35rem",
+        padding: "0.45rem 0.85rem",
+        borderRadius: "9999px",
+        background: "rgba(148,163,184,0.2)",
+        color: "var(--color-gray-600)",
+        fontSize: "0.78rem",
+        fontWeight: 600,
+        letterSpacing: "0.05em",
+        textTransform: "uppercase",
+    },
+    heroStatsGrid: {
+        display: "grid",
+        gap: "0.75rem",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    },
+    heroStat: {
+        borderRadius: "1rem",
+        background: "var(--color-white)",
+        border: "1px solid var(--input-border)",
+        padding: "1rem",
+        display: "grid",
+        gap: "0.45rem",
+        boxShadow: "var(--shadow-soft)",
+    },
+    heroStatIconWrap: {
+        width: "2.25rem",
+        height: "2.25rem",
+        borderRadius: "0.75rem",
+        background: "rgba(56,189,248,0.12)",
+        color: "var(--color-primary-600)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    heroStatLabel: {
+        fontSize: "0.75rem",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color: "var(--color-gray-500)",
+        fontWeight: 600,
+    },
+    heroStatValue: {
+        fontSize: "1.3rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
+    },
+    highlightPanel: {
+        borderRadius: "1.3rem",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
+        boxShadow: "var(--shadow-soft)",
+        padding: "1.6rem",
+        display: "grid",
+        gap: "1rem",
+        alignContent: "start",
+        width: "100%",
+    },
+    highlightHeader: {
+        display: "grid",
+        gap: "0.6rem",
+    },
+    highlightBadge: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        fontSize: "0.8rem",
+        fontWeight: 600,
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+        color: "var(--color-primary-700)",
+        background: "rgba(56,189,248,0.14)",
+        borderRadius: "999px",
+        padding: "0.45rem 0.9rem",
+        justifySelf: "start",
+        width: "max-content",
+    },
+    highlightTitle: {
+        margin: 0,
+        fontSize: "1.35rem",
+        fontWeight: 700,
+        color: "var(--color-gray-900)",
+    },
+    highlightList: {
         display: "flex",
         flexWrap: "wrap",
         gap: "0.55rem",
     },
-    heroTag: {
+    highlightChip: {
+        background: "rgba(148,163,184,0.15)",
+        border: "1px solid var(--input-border)",
+        borderRadius: "999px",
+        padding: "0.55rem 0.85rem",
+        fontSize: "0.86rem",
+        fontWeight: 600,
+        color: "var(--color-gray-700)",
         display: "inline-flex",
         alignItems: "center",
-        gap: "0.35rem",
-        padding: "0.42rem 0.95rem",
-        borderRadius: "9999px",
-        background: "rgba(15,23,42,0.32)",
-        color: "#dbeafe",
-        fontSize: "0.82rem",
-        fontWeight: 600,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        boxShadow: "inset 0 0 0 1px rgba(148,163,184,0.28)",
+        gap: "0.5rem",
+        boxShadow: "var(--shadow-soft)",
     },
-    heroSpotlights: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        gap: "1.1rem",
+    highlightChipIcon: {
+        width: "1rem",
+        height: "1rem",
+        color: "var(--color-primary-300)",
+        flexShrink: 0,
     },
-    heroSpotlightCard: {
-        borderRadius: "1.05rem",
-        border: "1px solid rgba(148,163,184,0.26)",
-        background: "rgba(8, 17, 34, 0.72)",
-        boxShadow: "0 24px 60px -44px rgba(56,189,248,0.55)",
-        padding: "1.1rem 1.2rem",
-        display: "grid",
-        gap: "0.55rem",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    highlightFooter: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "0.75rem",
+        flexWrap: "wrap",
+        borderTop: "1px solid rgba(148,163,184,0.25)",
+        paddingTop: "0.8rem",
     },
-    heroSpotlightCardHover: {
-        transform: "translateY(-4px)",
-        boxShadow: "0 36px 90px -60px rgba(56,189,248,0.65)",
-        borderColor: "rgba(56,189,248,0.35)",
-    },
-    heroSpotlightIcon: {
-        fontSize: "1.2rem",
-    },
-    heroSpotlightTitle: {
-        fontSize: "1rem",
-        fontWeight: 600,
-        color: "#f8fafc",
-    },
-    heroSpotlightCaption: {
-        fontSize: "0.88rem",
-        color: "#9fb2d6",
-        lineHeight: 1.5,
+    highlightFooterCopy: {
+        fontSize: "0.84rem",
+        color: "var(--color-gray-600)",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.4rem",
     },
     section: {
         borderRadius: "1.4rem",
-        border: "1px solid rgba(56,189,248,0.16)",
-        background: "rgba(7, 14, 28, 0.85)",
-        boxShadow: "0 45px 110px -70px rgba(14,165,233,0.55)",
+        border: "1px solid var(--input-border)",
+        background: "var(--panel-bg)",
+        boxShadow: "var(--shadow-lg)",
         padding: "2.75rem",
         display: "grid",
         gap: "1.9rem",
@@ -363,7 +429,7 @@ const styles = {
         padding: "0.32rem 0.75rem",
         borderRadius: "999px",
         background: "rgba(59,130,246,0.16)",
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
         fontSize: "0.78rem",
         fontWeight: 600,
         letterSpacing: "0.06em",
@@ -372,19 +438,19 @@ const styles = {
     sectionTitle: {
         fontSize: "1.7rem",
         fontWeight: 700,
-        color: "#f8fafc",
+        color: "var(--color-gray-900)",
     },
     sectionLead: {
         fontSize: "0.98rem",
-        color: "#9fb2d6",
+        color: "var(--color-gray-600)",
         lineHeight: 1.68,
         maxWidth: "40rem",
     },
     sectionCard: {
         borderRadius: "1.15rem",
-        border: "1px solid rgba(56,189,248,0.16)",
-        background: "rgba(8, 16, 31, 0.78)",
-        boxShadow: "0 34px 82px -60px rgba(14,165,233,0.45)",
+        border: "1px solid var(--input-border)",
+        background: "var(--color-white)",
+        boxShadow: "var(--shadow-md)",
         padding: "1.95rem",
         display: "grid",
         gap: "1.25rem",
@@ -396,25 +462,25 @@ const styles = {
     },
     statCard: {
         borderRadius: "1rem",
-        border: "1px solid rgba(56,189,248,0.2)",
-        background: "rgba(9, 18, 34, 0.75)",
+        border: "1px solid var(--input-border)",
+        background: "var(--color-white)",
         padding: "0.95rem 1.1rem",
         display: "grid",
         gap: "0.35rem",
-        boxShadow: "0 24px 64px -48px rgba(56,189,248,0.55)",
+        boxShadow: "var(--shadow-soft)",
     },
     statLabelRow: {
         display: "flex",
         alignItems: "center",
         gap: "0.45rem",
-        color: "#cbd5f5",
+        color: "var(--color-gray-600)",
         fontSize: "0.82rem",
         fontWeight: 600,
     },
     statValue: {
         fontSize: "1.35rem",
         fontWeight: 700,
-        color: "#f8fafc",
+        color: "var(--color-gray-900)",
     },
     tagRow: {
         display: "flex",
@@ -427,17 +493,17 @@ const styles = {
         justifyItems: "center",
         padding: "3.2rem 2.4rem",
         borderRadius: "1.15rem",
-        border: "1px dashed rgba(148,163,184,0.35)",
-        background: "rgba(9, 18, 34, 0.82)",
-        boxShadow: "0 28px 70px -50px rgba(56,189,248,0.4)",
+        border: "1px dashed var(--input-border)",
+        background: "var(--color-white)",
+        boxShadow: "var(--shadow-soft)",
     },
     emptyStateTitle: {
         fontSize: "1.05rem",
         fontWeight: 600,
-        color: "#f8fafc",
+        color: "var(--color-gray-900)",
     },
     emptyStateSubtitle: {
-        color: "#8ea0c2",
+        color: "var(--color-gray-600)",
         fontSize: "0.95rem",
     },
     searchPanel: {
@@ -448,12 +514,12 @@ const styles = {
         width: "100%",
         padding: "0.95rem 1.2rem",
         borderRadius: "0.95rem",
-        border: "1px solid rgba(56,189,248,0.22)",
-        background: "rgba(9, 18, 34, 0.85)",
-        color: "#e2e8f0",
+        border: "1px solid var(--input-border)",
+        background: "var(--color-white)",
+        color: "var(--color-gray-900)",
         fontSize: "1rem",
         outline: "none",
-        boxShadow: "0 18px 42px -30px rgba(56,189,248,0.45)",
+        boxShadow: "var(--shadow-soft)",
     },
     filterBar: {
         display: "flex",
@@ -465,17 +531,17 @@ const styles = {
         borderRadius: "0.95rem",
         fontWeight: 600,
         fontSize: "0.95rem",
-        border: "1px solid rgba(148,163,184,0.28)",
-        background: "rgba(15,23,42,0.35)",
-        color: "#cbd5f5",
+        border: "1px solid var(--input-border)",
+        background: "var(--color-white)",
+        color: "var(--color-gray-600)",
         cursor: "pointer",
         transition: "all 0.2s ease",
     },
     filterChipActive: {
-        background: "rgba(56,189,248,0.22)",
-        color: "#38bdf8",
-        border: "1px solid rgba(56,189,248,0.45)",
-        boxShadow: "0 22px 48px -32px rgba(56,189,248,0.6)",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+        border: "1px solid var(--color-primary-300)",
+        boxShadow: "var(--shadow-soft)",
     },
     resourceGrid: {
         display: "grid",
@@ -484,9 +550,9 @@ const styles = {
     },
     resourceCard: {
         borderRadius: "1.2rem",
-        border: "1px solid rgba(56,189,248,0.2)",
-        background: "rgba(12, 22, 40, 0.9)",
-        boxShadow: "0 36px 95px -62px rgba(56,189,248,0.55)",
+        border: "1px solid var(--input-border)",
+        background: "var(--panel-bg)",
+        boxShadow: "var(--shadow-md)",
         padding: "1.9rem",
         display: "grid",
         gap: "1.05rem",
@@ -495,8 +561,8 @@ const styles = {
     },
     resourceCardHover: {
         transform: "translateY(-6px)",
-        boxShadow: "0 48px 125px -70px rgba(56,189,248,0.65)",
-        borderColor: "rgba(56,189,248,0.38)",
+        boxShadow: "var(--shadow-xl)",
+        borderColor: "var(--color-primary-300)",
     },
     resourceHeader: {
         display: "flex",
@@ -510,7 +576,7 @@ const styles = {
         padding: "0.35rem 0.75rem",
         borderRadius: "999px",
         background: "rgba(56,189,248,0.16)",
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
         fontSize: "0.78rem",
         fontWeight: 600,
         letterSpacing: "0.05em",
@@ -521,7 +587,7 @@ const styles = {
         height: "2.85rem",
         borderRadius: "0.95rem",
         background: "linear-gradient(135deg, rgba(56,189,248,0.32), rgba(129,140,248,0.28))",
-        color: "#0ea5e9",
+        color: "var(--color-primary-600)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -529,7 +595,7 @@ const styles = {
     resourceTitle: {
         fontSize: "1.18rem",
         fontWeight: 600,
-        color: "#f8fafc",
+        color: "var(--color-gray-900)",
     },
     resourceMeta: {
         display: "flex",
@@ -538,18 +604,18 @@ const styles = {
         gap: "0.75rem",
         fontSize: "0.85rem",
         fontWeight: 600,
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
     },
     resourceDescription: {
         fontSize: "0.95rem",
-        color: "#9fb2d6",
+        color: "var(--color-gray-600)",
         lineHeight: 1.72,
     },
     tagPill: {
         padding: "0.35rem 0.95rem",
         borderRadius: "9999px",
         background: "rgba(15,23,42,0.45)",
-        color: "#cbd5f5",
+        color: "var(--color-gray-600)",
         fontSize: "0.78rem",
         fontWeight: 600,
     },
@@ -557,30 +623,31 @@ const styles = {
         padding: "0.32rem 0.8rem",
         borderRadius: "999px",
         background: "rgba(59,130,246,0.16)",
-        color: "#cfe1ff",
+        color: "var(--color-primary-100)",
         fontSize: "0.78rem",
         fontWeight: 600,
     },
     cardAction: {
-        alignSelf: "flex-start",
         display: "inline-flex",
         alignItems: "center",
         gap: "0.55rem",
-        padding: "0.7rem 1.5rem",
-        borderRadius: "0.95rem",
-        border: "1px solid rgba(56,189,248,0.32)",
-        background: "linear-gradient(130deg, rgba(56,189,248,0.2), rgba(14,165,233,0.18))",
-        color: "#38bdf8",
+        borderRadius: "9999px",
+        padding: "0.85rem 2.1rem",
         fontWeight: 600,
-        fontSize: "0.94rem",
+        fontSize: "1rem",
         cursor: "pointer",
-        transition: "all 0.2s ease",
+        border: "1px solid var(--color-primary-200)",
+        color: "var(--color-primary-700)",
+        background: "var(--color-primary-100)",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        boxShadow: "0 18px 32px -28px rgba(14,165,233,0.65)",
     },
     cardActionHover: {
-        background: "linear-gradient(130deg, rgba(56,189,248,0.28), rgba(14,165,233,0.26))",
-        borderColor: "rgba(56,189,248,0.48)",
-        transform: "translateY(-3px)",
-        boxShadow: "0 26px 64px -40px rgba(56,189,248,0.6)",
+        background: "linear-gradient(110deg, #38bdf8, #60a5fa)",
+        border: "none",
+        color: "#0f172a",
+        boxShadow: "0 24px 48px -28px rgba(56,189,248,0.7)",
+        transform: "translateY(-2px)",
     },
     highlightGrid: {
         display: "grid",
@@ -589,9 +656,9 @@ const styles = {
     },
     highlightCard: {
         borderRadius: "1.2rem",
-        border: "1px solid rgba(56,189,248,0.18)",
-        background: "rgba(12, 22, 40, 0.88)",
-        boxShadow: "0 32px 90px -58px rgba(56,189,248,0.55)",
+        border: "1px solid var(--input-border)",
+        background: "var(--panel-bg)",
+        boxShadow: "var(--shadow-md)",
         padding: "1.85rem",
         display: "grid",
         gap: "0.95rem",
@@ -608,7 +675,7 @@ const styles = {
         height: "2.6rem",
         borderRadius: "0.95rem",
         background: "linear-gradient(135deg, rgba(56,189,248,0.32), rgba(129,140,248,0.28))",
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -617,7 +684,7 @@ const styles = {
     highlightTitle: {
         fontSize: "1.18rem",
         fontWeight: 600,
-        color: "#f8fafc",
+        color: "var(--color-gray-900)",
     },
     highlightBadge: {
         display: "inline-flex",
@@ -625,7 +692,7 @@ const styles = {
         gap: "0.35rem",
         fontSize: "0.82rem",
         fontWeight: 600,
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
     },
     highlightMoments: {
         display: "flex",
@@ -636,26 +703,26 @@ const styles = {
         padding: "0.32rem 0.78rem",
         borderRadius: "999px",
         background: "rgba(56,189,248,0.18)",
-        color: "#e0f2fe",
+        color: "var(--color-primary-100)",
         fontSize: "0.78rem",
         fontWeight: 600,
     },
     highlightMetric: {
         fontSize: "0.85rem",
         fontWeight: 600,
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
     },
     highlightCardHover: {
         transform: "translateY(-6px)",
-        boxShadow: "0 48px 120px -70px rgba(56,189,248,0.62)",
-        borderColor: "rgba(56,189,248,0.32)",
+        boxShadow: "var(--shadow-xl)",
+        borderColor: "var(--color-primary-300)",
     },
     highlightEmoji: {
         fontSize: "1.3rem",
     },
     highlightDescription: {
         fontSize: "0.94rem",
-        color: "#9fb2d6",
+        color: "var(--color-gray-600)",
         lineHeight: 1.68,
     },
     goodiesRow: {
@@ -667,7 +734,7 @@ const styles = {
         padding: "0.35rem 0.85rem",
         borderRadius: "0.85rem",
         background: "rgba(14,165,233,0.22)",
-        color: "#cffafe",
+        color: "var(--color-cyan-100)",
         fontSize: "0.78rem",
         fontWeight: 600,
     },
@@ -676,7 +743,7 @@ const styles = {
         paddingLeft: "1.2rem",
         display: "grid",
         gap: "0.48rem",
-        color: "#9fb2d6",
+        color: "var(--color-gray-600)",
         fontSize: "0.9rem",
         lineHeight: 1.62,
     },
@@ -840,42 +907,77 @@ const Resources = () => {
         <div style={styles.page}>
             <div style={styles.container}>
                 <section style={styles.hero}>
-                    <div style={styles.heroGlow} />
-                    <div style={styles.heroContent}>
-                        <div style={styles.heroHeadline}>
-                            <div style={styles.heroPillRow}>
-                                <span style={styles.heroEyebrow}>FocusFlow vault</span>
-                                <span style={styles.heroPill}>Always fresh</span>
+                    <div style={styles.heroGlow} aria-hidden />
+                    <div style={styles.heroLayout}>
+                        <div style={styles.heroLeft}>
+                            <div>
+                                <h1 style={styles.heroTitle}>Find your next focus boost</h1>
+                                <p style={styles.heroLead}>
+                                    Bite-sized playbooks, remixable templates, and on-demand jams. Dip in, grab what’s fun, and get back to creating.
+                                </p>
                             </div>
-                            <h1 style={styles.heroTitle}>Find your next focus boost</h1>
-                            <p style={styles.heroLead}>
-                                Bite-sized playbooks, remixable templates, and on-demand jams. Dip in, grab what’s fun, and get back to creating.
-                            </p>
-                            <div style={styles.heroTags}>
+                            <div style={styles.badgeRow}>
                                 {heroTags.map((tag) => (
-                                    <span key={tag} style={styles.heroTag}>
+                                    <span key={tag} style={styles.badge}>
                                         {tag}
                                     </span>
                                 ))}
                             </div>
-                        </div>
-                        <div style={styles.heroSpotlights}>
-                            {heroSpotlights.map((spotlight) => (
-                                <div
-                                    key={spotlight.key}
-                                    style={styles.heroSpotlightCard}
-                                    onMouseEnter={(event) =>
-                                        Object.assign(event.currentTarget.style, styles.heroSpotlightCardHover)
-                                    }
-                                    onMouseLeave={(event) =>
-                                        Object.assign(event.currentTarget.style, styles.heroSpotlightCard)
-                                    }
-                                >
-                                    <span style={styles.heroSpotlightIcon}>{spotlight.icon}</span>
-                                    <span style={styles.heroSpotlightTitle}>{spotlight.title}</span>
-                                    <span style={styles.heroSpotlightCaption}>{spotlight.caption}</span>
+                            <div style={styles.heroActionCard}>
+                                <div style={styles.highlightList}>
+                                    {[
+                                        "Quick filters keep the library light",
+                                        "Grab templates without the signup",
+                                        "Swap categories in one click",
+                                    ].map((tip) => (
+                                        <div key={tip} style={styles.highlightChip}>
+                                            <ChartBarIcon style={styles.highlightChipIcon} />
+                                            <span>{tip}</span>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                                <div style={styles.highlightFooter}>
+                                    <span style={styles.highlightFooterCopy}>
+                                        <LightBulbIcon style={{ width: "1rem", height: "1rem" }} /> Start with a focus sprint
+                                    </span>
+                                    <button
+                                        style={{
+                                            ...styles.cardAction,
+                                            padding: "0.6rem 1.6rem",
+                                            fontSize: "0.95rem",
+                                        }}
+                                        onMouseEnter={(event) =>
+                                            Object.assign(event.currentTarget.style, styles.cardActionHover)
+                                        }
+                                        onMouseLeave={(event) =>
+                                            Object.assign(event.currentTarget.style, styles.cardAction)
+                                        }
+                                    >
+                                        <PlayCircleIcon style={{ width: "1.1rem", height: "1.1rem" }} /> Explore resources
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={styles.heroRight}>
+                            <div style={styles.highlightPanel}>
+                                <div style={styles.highlightHeader}>
+                                    <span style={styles.highlightBadge}>
+                                        <BookOpenIcon style={{ width: "1rem", height: "1rem" }} /> Resource types
+                                    </span>
+                                    <h2 style={styles.highlightTitle}>What's in the vault</h2>
+                                </div>
+                                <div style={styles.heroStatsGrid}>
+                                    {resourceStats.map((stat) => (
+                                        <div key={stat.key} style={styles.heroStat}>
+                                            <div style={styles.heroStatIconWrap}>
+                                                <span style={{ fontSize: "1.1rem" }}>{stat.icon}</span>
+                                            </div>
+                                            <span style={styles.heroStatLabel}>{stat.label}</span>
+                                            <span style={styles.heroStatValue}>{stat.count}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>

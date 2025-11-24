@@ -1,140 +1,356 @@
 import React, { useState, useEffect } from "react";
-import { XMarkIcon, SparklesIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, SpeakerWaveIcon, HeartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const AffirmationsRelaxation = ({ isOpen, onClose }) => {
+const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const [timeLeft, setTimeLeft] = useState(180);
+    const [sessionComplete, setSessionComplete] = useState(false);
     const [currentAffirmation, setCurrentAffirmation] = useState(0);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const [favorites, setFavorites] = useState([]);
 
     const affirmations = [
-        "I am focused and capable of deep work.",
-        "My mind is clear and ready to create.",
-        "I approach my tasks with calm confidence.",
+        "I am capable of achieving great things through focused effort.",
+        "My mind is clear, calm, and ready to tackle any challenge.",
+        "I embrace deep work and find joy in concentrated effort.",
         "Every moment of focus brings me closer to my goals.",
-        "I am in control of my attention and energy.",
-        "I release distractions and embrace clarity.",
-        "My work matters and I give it my full presence.",
-        "I am building momentum with each focused session.",
+        "I trust in my ability to maintain attention and complete important work.",
+        "Distractions are temporary, but my determination is lasting.",
+        "I choose to invest my energy in what truly matters.",
+        "My focus is a superpower that I strengthen each day.",
+        "I am in control of my attention and how I spend my time.",
+        "Creative solutions flow to me when I give myself space to think deeply.",
+        "I deserve focused time to do meaningful work.",
+        "Each deep work session builds my skills and confidence.",
+        "I release perfectionism and embrace progress.",
+        "My best work emerges when I give it my full attention.",
+        "I am building sustainable habits that serve my highest good.",
+        "Focused work energizes and fulfills me.",
+        "I honor my need for both concentration and rest.",
+        "My productivity comes from alignment, not pressure.",
+        "I approach my work with curiosity and calm.",
+        "Today, I choose presence over distraction.",
     ];
 
     useEffect(() => {
-        if (isOpen) {
-            setCurrentAffirmation(Math.floor(Math.random() * affirmations.length));
-        }
+        if (!isOpen) return;
+        // Reset timer when opening
+        setTimeLeft(180);
+        setSessionComplete(false);
+        
+        const interval = setInterval(() => {
+            setTimeLeft((prev) => {
+                if (prev <= 1) {
+                    setSessionComplete(true);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
     }, [isOpen]);
 
-    const nextAffirmation = () => {
-        setCurrentAffirmation((prev) => (prev + 1) % affirmations.length);
+    useEffect(() => {
+        if (!isOpen) return;
+        if (sessionComplete) {
+            const timer = setTimeout(() => {
+                onClose();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [sessionComplete, onClose, isOpen]);
+
+    // Early return after all hooks are defined
+    if (!isOpen) {
+        return null;
+    }
+
+    const getRandomAffirmation = () => {
+        const newIndex = Math.floor(Math.random() * affirmations.length);
+        setCurrentAffirmation(newIndex);
+        stopSpeech();
     };
 
-    if (!isOpen) return null;
+    const speakAffirmation = () => {
+        if ('speechSynthesis' in window) {
+            stopSpeech();
+            
+            const utterance = new SpeechSynthesisUtterance(affirmations[currentAffirmation]);
+            utterance.rate = 0.8;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = () => setIsSpeaking(true);
+            utterance.onend = () => setIsSpeaking(false);
+            utterance.onerror = () => setIsSpeaking(false);
+            
+            window.speechSynthesis.speak(utterance);
+        }
+    };
 
-    const modalStyles = {
-        overlay: {
+    const stopSpeech = () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            setIsSpeaking(false);
+        }
+    };
+
+    const toggleFavorite = () => {
+        if (favorites.includes(currentAffirmation)) {
+            setFavorites(favorites.filter(f => f !== currentAffirmation));
+        } else {
+            setFavorites([...favorites, currentAffirmation]);
+        }
+    };
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    const styles = {
+        modalOverlay: {
             position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(79, 70, 229, 0.2)",
-            backdropFilter: "blur(8px)",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.6)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 1000,
-            animation: "fadeIn 0.3s ease",
-        },
-        modal: {
-            background: "linear-gradient(135deg, rgba(165, 180, 252, 0.2), rgba(129, 140, 248, 0.2))",
-            borderRadius: "1.5rem",
-            border: "1px solid rgba(165, 180, 252, 0.4)",
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-            padding: "3rem",
-            maxWidth: "650px",
-            width: "90%",
-            position: "relative",
-            animation: "slideUp 0.3s ease",
-            textAlign: "center",
+            padding: "2rem",
+            zIndex: 9999,
+            animation: "fadeIn 0.3s ease-out",
         },
         closeButton: {
             position: "absolute",
             top: "1.5rem",
             right: "1.5rem",
-            width: "2.5rem",
-            height: "2.5rem",
+            width: "40px",
+            height: "40px",
             borderRadius: "50%",
-            background: "rgba(148, 163, 184, 0.2)",
-            border: "1px solid rgba(148, 163, 184, 0.3)",
+            border: "1px solid var(--input-border)",
+            background: "var(--panel-bg)",
+            color: "var(--color-gray-700)",
+            cursor: "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            cursor: "pointer",
             transition: "all 0.2s ease",
-            color: "var(--color-gray-600)",
+            zIndex: 10,
+        },
+        card: {
+            position: "relative",
+            maxWidth: "800px",
+            width: "100%",
+            background: "var(--panel-bg)",
+            border: "1px solid var(--input-border)",
+            borderRadius: "1.5rem",
+            padding: "3rem",
+            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "2.5rem",
+            alignItems: "center",
+            animation: "slideUp 0.3s ease-out",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            scrollbarColor: "var(--color-primary-400) var(--color-gray-200)",
         },
         header: {
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            justifyContent: "center",
+            width: "100%",
+            flexWrap: "wrap",
             gap: "1rem",
-            marginBottom: "2rem",
-        },
-        icon: {
-            width: "3.5rem",
-            height: "3.5rem",
-            borderRadius: "1rem",
-            background: "linear-gradient(135deg, rgba(165, 180, 252, 0.3), rgba(129, 140, 248, 0.3))",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#818cf8",
-            animation: "pulse 2s ease-in-out infinite",
         },
         title: {
-            fontSize: "1.75rem",
+            fontSize: "2rem",
             fontWeight: 700,
             color: "var(--color-gray-900)",
             margin: 0,
         },
-        affirmationBox: {
-            background: "rgba(255, 255, 255, 0.7)",
-            borderRadius: "1.25rem",
-            padding: "2.5rem 2rem",
-            border: "2px solid rgba(165, 180, 252, 0.4)",
-            marginBottom: "2rem",
-            minHeight: "150px",
+        timer: {
+            fontSize: "1.5rem",
+            fontWeight: 600,
+            color: "var(--color-primary-600)",
+        },
+        affirmationDisplay: {
+            textAlign: "center",
+            padding: "3rem 2rem",
+            background: "linear-gradient(135deg, rgba(56,189,248,0.1), rgba(129,140,248,0.1))",
+            borderRadius: "1.5rem",
+            border: "2px solid var(--color-primary-200)",
+            minHeight: "200px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 10px 30px rgba(129, 140, 248, 0.2)",
+            width: "100%",
         },
         affirmationText: {
-            fontSize: "1.5rem",
+            fontSize: "1.8rem",
             fontWeight: 600,
             color: "var(--color-gray-900)",
             lineHeight: 1.6,
-            animation: "fadeInScale 0.5s ease",
+            maxWidth: "600px",
+        },
+        controls: {
+            display: "flex",
+            gap: "1rem",
+            flexWrap: "wrap",
+            justifyContent: "center",
         },
         button: {
-            padding: "0.85rem 2rem",
+            padding: "0.75rem 1.5rem",
             borderRadius: "0.75rem",
-            background: "linear-gradient(110deg, #818cf8, #a5b4fc)",
             border: "none",
-            color: "white",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",
-            transition: "all 0.2s ease",
-            display: "inline-flex",
+            display: "flex",
             alignItems: "center",
             gap: "0.5rem",
-            boxShadow: "0 10px 20px rgba(129, 140, 248, 0.3)",
+            transition: "all 0.2s ease",
         },
-        hint: {
+        primaryButton: {
+            background: "linear-gradient(110deg, #38bdf8, #60a5fa)",
+            color: "#0f172a",
+            boxShadow: "0 4px 12px rgba(56,189,248,0.3)",
+        },
+        secondaryButton: {
+            background: "var(--color-gray-200)",
+            color: "var(--color-gray-700)",
+        },
+        favoriteButton: {
+            background: "var(--color-pink-100)",
+            color: "var(--color-pink-700)",
+        },
+        favoriteButtonActive: {
+            background: "var(--color-pink-500)",
+            color: "white",
+        },
+        counter: {
             fontSize: "0.9rem",
             color: "var(--color-gray-600)",
-            marginTop: "1.5rem",
-            fontStyle: "italic",
+            textAlign: "center",
+        },
+        completeMessage: {
+            fontSize: "1.5rem",
+            fontWeight: 600,
+            color: "var(--color-green-600)",
+            textAlign: "center",
+        },
+        description: {
+            color: "var(--color-gray-600)",
+            fontSize: "1rem",
+            lineHeight: 1.6,
+            textAlign: "center",
+        },
+        favoritesSection: {
+            width: "100%",
+            padding: "1.5rem",
+            background: "var(--color-white)",
+            borderRadius: "1rem",
+            border: "1px solid var(--input-border)",
+        },
+        favoritesTitle: {
+            fontSize: "1rem",
+            fontWeight: 600,
+            color: "var(--color-gray-700)",
+            marginBottom: "0.75rem",
+        },
+        favoritesList: {
+            fontSize: "0.9rem",
+            color: "var(--color-gray-600)",
+            lineHeight: 1.6,
+        },
+        skipButton: {
+            padding: "0.75rem 1.5rem",
+            borderRadius: "0.75rem",
+            border: "none",
+            background: "var(--color-primary-100)",
+            color: "var(--color-primary-700)",
+            fontWeight: 600,
+            fontSize: "1rem",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            transition: "all 0.2s ease",
+            marginTop: "1rem",
         },
     };
 
+    if (sessionComplete) {
+        const stylesWithSkipButton = {
+            ...styles,
+            skipButton: {
+                padding: "0.75rem 1.5rem",
+                borderRadius: "0.75rem",
+                border: "none",
+                background: "var(--color-primary-100)",
+                color: "var(--color-primary-700)",
+                fontWeight: 600,
+                fontSize: "1rem",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                transition: "all 0.2s ease",
+                marginTop: "1rem",
+            }
+        };
+
+        return (
+            <div style={stylesWithSkipButton.modalOverlay} onClick={onClose}>
+                <style>
+                    {`
+                        @keyframes fadeIn {
+                            from { opacity: 0; }
+                            to { opacity: 1; }
+                        }
+                        @keyframes slideUp {
+                            from { transform: translateY(20px); opacity: 0; }
+                            to { transform: translateY(0); opacity: 1; }
+                        }
+                    `}
+                </style>
+                <div style={stylesWithSkipButton.card} onClick={(e) => e.stopPropagation()}>
+                    <h1 style={stylesWithSkipButton.completeMessage}>
+                        ✨ Session Complete
+                    </h1>
+                    <p style={stylesWithSkipButton.description}>
+                        Carry these positive intentions into your focus session.
+                    </p>
+                    <p style={stylesWithSkipButton.description}>
+                        Returning to Dashboard...
+                    </p>
+                    <button
+                        onClick={onSkipToFocus}
+                        style={stylesWithSkipButton.skipButton}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-200)";
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-100)";
+                            e.currentTarget.style.transform = "translateY(0)";
+                        }}
+                    >
+                        Skip to Focus Session
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <>
+        <div style={styles.modalOverlay} onClick={onClose}>
             <style>
                 {`
                     @keyframes fadeIn {
@@ -145,68 +361,140 @@ const AffirmationsRelaxation = ({ isOpen, onClose }) => {
                         from { transform: translateY(20px); opacity: 0; }
                         to { transform: translateY(0); opacity: 1; }
                     }
-                    @keyframes fadeInScale {
-                        from { opacity: 0; transform: scale(0.95); }
-                        to { opacity: 1; transform: scale(1); }
-                    }
-                    @keyframes pulse {
-                        0%, 100% { transform: scale(1); }
-                        50% { transform: scale(1.05); }
-                    }
                 `}
             </style>
-            <div style={modalStyles.overlay} onClick={onClose}>
-                <div style={modalStyles.modal} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.card} onClick={(e) => e.stopPropagation()}>
+                <button
+                    onClick={onClose}
+                    style={styles.closeButton}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--color-gray-100)";
+                        e.currentTarget.style.transform = "scale(1.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "var(--panel-bg)";
+                        e.currentTarget.style.transform = "scale(1)";
+                    }}
+                >
+                    <XMarkIcon style={{ width: "24px", height: "24px" }} />
+                </button>
+                <div style={styles.header}>
+                    <h1 style={styles.title}>💬 Daily Affirmations</h1>
+                    <div style={styles.timer}>{formatTime(timeLeft)}</div>
+                </div>
+
+                <p style={styles.description}>
+                    Read these affirmations slowly. Let each word sink in. Believe in your capacity for focused, meaningful work.
+                </p>
+
+                <div style={styles.affirmationDisplay}>
+                    <p style={styles.affirmationText}>
+                        {affirmations[currentAffirmation]}
+                    </p>
+                </div>
+
+                <p style={styles.counter}>
+                    Affirmation {currentAffirmation + 1} of {affirmations.length}
+                </p>
+
+                <div style={styles.controls}>
                     <button
-                        style={modalStyles.closeButton}
-                        onClick={onClose}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "rgba(148, 163, 184, 0.3)";
-                            e.currentTarget.style.transform = "scale(1.05)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "rgba(148, 163, 184, 0.2)";
-                            e.currentTarget.style.transform = "scale(1)";
-                        }}
-                    >
-                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
-                    </button>
-
-                    <div style={modalStyles.header}>
-                        <div style={modalStyles.icon}>
-                            <SparklesIcon style={{ width: "2rem", height: "2rem" }} />
-                        </div>
-                        <h2 style={modalStyles.title}>💬 Affirmations</h2>
-                    </div>
-
-                    <div style={modalStyles.affirmationBox}>
-                        <p key={currentAffirmation} style={modalStyles.affirmationText}>
-                            "{affirmations[currentAffirmation]}"
-                        </p>
-                    </div>
-
-                    <button
-                        style={modalStyles.button}
-                        onClick={nextAffirmation}
+                        onClick={getRandomAffirmation}
+                        style={{ ...styles.button, ...styles.primaryButton }}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.transform = "translateY(-2px)";
-                            e.currentTarget.style.boxShadow = "0 15px 30px rgba(129, 140, 248, 0.4)";
+                            e.currentTarget.style.boxShadow = "0 6px 16px rgba(56,189,248,0.4)";
                         }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.transform = "translateY(0)";
-                            e.currentTarget.style.boxShadow = "0 10px 20px rgba(129, 140, 248, 0.3)";
+                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(56,189,248,0.3)";
                         }}
                     >
-                        <ArrowPathIcon style={{ width: "1.2rem", height: "1.2rem" }} />
+                        <ArrowPathIcon style={{ width: "20px", height: "20px" }} />
                         Next Affirmation
                     </button>
 
-                    <p style={modalStyles.hint}>
-                        Take a deep breath and let this affirmation sink in before starting your focus session.
-                    </p>
+                    <button
+                        onClick={speakAffirmation}
+                        disabled={isSpeaking}
+                        style={{
+                            ...styles.button,
+                            ...styles.secondaryButton,
+                            opacity: isSpeaking ? 0.6 : 1,
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isSpeaking) {
+                                e.currentTarget.style.background = "var(--color-gray-300)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "var(--color-gray-200)";
+                        }}
+                    >
+                        <SpeakerWaveIcon style={{ width: "20px", height: "20px" }} />
+                        {isSpeaking ? "Speaking..." : "Listen"}
+                    </button>
+
+                    <button
+                        onClick={toggleFavorite}
+                        style={{
+                            ...styles.button,
+                            ...(favorites.includes(currentAffirmation)
+                                ? styles.favoriteButtonActive
+                                : styles.favoriteButton),
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!favorites.includes(currentAffirmation)) {
+                                e.currentTarget.style.background = "var(--color-pink-200)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!favorites.includes(currentAffirmation)) {
+                                e.currentTarget.style.background = "var(--color-pink-100)";
+                            }
+                        }}
+                    >
+                        <HeartIcon
+                            style={{
+                                width: "20px",
+                                height: "20px",
+                                fill: favorites.includes(currentAffirmation) ? "currentColor" : "none",
+                            }}
+                        />
+                        {favorites.includes(currentAffirmation) ? "Favorited" : "Favorite"}
+                    </button>
                 </div>
+
+                {favorites.length > 0 && (
+                    <div style={styles.favoritesSection}>
+                        <p style={styles.favoritesTitle}>
+                            ❤️ Your Favorites ({favorites.length})
+                        </p>
+                        <div style={styles.favoritesList}>
+                            {favorites.map((index) => (
+                                <p key={index} style={{ margin: "0.5rem 0" }}>
+                                    • {affirmations[index]}
+                                </p>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                <button
+                    onClick={onSkipToFocus}
+                    style={styles.skipButton}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--color-primary-200)";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "var(--color-primary-100)";
+                        e.currentTarget.style.transform = "translateY(0)";
+                    }}
+                >
+                    Skip to Focus Session
+                </button>
             </div>
-        </>
+        </div>
     );
 };
 

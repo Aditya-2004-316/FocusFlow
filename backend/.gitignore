@@ -10,8 +10,6 @@ node_modules/
 # Build outputs
 dist/
 build/
-dist-ssr/
-*.local
 
 # Logs
 logs
@@ -69,12 +67,14 @@ debug.log*
 tmp/
 temp/
 
-# Vite related
-.env.local
-.env.*.local
+# Node.js coverage
+coverage/
 
-# Production builds
-build/
+# Jest
+.jest/
+
+# Nodemon
+.nodemon/
 
 # Misc
 *.bak

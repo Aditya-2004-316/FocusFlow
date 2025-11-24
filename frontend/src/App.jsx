@@ -4,6 +4,7 @@ import {
     Routes,
     Route,
     Navigate,
+    useNavigate,
 } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import Timer from "./components/Timer.jsx";
@@ -95,6 +96,7 @@ const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
 
 function Dashboard() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [distractions, setDistractions] = useState(() => {
         const saved = localStorage.getItem("distractions");
         return saved ? JSON.parse(saved) : [];
@@ -104,6 +106,116 @@ function Dashboard() {
     const [filterText, setFilterText] = useState("");
     const [isSyncing, setIsSyncing] = useState(false);
     const [activeRelaxationModal, setActiveRelaxationModal] = useState(null);
+    const [relaxationUsage, setRelaxationUsage] = useState(() => {
+        const saved = localStorage.getItem("relaxationUsage");
+        return saved ? JSON.parse(saved) : { activities: [], lastReset: Date.now() };
+    });
+    const [cooldownActive, setCooldownActive] = useState(false);
+    const [notification, setNotification] = useState(null);
+
+    // Check if cooldown is active on component mount
+    useEffect(() => {
+        const savedCooldown = localStorage.getItem("relaxationCooldown");
+        if (savedCooldown) {
+            const cooldownData = JSON.parse(savedCooldown);
+            const timeLeft = cooldownData.endTime - Date.now();
+            if (timeLeft > 0) {
+                setCooldownActive(true);
+                // Set a timeout to clear cooldown when it expires
+                setTimeout(() => {
+                    setCooldownActive(false);
+                    localStorage.removeItem("relaxationCooldown");
+                }, timeLeft);
+            } else {
+                localStorage.removeItem("relaxationCooldown");
+            }
+        }
+    }, []);
+
+    // Save relaxation usage to localStorage
+    useEffect(() => {
+        localStorage.setItem("relaxationUsage", JSON.stringify(relaxationUsage));
+    }, [relaxationUsage]);
+
+    // Function to handle skip to focus session
+    const handleSkipToFocus = () => {
+        navigate("/focus-timer");
+    };
+
+    // Function to check if user can use a relaxation activity
+    const canUseRelaxationActivity = (activityType) => {
+        // // Reset usage if it's been more than 24 hours
+        // const now = Date.now();
+        // if (now - relaxationUsage.lastReset > 24 * 60 * 60 * 1000) {
+        //     setRelaxationUsage({ activities: [], lastReset: now });
+        //     return true;
+        // }
+
+        // // Check if cooldown is active
+        // if (cooldownActive) {
+        //     return false;
+        // }
+
+        // // Count how many times this activity has been used
+        // const activityCount = relaxationUsage.activities.filter(a => a.type === activityType).length;
+        
+        // // Count total unique activities
+        // const uniqueActivities = [...new Set(relaxationUsage.activities.map(a => a.type))].length;
+        
+        // // Allow if:
+        // // 1. Less than 2 different activities used, OR
+        // // 2. This activity used less than 2 times
+        // if (uniqueActivities < 2 || activityCount < 2) {
+        //     return true;
+        // }
+        
+        // // Start cooldown
+        // startCooldown();
+        // return false;
+        return true;
+    };
+
+    // Function to record relaxation activity usage
+    const recordRelaxationActivity = (activityType) => {
+        const now = Date.now();
+        const newUsage = {
+            activities: [...relaxationUsage.activities, { type: activityType, timestamp: now }],
+            lastReset: relaxationUsage.lastReset
+        };
+        setRelaxationUsage(newUsage);
+    };
+
+    // Function to start 30-minute cooldown
+    const startCooldown = () => {
+        const endTime = Date.now() + 30 * 60 * 1000; // 30 minutes
+        const cooldownData = { endTime };
+        localStorage.setItem("relaxationCooldown", JSON.stringify(cooldownData));
+        setCooldownActive(true);
+        
+        // Set timeout to clear cooldown
+        setTimeout(() => {
+            setCooldownActive(false);
+            localStorage.removeItem("relaxationCooldown");
+        }, 30 * 60 * 1000);
+    };
+
+    // Function to handle opening a relaxation modal
+    const handleOpenRelaxationModal = (modalType) => {
+        if (canUseRelaxationActivity(modalType)) {
+            recordRelaxationActivity(modalType);
+            setActiveRelaxationModal(modalType);
+        } else {
+            // Show notification about cooldown
+            setNotification({
+                message: "You've reached the limit for relaxation activities. Please wait 30 minutes before using them again.",
+                type: "warning"
+            });
+            // Clear notification after 5 seconds
+            setTimeout(() => {
+                setNotification(null);
+            }, 5000);
+        }
+    };
 
     const displayName = user
         ? user.firstName
@@ -563,7 +675,7 @@ function Dashboard() {
         },
         companionGrid: {
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "1.3rem",
         },
         companionCard: {
@@ -863,12 +975,49 @@ function Dashboard() {
             action: "Create admin block",
         },
     ];
+    // Notification component
+    const Notification = ({ message, type }) => {
+        if (!message) return null;
+        
+        const notificationStyles = {
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            padding: "1rem 1.5rem",
+            borderRadius: "0.5rem",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            zIndex: 10000,
+            maxWidth: "400px",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            background: type === "warning" ? "#fef3c7" : "#dbeafe",
+            border: `1px solid ${type === "warning" ? "#f59e0b" : "#3b82f6"}`,
+            color: type === "warning" ? "#92400e" : "#1e40af",
+            transform: "translateY(0)",
+            transition: "transform 0.3s ease, opacity 0.3s ease",
+        };
+        
+        return (
+            <div style={notificationStyles}>
+                <div>
+                    {type === "warning" ? 
+                        <BellAlertIcon style={{ width: "1.5rem", height: "1.5rem" }} /> : 
+                        <ChartBarIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                    }
+                </div>
+                <div>{message}</div>
+            </div>
+        );
+    };
+
     return (
         <div style={dashboardStyles.wrapper}>
+            <Notification message={notification?.message} type={notification?.type} />
             <div style={dashboardStyles.inner}>
                 <section style={dashboardStyles.hero}>
                     <div>
-                        <h1 style={dashboardStyles.heroTitle}>
+                        <h1 style={{...dashboardStyles.heroTitle, marginBottom: "1.5rem"}}>
                             {displayName ? (
                                 <>
                                     Welcome back, {" "}
@@ -910,7 +1059,7 @@ function Dashboard() {
                     </div>
                 </section>
 
-                <section style={dashboardStyles.companionSection}>
+                {/* <section style={dashboardStyles.companionSection}>
                     <div style={dashboardStyles.companionHeader}>
                         <h2 style={dashboardStyles.sectionTitle}>Companion tools</h2>
                         <p style={dashboardStyles.sectionLead}>
@@ -948,7 +1097,7 @@ function Dashboard() {
                             );
                         })}
                     </div>
-                </section>
+                </section> */}
 
                 <section style={dashboardStyles.companionSection}>
                     <div style={dashboardStyles.companionHeader}>
@@ -998,6 +1147,14 @@ function Dashboard() {
                             },
                         ].map((activity) => {
                             const ActivityIcon = activity.Icon;
+                            const routeMap = {
+                                music: "/relaxation/music",
+                                meditation: "/relaxation/meditation",
+                                thoughtDump: "/relaxation/thought-dump",
+                                calmingGame: "/relaxation/calming-game",
+                                doodlePad: "/relaxation/doodle-pad",
+                                affirmations: "/relaxation/affirmations",
+                            };
                             return (
                                 <article key={activity.title} style={dashboardStyles.companionCard}>
                                     <div style={dashboardStyles.companionIcon}>
@@ -1008,7 +1165,7 @@ function Dashboard() {
                                     <button
                                         type="button"
                                         style={dashboardStyles.companionButton}
-                                        onClick={() => setActiveRelaxationModal(activity.modal)}
+                                        onClick={() => handleOpenRelaxationModal(activity.modal)}
                                         onMouseEnter={(event) =>
                                             Object.assign(event.currentTarget.style, {
                                                 transform: "translateY(-3px)",
@@ -1357,26 +1514,32 @@ function Dashboard() {
                 <MusicRelaxation
                     isOpen={activeRelaxationModal === "music"}
                     onClose={() => setActiveRelaxationModal(null)}
+                    onSkipToFocus={handleSkipToFocus}
                 />
                 <MeditationRelaxation
                     isOpen={activeRelaxationModal === "meditation"}
                     onClose={() => setActiveRelaxationModal(null)}
+                    onSkipToFocus={handleSkipToFocus}
                 />
                 <ThoughtDumpRelaxation
                     isOpen={activeRelaxationModal === "thoughtDump"}
                     onClose={() => setActiveRelaxationModal(null)}
+                    onSkipToFocus={handleSkipToFocus}
                 />
                 <CalmingGameRelaxation
                     isOpen={activeRelaxationModal === "calmingGame"}
                     onClose={() => setActiveRelaxationModal(null)}
+                    onSkipToFocus={handleSkipToFocus}
                 />
                 <DoodlePadRelaxation
                     isOpen={activeRelaxationModal === "doodlePad"}
                     onClose={() => setActiveRelaxationModal(null)}
+                    onSkipToFocus={handleSkipToFocus}
                 />
                 <AffirmationsRelaxation
                     isOpen={activeRelaxationModal === "affirmations"}
                     onClose={() => setActiveRelaxationModal(null)}
+                    onSkipToFocus={handleSkipToFocus}
                 />
             </div>
         </div>

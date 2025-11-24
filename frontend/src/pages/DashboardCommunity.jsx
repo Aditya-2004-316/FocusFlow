@@ -174,22 +174,22 @@ const DashboardCommunity = () => {
     };
 
     const userCardStyle = {
-        background: "rgba(15,23,42,0.75)",
+        background: "var(--panel-bg)",
         borderRadius: "1rem",
-        border: "1px solid rgba(56,189,248,0.2)",
+        border: "1px solid var(--input-border)",
         padding: "1.2rem",
         display: "flex",
         alignItems: "center",
         gap: "1rem",
         marginBottom: "1rem",
-        boxShadow: "0 20px 45px -30px rgba(15,23,42,0.6)",
+        boxShadow: "var(--shadow-soft)",
     };
 
     const avatarStyle = {
         width: "3rem",
         height: "3rem",
         borderRadius: "50%",
-        background: "linear-gradient(130deg, rgba(59,130,246,0.22), rgba(14,165,233,0.22))",
+        background: "linear-gradient(130deg, rgba(59,130,246,0.2), rgba(14,165,233,0.2))",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -242,7 +242,7 @@ const DashboardCommunity = () => {
         width: "3rem",
         height: "3rem",
         borderRadius: "50%",
-        background: "linear-gradient(130deg, rgba(59,130,246,0.22), rgba(14,165,233,0.22))",
+        background: "linear-gradient(130deg, rgba(59,130,246,0.2), rgba(14,165,233,0.2))",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -386,6 +386,21 @@ const DashboardCommunity = () => {
         color: "var(--color-primary-700)",
         fontSize: "0.75rem",
         fontWeight: 600,
+    };
+
+    const buttonStyle = {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.75rem",
+        padding: "0.9rem 1.4rem",
+        borderRadius: "0.95rem",
+        border: "1px solid var(--color-primary-300)",
+        background: "var(--color-primary-100)",
+        color: "var(--color-primary-700)",
+        fontWeight: 600,
+        cursor: "pointer",
+        transition: "all 0.2s ease",
+        fontSize: "1rem",
     };
 
     const communityMentors = [
@@ -615,13 +630,14 @@ const DashboardCommunity = () => {
                                     style={{
                                         fontWeight: 600,
                                         marginBottom: "0.25rem",
+                                        color: "var(--color-gray-900)",
                                     }}
                                 >
                                     John Doe
                                 </h4>
                                 <p
                                     style={{
-                                        color: "#94a3b8",
+                                        color: "var(--color-gray-600)",
                                         fontSize: "0.875rem",
                                     }}
                                 >
@@ -631,7 +647,7 @@ const DashboardCommunity = () => {
                             </div>
                             <span
                                 style={{
-                                    color: "#94a3b8",
+                                    color: "var(--color-gray-600)",
                                     fontSize: "0.875rem",
                                 }}
                             >
@@ -747,7 +763,7 @@ const DashboardCommunity = () => {
                                                 style={{
                                                     fontSize: "1.05rem",
                                                     fontWeight: 600,
-                                                    color: "#f8fafc",
+                                                    color: "var(--color-gray-900)",
                                                 }}
                                             >
                                                 {mentor.name}
@@ -810,7 +826,7 @@ const DashboardCommunity = () => {
                                         style={{
                                             fontSize: "1.05rem",
                                             fontWeight: 600,
-                                            color: "#f8fafc",
+                                            color: "var(--color-gray-900)",
                                         }}
                                     >
                                         {event.title}

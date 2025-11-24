@@ -8,6 +8,8 @@ import {
     ShieldCheckIcon,
     MoonIcon,
     SunIcon,
+    CheckCircleIcon,
+    FireIcon,
 } from "@heroicons/react/24/outline";
 
 import { useEffect, useState } from "react";
@@ -20,6 +22,7 @@ import FocusFlowLogo from "../assets/focusflowlogo.png";
 
 const Header = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const { user, logout, isAuthenticated } = useAuth();
     const navigate = useNavigate();
@@ -187,9 +190,133 @@ const Header = () => {
                         )}
                     </button>
                 )}
-                <button style={buttonStyle}>
-                    <BellIcon style={{ width: "1.5rem", height: "1.5rem" }} />
-                </button>
+                {isAuthenticated && (
+                    <div style={{ position: "relative" }}>
+                        <button
+                            style={buttonStyle}
+                            onClick={() => setIsNotificationsOpen((prev) => !prev)}
+                            title="Notifications"
+                        >
+                            <BellIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                        </button>
+                        {isNotificationsOpen && (
+                            <div style={dropdownStyle}>
+                                <div style={dropdownHeaderStyle}>
+                                    <p
+                                        style={{
+                                            fontWeight: 600,
+                                            color: "var(--color-gray-900)",
+                                            margin: 0,
+                                        }}
+                                    >
+                                        Notifications
+                                    </p>
+                                </div>
+                                <div
+                                    style={{
+                                        ...dropdownItemStyle,
+                                        cursor: "default",
+                                        display: "grid",
+                                        gap: "0.5rem",
+                                        paddingTop: "1rem",
+                                        paddingBottom: "1rem",
+                                    }}
+                                >
+                                    <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+                                        <CheckCircleIcon style={{ ...dropdownItemIconStyle, color: "var(--color-green-600)", flexShrink: 0 }} />
+                                        <div>
+                                            <p style={{ margin: 0, fontWeight: 600, fontSize: "0.9rem" }}>Session Complete!</p>
+                                            <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "var(--color-gray-600)" }}>
+                                                Great job! You completed a 25-minute focus session.
+                                            </p>
+                                            <p style={{ margin: "0.25rem 0 0", fontSize: "0.75rem", color: "var(--color-gray-500)" }}>
+                                                2 hours ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={dropdownDividerStyle} />
+                                <div
+                                    style={{
+                                        ...dropdownItemStyle,
+                                        cursor: "default",
+                                        display: "grid",
+                                        gap: "0.5rem",
+                                        paddingTop: "1rem",
+                                        paddingBottom: "1rem",
+                                    }}
+                                >
+                                    <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+                                        <FireIcon style={{ ...dropdownItemIconStyle, color: "var(--color-orange-500)", flexShrink: 0 }} />
+                                        <div>
+                                            <p style={{ margin: 0, fontWeight: 600, fontSize: "0.9rem" }}>5-Day Streak!</p>
+                                            <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "var(--color-gray-600)" }}>
+                                                You're on fire! Keep up the momentum.
+                                            </p>
+                                            <p style={{ margin: "0.25rem 0 0", fontSize: "0.75rem", color: "var(--color-gray-500)" }}>
+                                                Yesterday
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={dropdownDividerStyle} />
+                                <div
+                                    style={{
+                                        ...dropdownItemStyle,
+                                        cursor: "default",
+                                        display: "grid",
+                                        gap: "0.5rem",
+                                        paddingTop: "1rem",
+                                        paddingBottom: "1rem",
+                                    }}
+                                >
+                                    <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+                                        <BellIcon style={{ ...dropdownItemIconStyle, color: "var(--color-primary-600)", flexShrink: 0 }} />
+                                        <div>
+                                            <p style={{ margin: 0, fontWeight: 600, fontSize: "0.9rem" }}>Break Reminder</p>
+                                            <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "var(--color-gray-600)" }}>
+                                                Time for a 5-minute break. Stretch and recharge!
+                                            </p>
+                                            <p style={{ margin: "0.25rem 0 0", fontSize: "0.75rem", color: "var(--color-gray-500)" }}>
+                                                3 days ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={dropdownDividerStyle} />
+                                <button
+                                    type="button"
+                                    style={{
+                                        ...dropdownItemStyle,
+                                        width: "100%",
+                                        border: "none",
+                                        background: "transparent",
+                                        justifyContent: "center",
+                                        fontWeight: 600,
+                                        fontSize: "0.9rem",
+                                    }}
+                                    onMouseEnter={(e) =>
+                                        Object.assign(e.currentTarget.style, dropdownItemHoverStyle)
+                                    }
+                                    onMouseLeave={(e) => {
+                                        Object.assign(e.currentTarget.style, {
+                                            ...dropdownItemStyle,
+                                            width: "100%",
+                                            border: "none",
+                                            background: "transparent",
+                                            justifyContent: "center",
+                                            fontWeight: 600,
+                                            fontSize: "0.9rem",
+                                        });
+                                    }}
+                                    onClick={() => setIsNotificationsOpen(false)}
+                                >
+                                    View All Notifications
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
                 {isAuthenticated && user && (
                     <div style={{ position: "relative" }}>
                         <button

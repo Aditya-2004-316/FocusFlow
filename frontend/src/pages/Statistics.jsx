@@ -17,8 +17,8 @@ const styles = {
         padding: "3rem",
         display: "grid",
         gap: "1.6rem",
-        background: "linear-gradient(135deg, rgba(15,23,42,0.88), rgba(30,41,59,0.92))",
-        border: "1px solid rgba(148,163,184,0.3)",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
     },
     heroTitle: {
         fontSize: "2.4rem",
@@ -78,8 +78,8 @@ const styles = {
     },
     metricCard: {
         ...sharedFocusShell.sectionCard,
-        background: "linear-gradient(150deg, rgba(15,23,42,0.95), rgba(30,41,59,0.86))",
-        border: "1px solid rgba(148,163,184,0.32)",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
         padding: "1.8rem",
         display: "grid",
         gap: "0.75rem",
@@ -94,7 +94,7 @@ const styles = {
         height: "2.6rem",
         borderRadius: "0.85rem",
         background: "rgba(56,189,248,0.16)",
-        color: "var(--color-primary-200)",
+        color: "var(--color-primary-600)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -105,12 +105,12 @@ const styles = {
         fontWeight: 600,
         letterSpacing: "0.05em",
         textTransform: "uppercase",
-        color: "rgba(226,232,240,0.75)",
+        color: "var(--color-gray-600)",
     },
     metricValue: {
         fontSize: "1.9rem",
         fontWeight: 700,
-        color: "#f8fafc",
+        color: "var(--color-gray-900)",
     },
     metricTrend: {
         display: "inline-flex",
@@ -126,10 +126,12 @@ const styles = {
         alignItems: "center",
         gap: "1.25rem",
         padding: "1.3rem 1.6rem",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
     },
     toolbarLabel: {
         fontSize: "0.95rem",
-        color: "rgba(226,232,240,0.8)",
+        color: "var(--color-gray-600)",
         display: "flex",
         gap: "0.45rem",
         alignItems: "center",
@@ -144,21 +146,23 @@ const styles = {
         borderRadius: "0.75rem",
         fontWeight: 600,
         fontSize: "0.95rem",
-        border: "1px solid rgba(148,163,184,0.28)",
-        background: "rgba(15,23,42,0.55)",
-        color: "rgba(226,232,240,0.75)",
+        border: "1px solid var(--input-border)",
+        background: "var(--color-white)",
+        color: "var(--color-gray-700)",
         cursor: "pointer",
         transition: "all 0.2s ease",
     },
     rangeButtonActive: {
-        background: "rgba(56,189,248,0.18)",
-        color: "var(--color-primary-50)",
+        background: "rgba(56,189,248,0.15)",
+        color: "var(--color-primary-700)",
         border: "1px solid rgba(56,189,248,0.35)",
-        boxShadow: "0 18px 38px -28px rgba(56,189,248,0.55)",
+        boxShadow: "var(--shadow-soft)",
     },
     chart: {
         ...sharedFocusShell.sectionCard,
         padding: "2rem",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
     },
     chartInner: {
         height: "280px",
@@ -203,6 +207,8 @@ const styles = {
         ...sharedFocusShell.sectionCard,
         padding: "1.8rem",
         gap: "0.85rem",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
     },
     insightHeader: {
         display: "flex",
@@ -215,7 +221,7 @@ const styles = {
         height: "2.5rem",
         borderRadius: "0.85rem",
         background: "rgba(56,189,248,0.16)",
-        color: "var(--color-primary-200)",
+        color: "var(--color-primary-600)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -233,13 +239,13 @@ const styles = {
     insightHighlight: {
         fontSize: "1.35rem",
         fontWeight: 700,
-        color: "#38bdf8",
+        color: "var(--color-primary-600)",
     },
     deepSection: {
         ...sharedFocusShell.sectionCard,
-        border: "1px solid rgba(56,189,248,0.25)",
-        background: "linear-gradient(135deg, rgba(15,23,42,0.75), rgba(17,24,39,0.85))",
-        color: "#e2e8f0",
+        border: "1px solid var(--input-border)",
+        background: "var(--panel-bg)",
+        color: "var(--color-gray-900)",
         gap: "1.6rem",
     },
     goalList: {
@@ -248,8 +254,8 @@ const styles = {
     },
     goalCard: {
         ...sharedFocusShell.sectionCard,
-        background: "rgba(15,23,42,0.65)",
-        border: "1px solid rgba(148,163,184,0.22)",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
         gap: "0.85rem",
         padding: "1.6rem",
     },
@@ -278,8 +284,8 @@ const styles = {
     },
     suggestionCard: {
         ...sharedFocusShell.sectionCard,
-        background: "rgba(17,24,39,0.72)",
-        border: "1px solid rgba(148,163,184,0.22)",
+        background: "var(--panel-bg)",
+        border: "1px solid var(--input-border)",
         gap: "0.75rem",
         minHeight: "100%",
     },
@@ -517,7 +523,7 @@ const Statistics = () => {
                                     <div style={{ fontSize: "1.12rem", fontWeight: 600 }}>{insight.title}</div>
                                     <div style={styles.insightHighlight}>{insight.highlight}</div>
                                 </div>
-                                <p style={{ color: "#cbd5f5", fontSize: "0.92rem", lineHeight: 1.7 }}>{insight.description}</p>
+                                <p style={{ color: "var(--color-gray-600)", fontSize: "0.92rem", lineHeight: 1.7 }}>{insight.description}</p>
                             </div>
                         ))}
                     </div>
@@ -525,8 +531,8 @@ const Statistics = () => {
 
                 <section style={styles.deepSection}>
                     <div>
-                        <h2 style={{ fontSize: "1.55rem", fontWeight: 700, marginBottom: "0.35rem" }}>Productivity goals</h2>
-                        <p style={{ fontSize: "0.98rem", lineHeight: 1.7, color: "#cbd5f5" }}>
+                        <h2 style={{ fontSize: "1.55rem", fontWeight: 700, marginBottom: "0.35rem", color: "var(--color-gray-900)" }}>Productivity goals</h2>
+                        <p style={{ fontSize: "0.98rem", lineHeight: 1.7, color: "var(--color-gray-600)" }}>
                             Your accountability stack—each target is measurable, rhythmic, and ready for a weekly retro.
                         </p>
                     </div>
@@ -539,11 +545,11 @@ const Statistics = () => {
                                         {goal.status.text}
                                     </span>
                                 </div>
-                                <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "#cbd5f5" }}>{goal.description}</p>
+                                <p style={{ fontSize: "0.92rem", lineHeight: 1.7, color: "var(--color-gray-600)" }}>{goal.description}</p>
                                 <div style={styles.goalProgress}>
                                     <div style={{ ...styles.goalProgressFill, width: `${goal.progress}%` }} />
                                 </div>
-                                <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "#94a3b8" }}>{goal.progress}% complete</span>
+                                <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--color-gray-600)" }}>{goal.progress}% complete</span>
                             </div>
                         ))}
                     </div>
@@ -560,8 +566,8 @@ const Statistics = () => {
                         {suggestions.map((suggestion) => (
                             <div key={suggestion.title} style={styles.suggestionCard}>
                                 <div style={{ fontSize: "1.4rem" }}>{suggestion.icon}</div>
-                                <div style={{ fontSize: "1.05rem", fontWeight: 600, color: "#f8fafc" }}>{suggestion.title}</div>
-                                <p style={{ fontSize: "0.9rem", lineHeight: 1.65, color: "#cbd5f5" }}>{suggestion.description}</p>
+                                <div style={{ fontSize: "1.05rem", fontWeight: 600, color: "var(--color-gray-900)" }}>{suggestion.title}</div>
+                                <p style={{ fontSize: "0.9rem", lineHeight: 1.65, color: "var(--color-gray-600)" }}>{suggestion.description}</p>
                             </div>
                         ))}
                     </div>
