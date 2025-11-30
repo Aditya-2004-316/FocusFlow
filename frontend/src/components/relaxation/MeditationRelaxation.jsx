@@ -8,6 +8,7 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
     const [breathCycle, setBreathCycle] = useState("inhale");
     const [breathProgress, setBreathProgress] = useState(0);
     const [isSpeaking, setIsSpeaking] = useState(false);
+    const [lastSpokenBreath, setLastSpokenBreath] = useState("");
 
     const meditationPhases = [
         {
@@ -72,6 +73,15 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
 
     useEffect(() => {
         if (!isOpen) return;
+        // Auto-speak breath instructions
+        if (breathCycle !== lastSpokenBreath) {
+            speakBreathInstruction(breathCycle);
+            setLastSpokenBreath(breathCycle);
+        }
+    }, [breathCycle, isOpen]);
+
+    useEffect(() => {
+        if (!isOpen) return;
         // Breathing animation cycle: 4s inhale, 4s hold, 4s exhale, 4s hold
         const breathInterval = setInterval(() => {
             setBreathProgress((prev) => {
@@ -100,9 +110,6 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
     }
 
     const speakInstruction = (phaseIndex) => {
-        // Only speak for phases 1 and 2 (breathing instructions), not phase 0 (settle instructions)
-        if (phaseIndex === 0) return;
-        
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             
@@ -118,6 +125,27 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             utterance.onerror = () => setIsSpeaking(false);
             
             window.speechSynthesis.speak(utterance);
+        }
+    };
+
+    const speakBreathInstruction = (breathCycle) => {
+        if ('speechSynthesis' in window) {
+            const breathTexts = {
+                "inhale": "Breathe in",
+                "hold": "Hold",
+                "exhale": "Breathe out",
+                "rest": "Rest"
+            };
+            
+            const text = breathTexts[breathCycle] || "";
+            if (text) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                utterance.volume = 0.9;
+                
+                window.speechSynthesis.speak(utterance);
+            }
         }
     };
 

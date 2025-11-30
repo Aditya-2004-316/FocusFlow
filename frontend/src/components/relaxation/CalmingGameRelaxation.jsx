@@ -4,18 +4,31 @@ import { ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/outline";
 const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
     const [timeLeft, setTimeLeft] = useState(180);
     const [sessionComplete, setSessionComplete] = useState(false);
+    const [currentGame, setCurrentGame] = useState("memory"); // "memory" or "breathing"
     const [tiles, setTiles] = useState([]);
     const [revealed, setRevealed] = useState([]);
     const [matched, setMatched] = useState([]);
     const [moves, setMoves] = useState(0);
     const [gameComplete, setGameComplete] = useState(false);
+    const [breathCycle, setBreathCycle] = useState("inhale");
+    const [breathProgress, setBreathProgress] = useState(0);
 
     const symbols = ["🌸", "🌺", "🍃", "🌊", "⭐", "🌙", "☀️", "🦋"];
+    const breathingPhases = [
+        { name: "inhale", duration: 40, color: "#38bdf8" },
+        { name: "hold", duration: 40, color: "#818cf8" },
+        { name: "exhale", duration: 40, color: "#f472b6" },
+        { name: "rest", duration: 40, color: "#fbbf24" }
+    ];
 
     useEffect(() => {
         if (!isOpen) return;
-        initializeGame();
-    }, [isOpen]);
+        if (currentGame === "memory") {
+            initializeGame();
+        } else {
+            initializeBreathingGame();
+        }
+    }, [isOpen, currentGame]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -35,6 +48,32 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
 
         return () => clearInterval(interval);
     }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen || currentGame !== "breathing") return;
+        
+        // Breathing animation cycle
+        const breathInterval = setInterval(() => {
+            setBreathProgress((prev) => {
+                const next = (prev + 1) % 160; // 16 seconds total cycle
+                
+                // Determine current phase
+                if (next < 40) {
+                    setBreathCycle("inhale");
+                } else if (next < 80) {
+                    setBreathCycle("hold");
+                } else if (next < 120) {
+                    setBreathCycle("exhale");
+                } else {
+                    setBreathCycle("rest");
+                }
+                
+                return next;
+            });
+        }, 100);
+
+        return () => clearInterval(breathInterval);
+    }, [isOpen, currentGame]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -78,6 +117,12 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         setGameComplete(false);
     };
 
+    const initializeBreathingGame = () => {
+        setBreathProgress(0);
+        setBreathCycle("inhale");
+        setGameComplete(false);
+    };
+
     const handleTileClick = (index) => {
         if (revealed.length >= 2 || revealed.includes(index) || matched.includes(index)) {
             return;
@@ -93,6 +138,26 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    const getBreathScale = () => {
+        const position = breathProgress % 40;
+        if (breathCycle === "inhale") {
+            return 1 + (position / 40) * 0.5;
+        } else if (breathCycle === "exhale") {
+            return 1.5 - (position / 40) * 0.5;
+        }
+        return breathCycle === "hold" ? 1.5 : 1;
+    };
+
+    const getBreathColor = () => {
+        const colors = {
+            "inhale": "#38bdf8",
+            "hold": "#818cf8",
+            "exhale": "#f472b6",
+            "rest": "#fbbf24"
+        };
+        return colors[breathCycle] || "#38bdf8";
     };
 
     const styles = {
@@ -235,6 +300,12 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             fontWeight: 600,
             fontSize: "1.2rem",
         },
+        buttonGroup: {
+            display: "flex",
+            gap: "1rem",
+            justifyContent: "center",
+            flexWrap: "wrap",
+        },
         skipButton: {
             padding: "0.75rem 1.5rem",
             borderRadius: "0.75rem",
@@ -345,86 +416,177 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                     <XMarkIcon style={{ width: "24px", height: "24px" }} />
                 </button>
                 <div style={styles.header}>
-                    <h1 style={styles.title}>🎮 Memory Match</h1>
+                    <h1 style={styles.title}>
+                        {currentGame === "memory" ? "🎮 Memory Match" : "🧘‍♀️ Breathing Exercise"}
+                    </h1>
                     <div style={styles.stats}>
                         <span style={styles.timer}>{formatTime(timeLeft)}</span>
-                        <span style={styles.moves}>Moves: {moves}</span>
+                        {currentGame === "memory" && (
+                            <span style={styles.moves}>Moves: {moves}</span>
+                        )}
                     </div>
                 </div>
 
                 <p style={styles.description}>
-                    Match pairs of symbols to calm your mind. Focus on the patterns and let your memory guide you.
+                    {currentGame === "memory" 
+                        ? "Match pairs of symbols to calm your mind. Focus on the patterns and let your memory guide you."
+                        : "Follow the breathing circle to relax and center yourself. Inhale, hold, exhale, and rest in rhythm."}
                 </p>
 
                 {gameComplete && (
                     <p style={styles.gameCompleteMessage}>
-                        🎉 Perfect! You matched all pairs in {moves} moves!
+                        {currentGame === "memory" 
+                            ? `🎉 Perfect! You matched all pairs in ${moves} moves!`
+                            : "✨ Well done! You've completed the breathing exercise."}
                     </p>
                 )}
 
-                <div style={styles.gameBoard}>
-                    {tiles.map((symbol, index) => {
-                        const isRevealed = revealed.includes(index);
-                        const isMatched = matched.includes(index);
-                        
-                        return (
-                            <div
-                                key={index}
-                                onClick={() => handleTileClick(index)}
-                                style={{
-                                    ...styles.tile,
-                                    ...(isRevealed || isMatched ? styles.tileRevealed : styles.tileHidden),
-                                    ...(isMatched ? styles.tileMatched : {}),
-                                    cursor: isMatched ? "default" : "pointer",
-                                }}
-                                onMouseEnter={(e) => {
-                                    if (!isMatched && !isRevealed) {
-                                        e.currentTarget.style.transform = "scale(1.05)";
-                                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(56,189,248,0.2)";
-                                    }
-                                }}
-                                onMouseLeave={(e) => {
-                                    if (!isMatched && !isRevealed) {
-                                        e.currentTarget.style.transform = "scale(1)";
-                                        e.currentTarget.style.boxShadow = "none";
-                                    }
-                                }}
-                            >
-                                {isRevealed || isMatched ? symbol : "?"}
+                {currentGame === "memory" ? (
+                    <div style={styles.gameBoard}>
+                        {tiles.map((symbol, index) => {
+                            const isRevealed = revealed.includes(index);
+                            const isMatched = matched.includes(index);
+                            
+                            return (
+                                <div
+                                    key={index}
+                                    onClick={() => handleTileClick(index)}
+                                    style={{
+                                        ...styles.tile,
+                                        ...(isRevealed || isMatched ? styles.tileRevealed : styles.tileHidden),
+                                        ...(isMatched ? styles.tileMatched : {}),
+                                        cursor: isMatched ? "default" : "pointer",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (!isMatched && !isRevealed) {
+                                            e.currentTarget.style.transform = "scale(1.05)";
+                                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(56,189,248,0.2)";
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (!isMatched && !isRevealed) {
+                                            e.currentTarget.style.transform = "scale(1)";
+                                            e.currentTarget.style.boxShadow = "none";
+                                        }
+                                    }}
+                                >
+                                    {isRevealed || isMatched ? symbol : "?"}
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "300px",
+                        margin: "2rem 0"
+                    }}>
+                        <div style={{
+                            width: "200px",
+                            height: "200px",
+                            borderRadius: "50%",
+                            background: getBreathColor(),
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "transform 0.1s ease, background 0.3s ease",
+                            transform: `scale(${getBreathScale()})`,
+                            boxShadow: "0 0 30px rgba(56,189,248,0.3)",
+                        }}>
+                            <div style={{
+                                fontSize: "1.5rem",
+                                fontWeight: 600,
+                                color: "white",
+                                textAlign: "center",
+                                textShadow: "0 1px 2px rgba(0,0,0,0.3)"
+                            }}>
+                                {breathCycle.charAt(0).toUpperCase() + breathCycle.slice(1)}
                             </div>
-                        );
-                    })}
-                </div>
+                        </div>
+                    </div>
+                )}
 
-                <button
-                    onClick={initializeGame}
-                    style={styles.button}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "var(--color-primary-200)";
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "var(--color-primary-100)";
-                        e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                >
-                    <ArrowPathIcon style={{ width: "20px", height: "20px" }} />
-                    New Game
-                </button>
-                <button
-                    onClick={onSkipToFocus}
-                    style={styles.skipButton}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "var(--color-primary-200)";
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "var(--color-primary-100)";
-                        e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                >
-                    Skip to Focus Session
-                </button>
+                <div style={styles.buttonGroup}>
+                    <button
+                        onClick={() => setCurrentGame("memory")}
+                        style={{
+                            ...styles.button,
+                            background: currentGame === "memory" 
+                                ? "var(--color-primary-200)" 
+                                : "var(--color-primary-100)",
+                            transform: currentGame === "memory" ? "translateY(-2px)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-200)";
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = currentGame === "memory" 
+                                ? "var(--color-primary-200)" 
+                                : "var(--color-primary-100)";
+                            e.currentTarget.style.transform = currentGame === "memory" 
+                                ? "translateY(-2px)" 
+                                : "translateY(0)";
+                        }}
+                    >
+                        Memory Match
+                    </button>
+                    <button
+                        onClick={() => setCurrentGame("breathing")}
+                        style={{
+                            ...styles.button,
+                            background: currentGame === "breathing" 
+                                ? "var(--color-primary-200)" 
+                                : "var(--color-primary-100)",
+                            transform: currentGame === "breathing" ? "translateY(-2px)" : "none"
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-200)";
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = currentGame === "breathing" 
+                                ? "var(--color-primary-200)" 
+                                : "var(--color-primary-100)";
+                            e.currentTarget.style.transform = currentGame === "breathing" 
+                                ? "translateY(-2px)" 
+                                : "translateY(0)";
+                        }}
+                    >
+                        Breathing
+                    </button>
+                    <button
+                        onClick={currentGame === "memory" ? initializeGame : initializeBreathingGame}
+                        style={styles.button}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-200)";
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-100)";
+                            e.currentTarget.style.transform = "translateY(0)";
+                        }}
+                    >
+                        <ArrowPathIcon style={{ width: "20px", height: "20px" }} />
+                        New Game
+                    </button>
+                    <button
+                        onClick={onSkipToFocus}
+                        style={{...styles.button, ...styles.skipButton}}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-200)";
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "var(--color-primary-100)";
+                            e.currentTarget.style.transform = "translateY(0)";
+                        }}
+                    >
+                        Skip to Focus Session
+                    </button>
+                </div>
             </div>
         </div>
     );

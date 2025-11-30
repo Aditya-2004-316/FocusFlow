@@ -4,6 +4,7 @@ import { XMarkIcon, PlayIcon, PauseIcon, SpeakerWaveIcon, SpeakerXMarkIcon } fro
 const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
     const [timeLeft, setTimeLeft] = useState(180); // 3 minutes in seconds
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [volume, setVolume] = useState(0.5);
     const [isMuted, setIsMuted] = useState(false);
     const [sessionComplete, setSessionComplete] = useState(false);
@@ -46,12 +47,11 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         setIsPlaying(false);
         
         let interval;
-        if (isPlaying && timeLeft > 0) {
+        if (isTimerRunning && timeLeft > 0) {
             interval = setInterval(() => {
                 setTimeLeft((prev) => {
                     if (prev <= 1) {
-                        setIsPlaying(false);
-                        stopAmbientSound();
+                        setIsTimerRunning(false);
                         setSessionComplete(true);
                         return 0;
                     }
@@ -179,6 +179,14 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         } else {
             generateAmbientSound();
             setIsPlaying(true);
+        }
+    };
+
+    const toggleTimer = () => {
+        if (isTimerRunning) {
+            setIsTimerRunning(false);
+        } else {
+            setIsTimerRunning(true);
         }
     };
 
@@ -473,6 +481,24 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                         }}
                     >
                         {isPlaying ? (
+                            <PauseIcon style={{ width: "28px", height: "28px" }} />
+                        ) : (
+                            <PlayIcon style={{ width: "28px", height: "28px" }} />
+                        )}
+                    </button>
+                    <button
+                        onClick={toggleTimer}
+                        style={{...styles.button, marginLeft: "1rem"}}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "scale(1.1)";
+                            e.currentTarget.style.boxShadow = "0 8px 16px rgba(56,189,248,0.3)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "scale(1)";
+                            e.currentTarget.style.boxShadow = "none";
+                        }}
+                    >
+                        {isTimerRunning ? (
                             <PauseIcon style={{ width: "28px", height: "28px" }} />
                         ) : (
                             <PlayIcon style={{ width: "28px", height: "28px" }} />

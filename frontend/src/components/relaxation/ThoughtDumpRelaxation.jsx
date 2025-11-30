@@ -167,6 +167,7 @@ const ThoughtDumpRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             display: "flex",
             gap: "1rem",
             flexWrap: "wrap",
+            alignItems: "center",
         },
         button: {
             padding: "0.75rem 1.5rem",
@@ -425,7 +426,7 @@ const ThoughtDumpRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                     </button>
                     <button
                         onClick={onSkipToFocus}
-                        style={styles.skipButton}
+                        style={{...styles.button, ...styles.skipButton}}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.background = "var(--color-primary-200)";
                             e.currentTarget.style.transform = "translateY(-2px)";

@@ -665,7 +665,7 @@ const styles = {
         transition: "transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease",
         transform: "translateY(0)",
     },
-    highlightHeader: {
+    highlightCardHeader: {
         display: "flex",
         alignItems: "center",
         gap: "0.9rem",
@@ -681,12 +681,12 @@ const styles = {
         justifyContent: "center",
         fontSize: "1.2rem",
     },
-    highlightTitle: {
+    highlightCardTitle: {
         fontSize: "1.18rem",
         fontWeight: 600,
         color: "var(--color-gray-900)",
     },
-    highlightBadge: {
+    highlightCardBadge: {
         display: "inline-flex",
         alignItems: "center",
         gap: "0.35rem",
@@ -1129,13 +1129,13 @@ const Resources = () => {
                                     Object.assign(event.currentTarget.style, styles.highlightCard)
                                 }
                             >
-                                <div style={styles.highlightHeader}>
+                                <div style={styles.highlightCardHeader}>
                                     <div style={styles.highlightIcon}>
                                         <BookOpenIcon style={{ width: "1.25rem", height: "1.25rem" }} />
                                     </div>
                                     <div>
-                                        <div style={styles.highlightTitle}>{track.title}</div>
-                                        <span style={styles.highlightBadge}>{track.duration}</span>
+                                        <div style={styles.highlightCardTitle}>{track.title}</div>
+                                        <span style={styles.highlightCardBadge}>{track.duration}</span>
                                     </div>
                                 </div>
                                 <p style={styles.highlightDescription}>{track.vibe}</p>
@@ -1172,13 +1172,13 @@ const Resources = () => {
                                     Object.assign(event.currentTarget.style, styles.highlightCard)
                                 }
                             >
-                                <div style={styles.highlightHeader}>
+                                <div style={styles.highlightCardHeader}>
                                     <div style={styles.highlightIcon}>
                                         <DocumentTextIcon style={{ width: "1.25rem", height: "1.25rem" }} />
                                     </div>
                                     <div>
-                                        <div style={styles.highlightTitle}>{bundle.title}</div>
-                                        <span style={styles.highlightBadge}>Ready-made kit</span>
+                                        <div style={styles.highlightCardTitle}>{bundle.title}</div>
+                                        <span style={styles.highlightCardBadge}>Ready-made kit</span>
                                     </div>
                                 </div>
                                 <p style={styles.highlightDescription}>{bundle.punchline}</p>
@@ -1215,12 +1215,12 @@ const Resources = () => {
                                     Object.assign(event.currentTarget.style, styles.highlightCard)
                                 }
                             >
-                                <div style={styles.highlightHeader}>
+                                <div style={styles.highlightCardHeader}>
                                     <div style={styles.highlightIcon}>
                                         <span style={styles.highlightEmoji}>{signal.icon}</span>
                                     </div>
                                     <div>
-                                        <div style={styles.highlightTitle}>{signal.title}</div>
+                                        <div style={styles.highlightCardTitle}>{signal.title}</div>
                                         <span style={styles.highlightMetric}>{signal.metric}</span>
                                     </div>
                                 </div>
