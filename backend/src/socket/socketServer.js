@@ -11,10 +11,22 @@ let io = null;
 export const initializeSocket = (httpServer) => {
     io = new Server(httpServer, {
         cors: {
-            origin: process.env.CORS_ORIGIN_PROD?.split(",") || process.env.CLIENT_URL || [
-                "http://localhost:3000",
-                "http://localhost:5173",
-            ],
+            origin: (origin, callback) => {
+                const allowedOrigins = [
+                    ...(process.env.CORS_ORIGIN_PROD || "").split(",").map(o => o.trim().replace(/\/$/, "")),
+                    ...(process.env.CORS_ORIGIN || "").split(",").map(o => o.trim().replace(/\/$/, "")),
+                    "http://localhost:3000",
+                    "http://localhost:5173",
+                    "http://localhost:5000",
+                ].filter(Boolean);
+
+                const normalizedOrigin = origin ? origin.replace(/\/$/, "") : null;
+                if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
+                    callback(null, true);
+                } else {
+                    callback(new Error("Not allowed by CORS"));
+                }
+            },
             methods: ["GET", "POST"],
             credentials: true,
         },

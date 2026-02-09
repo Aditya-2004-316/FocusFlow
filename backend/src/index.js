@@ -54,21 +54,24 @@ const parseOrigins = (value, fallback = []) => {
     }
     return value
         .split(",")
-        .map((origin) => origin.trim())
+        .map((origin) => origin.trim().replace(/\/$/, ""))
         .filter(Boolean);
 };
 
-const allowedOrigins =
-    process.env.NODE_ENV === "production"
-        ? parseOrigins(process.env.CORS_ORIGIN_PROD)
-        : parseOrigins(process.env.CORS_ORIGIN, [
-            "http://localhost:3000",
-            "http://localhost:5173",
-        ]);
+const allowedOrigins = [
+    ...parseOrigins(process.env.CORS_ORIGIN_PROD),
+    ...parseOrigins(process.env.CORS_ORIGIN, [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5000",
+    ]),
+];
 
 const corsOptions = {
     origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Strip trailing slash from incoming origin for comparison
+        const normalizedOrigin = origin ? origin.replace(/\/$/, "") : null;
+        if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
             return callback(null, true);
         }
         return callback(new Error(`CORS blocked for origin: ${origin}`));
