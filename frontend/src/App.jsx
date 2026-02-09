@@ -30,6 +30,7 @@ import Careers from "./pages/Careers.jsx";
 import Cookies from "./pages/Cookies.jsx";
 import Testimonials from "./pages/Testimonials.jsx";
 import "./App.css";
+import { API_BASE_URL as API_BASE } from "./config/api";
 import {
     ChartBarIcon,
     ClockIcon,
@@ -97,7 +98,7 @@ import CalmingGameRelaxation from "./components/relaxation/CalmingGameRelaxation
 import DoodlePadRelaxation from "./components/relaxation/DoodlePadRelaxation.jsx";
 import AffirmationsRelaxation from "./components/relaxation/AffirmationsRelaxation.jsx";
 
-const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
+
 
 function Dashboard() {
     const { user } = useAuth();

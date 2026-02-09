@@ -3,7 +3,7 @@
  * Handles token injection, refresh logic, and global session management
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
 // Helper to notify the app when session expires
 const notifySessionExpired = () => {

@@ -23,6 +23,7 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { useConfirm } from "../components/ConfirmModal";
 import useResponsive from "../hooks/useResponsive";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
 const DashboardCommunity = () => {
     const { isMobile, isTablet, isSmallMobile, width } = useResponsive();
@@ -60,7 +61,7 @@ const DashboardCommunity = () => {
     });
     const [loadingStats, setLoadingStats] = useState(true);
 
-    const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
+
 
     // Use authUser from context as the source of truth
     useEffect(() => {

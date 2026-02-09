@@ -14,7 +14,7 @@ import LandingFooter from "../LandingPage/LandingFooter";
 import "../styles/CardHover.css";
 import useResponsive from "../hooks/useResponsive";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
 const Community = () => {
     const { isMobile, isTablet, width } = useResponsive();

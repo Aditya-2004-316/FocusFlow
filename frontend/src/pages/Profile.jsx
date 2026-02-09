@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile, useIsSmallMobile, useIsNarrow } from "../hooks/useMediaQuery";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
 import {
     UserCircleIcon,
@@ -531,7 +532,7 @@ const Profile = () => {
             }
 
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE || "http://localhost:5000/api"}/users/profile`,
+                `${API_BASE}/users/profile`,
                 {
                     method: "PUT",
                     headers: {
@@ -600,7 +601,7 @@ const Profile = () => {
             }
 
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE || "http://localhost:5000/api"}/users/password`,
+                `${API_BASE}/users/password`,
                 {
                     method: "PUT",
                     headers: {

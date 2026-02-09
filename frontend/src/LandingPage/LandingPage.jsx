@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import LandingNavbar from "./LandingNavbar";
 import LandingFooter from "./LandingFooter";
 import useResponsive from "../hooks/useResponsive";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+
 
 const FeatureCard = ({ feature, index, width, styles }) => {
     const [isHovered, setIsHovered] = useState(false);

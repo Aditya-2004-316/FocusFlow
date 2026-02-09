@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import useResponsive from "../hooks/useResponsive";
 
-const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
 const Settings = () => {
     const { isMobile, isTablet, width } = useResponsive();

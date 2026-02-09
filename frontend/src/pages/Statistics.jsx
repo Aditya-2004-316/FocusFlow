@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { sharedFocusShell } from "./FocusTimer.jsx";
 import useResponsive from "../hooks/useResponsive";
+import { API_BASE_URL as API_BASE } from "../config/api";
 
 const getStyles = (isMobile, range) => {
     const sharedStyles = sharedFocusShell(isMobile);
@@ -515,7 +516,7 @@ const getStyles = (isMobile, range) => {
     };
 };
 
-const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:5000/api";
+
 
 const Statistics = () => {
     const { isMobile } = useResponsive();
