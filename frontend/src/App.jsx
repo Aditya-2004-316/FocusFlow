@@ -378,35 +378,35 @@ function Dashboard() {
 
     // Function to check if user can use a relaxation activity
     const canUseRelaxationActivity = (activityType) => {
-        // // Reset usage if it's been more than 24 hours
-        // const now = Date.now();
-        // if (now - relaxationUsage.lastReset > 24 * 60 * 60 * 1000) {
-        //     setRelaxationUsage({ activities: [], lastReset: now });
-        //     return true;
-        // }
+        // Reset usage if it's been more than 24 hours
+        const now = Date.now();
+        if (now - relaxationUsage.lastReset > 24 * 60 * 60 * 1000) {
+            setRelaxationUsage({ activities: [], lastReset: now });
+            return true;
+        }
 
-        // // Check if cooldown is active
-        // if (cooldownActive) {
-        //     return false;
-        // }
+        // Check if cooldown is active
+        if (cooldownActive) {
+            return false;
+        }
 
-        // // Count how many times this activity has been used
-        // const activityCount = relaxationUsage.activities.filter(a => a.type === activityType).length;
+        // Count how many times this activity has been used
+        const activityCount = relaxationUsage.activities.filter(a => a.type === activityType).length;
 
-        // // Count total unique activities
-        // const uniqueActivities = [...new Set(relaxationUsage.activities.map(a => a.type))].length;
+        // Count total unique activities
+        const uniqueActivities = [...new Set(relaxationUsage.activities.map(a => a.type))].length;
 
-        // // Allow if:
-        // // 1. Less than 2 different activities used, OR
-        // // 2. This activity used less than 2 times
-        // if (uniqueActivities < 2 || activityCount < 2) {
-        //     return true;
-        // }
+        // Allow if:
+        // 1. Less than 2 different activities used, OR
+        // 2. This activity used less than 2 times
+        if (uniqueActivities < 2 || activityCount < 2) {
+            return true;
+        }
 
-        // // Start cooldown
-        // startCooldown();
-        // return false;
-        return true;
+        // Start cooldown
+        startCooldown();
+        return false;
+        // return true;
     };
 
     // Function to record relaxation activity usage
