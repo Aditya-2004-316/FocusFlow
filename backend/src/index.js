@@ -117,6 +117,15 @@ app.get("/health", (req, res) => {
     });
 });
 
+// Welcome route
+app.get("/", (req, res) => {
+    res.json({
+        message: "Welcome to the FocusFlow API",
+        documentation: "/api",
+        health: "/health"
+    });
+});
+
 // API routes (with database connection check)
 app.use("/api/auth", checkDBConnection, authRoutes);
 app.use("/api/users", checkDBConnection, userRoutes);
