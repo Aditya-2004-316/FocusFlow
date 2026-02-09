@@ -59,12 +59,6 @@ echo.
 echo   3. Run only web version (no Electron):
 echo      npm run dev
 echo.
-echo   Documentation:
-echo   - ELECTRON_QUICK_START.md ........... Quick reference
-echo   - ELECTRON_INSTALLATION.md ......... Setup help
-echo   - ELECTRON_SETUP_GUIDE.md .......... Architecture details
-echo   - ELECTRON_MIGRATION_SUMMARY.md ... Changes overview
-echo.
 echo ============================================================
 echo.
 
