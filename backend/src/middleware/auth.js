@@ -64,12 +64,13 @@ export const protect = async (req, res, next) => {
             return;
         }
 
-        // Check if user is email verified (only enforced in production)
-        const requireVerifiedEmail = process.env.NODE_ENV === "production";
+        // Check if user is email verified (only enforced if configured)
+        const requireVerifiedEmail = process.env.REQUIRE_VERIFIED_EMAIL === "true";
 
         if (requireVerifiedEmail && !user.isEmailVerified) {
             res.status(401).json({
                 success: false,
+                isEmailVerificationError: true,
                 error: "Please verify your email address",
             });
             return;

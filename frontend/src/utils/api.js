@@ -36,6 +36,13 @@ export const apiCall = async (endpoint, options = {}) => {
 
         // If we get a 401, try to refresh the token once and retry
         if (response.status === 401) {
+            const errorData = await response.clone().json().catch(() => ({}));
+
+            // If it's an email verification error, don't logout, just let the UI handle it
+            if (errorData.isEmailVerificationError) {
+                throw new Error("unverified_email");
+            }
+
             console.warn("Access token expired, attempting refresh...");
             const refreshResult = await fetch(`${API_BASE}/auth/refresh-token`, {
                 method: "POST",

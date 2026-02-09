@@ -45,8 +45,8 @@ const setTokenCookies = (res, accessToken, refreshToken) => {
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: isProduction,
-        // Use 'lax' so cookies are sent for top-level navigation from dev origins
-        sameSite: "lax",
+        // In production (Render <-> Vercel), we need 'none' for cross-site cookies
+        sameSite: isProduction ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -54,7 +54,7 @@ const setTokenCookies = (res, accessToken, refreshToken) => {
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: "lax",
+        sameSite: isProduction ? "none" : "lax",
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 };
