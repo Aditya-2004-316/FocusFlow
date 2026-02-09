@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FocusFlow - Floating Timer</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+                    "Droid Sans", "Helvetica Neue", sans-serif;
+                background: transparent;
+                overflow: hidden;
+                user-select: none;
+                -webkit-app-region: drag;
+            }
+
+            .floating-timer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(30, 30, 30, 0.95);
+                border: 2px solid #3b82f6;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            }
+
+            .timer-content {
+                text-align: center;
+                color: white;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                -webkit-app-region: no-drag;
+            }
+
+            .timer-display {
+                font-size: 48px;
+                font-weight: bold;
+                font-variant-numeric: tabular-nums;
+                color: #3b82f6;
+            }
+
+            .session-label {
+                font-size: 12px;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .progress-ring {
+                width: 80px;
+                height: 80px;
+                transform: rotate(-90deg);
+            }
+
+            .progress-ring circle {
+                fill: none;
+                stroke-width: 3;
+                stroke-linecap: round;
+            }
+
+            .progress-ring-bg {
+                stroke: rgba(59, 130, 246, 0.2);
+            }
+
+            .progress-ring-progress {
+                stroke: #3b82f6;
+                transition: stroke-dashoffset 0.5s ease;
+            }
+
+            .session-type.break .progress-ring-progress {
+                stroke: #10b981;
+            }
+
+            .session-type.break .timer-display {
+                color: #10b981;
+            }
+
+            .session-type.break .floating-timer {
+                border-color: #10b981;
+            }
+
+            .controls {
+                display: flex;
+                gap: 8px;
+                margin-top: 10px;
+                justify-content: center;
+            }
+
+            .control-btn {
+                background: #1f2937;
+                border: 1px solid #374151;
+                color: white;
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                font-size: 16px;
+            }
+
+            .control-btn:hover {
+                background: #374151;
+                border-color: #4b5563;
+            }
+
+            .control-btn:active {
+                transform: scale(0.95);
+            }
+
+            .status-indicator {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #10b981;
+                margin-right: 6px;
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.5;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="floating-timer" id="floatingTimer">
+            <div class="timer-content">
+                <svg class="progress-ring" id="progressRing">
+                    <circle class="progress-ring-bg" cx="40" cy="40" r="36" />
+                    <circle
+                        class="progress-ring-progress"
+                        id="progressCircle"
+                        cx="40"
+                        cy="40"
+                        r="36"
+                    />
+                </svg>
+                <div class="session-label">
+                    <span class="status-indicator" id="statusIndicator"></span>
+                    <span id="sessionLabel">Focus</span>
+                </div>
+                <div class="timer-display" id="timerDisplay">00:00</div>
+                <div class="controls">
+                    <button
+                        class="control-btn"
+                        id="pauseResumeBtn"
+                        title="Pause/Resume"
+                    >
+                        ⏸
+                    </button>
+                    <button class="control-btn" id="closeBtn" title="Close">
+                        ✕
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let timerData = {
+                timeLeft: 0,
+                totalTime: 0,
+                isRunning: false,
+                sessionType: "focus",
+            };
+
+            const timerDisplay = document.getElementById("timerDisplay");
+            const sessionLabel = document.getElementById("sessionLabel");
+            const progressCircle = document.getElementById("progressCircle");
+            const floatingTimerContainer =
+                document.getElementById("floatingTimer");
+            const pauseResumeBtn = document.getElementById("pauseResumeBtn");
+            const closeBtn = document.getElementById("closeBtn");
+
+            // Set up circle for progress
+            const circumference = 2 * Math.PI * 36;
+            progressCircle.style.strokeDasharray = circumference;
+            progressCircle.style.strokeDashoffset = circumference;
+
+            // Wait for electronAPI to be available
+            if (window.electronAPI && window.electronAPI.onTimerData) {
+                // Listen for timer data updates from main process
+                window.electronAPI.onTimerData((data) => {
+                    timerData = data;
+                    updateDisplay();
+                });
+            } else {
+                // Fallback for testing without Electron
+                console.log("electronAPI not available - running in web mode");
+            }
+
+            function updateDisplay() {
+                const minutes = Math.floor(timerData.timeLeft / 60);
+                const seconds = timerData.timeLeft % 60;
+                timerDisplay.textContent = `${minutes
+                    .toString()
+                    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+                sessionLabel.textContent =
+                    timerData.sessionType === "break" ? "Break" : "Focus";
+
+                // Update progress ring
+                const progress =
+                    (timerData.totalTime - timerData.timeLeft) /
+                    timerData.totalTime;
+                const offset = circumference * (1 - progress);
+                progressCircle.style.strokeDashoffset = offset;
+
+                // Update session type styling
+                if (timerData.sessionType === "break") {
+                    floatingTimerContainer.classList.add("session-type");
+                    floatingTimerContainer.classList.add("break");
+                } else {
+                    floatingTimerContainer.classList.remove("break");
+                }
+
+                // Update button text
+                pauseResumeBtn.textContent = timerData.isRunning ? "⏸" : "▶";
+            }
+
+            // Close button
+            closeBtn.addEventListener("click", () => {
+                if (
+                    window.electronAPI &&
+                    window.electronAPI.closeFloatingTimer
+                ) {
+                    window.electronAPI.closeFloatingTimer();
+                }
+            });
+
+            // Pause/Resume button - send command back to main app
+            pauseResumeBtn.addEventListener("click", () => {
+                if (window.electronAPI && window.electronAPI.toggleTimerPause) {
+                    window.electronAPI.toggleTimerPause();
+                } else {
+                    console.log(
+                        "Pause/Resume - toggleTimerPause not available"
+                    );
+                }
+            });
+
+            // Initial display
+            updateDisplay();
+        </script>
+    </body>
+</html>

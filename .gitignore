@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Environment Variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Sensitive files
+*.pem
+*.key
+*.csr
+*.crt
+config/*.json
+!config/example.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Debug files
+*.log
+debug.log*
+
+# Temporary files
+tmp/
+temp/

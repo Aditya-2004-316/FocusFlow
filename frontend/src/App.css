@@ -1,0 +1,53 @@
+/* App.css - Main application styles */
+
+/* Root-level app container */
+#root {
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Global app wrapper - Changed to .App to match JSX */
+.App {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure main content area takes available space */
+.app-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scrollbar styling to match theme */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary-300);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-400);
+}
+
+/* Dark theme scrollbar */
+.dark ::-webkit-scrollbar-track {
+    background: var(--color-gray-100);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: var(--color-primary-500);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-400);
+}
