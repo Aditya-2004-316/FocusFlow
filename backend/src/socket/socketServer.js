@@ -11,7 +11,10 @@ let io = null;
 export const initializeSocket = (httpServer) => {
     io = new Server(httpServer, {
         cors: {
-            origin: process.env.CLIENT_URL || "http://localhost:5173",
+            origin: process.env.CORS_ORIGIN_PROD?.split(",") || process.env.CLIENT_URL || [
+                "http://localhost:3000",
+                "http://localhost:5173",
+            ],
             methods: ["GET", "POST"],
             credentials: true,
         },
