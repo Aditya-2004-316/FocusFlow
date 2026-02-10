@@ -11,15 +11,18 @@ import {
     Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import useResponsive from "../hooks/useResponsive";
+import { useTheme } from "../context/ThemeContext";
 
 import { API_BASE_URL as API_BASE } from "../config/api";
+import { useSettings } from "../context/SettingsContext";
 
 const Settings = () => {
     const { isMobile, isTablet, width } = useResponsive();
     const [activeSection, setActiveSection] = useState("profile");
     const [isWrapped, setIsWrapped] = useState(false);
     const tabBarRef = useRef(null);
-    const isThemeDark = document.documentElement.classList.contains('dark');
+    const { isDarkMode, setIsDarkMode, glassIntensity, setGlassIntensity } = useTheme();
+    const isThemeDark = isDarkMode;
 
     useEffect(() => {
         if (!tabBarRef.current) return;
@@ -43,8 +46,7 @@ const Settings = () => {
     const [bio, setBio] = useState("");
 
     // Appearance
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [glassIntensity, setGlassIntensity] = useState("medium");
+    // glassIntensity is handled by useTheme()
 
     // Notifications
     const [notifications, setNotifications] = useState(true);
@@ -64,80 +66,71 @@ const Settings = () => {
 
     const [isSaving, setIsSaving] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const { settings, updateSettings: updateGlobalSettings } = useSettings();
 
     useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const headers = {};
-                if (token) {
-                    headers["Authorization"] = `Bearer ${token}`;
-                }
-                const res = await fetch(`${API_BASE}/settings`, {
-                    headers,
-                });
-                if (res.ok) {
-                    const json = await res.json();
-                    if (json?.success && json?.data?.settings) {
-                        const s = json.data.settings;
-                        setDisplayName(s?.profileSettings?.displayName || "");
-                        setBio(s?.profileSettings?.bio || "");
-                        setIsDarkMode((s?.themeSettings?.theme || "light") === "dark");
-                        setGlassIntensity(s?.themeSettings?.glassIntensity || "medium");
-                        setNotifications(!!s?.notificationSettings?.notifications);
-                        setSoundEnabled(s?.notificationSettings?.soundEnabled ?? true);
-                        setDesktopNotifications(s?.notificationSettings?.desktopNotifications ?? true);
-                        setAutoStartBreaks(s?.productivitySettings?.autoStartBreaks ?? false);
-                        setAutoStartWork(s?.productivitySettings?.autoStartWork ?? false);
-                        setStatusVisibility(s?.communitySettings?.statusVisibility ?? true);
-                        setLeaderboardOptIn(s?.communitySettings?.leaderboardOptIn ?? true);
-                        setDataSharing(!!s?.privacySettings?.dataSharing);
-                    }
-                }
-            } catch (e) {
-                console.error("Failed to fetch settings", e);
-            }
-        };
-        fetchSettings();
-    }, []);
+        if (settings) {
+            const s = settings;
+            setDisplayName(s?.profileSettings?.displayName || "");
+            setBio(s?.profileSettings?.bio || "");
+            setIsDarkMode((s?.themeSettings?.theme || "light") === "dark");
+            setGlassIntensity(s?.themeSettings?.glassIntensity || "medium");
+            setNotifications(!!s?.notificationSettings?.notifications);
+            setSoundEnabled(s?.notificationSettings?.soundEnabled ?? true);
+            setDesktopNotifications(s?.notificationSettings?.desktopNotifications ?? true);
+            setAutoStartBreaks(s?.productivitySettings?.autoStartBreaks ?? false);
+            setAutoStartWork(s?.productivitySettings?.autoStartWork ?? false);
+            setStatusVisibility(s?.communitySettings?.statusVisibility ?? true);
+            setLeaderboardOptIn(s?.communitySettings?.leaderboardOptIn ?? true);
+            setDataSharing(!!s?.privacySettings?.dataSharing);
+        }
+    }, [settings, setIsDarkMode]);
 
-    const handleSave = async () => {
+    const handleSave = async (overrides = {}) => {
         setIsSaving(true);
         try {
             const payload = {
                 profileSettings: { displayName, bio },
                 themeSettings: {
-                    theme: isDarkMode ? "dark" : "light",
-                    glassIntensity
+                    theme: (overrides.isDarkMode !== undefined ? overrides.isDarkMode : isDarkMode) ? "dark" : "light",
+                    glassIntensity: overrides.glassIntensity !== undefined ? overrides.glassIntensity : glassIntensity
                 },
                 notificationSettings: {
-                    notifications,
-                    soundEnabled,
-                    desktopNotifications
+                    notifications: overrides.notifications !== undefined ? overrides.notifications : notifications,
+                    soundEnabled: overrides.soundEnabled !== undefined ? overrides.soundEnabled : soundEnabled,
+                    desktopNotifications: overrides.desktopNotifications !== undefined ? overrides.desktopNotifications : desktopNotifications
                 },
                 productivitySettings: {
-                    autoStartBreaks,
-                    autoStartWork
+                    autoStartBreaks: overrides.autoStartBreaks !== undefined ? overrides.autoStartBreaks : autoStartBreaks,
+                    autoStartWork: overrides.autoStartWork !== undefined ? overrides.autoStartWork : autoStartWork
                 },
                 communitySettings: {
-                    statusVisibility,
-                    leaderboardOptIn
+                    statusVisibility: overrides.statusVisibility !== undefined ? overrides.statusVisibility : statusVisibility,
+                    leaderboardOptIn: overrides.leaderboardOptIn !== undefined ? overrides.leaderboardOptIn : leaderboardOptIn
                 },
-                privacySettings: { dataSharing }
+                privacySettings: {
+                    dataSharing: overrides.dataSharing !== undefined ? overrides.dataSharing : dataSharing
+                }
             };
             const token = localStorage.getItem("token");
             const headers = { "Content-Type": "application/json" };
             if (token) {
                 headers["Authorization"] = `Bearer ${token}`;
             }
-            await fetch(`${API_BASE}/settings`, {
+            const res = await fetch(`${API_BASE}/settings`, {
                 method: "PUT",
                 headers,
                 body: JSON.stringify(payload),
                 credentials: "include",
             });
-            setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 3000);
+            if (res.ok) {
+                const json = await res.json();
+                if (json?.success && json?.data?.settings) {
+                    updateGlobalSettings(json.data.settings);
+                }
+                setShowSuccess(true);
+                setTimeout(() => setShowSuccess(false), 2000);
+            }
         } catch (e) {
             console.error("Save failed", e);
         } finally {
@@ -405,7 +398,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Global Alerts</h3>
                                 <p style={styles.desc}>Master switch for all FocusFlow notifications and alerts.</p>
                             </div>
-                            <div style={styles.toggleEx(notifications)} onClick={() => setNotifications(!notifications)}>
+                            <div style={styles.toggleEx(notifications)} onClick={() => {
+                                const newVal = !notifications;
+                                setNotifications(newVal);
+                                handleSave({ notifications: newVal });
+                            }}>
                                 <div style={styles.knob(notifications)} />
                             </div>
                         </div>
@@ -414,7 +411,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Push Notifications</h3>
                                 <p style={styles.desc}>Allow desktop notifications for session starts and reminders.</p>
                             </div>
-                            <div style={styles.toggleEx(desktopNotifications)} onClick={() => setDesktopNotifications(!desktopNotifications)}>
+                            <div style={styles.toggleEx(desktopNotifications)} onClick={() => {
+                                const newVal = !desktopNotifications;
+                                setDesktopNotifications(newVal);
+                                handleSave({ desktopNotifications: newVal });
+                            }}>
                                 <div style={styles.knob(desktopNotifications)} />
                             </div>
                         </div>
@@ -423,7 +424,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Sound Effects</h3>
                                 <p style={styles.desc}>Play sounds for timer completion and breaks.</p>
                             </div>
-                            <div style={styles.toggleEx(soundEnabled)} onClick={() => setSoundEnabled(!soundEnabled)}>
+                            <div style={styles.toggleEx(soundEnabled)} onClick={() => {
+                                const newVal = !soundEnabled;
+                                setSoundEnabled(newVal);
+                                handleSave({ soundEnabled: newVal });
+                            }}>
                                 <div style={styles.knob(soundEnabled)} />
                             </div>
                         </div>
@@ -437,7 +442,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Auto-start Breaks</h3>
                                 <p style={styles.desc}>Automatically transition to a break when focus time ends.</p>
                             </div>
-                            <div style={styles.toggleEx(autoStartBreaks)} onClick={() => setAutoStartBreaks(!autoStartBreaks)}>
+                            <div style={styles.toggleEx(autoStartBreaks)} onClick={() => {
+                                const newVal = !autoStartBreaks;
+                                setAutoStartBreaks(newVal);
+                                handleSave({ autoStartBreaks: newVal });
+                            }}>
                                 <div style={styles.knob(autoStartBreaks)} />
                             </div>
                         </div>
@@ -446,7 +455,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Auto-start Focus</h3>
                                 <p style={styles.desc}>Immediately start the next work block after a break.</p>
                             </div>
-                            <div style={styles.toggleEx(autoStartWork)} onClick={() => setAutoStartWork(!autoStartWork)}>
+                            <div style={styles.toggleEx(autoStartWork)} onClick={() => {
+                                const newVal = !autoStartWork;
+                                setAutoStartWork(newVal);
+                                handleSave({ autoStartWork: newVal });
+                            }}>
                                 <div style={styles.knob(autoStartWork)} />
                             </div>
                         </div>
@@ -460,7 +473,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Dark Mode</h3>
                                 <p style={styles.desc}>Switch between light and dark interface themes.</p>
                             </div>
-                            <div style={styles.toggleEx(isDarkMode)} onClick={() => setIsDarkMode(!isDarkMode)}>
+                            <div style={styles.toggleEx(isDarkMode)} onClick={() => {
+                                const newVal = !isDarkMode;
+                                setIsDarkMode(newVal);
+                                handleSave({ isDarkMode: newVal });
+                            }}>
                                 <div style={styles.knob(isDarkMode)} />
                             </div>
                         </div>
@@ -472,7 +489,11 @@ const Settings = () => {
                             <select
                                 style={styles.select}
                                 value={glassIntensity}
-                                onChange={(e) => setGlassIntensity(e.target.value)}
+                                onChange={(e) => {
+                                    const newVal = e.target.value;
+                                    setGlassIntensity(newVal);
+                                    handleSave({ glassIntensity: newVal });
+                                }}
                             >
                                 <option value="low">Low (Solid)</option>
                                 <option value="medium">Medium (Balanced)</option>
@@ -489,7 +510,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Focus Status Visibility</h3>
                                 <p style={styles.desc}>Allow others to see when you are currently in a focus session.</p>
                             </div>
-                            <div style={styles.toggleEx(statusVisibility)} onClick={() => setStatusVisibility(!statusVisibility)}>
+                            <div style={styles.toggleEx(statusVisibility)} onClick={() => {
+                                const newVal = !statusVisibility;
+                                setStatusVisibility(newVal);
+                                handleSave({ statusVisibility: newVal });
+                            }}>
                                 <div style={styles.knob(statusVisibility)} />
                             </div>
                         </div>
@@ -498,7 +523,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Community Leaderboards</h3>
                                 <p style={styles.desc}>Agree to participate in global rankings and focus challenges.</p>
                             </div>
-                            <div style={styles.toggleEx(leaderboardOptIn)} onClick={() => setLeaderboardOptIn(!leaderboardOptIn)}>
+                            <div style={styles.toggleEx(leaderboardOptIn)} onClick={() => {
+                                const newVal = !leaderboardOptIn;
+                                setLeaderboardOptIn(newVal);
+                                handleSave({ leaderboardOptIn: newVal });
+                            }}>
                                 <div style={styles.knob(leaderboardOptIn)} />
                             </div>
                         </div>
@@ -512,7 +541,11 @@ const Settings = () => {
                                 <h3 style={styles.label}>Anonymous Data Sharing</h3>
                                 <p style={styles.desc}>Help us optimize focus flows by sharing usage analytics.</p>
                             </div>
-                            <div style={styles.toggleEx(dataSharing)} onClick={() => setDataSharing(!dataSharing)}>
+                            <div style={styles.toggleEx(dataSharing)} onClick={() => {
+                                const newVal = !dataSharing;
+                                setDataSharing(newVal);
+                                handleSave({ dataSharing: newVal });
+                            }}>
                                 <div style={styles.knob(dataSharing)} />
                             </div>
                         </div>

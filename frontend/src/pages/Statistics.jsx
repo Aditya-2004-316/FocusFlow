@@ -635,6 +635,9 @@ const Statistics = () => {
         },
     ];
 
+    const goalsToDisplay = statsData.goals?.length > 0 ? statsData.goals : goalBlueprints;
+    const suggestionsToDisplay = statsData.suggestions?.length > 0 ? statsData.suggestions : suggestions;
+
     return (
         <div style={styles.page}>
             <div style={styles.container}>
@@ -830,7 +833,7 @@ const Statistics = () => {
                         </p>
                     </div>
                     <div style={styles.goalList}>
-                        {goalBlueprints.map((goal) => (
+                        {goalsToDisplay.map((goal) => (
                             <div key={goal.title} style={styles.goalCard}>
                                 <div style={styles.goalHeader}>
                                     <span
@@ -891,7 +894,7 @@ const Statistics = () => {
                         </p>
                     </div>
                     <div style={styles.suggestionGrid}>
-                        {suggestions.map((suggestion) => (
+                        {suggestionsToDisplay.map((suggestion) => (
                             <div
                                 key={suggestion.title}
                                 style={styles.suggestionCard}

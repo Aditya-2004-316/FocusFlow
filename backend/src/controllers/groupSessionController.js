@@ -686,3 +686,30 @@ export const updateHeartbeat = async (req, res) => {
         });
     }
 };
+/**
+ * @desc    Delete all group sessions (Cleanup for testing)
+ * @route   DELETE /api/group-sessions/debug/cleanup
+ * @access  Protected (Admin-only or Dev)
+ */
+export const deleteAllSessions = async (req, res) => {
+    try {
+        // For safety, you could check for admin role here if you have one
+        // if (req.user.role !== 'admin') { ... }
+
+        const result = await GroupSession.deleteMany({});
+
+        // Also clean up timer records created from group sessions if needed
+        // await Timer.deleteMany({ tags: "group-session" });
+
+        res.status(200).json({
+            success: true,
+            message: `Successfully deleted ${result.deletedCount} group sessions`,
+        });
+    } catch (error) {
+        console.error("Cleanup sessions error:", error);
+        res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
+};

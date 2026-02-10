@@ -55,6 +55,7 @@
 
     /* Surfaces and inputs */
     --panel-bg: #f9fafb;
+    --panel-bg-glass: rgba(249, 250, 251, var(--glass-opacity));
     /* Light gray for cards in light mode */
     --sidebar-bg: linear-gradient(to bottom,
             var(--color-primary-50),
@@ -63,6 +64,25 @@
     --input-border: var(--color-gray-300);
     --footer-heading: var(--color-white);
     --footer-link: var(--color-primary-100);
+
+    /* Glassmorphism Defaults */
+    --glass-blur: 12px;
+    --glass-opacity: 0.85;
+}
+
+[data-glass="low"] {
+    --glass-blur: 4px;
+    --glass-opacity: 0.95;
+}
+
+[data-glass="medium"] {
+    --glass-blur: 12px;
+    --glass-opacity: 0.85;
+}
+
+[data-glass="high"] {
+    --glass-blur: 24px;
+    --glass-opacity: 0.65;
 }
 
 /* Dark mode: toggle by adding class 'dark' on html or body */
@@ -94,6 +114,7 @@
     /* Bright cyan for active text */
 
     --panel-bg: #0f172a;
+    --panel-bg-glass: rgba(15, 23, 42, var(--glass-opacity));
     /* card/panel background */
     --sidebar-bg: #111827;
     /* darker than panel, not as dark as body */

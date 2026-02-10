@@ -65,6 +65,8 @@ import useResponsive from "./hooks/useResponsive";
 import Signup from "./pages/Signup.jsx";
 import LandingPage from "./LandingPage/LandingPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import { ThemeProvider, useTheme } from "./context/ThemeContext.jsx";
+import { SettingsProvider } from "./context/SettingsContext.jsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import { SocketProvider } from "./context/SocketContext.jsx";
 import { ToastProvider } from "./context/ToastContext.jsx";
@@ -102,64 +104,18 @@ import AffirmationsRelaxation from "./components/relaxation/AffirmationsRelaxati
 
 function Dashboard() {
     const { user } = useAuth();
+    const { isDarkMode: isDarkTheme } = useTheme();
     const navigate = useNavigate();
     const { isMobile, isTablet, width } = useResponsive();
-    const isDarkTheme =
-        typeof document !== "undefined" &&
-        document.documentElement.classList.contains("dark");
-    const [distractions, setDistractions] = useState(() => {
-        const saved = localStorage.getItem("distractions");
-        return saved ? JSON.parse(saved) : [];
-    });
+    const [distractions, setDistractions] = useState([]);
     useEffect(() => {
-        const ENABLE_SEED = true; // flip to false to disable seeding
-        if (!ENABLE_SEED) return;
-        try {
-            const seededKey = "ff.seededData.v1";
-            const alreadySeeded = localStorage.getItem(seededKey) === "true";
-            const existing = localStorage.getItem("distractions");
-            const existingList = existing ? JSON.parse(existing) : [];
-            if (
-                !alreadySeeded &&
-                (!existingList || existingList.length === 0)
-            ) {
-                const now = Date.now();
-                const seed = [
-                    {
-                        id: crypto.randomUUID(),
-                        timestamp: now - 1000 * 60 * 10,
-                        note: "Phone call during session",
-                        type: "phone",
-                        severity: "high",
-                    },
-                    {
-                        id: crypto.randomUUID(),
-                        timestamp: now - 1000 * 60 * 45,
-                        note: "Slack ping",
-                        type: "chat",
-                        severity: "medium",
-                    },
-                    {
-                        id: crypto.randomUUID(),
-                        timestamp: now - 1000 * 60 * 90,
-                        note: "Email check drifted",
-                        type: "email",
-                        severity: "low",
-                    },
-                    {
-                        id: crypto.randomUUID(),
-                        timestamp: now - 1000 * 60 * 150,
-                        note: "Stretch break",
-                        type: "break",
-                        severity: "low",
-                    },
-                ];
-                localStorage.setItem("distractions", JSON.stringify(seed));
-                localStorage.setItem(seededKey, "true");
-                setDistractions(seed);
-            }
-        } catch { }
+        // Distraction seeding disabled to ensure user-specific data
+        const saved = localStorage.getItem("distractions");
+        if (saved) {
+            setDistractions(JSON.parse(saved));
+        }
     }, []);
+
     const [isLoggerOpen, setIsLoggerOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("overview");
     const [filterText, setFilterText] = useState("");
@@ -176,41 +132,32 @@ function Dashboard() {
     const [showWeeklyPlanner, setShowWeeklyPlanner] = useState(false);
     const [editingBufferBlock, setEditingBufferBlock] = useState(null);
     const [editingBufferText, setEditingBufferText] = useState("");
-    const [dailyFocusPlanItems, setDailyFocusPlanItems] = useState(() => {
-        const saved = localStorage.getItem("dailyFocusPlan");
-        return saved
-            ? JSON.parse(saved)
-            : [
-                {
-                    time: "08:30",
-                    title: "Morning planning sprint",
-                    description:
-                        "Review today's priorities and map one deep-work block before lunch.",
-                    status: "in-progress",
-                },
-                {
-                    time: "10:00",
-                    title: "Deep work block",
-                    description:
-                        "90-minute focus session dedicated to the highest-impact objective.",
-                    status: "scheduled",
-                },
-                {
-                    time: "14:30",
-                    title: "Experiment review",
-                    description:
-                        "Assess distraction triggers logged this week and adjust presets.",
-                    status: "scheduled",
-                },
-                {
-                    time: "17:45",
-                    title: "Shutdown ritual",
-                    description:
-                        "Document key wins, queue next steps, and clear the workspace.",
-                    status: "completed",
-                },
-            ];
-    });
+    const [dailyFocusPlanItems, setDailyFocusPlanItems] = useState([
+        {
+            time: "08:30",
+            title: "Morning planning sprint",
+            description: "Review today's priorities and map one deep-work block before lunch.",
+            status: "in-progress",
+        },
+        {
+            time: "10:00",
+            title: "Deep work block",
+            description: "90-minute focus session dedicated to the highest-impact objective.",
+            status: "scheduled",
+        },
+        {
+            time: "14:30",
+            title: "Experiment review",
+            description: "Assess distraction triggers logged this week and adjust presets.",
+            status: "scheduled",
+        },
+        {
+            time: "17:45",
+            title: "Shutdown ritual",
+            description: "Document key wins, queue next steps, and clear the workspace.",
+            status: "completed",
+        },
+    ]);
 
     const [summaryStats, setSummaryStats] = useState({
         todayFocusMinutes: 0,
@@ -218,9 +165,48 @@ function Dashboard() {
         productivityScore: 0,
         currentStreak: 0
     });
+    const [achievements, setAchievements] = useState([]);
+    const [fullStats, setFullStats] = useState(null);
 
     const [activityFeed, setActivityFeed] = useState([]);
     const [isLoadingStats, setIsLoadingStats] = useState(true);
+
+    const fetchSettings = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            const res = await fetch(`${API_BASE}/settings`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const json = await res.json();
+            if (json?.success && json?.data?.settings) {
+                const s = json.data.settings;
+                if (s.dailyFocusPlan?.length > 0) setDailyFocusPlanItems(s.dailyFocusPlan);
+                if (s.weeklyPlan?.length > 0) setWeeklyPlanItems(s.weeklyPlan);
+            }
+        } catch (e) {
+            console.error("Settings fetch failed:", e.message);
+        }
+    };
+
+    const updatePlannerOnBackend = async (type, items) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            await fetch(`${API_BASE}/settings`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ [type]: items })
+            });
+        } catch (e) {
+            console.error(`Update ${type} failed:`, e.message);
+        }
+    };
 
     const fetchSummaryStats = async () => {
         try {
@@ -238,6 +224,19 @@ function Dashboard() {
             const statsJson = await statsRes.json();
             if (statsJson?.success) {
                 setSummaryStats(statsJson.data.summary);
+            }
+
+            // Fetch full stats for achievements
+            const fullRes = await fetch(`${API_BASE}/stats/full?range=week`, {
+                credentials: "include",
+                headers,
+            });
+            const fullJson = await fullRes.json();
+            if (fullJson?.success) {
+                setFullStats(fullJson.data);
+                if (fullJson.data.achievements) {
+                    setAchievements(fullJson.data.achievements);
+                }
             }
 
             // Fetch activity feed from users endpoint (includes logins, sessions, community joins)
@@ -277,56 +276,55 @@ function Dashboard() {
 
     useEffect(() => {
         fetchSummaryStats();
+        fetchSettings();
     }, []);
-    const [weeklyPlanItems, setWeeklyPlanItems] = useState(() => {
-        const saved = localStorage.getItem("weeklyPlan");
-        return saved
-            ? JSON.parse(saved)
-            : [
-                {
-                    day: "Monday",
-                    focus: "Strategic Planning",
-                    duration: "3 hours",
-                    sessions: 3,
-                },
-                {
-                    day: "Tuesday",
-                    focus: "Deep Development Work",
-                    duration: "4 hours",
-                    sessions: 4,
-                },
-                {
-                    day: "Wednesday",
-                    focus: "Code Review & Collaboration",
-                    duration: "2.5 hours",
-                    sessions: 2,
-                },
-                {
-                    day: "Thursday",
-                    focus: "Problem Solving & Testing",
-                    duration: "3.5 hours",
-                    sessions: 3,
-                },
-                {
-                    day: "Friday",
-                    focus: "Documentation & Planning",
-                    duration: "2 hours",
-                    sessions: 2,
-                },
-            ];
-    });
 
-    // Save daily focus plan to localStorage
+    const [weeklyPlanItems, setWeeklyPlanItems] = useState([
+        {
+            day: "Monday",
+            focus: "Strategic Planning",
+            duration: "3 hours",
+            sessions: 3,
+        },
+        {
+            day: "Tuesday",
+            focus: "Deep Development Work",
+            duration: "4 hours",
+            sessions: 4,
+        },
+        {
+            day: "Wednesday",
+            focus: "Code Review & Collaboration",
+            duration: "2.5 hours",
+            sessions: 2,
+        },
+        {
+            day: "Thursday",
+            focus: "Problem Solving & Testing",
+            duration: "3.5 hours",
+            sessions: 3,
+        },
+        {
+            day: "Friday",
+            focus: "Documentation & Planning",
+            duration: "2 hours",
+            sessions: 2,
+        },
+    ]);
+
+    // Save daily focus plan to localStorage and Backend
     useEffect(() => {
         localStorage.setItem(
             "dailyFocusPlan",
             JSON.stringify(dailyFocusPlanItems)
         );
+        updatePlannerOnBackend("dailyFocusPlan", dailyFocusPlanItems);
     }, [dailyFocusPlanItems]);
 
-    // Save weekly plan to localStorage
+    // Save weekly plan to localStorage and Backend
     useEffect(() => {
         localStorage.setItem("weeklyPlan", JSON.stringify(weeklyPlanItems));
+        updatePlannerOnBackend("weeklyPlan", weeklyPlanItems);
     }, [weeklyPlanItems]);
 
     // Check if cooldown is active on component mount
@@ -2836,40 +2834,17 @@ function Dashboard() {
                             </p>
                         </header>
                         <div style={dashboardStyles.momentumGrid}>
-                            {[
+                            {(fullStats?.recentSessions?.length > 0 ? fullStats.recentSessions : [
                                 {
-                                    date: "Today, 2:45 PM",
-                                    duration: "45 minutes",
-                                    focus: "Deep Work Block",
-                                    productivity: "92%",
+                                    date: "No sessions yet",
+                                    duration: "0 minutes",
+                                    focus: "Start your first session!",
+                                    productivity: "0%",
                                     icon: FireIcon,
+                                    type: 'pomodoro'
                                 },
-                                {
-                                    date: "Today, 10:15 AM",
-                                    duration: "90 minutes",
-                                    focus: "Morning Sprint",
-                                    productivity: "87%",
-                                    icon: CheckCircleIcon,
-                                },
-                                {
-                                    date: "Yesterday, 3:30 PM",
-                                    duration: "60 minutes",
-                                    focus: "Code Review",
-                                    productivity: "79%",
-                                    icon: ClockIcon,
-                                },
-                                {
-                                    date: "Yesterday, 9:00 AM",
-                                    duration: "120 minutes",
-                                    focus: "Strategic Planning",
-                                    productivity: "95%",
-                                    icon: TrophyIcon,
-                                },
-                            ].map((session, idx) => {
-                                const SessionIcon = session.icon;
-                                const productivityNum = parseInt(
-                                    session.productivity
-                                );
+                            ]).map((session, idx) => {
+                                const SessionIcon = session.type === 'break' ? SparklesIcon : FireIcon;
                                 return (
                                     <article
                                         key={idx}
@@ -2995,80 +2970,59 @@ function Dashboard() {
                                 gridTemplateColumns: width >= 910 ? "repeat(3, 1fr)" : width >= 510 ? "repeat(2, 1fr)" : "1fr",
                             }}
                         >
-                            {[
+                            {(achievements.length > 0 ? achievements.map(a => ({
+                                ...a,
+                                icon: a.icon === "FireIcon" ? FireIcon :
+                                    a.icon === "TrophyIcon" ? TrophyIcon :
+                                        a.icon === "CheckCircleIcon" ? CheckCircleIcon :
+                                            a.icon === "ClockIcon" ? ClockIcon :
+                                                a.icon === "ClockIcon" ? ClockIcon :
+                                                    a.icon === "SparklesIcon" ? SparklesIcon :
+                                                        a.icon === "StarIcon" ? StarIcon : TrophyIcon
+                            })) : [
                                 {
                                     title: "🔥 7-Day Streak",
-                                    description:
-                                        "Completed 7 consecutive days of focus sessions",
-                                    progress: "100%",
+                                    description: "Completed 7 consecutive days of focus sessions",
+                                    progress: "0%",
                                     icon: FireIcon,
-                                    earned: true,
+                                    earned: false,
                                 },
                                 {
                                     title: "⭐ Perfect Week",
-                                    description:
-                                        "Achieved 90%+ productivity for an entire week",
-                                    progress: "85%",
+                                    description: "Achieved 90%+ productivity for an entire week",
+                                    progress: "0%",
                                     icon: TrophyIcon,
                                     earned: false,
                                 },
                                 {
                                     title: "💪 Century Club",
-                                    description:
-                                        "Complete 100 total focus sessions",
-                                    progress: "67%",
+                                    description: "Complete 100 total focus sessions",
+                                    progress: "0%",
                                     icon: CheckCircleIcon,
                                     earned: false,
                                 },
                                 {
                                     title: "🌅 Early Bird",
-                                    description:
-                                        "Start 5 focus sessions before 8 AM",
-                                    progress: "60%",
+                                    description: "Start 5 focus sessions before 8 AM",
+                                    progress: "0%",
                                     icon: ClockIcon,
                                     earned: false,
                                 },
                                 {
                                     title: "🎯 Focus Master",
-                                    description:
-                                        "Maintain 200+ minutes of focus in a single day",
-                                    progress: "40%",
+                                    description: "Maintain 200+ minutes of focus in a single day",
+                                    progress: "0%",
                                     icon: SparklesIcon,
                                     earned: false,
                                 },
                                 {
-                                    title: "🧘 Mindful Breaks",
-                                    description:
-                                        "Use 10 relaxation activities before focus sessions",
-                                    progress: "30%",
-                                    icon: BellAlertIcon,
+                                    title: "👑 Consistency King",
+                                    description: "Accumulate 50 total hours of focus time",
+                                    progress: "0%",
+                                    icon: StarIcon,
                                     earned: false,
                                 },
-                                {
-                                    title: "🚀 Speed Racer",
-                                    description:
-                                        "Complete 5 sessions in rapid succession",
-                                    progress: "20%",
-                                    icon: ArrowTrendingUpIcon,
-                                    earned: false,
-                                },
-                                {
-                                    title: "🌟 Consistency King",
-                                    description:
-                                        "Maintain 95%+ consistency for a month",
-                                    progress: "45%",
-                                    icon: SparklesIcon,
-                                    earned: false,
-                                },
-                                {
-                                    title: "💎 Diamond Status",
-                                    description:
-                                        "Unlock all other achievements",
-                                    progress: "11%",
-                                    icon: TrophyIcon,
-                                    earned: false,
-                                },
-                            ].map((badge, idx) => {
+                            ]).map((badge, idx) => {
                                 const BadgeIcon = badge.icon;
                                 const progressNum = parseInt(badge.progress);
                                 return (
@@ -3696,6 +3650,16 @@ function Dashboard() {
 }
 
 function App() {
+    return (
+        <ThemeProvider>
+            <SettingsProvider>
+                <AppContent />
+            </SettingsProvider>
+        </ThemeProvider>
+    );
+}
+
+function AppContent() {
     const { isMobile, width } = useResponsive();
     // Initialize sidebar state based on screen width:
     // - Collapsed (true) for screens < 826px

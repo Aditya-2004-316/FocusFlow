@@ -25,6 +25,7 @@ import {
 import FloatingTimer from "../components/FloatingTimer.jsx";
 import FloatingTimerPermissionDialog from "../components/FloatingTimerPermissionDialog.jsx";
 import useResponsive from "../hooks/useResponsive";
+import { useSettings } from "../context/SettingsContext";
 
 const heroBadges = ["Adaptive presets", "Break reminders", "Session analytics"];
 
@@ -159,12 +160,12 @@ export const sharedFocusShell = (isMobile = false) => ({
     section: {
         borderRadius: "1.25rem",
         border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
-        background: "var(--panel-bg)",
+        background: "var(--panel-bg-glass)",
         padding: isMobile ? "1.5rem" : "2.5rem",
         display: "flex",
         flexDirection: "column",
         gap: "1.5rem",
-        backdropFilter: "blur(18px)",
+        backdropFilter: "blur(var(--glass-blur))",
         position: "relative",
         overflow: "hidden",
     },
@@ -257,7 +258,7 @@ export const sharedFocusShell = (isMobile = false) => ({
         background: "rgba(59,130,246,0.12)",
         color: "var(--color-primary-700)",
         border: "1px solid rgba(56,189,248,0.28)",
-        backdropFilter: "blur(12px)",
+        backdropFilter: "blur(var(--glass-blur))",
     },
     heroStatsGrid: {
         display: "grid",
@@ -897,6 +898,7 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
 
 const FocusTimer = () => {
     const { isMobile, isTablet, isSmallMobile, width } = useResponsive();
+    const { settings } = useSettings();
     const styles = getStyles(isMobile, isTablet, isSmallMobile, width);
     const [timeLeft, setTimeLeft] = useState(
         defaultTimerSettings.focusDuration * 60
@@ -926,19 +928,28 @@ const FocusTimer = () => {
     }, [isRunning, timeLeft]);
 
     const handleTimerComplete = () => {
+        let nextIsRunning = false;
         if (isBreak) {
+            // Ending a break, starting focus
             setCompletedSessions((prev) => prev + 1);
             if (currentSession % timerSettings.sessionsUntilLongBreak === 0) {
                 setTimeLeft(timerSettings.longBreakDuration * 60);
             } else {
                 setTimeLeft(timerSettings.shortBreakDuration * 60);
             }
+            if (settings?.productivitySettings?.autoStartWork) {
+                nextIsRunning = true;
+            }
         } else {
+            // Ending focus, starting break
             setTimeLeft(timerSettings.focusDuration * 60);
             setCurrentSession((prev) => prev + 1);
+            if (settings?.productivitySettings?.autoStartBreaks) {
+                nextIsRunning = true;
+            }
         }
         setIsBreak((prev) => !prev);
-        setIsRunning(false);
+        setIsRunning(nextIsRunning);
     };
 
     const applyTimerSettings = useCallback(

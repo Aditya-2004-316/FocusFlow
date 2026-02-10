@@ -69,6 +69,11 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null,
         },
+        activeChallenges: [{
+            challengeId: { type: String, required: true },
+            startedAt: { type: Date, default: Date.now },
+            status: { type: String, enum: ['active', 'completed'], default: 'active' }
+        }],
     },
     {
         timestamps: true,

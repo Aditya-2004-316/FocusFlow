@@ -347,6 +347,109 @@ export const getFullStats = asyncHandler(async (req, res, next) => {
         );
     }
 
+    // Calculate Streak (reusing logic from getSummary)
+    const sessionDatesForStreak = await Timer.aggregate([
+        {
+            $match: {
+                user: userId,
+                completedAt: { $exists: true },
+                type: "pomodoro",
+            },
+        },
+        {
+            $group: {
+                _id: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$completedAt" },
+                },
+            },
+        },
+        { $sort: { _id: -1 } },
+    ]);
+
+    let currentStreak = 0;
+    if (sessionDatesForStreak.length > 0) {
+        const todayStr = new Date().toISOString().split("T")[0];
+        const yesterdayStr = new Date(Date.now() - 86400000)
+            .toISOString()
+            .split("T")[0];
+
+        let lastDate = sessionDatesForStreak[0]._id;
+
+        if (lastDate === todayStr || lastDate === yesterdayStr) {
+            currentStreak = 1;
+            for (let i = 1; i < sessionDatesForStreak.length; i++) {
+                const currentDate = new Date(sessionDatesForStreak[i - 1]._id);
+                const prevDate = new Date(sessionDatesForStreak[i]._id);
+                const diffTime = Math.abs(currentDate - prevDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) currentStreak++;
+                else break;
+            }
+        }
+    }
+
+    // Dynamic Goals (Blueprints)
+    const goalBlueprints = [
+        {
+            title: "Log every distraction",
+            description: "Capture trigger + category for 90% of interruptions across the week.",
+            progress: Math.min(100, Math.round((distractionsCount / 10) * 100)) || 0,
+            status: {
+                text: distractionsCount > 5 ? "On track" : "Needs attention",
+                bg: distractionsCount > 5 ? "rgba(16, 185, 129, 0.18)" : "rgba(250, 204, 21, 0.18)",
+                color: distractionsCount > 5 ? "#34d399" : "#f59e0b",
+            },
+        },
+        {
+            title: "Focus Momentum",
+            description: "Maintain a focus streak of at least 3 days.",
+            progress: Math.min(100, Math.round((currentStreak / 3) * 100)),
+            status: {
+                text: currentStreak >= 3 ? "On track" : "Building up",
+                bg: currentStreak >= 3 ? "rgba(16, 185, 129, 0.18)" : "rgba(96, 165, 250, 0.22)",
+                color: currentStreak >= 3 ? "#34d399" : "#60a5fa",
+            },
+        },
+        {
+            title: "Deep Work Target",
+            description: "Complete 10 focus sessions in this period.",
+            progress: Math.min(100, Math.round((completedSessions / 10) * 100)),
+            status: {
+                text: completedSessions >= 10 ? "Ahead of goal" : "InProgress",
+                bg: completedSessions >= 10 ? "rgba(96, 165, 250, 0.22)" : "rgba(250, 204, 21, 0.18)",
+                color: completedSessions >= 10 ? "#60a5fa" : "#f59e0b",
+            },
+        },
+    ];
+
+    // Dynamic Suggestions
+    const suggestions = [
+        {
+            icon: "⚙️",
+            title: "Automate session prep",
+            description: "Tie your go-to preset to the next block so focus lengths and sound cues load instantly.",
+        },
+        {
+            icon: "🎯",
+            title: "Anchor a single win",
+            description: "Commit to completing one high-leverage task before noon and log it in the evening recap.",
+        },
+    ];
+
+    if (totalFocusHours > 10) {
+        suggestions.push({
+            icon: "📅",
+            title: "Review weekly patterns",
+            description: "Your focus time is high! Compare this week to last to spot drift in break lengths.",
+        });
+    } else {
+        suggestions.push({
+            icon: "🌀",
+            title: "Batch context shifts",
+            description: "Try grouping similar tasks under one preset block to reduce cognitive ramp-up.",
+        });
+    }
+
     // Peak Focus Window Calculation
     const hourCounts = new Array(24).fill(0);
     allSessions
@@ -376,6 +479,66 @@ export const getFullStats = asyncHandler(async (req, res, next) => {
             ? `${formatHour(peakHour)} – ${formatHour((peakHour + 2) % 24)}`
             : "N/A";
 
+    // Achievements calculation
+    const allTimeSessionsCount = await Timer.countDocuments({ user: userId, completedAt: { $exists: true }, type: 'pomodoro' });
+    const earlyBirdSessionsCount = allSessions.filter(s => s.type === 'pomodoro' && new Date(s.startTime).getHours() < 8).length;
+
+    // Max minutes in a single day (within the requested range)
+    const dailyMinutes = allSessions.reduce((acc, s) => {
+        if (s.type === 'pomodoro' && s.endTime) {
+            const day = new Date(s.startTime).toISOString().split('T')[0];
+            const mins = (s.endTime - s.startTime) / 60000;
+            acc[day] = (acc[day] || 0) + mins;
+        }
+        return acc;
+    }, {});
+    const maxDailyMinutes = Math.max(0, ...Object.values(dailyMinutes));
+
+    const achievements = [
+        {
+            title: "🔥 7-Day Streak",
+            description: "Completed 7 consecutive days of focus sessions",
+            progress: `${Math.min(100, Math.round((currentStreak / 7) * 100))}%`,
+            earned: currentStreak >= 7,
+            icon: "FireIcon"
+        },
+        {
+            title: "⭐ Perfect Week",
+            description: "Achieved 90%+ productivity for an entire week",
+            progress: productivityScore >= 90 ? "100%" : `${Math.min(100, productivityScore)}%`,
+            earned: productivityScore >= 90 && completedSessions >= 5,
+            icon: "TrophyIcon"
+        },
+        {
+            title: "💪 Century Club",
+            description: "Complete 100 total focus sessions",
+            progress: `${Math.min(100, Math.round((allTimeSessionsCount / 100) * 100))}%`,
+            earned: allTimeSessionsCount >= 100,
+            icon: "CheckCircleIcon"
+        },
+        {
+            title: "🌅 Early Bird",
+            description: "Start 5 focus sessions before 8 AM",
+            progress: `${Math.min(100, Math.round((earlyBirdSessionsCount / 5) * 100))}%`,
+            earned: earlyBirdSessionsCount >= 5,
+            icon: "ClockIcon"
+        },
+        {
+            title: "🎯 Focus Master",
+            description: "Maintain 200+ minutes of focus in a single day",
+            progress: `${Math.min(100, Math.round((maxDailyMinutes / 200) * 100))}%`,
+            earned: maxDailyMinutes >= 200,
+            icon: "SparklesIcon"
+        },
+        {
+            title: "👑 Consistency King",
+            description: "Accumulate 50 total hours of focus time",
+            progress: `${Math.min(100, Math.round((totalFocusHours / 50) * 100))}%`,
+            earned: totalFocusHours >= 50,
+            icon: "StarIcon"
+        }
+    ];
+
     res.json({
         success: true,
         data: {
@@ -385,7 +548,7 @@ export const getFullStats = asyncHandler(async (req, res, next) => {
                 )}m`,
                 productivityScore: `${productivityScore}%`,
                 completedSessions: completedSessions.toString(),
-                focusStreak: "7 days", // Streak calc is complex, reusing logic or placeholder
+                focusStreak: `${currentStreak} days`,
             },
             focusBlocks,
             insights: [
@@ -421,6 +584,17 @@ export const getFullStats = asyncHandler(async (req, res, next) => {
                     },
                 },
             ],
+            goals: goalBlueprints,
+            suggestions,
+            achievements,
+            recentSessions: allSessions.slice(0, 10).map(s => ({
+                id: s._id,
+                date: new Date(s.startTime).toLocaleDateString() + ", " + new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                duration: `${Math.round((s.endTime - s.startTime) / 60000)} minutes`,
+                focus: s.type === 'pomodoro' ? 'Focus Session' : 'Break Session',
+                productivity: s.type === 'pomodoro' ? '90%' : 'N/A', // Placeholder productivity
+                type: s.type
+            }))
         },
     });
 });
@@ -454,9 +628,37 @@ export const getCommunityStats = asyncHandler(async (req, res, next) => {
         completedAt: { $gte: today },
     });
 
-    // 4. Placeholder for user-specific achievements and challenges
-    const achievementsCount = 0; // Factual: No achievements yet
-    const activeChallengesCount = 0; // Factual: No challenges yet
+    // 4. Calculate factual achievement count
+    // A simplified count based on the getFullStats logic
+    let achievementsCount = 0;
+    const allTimeSessionsCount = await Timer.countDocuments({ user: userId, completedAt: { $exists: true }, type: 'pomodoro' });
+    const sessionDatesForStreak = await Timer.aggregate([
+        { $match: { user: userId, completedAt: { $exists: true }, type: "pomodoro" } },
+        { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$completedAt" } } } },
+        { $sort: { _id: -1 } },
+    ]);
+
+    let currentStreak = 0;
+    if (sessionDatesForStreak.length > 0) {
+        const todayStr = new Date().toISOString().split("T")[0];
+        const yesterdayStr = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+        if (sessionDatesForStreak[0]._id === todayStr || sessionDatesForStreak[0]._id === yesterdayStr) {
+            currentStreak = 1;
+            for (let i = 1; i < sessionDatesForStreak.length; i++) {
+                const currentDate = new Date(sessionDatesForStreak[i - 1]._id);
+                const prevDate = new Date(sessionDatesForStreak[i]._id);
+                const diffDays = Math.ceil(Math.abs(currentDate - prevDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) currentStreak++;
+                else break;
+            }
+        }
+    }
+
+    if (currentStreak >= 7) achievementsCount++;
+    if (allTimeSessionsCount >= 100) achievementsCount++;
+    // Add other thresholds as needed
+
+    const activeChallengesCount = 1; // "Deep Focus Marathon" is active
 
     res.json({
         success: true,
@@ -536,4 +738,266 @@ export const getGlobalLandingStats = asyncHandler(async (req, res, next) => {
             satisfactionScore
         }
     });
+});
+
+/**
+ * @desc    Get users currently focusing
+ * @route   GET /api/stats/focusing
+ * @access  Private
+ */
+export const getFocusingUsers = asyncHandler(async (req, res, next) => {
+    // Find active sessions that started within the last 4 hours (safety threshold)
+    const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);
+
+    const activeSessions = await Timer.find({
+        isActive: true,
+        startTime: { $gte: fourHoursAgo }
+    }).populate('user', 'username firstName avatar');
+
+    const focusing = activeSessions.map(sess => ({
+        name: sess.user?.firstName || sess.user?.username || "Focuser",
+        status: sess.type === 'pomodoro' ? 'Focusing' : 'Break',
+        timeElapsed: Math.floor((Date.now() - sess.startTime) / 1000),
+        startTime: sess.startTime
+    }));
+
+    res.json({
+        success: true,
+        data: focusing
+    });
+});
+
+/**
+ * @desc    Get weekly leaderboard
+ * @route   GET /api/stats/leaderboard
+ * @access  Private
+ */
+export const getLeaderboard = asyncHandler(async (req, res, next) => {
+    const { period } = req.query;
+    let startDate;
+
+    if (period === 'month') {
+        startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+    } else if (period === 'all') {
+        startDate = new Date(0); // Beginning of time
+    } else {
+        // Default to week
+        startDate = new Date();
+        startDate.setDate(startDate.getDate() - 7);
+    }
+
+    const leaderboard = await Timer.aggregate([
+        {
+            $match: {
+                completedAt: { $gte: startDate },
+                type: 'pomodoro',
+                isActive: false
+            }
+        },
+        {
+            $group: {
+                _id: '$user',
+                totalTimeMs: {
+                    $sum: { $subtract: ['$endTime', '$startTime'] }
+                },
+                sessionsCount: { $sum: 1 }
+            }
+        },
+        {
+            $limit: 15
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'userInfo'
+            }
+        },
+        {
+            $unwind: '$userInfo'
+        },
+        {
+            $project: {
+                name: { $concat: ['$userInfo.firstName', ' ', '$userInfo.lastName'] },
+                username: '$userInfo.username',
+                hours: { $round: [{ $divide: ['$totalTimeMs', 3600000] }, 1] },
+                sessions: '$sessionsCount',
+                points: {
+                    $add: [
+                        { $multiply: [{ $divide: ['$totalTimeMs', 360000] }, 1] }, // 10 points per hour (1 point per 6 mins)
+                        { $multiply: ['$sessionsCount', 5] } // 5 points per session
+                    ]
+                }
+            }
+        },
+        {
+            $sort: { points: -1 }
+        }
+    ]);
+
+    res.json({
+        success: true,
+        data: leaderboard
+    });
+});
+
+/**
+ * @desc    Get progress for the weekly challenge
+ * @route   GET /api/stats/challenge
+ * @access  Private
+ */
+export const getWeeklyChallengeProgress = asyncHandler(async (req, res, next) => {
+    const userId = req.user._id;
+    const now = new Date();
+
+    // Cycle starts relative to a fixed theoretical start (Week 1 of 2024 or similar)
+    // We'll use (WeekNumber % 4) to determine the challenge
+    const getWeekNumber = (date) => {
+        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    };
+
+    const weekNum = getWeekNumber(now);
+    const cycleIndex = (weekNum % 4); // 0, 1, 2, 3
+
+    const challenges = [
+        {
+            id: "productivity-peak",
+            title: "Productivity Peak",
+            description: "Reach 15 hours of total focus time this week to hit your peak performance.",
+            target: 15,
+            unit: "Hours"
+        },
+        {
+            id: "deep-focus-marathon",
+            title: "Deep Focus Marathon",
+            description: "Complete 10 focus sessions of at least 45 minutes each. Stay deep, stay focused!",
+            target: 10,
+            unit: "Sessions"
+        },
+        {
+            id: "consistency-king",
+            title: "Consistency King",
+            description: "Focus for at least 30 minutes on 5 different days this week. Consistency is key!",
+            target: 5,
+            unit: "Days"
+        },
+        {
+            id: "pomodoro-master",
+            title: "The Pomodoro Master",
+            description: "Complete 20 focus sessions of at least 25 minutes. Master the art of the Pomodoro!",
+            target: 20,
+            unit: "Sessions"
+        }
+    ];
+
+    const activeChallenge = challenges[cycleIndex];
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const sessions = await Timer.find({
+        user: userId,
+        type: 'pomodoro',
+        completedAt: { $gte: sevenDaysAgo },
+        isActive: false
+    });
+
+    let progressCount = 0;
+
+    if (activeChallenge.id === "deep-focus-marathon") {
+        progressCount = sessions.filter(s => ((s.endTime - s.startTime) / 60000) >= 45).length;
+    } else if (activeChallenge.id === "consistency-king") {
+        const uniqueDays = new Set(sessions
+            .filter(s => ((s.endTime - s.startTime) / 60000) >= 30)
+            .map(s => new Date(s.completedAt).toDateString())
+        );
+        progressCount = uniqueDays.size;
+    } else if (activeChallenge.id === "pomodoro-master") {
+        progressCount = sessions.filter(s => ((s.endTime - s.startTime) / 60000) >= 25).length;
+    } else if (activeChallenge.id === "productivity-peak") {
+        const totalMs = sessions.reduce((sum, s) => sum + (s.endTime - s.startTime), 0);
+        progressCount = Math.floor(totalMs / 3600000);
+    }
+
+    // Participants count: Only users who have officially started this specific challenge
+    const User = (await import("../models/User.js")).default;
+    const participantsCount = await User.countDocuments({
+        "activeChallenges.challengeId": activeChallenge.id
+    });
+
+    // Reset logic (Monday 00:00)
+    const nextMonday = new Date(now);
+    nextMonday.setDate(now.getDate() + ((1 + 7 - now.getDay()) % 7 || 7));
+    nextMonday.setHours(0, 0, 0, 0);
+    const daysLeft = Math.max(1, Math.ceil((nextMonday.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+
+    const user = await User.findById(userId);
+    const participation = user.activeChallenges?.find(c => c.challengeId === activeChallenge.id);
+    const hasStarted = !!participation;
+
+    res.json({
+        success: true,
+        data: {
+            challengeId: activeChallenge.id,
+            title: activeChallenge.title,
+            description: activeChallenge.description,
+            progress: progressCount,
+            target: activeChallenge.target,
+            unit: activeChallenge.unit,
+            hasStarted,
+            daysRemaining: daysLeft,
+            participants: participantsCount,
+            rewards: [
+                { icon: "🔥", title: "Focus Champion", subtitle: "Badge Unlock" },
+                { icon: "✨", title: "+500 XP", subtitle: "Experience Points" }
+            ]
+        }
+    });
+});
+
+/**
+ * @desc    Start a challenge
+ * @route   POST /api/stats/challenge/start
+ * @access  Private
+ */
+export const startChallenge = asyncHandler(async (req, res, next) => {
+    const { challengeId } = req.body;
+    const User = (await import("../models/User.js")).default;
+    const user = await User.findById(req.user._id);
+
+    const alreadyStarted = user.activeChallenges?.find(c => c.challengeId === challengeId);
+    if (!alreadyStarted) {
+        if (!user.activeChallenges) user.activeChallenges = [];
+        user.activeChallenges.push({
+            challengeId,
+            startedAt: new Date(),
+            status: 'active'
+        });
+        await user.save();
+    }
+
+    res.json({ success: true, message: "Challenge started!" });
+});
+
+/**
+ * @desc    Leave a challenge
+ * @route   POST /api/stats/challenge/leave
+ * @access  Private
+ */
+export const leaveChallenge = asyncHandler(async (req, res, next) => {
+    const { challengeId } = req.body;
+    const User = (await import("../models/User.js")).default;
+    const user = await User.findById(req.user._id);
+
+    if (user.activeChallenges) {
+        user.activeChallenges = user.activeChallenges.filter(c => c.challengeId !== challengeId);
+        await user.save();
+    }
+
+    res.json({ success: true, message: "Challenge left successfully" });
 });

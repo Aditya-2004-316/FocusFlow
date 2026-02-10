@@ -24,10 +24,12 @@ import { useToast } from "../context/ToastContext";
 import { useConfirm } from "../components/ConfirmModal";
 import useResponsive from "../hooks/useResponsive";
 import { API_BASE_URL as API_BASE } from "../config/api";
+import { useNavigate } from "react-router-dom";
 
 const DashboardCommunity = () => {
     const { isMobile, isTablet, isSmallMobile, width } = useResponsive();
     const { user: authUser } = useAuth();
+    const navigate = useNavigate();
     const toast = useToast();
     const confirm = useConfirm();
     const [communities, setCommunities] = useState([]);
@@ -50,6 +52,10 @@ const DashboardCommunity = () => {
     const [showLeaderboardModal, setShowLeaderboardModal] = useState(false);
     const [showChallengeModal, setShowChallengeModal] = useState(false);
 
+    const [focusingUsers, setFocusingUsers] = useState([]);
+    const [leaderboardData, setLeaderboardData] = useState([]);
+    const [loadingFocusing, setLoadingFocusing] = useState(false);
+    const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
 
 
     const [communityStats, setCommunityStats] = useState({
@@ -60,6 +66,9 @@ const DashboardCommunity = () => {
         activeChallengesCount: 0
     });
     const [loadingStats, setLoadingStats] = useState(true);
+    const [leaderboardPeriod, setLeaderboardPeriod] = useState("week");
+    const [challengeData, setChallengeData] = useState(null);
+    const [loadingChallenge, setLoadingChallenge] = useState(false);
 
 
 
@@ -93,6 +102,120 @@ const DashboardCommunity = () => {
             console.error("Failed to load community stats:", err);
         } finally {
             setLoadingStats(false);
+        }
+    };
+
+    const loadFocusingUsers = async () => {
+        try {
+            setLoadingFocusing(true);
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${API_BASE}/stats/focusing`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const json = await res.json();
+            if (json.success) setFocusingUsers(json.data);
+        } catch (err) {
+            console.error("Failed to load focusing users:", err);
+        } finally {
+            setLoadingFocusing(false);
+        }
+    };
+
+    const loadChallengeData = async () => {
+        try {
+            setLoadingChallenge(true);
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${API_BASE}/stats/challenge`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const json = await res.json();
+            if (json.success) setChallengeData(json.data);
+        } catch (err) {
+            console.error("Failed to load challenge data:", err);
+        } finally {
+            setLoadingChallenge(false);
+        }
+    };
+
+    const loadLeaderboard = async (period = leaderboardPeriod) => {
+        try {
+            setLoadingLeaderboard(true);
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${API_BASE}/stats/leaderboard?period=${period}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const json = await res.json();
+            if (json.success) setLeaderboardData(json.data);
+        } catch (err) {
+            console.error("Failed to load leaderboard:", err);
+        } finally {
+            setLoadingLeaderboard(false);
+        }
+    };
+
+    useEffect(() => {
+        if (showFocusingModal) loadFocusingUsers();
+    }, [showFocusingModal]);
+
+    useEffect(() => {
+        if (showLeaderboardModal) loadLeaderboard(leaderboardPeriod);
+    }, [showLeaderboardModal, leaderboardPeriod]);
+
+    useEffect(() => {
+        if (showChallengeModal) loadChallengeData();
+    }, [showChallengeModal]);
+
+    const handleChallengeAction = async () => {
+        if (!challengeData) return;
+
+        if (challengeData.hasStarted) {
+            setShowChallengeModal(false);
+            toast.success("Resuming your focus session! 🔥");
+            navigate("/focus-timer");
+        } else {
+            try {
+                const token = localStorage.getItem("token");
+                const res = await fetch(`${API_BASE}/stats/challenge/start`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ challengeId: challengeData.challengeId })
+                });
+                const json = await res.json();
+                if (json.success) {
+                    toast.success("Challenge started! Good luck! 🎯");
+                    loadChallengeData(); // Refresh state
+                    navigate("/focus-timer");
+                }
+            } catch (err) {
+                console.error("Failed to start challenge:", err);
+                toast.error("Failed to start challenge. Please try again.");
+            }
+        }
+    };
+
+    const handleLeaveChallenge = async () => {
+        if (!challengeData) return;
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${API_BASE}/stats/challenge/leave`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ challengeId: challengeData.challengeId })
+            });
+            const json = await res.json();
+            if (json.success) {
+                toast.success("Successfully left the challenge.");
+                loadChallengeData(); // Refresh state
+            }
+        } catch (err) {
+            console.error("Failed to leave challenge:", err);
+            toast.error("Failed to opt out. Please try again.");
         }
     };
 
@@ -843,7 +966,7 @@ const DashboardCommunity = () => {
                             <input
                                 type="text"
                                 readOnly
-                                value={`${window.location.origin}/signup?ref=${currentUser?._id || 'focusflow'}`}
+                                value={`${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`}
                                 style={{
                                     flex: 1,
                                     background: "transparent",
@@ -855,7 +978,8 @@ const DashboardCommunity = () => {
                             />
                             <button
                                 onClick={() => {
-                                    navigator.clipboard.writeText(`${window.location.origin}/signup?ref=${currentUser?._id || 'focusflow'}`);
+                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                    navigator.clipboard.writeText(link);
                                     toast.success("Invite link copied to clipboard!");
                                 }}
                                 style={{
@@ -877,19 +1001,28 @@ const DashboardCommunity = () => {
                         </div>
                         <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
                             <button
-                                onClick={() => window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20FocusFlow%20-%20the%20ultimate%20productivity%20app!&url=${encodeURIComponent(window.location.origin)}`, '_blank')}
+                                onClick={() => {
+                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                    window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20FocusFlow%20-%20the%20ultimate%20productivity%20app!&url=${encodeURIComponent(link)}`, '_blank')
+                                }}
                                 style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(29, 161, 242, 0.1)", color: "#1DA1F2", fontWeight: 600, cursor: "pointer" }}
                             >
                                 Twitter/X
                             </button>
                             <button
-                                onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin)}`, '_blank')}
+                                onClick={() => {
+                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`, '_blank')
+                                }}
                                 style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(10, 102, 194, 0.1)", color: "#0A66C2", fontWeight: 600, cursor: "pointer" }}
                             >
                                 LinkedIn
                             </button>
                             <button
-                                onClick={() => window.open(`mailto:?subject=Join%20FocusFlow&body=Hey!%20Check%20out%20FocusFlow%20for%20better%20productivity:%20${encodeURIComponent(window.location.origin)}`, '_blank')}
+                                onClick={() => {
+                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                    window.open(`mailto:?subject=Join%20FocusFlow&body=Hey!%20Check%20out%20FocusFlow%20for%20better%20productivity:%20${encodeURIComponent(link)}`, '_blank')
+                                }}
                                 style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(234, 88, 12, 0.1)", color: "#ea580c", fontWeight: 600, cursor: "pointer" }}
                             >
                                 Email
@@ -914,49 +1047,52 @@ const DashboardCommunity = () => {
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem", padding: "0.75rem 1rem", background: "rgba(34, 197, 94, 0.1)", borderRadius: "0.75rem", border: "1px solid rgba(34, 197, 94, 0.3)" }}>
                             <div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite" }} />
-                            <span style={{ color: "#22c55e", fontWeight: 600 }}>{Math.floor(Math.random() * 12) + 3} members currently focusing</span>
+                            <span style={{ color: "#22c55e", fontWeight: 600 }}>{focusingUsers.length} member{focusingUsers.length !== 1 ? 's' : ''} currently focusing</span>
                         </div>
-                        {[
-                            { name: "Alex Chen", community: "Deep Work Masters", time: "45:23", status: "Focus Session" },
-                            { name: "Sarah Kim", community: "Code & Coffee", time: "23:11", status: "Deep Work" },
-                            { name: "Mike Johnson", community: "Productivity Pros", time: "12:45", status: "Study Sprint" },
-                            { name: "Emma Wilson", community: "Writers Guild", time: "67:30", status: "Creative Flow" },
-                            { name: "David Park", community: "Tech Focus", time: "34:18", status: "Coding Session" },
-                        ].map((user, idx) => (
-                            <div key={idx} style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "1rem",
-                                padding: "1rem",
-                                background: "rgba(255, 255, 255, 0.03)",
-                                borderRadius: "0.75rem",
-                                marginBottom: "0.75rem",
-                                border: "1px solid rgba(255, 255, 255, 0.06)",
-                            }}>
-                                <div style={{
-                                    width: "3rem",
-                                    height: "3rem",
-                                    borderRadius: "50%",
-                                    background: `linear-gradient(135deg, ${['#38bdf8', '#818cf8', '#22c55e', '#f59e0b', '#ec4899'][idx]}, ${['#818cf8', '#22c55e', '#f59e0b', '#ec4899', '#38bdf8'][idx]})`,
+                        {loadingFocusing ? (
+                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                        ) : focusingUsers.length === 0 ? (
+                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>No one is focusing right now. Start a session to be the first!</div>
+                        ) : focusingUsers.map((user, idx) => {
+                            const elapsedMins = Math.floor(user.timeElapsed / 60);
+                            const elapsedSecs = user.timeElapsed % 60;
+                            const timeStr = `${elapsedMins}:${elapsedSecs.toString().padStart(2, '0')}`;
+                            return (
+                                <div key={idx} style={{
                                     display: "flex",
                                     alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 700,
-                                    fontSize: "1.1rem",
+                                    gap: "1rem",
+                                    padding: "1rem",
+                                    background: "rgba(255, 255, 255, 0.03)",
+                                    borderRadius: "0.75rem",
+                                    marginBottom: "0.75rem",
+                                    border: "1px solid rgba(255, 255, 255, 0.06)",
                                 }}>
-                                    {user.name.charAt(0)}
+                                    <div style={{
+                                        width: "3rem",
+                                        height: "3rem",
+                                        borderRadius: "50%",
+                                        background: `linear-gradient(135deg, ${['#38bdf8', '#818cf8', '#22c55e', '#f59e0b', '#ec4899'][idx % 5]}, ${['#818cf8', '#22c55e', '#f59e0b', '#ec4899', '#38bdf8'][idx % 5]})`,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        color: "#fff",
+                                        fontWeight: 700,
+                                        fontSize: "1.1rem",
+                                    }}>
+                                        {user.name.charAt(0)}
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontWeight: 600, color: "var(--color-gray-900)", marginBottom: "0.25rem" }}>{user.name}</div>
+                                        <div style={{ fontSize: "0.85rem", color: "var(--color-gray-600)" }}>Ready to work</div>
+                                    </div>
+                                    <div style={{ textAlign: "right" }}>
+                                        <div style={{ fontWeight: 700, color: "#22c55e", fontFamily: "monospace", fontSize: "1.1rem" }}>{timeStr}</div>
+                                        <div style={{ fontSize: "0.75rem", color: "#64748b" }}>{user.status}</div>
+                                    </div>
                                 </div>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ fontWeight: 600, color: "var(--color-gray-900)", marginBottom: "0.25rem" }}>{user.name}</div>
-                                    <div style={{ fontSize: "0.85rem", color: "var(--color-gray-600)" }}>{user.community}</div>
-                                </div>
-                                <div style={{ textAlign: "right" }}>
-                                    <div style={{ fontWeight: 700, color: "#22c55e", fontFamily: "monospace", fontSize: "1.1rem" }}>{user.time}</div>
-                                    <div style={{ fontSize: "0.75rem", color: "#64748b" }}>{user.status}</div>
-                                </div>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 </div>
             )}
@@ -975,63 +1111,71 @@ const DashboardCommunity = () => {
                             </button>
                         </div>
                         <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
-                            {["This Week", "This Month", "All Time"].map((period, idx) => (
-                                <button key={period} style={{
-                                    flex: 1,
-                                    padding: "0.5rem",
-                                    borderRadius: "0.5rem",
-                                    border: idx === 0 ? "1px solid rgba(245, 158, 11, 0.5)" : "1px solid #334155",
-                                    background: idx === 0 ? "rgba(245, 158, 11, 0.15)" : "transparent",
-                                    color: idx === 0 ? "#f59e0b" : "#94a3b8",
-                                    fontWeight: 600,
-                                    fontSize: "0.85rem",
-                                    cursor: "pointer",
-                                }}>
-                                    {period}
+                            {["week", "month", "all"].map((period) => (
+                                <button
+                                    key={period}
+                                    onClick={() => setLeaderboardPeriod(period)}
+                                    style={{
+                                        flex: 1,
+                                        padding: "0.5rem",
+                                        borderRadius: "0.5rem",
+                                        border: leaderboardPeriod === period ? "1px solid rgba(245, 158, 11, 0.5)" : "1px solid #334155",
+                                        background: leaderboardPeriod === period ? "rgba(245, 158, 11, 0.15)" : "transparent",
+                                        color: leaderboardPeriod === period ? "#f59e0b" : "#94a3b8",
+                                        fontWeight: 600,
+                                        fontSize: "0.85rem",
+                                        cursor: "pointer",
+                                        textTransform: "capitalize"
+                                    }}>
+                                    This {period === 'all' ? 'Time' : period}
                                 </button>
                             ))}
                         </div>
-                        {[
-                            { rank: 1, name: "Jessica Taylor", hours: "32.5h", streak: 14, medal: "🥇" },
-                            { rank: 2, name: "Ryan Martinez", hours: "28.2h", streak: 11, medal: "🥈" },
-                            { rank: 3, name: "Priya Sharma", hours: "25.8h", streak: 9, medal: "🥉" },
-                            { rank: 4, name: currentUser?.firstName || currentUser?.username || "You", hours: "18.3h", streak: 5, medal: null },
-                            { rank: 5, name: "Chris Anderson", hours: "16.7h", streak: 7, medal: null },
-                        ].map((user, idx) => (
-                            <div key={idx} style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "1rem",
-                                padding: "1rem",
-                                background: user.rank === 4 ? "rgba(56, 189, 248, 0.1)" : "rgba(255, 255, 255, 0.03)",
-                                borderRadius: "0.75rem",
-                                marginBottom: "0.75rem",
-                                border: user.rank === 4 ? "1px solid rgba(56, 189, 248, 0.3)" : "1px solid rgba(255, 255, 255, 0.06)",
-                            }}>
-                                <div style={{
-                                    width: "2.5rem",
-                                    height: "2.5rem",
-                                    borderRadius: "50%",
-                                    background: user.rank <= 3 ? ["linear-gradient(135deg, #fbbf24, #f59e0b)", "linear-gradient(135deg, #94a3b8, #64748b)", "linear-gradient(135deg, #d97706, #a16207)"][user.rank - 1] : "#334155",
+                        {loadingLeaderboard ? (
+                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                        ) : leaderboardData.length > 0 ? (
+                            leaderboardData.map((user, idx) => (
+                                <div key={idx} style={{
                                     display: "flex",
                                     alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#fff",
-                                    fontWeight: 800,
-                                    fontSize: user.medal ? "1.25rem" : "1rem",
+                                    gap: "1rem",
+                                    padding: "1rem",
+                                    background: (user.username === currentUser?.username) ? "rgba(245, 158, 11, 0.1)" : "rgba(255, 255, 255, 0.03)",
+                                    borderRadius: "0.75rem",
+                                    marginBottom: "0.75rem",
+                                    border: (user.username === currentUser?.username) ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(255, 255, 255, 0.06)",
                                 }}>
-                                    {user.medal || `#${user.rank}`}
+                                    <div style={{
+                                        width: "2.5rem",
+                                        height: "2.5rem",
+                                        borderRadius: "0.5rem",
+                                        background: idx < 3 ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        fontWeight: 700,
+                                        color: idx < 3 ? "#f59e0b" : "var(--color-gray-600)",
+                                        fontSize: "1.2rem",
+                                    }}>
+                                        {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontWeight: 600, color: "var(--color-gray-900)" }}>{user.name}</div>
+                                        <div style={{ fontSize: "0.75rem", color: "var(--color-gray-600)" }}>{user.sessions} sessions • {Math.round(user.points)} pts</div>
+                                    </div>
+                                    <div style={{ textAlign: "right" }}>
+                                        <div style={{ fontWeight: 700, color: "var(--color-gray-900)" }}>{user.hours}h</div>
+                                        <div style={{ fontSize: "0.75rem", color: "#64748b" }}>Focus Time</div>
+                                    </div>
                                 </div>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ fontWeight: 600, color: user.rank === 4 ? "#38bdf8" : "var(--color-gray-900)", marginBottom: "0.25rem" }}>{user.name}</div>
-                                    <div style={{ fontSize: "0.85rem", color: "var(--color-gray-600)" }}>🔥 {user.streak} day streak</div>
-                                </div>
-                                <div style={{ textAlign: "right" }}>
-                                    <div style={{ fontWeight: 700, color: "#f59e0b", fontSize: "1.1rem" }}>{user.hours}</div>
-                                    <div style={{ fontSize: "0.75rem", color: "var(--color-gray-600)" }}>focused</div>
-                                </div>
+                            ))
+                        ) : (
+                            <div style={{ textAlign: "center", padding: "3rem", color: "var(--color-gray-600)" }}>
+                                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏙️</div>
+                                <div style={{ fontSize: "1.1rem", fontWeight: 600 }}>No users on the leaderboard yet.</div>
+                                <div style={{ fontSize: "0.9rem", marginTop: "0.5rem" }}>Be the first to claim the top spot!</div>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             )}
@@ -1050,79 +1194,124 @@ const DashboardCommunity = () => {
                             </button>
                         </div>
 
-                        {/* Current Challenge */}
-                        <div style={{
-                            background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.1))",
-                            border: "1px solid rgba(239, 68, 68, 0.3)",
-                            borderRadius: "1rem",
-                            padding: "1.5rem",
-                            marginBottom: "1.5rem",
-                        }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                                <span style={{ fontSize: "1.5rem" }}>🎯</span>
-                                <span style={{ color: "#fbbf24", fontWeight: 700, fontSize: "1.1rem" }}>CHALLENGE OF THE WEEK</span>
-                            </div>
-                            <h3 style={{ color: "var(--color-gray-900)", fontSize: "1.35rem", fontWeight: 700, marginBottom: "0.75rem" }}>
-                                "Deep Focus Marathon"
-                            </h3>
-                            <p style={{ color: "var(--color-gray-600)", lineHeight: 1.6, marginBottom: "1.25rem" }}>
-                                Complete 10 focus sessions of at least 45 minutes each. No distractions allowed!
-                            </p>
-                            <div style={{ marginBottom: "1rem" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                                    <span style={{ color: "var(--color-gray-600)", fontSize: "0.9rem" }}>Your Progress</span>
-                                    <span style={{ color: "var(--color-gray-900)", fontWeight: 600 }}>6 / 10 Sessions</span>
+                        {loadingChallenge ? (
+                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                        ) : challengeData ? (
+                            <div style={{
+                                background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.1))",
+                                border: "1px solid rgba(239, 68, 68, 0.3)",
+                                borderRadius: "1rem",
+                                padding: "1.25rem",
+                                marginBottom: "1rem",
+                            }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                                    <span style={{ fontSize: "1.3rem" }}>🎯</span>
+                                    <span style={{ color: "#fbbf24", fontWeight: 700, fontSize: "1rem" }}>CHALLENGE OF THE WEEK</span>
                                 </div>
-                                <div style={{ height: "0.75rem", background: "#1e293b", borderRadius: "999px", overflow: "hidden" }}>
-                                    <div style={{ width: "60%", height: "100%", background: "linear-gradient(90deg, #ef4444, #f59e0b)", borderRadius: "999px" }} />
+                                <h3 style={{ color: "var(--color-gray-900)", fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+                                    "{challengeData.title}"
+                                </h3>
+                                <p style={{ color: "var(--color-gray-600)", lineHeight: 1.5, marginBottom: "1rem", fontSize: "0.95rem" }}>
+                                    {challengeData.description}
+                                </p>
+                                <div style={{ marginBottom: "1rem" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                                        <span style={{ color: "var(--color-gray-600)", fontSize: "0.9rem" }}>Your Progress</span>
+                                        <span style={{ color: "var(--color-gray-900)", fontWeight: 600 }}>{challengeData.progress} / {challengeData.target} {challengeData.unit || "Sessions"}</span>
+                                    </div>
+                                    <div style={{ height: "0.75rem", background: "#1e293b", borderRadius: "999px", overflow: "hidden" }}>
+                                        <div style={{ width: `${(challengeData.progress / challengeData.target) * 100}%`, height: "100%", background: "linear-gradient(90deg, #ef4444, #f59e0b)", borderRadius: "999px" }} />
+                                    </div>
+                                </div>
+                                <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.85rem" }}>
+                                    <span>⏰ {challengeData.daysRemaining} days remaining</span>
+                                    <span>👥 {challengeData.participants} participants</span>
                                 </div>
                             </div>
-                            <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.85rem" }}>
-                                <span>⏰ 3 days remaining</span>
-                                <span>👥 234 participants</span>
-                            </div>
-                        </div>
+                        ) : (
+                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Failed to load challenge data.</div>
+                        )}
 
                         {/* Rewards */}
-                        <div style={{ marginBottom: "1.5rem" }}>
-                            <h4 style={{ color: "var(--color-gray-900)", fontWeight: 600, marginBottom: "1rem" }}>🏆 Rewards</h4>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                                <div style={{ padding: "1rem", background: "rgba(255, 255, 255, 0.03)", borderRadius: "0.75rem", border: "1px solid rgba(255, 255, 255, 0.06)", textAlign: "center" }}>
-                                    <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔥</div>
-                                    <div style={{ color: "var(--color-gray-900)", fontWeight: 600, fontSize: "0.9rem" }}>Focus Champion</div>
-                                    <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Badge Unlock</div>
-                                </div>
-                                <div style={{ padding: "1rem", background: "rgba(255, 255, 255, 0.03)", borderRadius: "0.75rem", border: "1px solid rgba(255, 255, 255, 0.06)", textAlign: "center" }}>
-                                    <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>✨</div>
-                                    <div style={{ color: "var(--color-gray-900)", fontWeight: 600, fontSize: "0.9rem" }}>+500 XP</div>
-                                    <div style={{ color: "#64748b", fontSize: "0.8rem" }}>Experience Points</div>
+                        {challengeData && (
+                            <div style={{ marginBottom: "1.5rem" }}>
+                                <h4 style={{ color: "var(--color-gray-900)", fontWeight: 600, marginBottom: "1rem" }}>🏆 Rewards</h4>
+                                <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.75rem" }}>
+                                    {challengeData.rewards.map((reward, ridx) => (
+                                        <div key={ridx} style={{
+                                            padding: "1rem",
+                                            background: "rgba(255, 255, 255, 0.03)",
+                                            borderRadius: "0.75rem",
+                                            border: "1px solid rgba(255, 255, 255, 0.06)",
+                                        }}>
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+                                                <span style={{ fontSize: "1.5rem" }}>{reward.icon}</span>
+                                                <div style={{ color: "var(--color-gray-900)", fontWeight: 700, fontSize: "1rem" }}>{reward.title}</div>
+                                            </div>
+                                            <div style={{ color: "#64748b", fontSize: "0.8rem", textAlign: "center" }}>{reward.subtitle}</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        </div>
+                        )}
 
-                        <button
-                            onClick={() => {
-                                setShowChallengeModal(false);
-                                toast.success("Challenge progress saved! Keep focusing! 🔥");
-                            }}
-                            style={{
-                                width: "100%",
-                                padding: "1rem",
-                                background: "linear-gradient(135deg, #ef4444, #f59e0b)",
-                                border: "none",
-                                borderRadius: "0.75rem",
-                                color: "#fff",
-                                fontWeight: 700,
-                                fontSize: "1rem",
-                                cursor: "pointer",
-                            }}
-                        >
-                            Continue Challenge 🚀
-                        </button>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                            <button
+                                onClick={handleChallengeAction}
+                                style={{
+                                    flex: 2,
+                                    minWidth: "200px",
+                                    padding: "0.75rem 1rem",
+                                    background: challengeData?.hasStarted ? "linear-gradient(135deg, #ef4444, #f59e0b)" : "linear-gradient(135deg, #38bdf8, #818cf8)",
+                                    border: "none",
+                                    borderRadius: "0.75rem",
+                                    color: "#fff",
+                                    fontWeight: 700,
+                                    fontSize: "1rem",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                                    boxShadow: challengeData?.hasStarted ? "0 4px 15px rgba(239, 68, 68, 0.2)" : "0 4px 15px rgba(56, 189, 248, 0.2)"
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.opacity = "0.95";
+                                    e.currentTarget.style.transform = "translateY(-1px)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.opacity = "1";
+                                    e.currentTarget.style.transform = "translateY(0)";
+                                }}
+                            >
+                                {challengeData?.hasStarted ? "Continue Challenge 🚀" : "Start Challenge 🎯"}
+                            </button>
+
+                            {challengeData?.hasStarted && (
+                                <button
+                                    onClick={handleLeaveChallenge}
+                                    style={{
+                                        flex: 1,
+                                        minWidth: "140px",
+                                        padding: "0.75rem 1rem",
+                                        background: "transparent",
+                                        border: "2px solid rgba(239, 68, 68, 0.5)",
+                                        borderRadius: "0.75rem",
+                                        color: "#ef4444",
+                                        fontWeight: 700,
+                                        fontSize: "0.95rem",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s ease",
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.05)"}
+                                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                                >
+                                    Leave Challenge
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 };
 

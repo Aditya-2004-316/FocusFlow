@@ -48,6 +48,22 @@ const SettingsSchema = new mongoose.Schema(
         privacySettings: {
             dataSharing: { type: Boolean, default: true },
         },
+        dailyFocusPlan: [
+            {
+                time: String,
+                title: String,
+                description: String,
+                status: { type: String, enum: ["in-progress", "scheduled", "completed"], default: "scheduled" }
+            }
+        ],
+        weeklyPlan: [
+            {
+                day: String,
+                focus: String,
+                duration: String,
+                sessions: Number
+            }
+        ]
     },
     { timestamps: true }
 );

@@ -83,13 +83,53 @@ const Profile = () => {
         }
     }, [user]);
 
-    // Mock stats - these should be fetched from backend
-    const stats = {
-        totalFocusTime: "127h 32m",
-        focusSessions: 248,
-        tasksCompleted: 156,
-        currentStreak: 12,
-    };
+    const [stats, setStats] = useState({
+        totalFocusTime: "0h 0m",
+        focusSessions: 0,
+        tasksCompleted: 0,
+        currentStreak: 0,
+    });
+
+    React.useEffect(() => {
+        const fetchProfileStats = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) return;
+
+                const res = await fetch(`${API_BASE}/stats/summary`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const json = await res.json();
+                if (json?.success && json?.data?.summary) {
+                    const s = json.data.summary;
+                    setStats({
+                        totalFocusTime: `${Math.floor(s.todayFocusMinutes / 60)}h ${s.todayFocusMinutes % 60}m`, // Today's focus
+                        focusSessions: s.completedSessionsCount,
+                        tasksCompleted: 0, // Placeholder as backend doesn't track specific tasks yet beyond sessions
+                        currentStreak: s.currentStreak,
+                    });
+                }
+
+                // If we want lifetime stats, we'd call /stats/full or /stats/community
+                const fullRes = await fetch(`${API_BASE}/stats/full?range=year`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const fullJson = await fullRes.json();
+                if (fullJson?.success && fullJson?.data?.metrics) {
+                    const m = fullJson.data.metrics;
+                    setStats(prev => ({
+                        ...prev,
+                        totalFocusTime: m.totalFocusTime,
+                        focusSessions: parseInt(m.completedSessions) || prev.focusSessions,
+                    }));
+                }
+
+            } catch (e) {
+                console.error("Profile stats fetch failed:", e.message);
+            }
+        };
+        fetchProfileStats();
+    }, []);
 
     const styles = {
         page: {

@@ -149,6 +149,12 @@ router.put(
                 ...updates.privacySettings,
             };
         }
+        if (updates.dailyFocusPlan) {
+            settings.dailyFocusPlan = updates.dailyFocusPlan;
+        }
+        if (updates.weeklyPlan) {
+            settings.weeklyPlan = updates.weeklyPlan;
+        }
 
         await settings.save();
         res.json({

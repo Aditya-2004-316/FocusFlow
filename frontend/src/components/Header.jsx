@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 import FocusFlowLogo from "../assets/focusflowlogo.png";
 import useResponsive from "../hooks/useResponsive";
@@ -25,32 +26,13 @@ const Header = () => {
     const { isMobile, width } = useResponsive();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const { isDarkMode, toggleTheme } = useTheme();
     const [hoveredNotification, setHoveredNotification] = useState(null);
     const [hoveredProfileItem, setHoveredProfileItem] = useState(null);
     const { user, logout, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Default to dark mode for authenticated users
-        const saved = localStorage.getItem("theme");
-        const shouldDark = saved ? saved === "dark" : true; // Default to dark if no preference saved
-        setIsDarkMode(shouldDark);
-        document.documentElement.classList.toggle("dark", shouldDark);
-        document.body.classList.toggle("dark", shouldDark);
-        // Save the default preference if not set
-        if (!saved) {
-            localStorage.setItem("theme", "dark");
-        }
-    }, []);
-
-    const toggleTheme = () => {
-        const next = !isDarkMode;
-        setIsDarkMode(next);
-        document.documentElement.classList.toggle("dark", next);
-        document.body.classList.toggle("dark", next);
-        localStorage.setItem("theme", next ? "dark" : "light");
-    };
+    // Theme is now handled by ThemeContext
 
     const handleLogout = () => {
         logout();

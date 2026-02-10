@@ -11,6 +11,7 @@ import {
     advanceSession,
     cancelSession,
     updateHeartbeat,
+    deleteAllSessions,
 } from "../controllers/groupSessionController.js";
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.post("/", createGroupSession);
 router.get("/community/:communityId", getCommunityGroupSessions);
 router.get("/:id", getGroupSession);
 router.delete("/:id", cancelSession);
+router.delete("/debug/cleanup", deleteAllSessions);
 
 // Participant actions
 router.post("/:id/join", joinGroupSession);
