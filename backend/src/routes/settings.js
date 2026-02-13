@@ -88,80 +88,63 @@ router.put(
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    error: "Validation failed",
-                    details: errors.array(),
-                });
+            return res.status(400).json({
+                success: false,
+                error: "Validation failed",
+                details: errors.array(),
+            });
         }
-
-        const settings = await ensureSettings(req.user._id);
 
         const updates = req.body || {};
-        if (updates.profileSettings) {
-            settings.profileSettings = {
-                ...(settings.profileSettings.toObject?.() ||
-                    settings.profileSettings),
-                ...updates.profileSettings,
-            };
-        }
-        if (updates.timerSettings) {
-            settings.timerSettings = {
-                ...(settings.timerSettings.toObject?.() ||
-                    settings.timerSettings),
-                ...updates.timerSettings,
-            };
-        }
-        if (updates.themeSettings) {
-            settings.themeSettings = {
-                ...(settings.themeSettings.toObject?.() ||
-                    settings.themeSettings),
-                ...updates.themeSettings,
-            };
-        }
-        if (updates.notificationSettings) {
-            settings.notificationSettings = {
-                ...(settings.notificationSettings.toObject?.() ||
-                    settings.notificationSettings),
-                ...updates.notificationSettings,
-            };
-        }
-        if (updates.productivitySettings) {
-            settings.productivitySettings = {
-                ...(settings.productivitySettings.toObject?.() ||
-                    settings.productivitySettings),
-                ...updates.productivitySettings,
-            };
-        }
-        if (updates.communitySettings) {
-            settings.communitySettings = {
-                ...(settings.communitySettings.toObject?.() ||
-                    settings.communitySettings),
-                ...updates.communitySettings,
-            };
-        }
-        if (updates.privacySettings) {
-            settings.privacySettings = {
-                ...(settings.privacySettings.toObject?.() ||
-                    settings.privacySettings),
-                ...updates.privacySettings,
-            };
-        }
+        const updateFields = {};
+
+        // Helper to handle nested settings blocks
+        const nestedSections = [
+            "profileSettings",
+            "timerSettings",
+            "themeSettings",
+            "notificationSettings",
+            "productivitySettings",
+            "communitySettings",
+            "privacySettings",
+        ];
+
+        nestedSections.forEach((section) => {
+            if (updates[section] && typeof updates[section] === "object") {
+                Object.keys(updates[section]).forEach((key) => {
+                    updateFields[`${section}.${key}`] = updates[section][key];
+                });
+            }
+        });
+
+        // Handle root-level arrays/fields
         if (updates.dailyFocusPlan) {
-            settings.dailyFocusPlan = updates.dailyFocusPlan;
+            updateFields.dailyFocusPlan = updates.dailyFocusPlan;
         }
         if (updates.weeklyPlan) {
-            settings.weeklyPlan = updates.weeklyPlan;
+            updateFields.weeklyPlan = updates.weeklyPlan;
         }
 
-        await settings.save();
-        res.json({
-            success: true,
-            message: "Settings updated successfully",
-            data: { settings },
-        });
+        try {
+            const settings = await Settings.findOneAndUpdate(
+                { user: req.user._id },
+                { $set: updateFields },
+                { new: true, upsert: true, runValidators: true }
+            );
+
+            res.json({
+                success: true,
+                message: "Settings updated successfully",
+                data: { settings },
+            });
+        } catch (error) {
+            console.error("Settings update error:", error);
+            res.status(500).json({
+                success: false,
+                error: "Failed to update settings",
+                message: error.message,
+            });
+        }
     }
 );
 

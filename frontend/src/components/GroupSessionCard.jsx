@@ -1,6 +1,8 @@
 import { UserGroupIcon, ClockIcon, PlayIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "../context/ThemeContext";
 
-const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
+const GroupSessionCard = ({ session, currentUserId, onJoin, onView = () => { } }) => {
+    const { isDarkMode } = useTheme();
     const isHost = session.hostId?._id === currentUserId || session.hostId === currentUserId;
     const isParticipant = session.participants?.some(
         p => (p.userId?._id || p.userId) === currentUserId && !["left", "disconnected"].includes(p.status)
@@ -48,12 +50,13 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
     };
 
     const cardStyle = {
-        background: "linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)",
+        background: isDarkMode ? "linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)" : "#ffffff",
         borderRadius: "1rem",
         padding: "1.25rem",
-        border: `1px solid ${isParticipant ? "rgba(56, 189, 248, 0.4)" : "rgba(255,255,255,0.1)"}`,
+        border: `1px solid ${isParticipant ? (isDarkMode ? "rgba(56, 189, 248, 0.4)" : "#38bdf8") : (isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0")}`,
         transition: "all 0.2s",
         cursor: "pointer",
+        boxShadow: isDarkMode ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     };
 
     const hostAvatarStyle = {
@@ -85,7 +88,7 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
         fontSize: "0.65rem",
         fontWeight: 600,
         color: "#fff",
-        border: "2px solid #1e293b",
+        border: `2px solid ${isDarkMode ? "#1e293b" : "#ffffff"}`,
         marginLeft: index > 0 ? "-0.5rem" : 0,
     });
 
@@ -109,7 +112,7 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
             {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
                 <div style={{ flex: 1 }}>
-                    <h4 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#f8fafc", margin: 0, marginBottom: "0.25rem" }}>
+                    <h4 style={{ fontSize: "1.1rem", fontWeight: 700, color: isDarkMode ? "#f8fafc" : "#0f172a", margin: 0, marginBottom: "0.25rem" }}>
                         {session.title}
                     </h4>
                     {session.description && (
@@ -128,8 +131,8 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
                 <div style={hostAvatarStyle}>
                     {session.hostId?.username?.slice(0, 2).toUpperCase() || "H"}
                 </div>
-                <span style={{ color: "#94a3b8", fontSize: "0.85rem" }}>
-                    Hosted by <span style={{ color: "#f8fafc", fontWeight: 500 }}>
+                <span style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem" }}>
+                    Hosted by <span style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", fontWeight: 500 }}>
                         {session.hostId?.username || "Unknown"}
                     </span>
                     {isHost && <span style={{ color: "#38bdf8" }}> (You)</span>}
@@ -138,7 +141,7 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
 
             {/* Session Info */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: "#94a3b8", fontSize: "0.85rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem" }}>
                     <ClockIcon style={{ width: "1rem", height: "1rem" }} />
                     {session.settings?.focusDuration || 25} min focus
                 </div>
@@ -147,7 +150,7 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
                         🧘 {session.settings.relaxationDuration} min relaxation
                     </div>
                 )}
-                <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: "#94a3b8", fontSize: "0.85rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem" }}>
                     <UserGroupIcon style={{ width: "1rem", height: "1rem" }} />
                     {activeParticipants.length}/{session.settings?.maxParticipants || 10}
                 </div>
@@ -179,7 +182,7 @@ const GroupSessionCard = ({ session, currentUserId, onJoin, onView }) => {
                         </div>
                     ))}
                     {activeParticipants.length > 5 && (
-                        <span style={{ marginLeft: "0.5rem", color: "#94a3b8", fontSize: "0.8rem" }}>
+                        <span style={{ marginLeft: "0.5rem", color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.8rem" }}>
                             +{activeParticipants.length - 5} more
                         </span>
                     )}

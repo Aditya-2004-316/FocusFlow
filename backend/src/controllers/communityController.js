@@ -24,9 +24,42 @@ export const getCommunities = async (req, res) => {
 
         const total = await Community.countDocuments({ isActive: true });
 
+        // If user is logged in, enrich community data with membership/contribution info
+        let enrichedCommunities = communities.map(c => c.toObject());
+
+        if (req.user) {
+            const memberships = await CommunityMember.find({ userId: req.user._id });
+            const membershipMap = memberships.reduce((acc, m) => {
+                acc[m.communityId.toString()] = m;
+                return acc;
+            }, {});
+
+            enrichedCommunities = enrichedCommunities.map(c => {
+                const membership = membershipMap[c._id.toString()];
+                const isCreator = c.creator._id.toString() === req.user._id.toString();
+
+                let contributionScore = 0;
+                if (isCreator) {
+                    contributionScore = 100;
+                } else if (membership) {
+                    // Calculate a dynamic contribution score based on postCount and age
+                    const daysActive = Math.ceil((Date.now() - new Date(membership.joinedAt)) / (1000 * 60 * 60 * 24));
+                    contributionScore = Math.min(100, 15 + (membership.postCount * 12) + (daysActive * 2));
+                }
+
+                return {
+                    ...c,
+                    isMember: !!membership || isCreator,
+                    memberRole: isCreator ? "Owner" : (membership?.role || null),
+                    contributionScore: Math.round(contributionScore),
+                    joinedAt: isCreator ? c.createdAt : (membership?.joinedAt || null)
+                };
+            });
+        }
+
         res.status(200).json({
             success: true,
-            data: communities,
+            data: enrichedCommunities,
             pagination: {
                 total,
                 page,

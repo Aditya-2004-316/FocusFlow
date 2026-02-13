@@ -687,23 +687,42 @@ export const updateHeartbeat = async (req, res) => {
     }
 };
 /**
- * @desc    Delete all group sessions (Cleanup for testing)
+ * @desc    Delete group sessions for a specific community (Cleanup)
  * @route   DELETE /api/group-sessions/debug/cleanup
- * @access  Protected (Admin-only or Dev)
+ * @access  Protected
  */
 export const deleteAllSessions = async (req, res) => {
     try {
-        // For safety, you could check for admin role here if you have one
-        // if (req.user.role !== 'admin') { ... }
+        const { communityId } = req.query;
 
-        const result = await GroupSession.deleteMany({});
+        if (!communityId) {
+            return res.status(400).json({
+                success: false,
+                error: "Community ID is required for cleanup",
+            });
+        }
 
-        // Also clean up timer records created from group sessions if needed
-        // await Timer.deleteMany({ tags: "group-session" });
+        // Verify community exists and user is owner
+        const community = await Community.findById(communityId);
+        if (!community) {
+            return res.status(404).json({
+                success: false,
+                error: "Community not found",
+            });
+        }
+
+        if (community.creator.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                error: "Only the community creator can reset sessions",
+            });
+        }
+
+        const result = await GroupSession.deleteMany({ communityId });
 
         res.status(200).json({
             success: true,
-            message: `Successfully deleted ${result.deletedCount} group sessions`,
+            message: `Successfully deleted ${result.deletedCount} sessions for this community`,
         });
     } catch (error) {
         console.error("Cleanup sessions error:", error);

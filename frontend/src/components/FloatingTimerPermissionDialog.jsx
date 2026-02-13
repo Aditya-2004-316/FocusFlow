@@ -1,7 +1,9 @@
 import React from "react";
 import { SparklesIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "../context/ThemeContext";
 
-const FloatingTimerPermissionDialog = ({ onAllow, onDeny, isDarkTheme }) => {
+const FloatingTimerPermissionDialog = ({ onAllow, onDeny }) => {
+    const { isDarkMode: isDarkTheme } = useTheme();
     return (
         <div
             style={{
@@ -101,7 +103,7 @@ const FloatingTimerPermissionDialog = ({ onAllow, onDeny, isDarkTheme }) => {
                         style={{
                             borderRadius: "0.875rem",
                             background: isDarkTheme
-                                ? "rgba(59, 130, 246, 0.08)"
+                                ? "rgba(56, 189, 248, 0.12)"
                                 : "rgba(59, 130, 246, 0.06)",
                             border: isDarkTheme
                                 ? "1px solid rgba(59, 130, 246, 0.15)"
@@ -192,23 +194,30 @@ const FloatingTimerPermissionDialog = ({ onAllow, onDeny, isDarkTheme }) => {
                             padding: "0.875rem 1rem",
                             borderRadius: "0.875rem",
                             border: "1px solid rgba(59, 130, 246, 0.4)",
-                            background:
-                                "linear-gradient(to right, rgba(59, 130, 246, 0.3), rgba(56, 189, 248, 0.25))",
-                            color: "rgba(59, 130, 246, 0.9)",
+                            background: isDarkTheme
+                                ? "linear-gradient(135deg, #38bdf8, #60a5fa)"
+                                : "linear-gradient(to right, rgba(59, 130, 246, 0.3), rgba(56, 189, 248, 0.25))",
+                            color: isDarkTheme ? "#0f172a" : "rgba(59, 130, 246, 0.9)",
                             fontWeight: 600,
                             fontSize: "0.9rem",
                             cursor: "pointer",
                             transition: "all 0.2s ease",
                         }}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.background =
-                                "linear-gradient(to right, rgba(59, 130, 246, 0.45), rgba(56, 189, 248, 0.35))";
-                            e.currentTarget.style.boxShadow =
-                                "0 12px 24px -8px rgba(59, 130, 246, 0.3)";
+                            if (isDarkTheme) {
+                                e.currentTarget.style.background = "linear-gradient(135deg, #60a5fa, #38bdf8)";
+                                e.currentTarget.style.boxShadow = "0 0 20px rgba(56, 189, 248, 0.4)";
+                            } else {
+                                e.currentTarget.style.background = "linear-gradient(to right, rgba(59, 130, 246, 0.45), rgba(56, 189, 248, 0.35))";
+                                e.currentTarget.style.boxShadow = "0 12px 24px -8px rgba(59, 130, 246, 0.3)";
+                            }
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.background =
-                                "linear-gradient(to right, rgba(59, 130, 246, 0.3), rgba(56, 189, 248, 0.25))";
+                            if (isDarkTheme) {
+                                e.currentTarget.style.background = "linear-gradient(135deg, #38bdf8, #60a5fa)";
+                            } else {
+                                e.currentTarget.style.background = "linear-gradient(to right, rgba(59, 130, 246, 0.3), rgba(56, 189, 248, 0.25))";
+                            }
                             e.currentTarget.style.boxShadow = "none";
                         }}
                     >

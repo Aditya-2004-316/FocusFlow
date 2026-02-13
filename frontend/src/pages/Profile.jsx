@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile, useIsSmallMobile, useIsNarrow } from "../hooks/useMediaQuery";
 import { API_BASE_URL as API_BASE } from "../config/api";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 import {
     UserCircleIcon,
@@ -53,9 +54,7 @@ const Profile = () => {
         confirmPassword: "",
     });
 
-    const isDarkTheme =
-        typeof document !== "undefined" &&
-        document.documentElement.classList.contains("dark");
+    const { isDarkMode: isDarkTheme } = useTheme();
 
     const displayName = user
         ? user.firstName
@@ -135,9 +134,7 @@ const Profile = () => {
         page: {
             minHeight: "100vh",
             padding: isNarrow ? "3.5rem 0.75rem 2.5rem" : (isMobile ? "4rem 1rem 3rem" : "3.5rem 2rem 5rem"),
-            background: isDarkTheme
-                ? "var(--color-white)"
-                : "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #f0fdf4 50%, #fdf4ff 75%, #fff7ed 100%)",
+            background: "var(--color-white)",
             color: "var(--color-gray-900)",
         },
         container: {
@@ -196,19 +193,15 @@ const Profile = () => {
                 : "0 4px 12px -4px rgba(56,189,248,0.4)",
         },
         profileCard: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.75)",
+            background: "var(--panel-bg)",
             borderRadius: isNarrow ? "1rem" : (isMobile ? "1.25rem" : "1.75rem"),
             padding: isNarrow ? "1.25rem" : (isMobile ? "1.5rem" : "2.5rem"),
-            border: isDarkTheme
-                ? "1px solid var(--input-border)"
-                : "1px solid rgba(255,255,255,0.4)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             boxShadow: isDarkTheme
                 ? "var(--shadow-lg)"
                 : "0 25px 50px -12px rgba(59,130,246,0.15)",
-            backdropFilter: isDarkTheme ? "none" : "blur(20px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(20px)",
+            backdropFilter: "var(--glass-blur)",
+            WebkitBackdropFilter: "var(--glass-blur)",
             position: "relative",
             overflow: "hidden",
         },
@@ -331,14 +324,10 @@ const Profile = () => {
             marginBottom: "2rem",
         },
         statCard: {
-            background: isDarkTheme
-                ? "rgba(56,189,248,0.06)"
-                : "rgba(255,255,255,0.7)",
+            background: "var(--panel-bg)",
             borderRadius: "1.25rem",
             padding: "1.75rem",
-            border: isDarkTheme
-                ? "1px solid rgba(56,189,248,0.15)"
-                : "1px solid rgba(255,255,255,0.5)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             display: "flex",
             flexDirection: "column",
@@ -385,14 +374,10 @@ const Profile = () => {
             width: "100%",
         },
         settingCard: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.7)",
+            background: "var(--panel-bg)",
             borderRadius: isNarrow ? "0.85rem" : (isMobile ? "1rem" : "1.25rem"),
             padding: isNarrow ? "1rem" : (isMobile ? "1.25rem" : "1.75rem"),
-            border: isDarkTheme
-                ? "1px solid var(--input-border)"
-                : "1px solid rgba(255,255,255,0.4)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             boxShadow: isDarkTheme
                 ? "var(--shadow-md)"
                 : "0 10px 25px -5px rgba(59,130,246,0.1)",
@@ -463,19 +448,15 @@ const Profile = () => {
             marginTop: "auto",
         },
         sectionCard: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.75)",
+            background: "var(--panel-bg)",
             borderRadius: "1.5rem",
             padding: "2rem",
-            border: isDarkTheme
-                ? "1px solid var(--input-border)"
-                : "1px solid rgba(255,255,255,0.4)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             boxShadow: isDarkTheme
                 ? "var(--shadow-lg)"
                 : "0 25px 50px -12px rgba(59,130,246,0.12)",
-            backdropFilter: isDarkTheme ? "none" : "blur(16px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(16px)",
+            backdropFilter: "var(--glass-blur)",
+            WebkitBackdropFilter: "var(--glass-blur)",
         },
         sectionTitle: {
             fontSize: "1.5rem",

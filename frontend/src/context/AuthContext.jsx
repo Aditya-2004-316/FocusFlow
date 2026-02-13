@@ -31,17 +31,6 @@ export const AuthProvider = ({ children }) => {
                 "isAuthenticated",
                 isAuthenticated ? "true" : "false"
             );
-            if (isAuthenticated) {
-                // Default to dark theme for authenticated users
-                document.documentElement.classList.add("dark");
-                document.body.classList.add("dark");
-                localStorage.setItem("theme", "dark");
-            } else {
-                // Enforce light theme for public users
-                document.documentElement.classList.remove("dark");
-                document.body.classList.remove("dark");
-                localStorage.setItem("theme", "light");
-            }
         } catch { }
     }, [isAuthenticated]);
 

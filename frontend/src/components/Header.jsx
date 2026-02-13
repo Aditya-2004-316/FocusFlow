@@ -139,8 +139,8 @@ const Header = () => {
     };
 
     const dropdownItemHoverStyle = {
-        backgroundColor: "var(--color-gray-100)",
-        color: "var(--color-primary-600)",
+        backgroundColor: isDarkMode ? "var(--color-primary-500)" : "var(--color-gray-100)",
+        color: isDarkMode ? "#ffffff" : "var(--color-primary-600)",
     };
 
     const dropdownItemIconStyle = {
@@ -170,15 +170,15 @@ const Header = () => {
                         style={buttonStyle}
                         onClick={toggleTheme}
                         title={
-                            isDarkMode ? "Switch to light" : "Switch to dark"
+                            isDarkMode ? "Switch to light mode" : "Switch to dark mode"
                         }
                     >
                         {isDarkMode ? (
-                            <SunIcon
+                            <MoonIcon
                                 style={{ width: "1.5rem", height: "1.5rem" }}
                             />
                         ) : (
-                            <MoonIcon
+                            <SunIcon
                                 style={{ width: "1.5rem", height: "1.5rem" }}
                             />
                         )}
@@ -218,7 +218,7 @@ const Header = () => {
                                         gap: "0.5rem",
                                         paddingTop: "1rem",
                                         paddingBottom: "1rem",
-                                        backgroundColor: hoveredNotification === 0 ? "var(--color-gray-100)" : "transparent",
+                                        backgroundColor: hoveredNotification === 0 ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
                                     }}
                                     onMouseEnter={() => setHoveredNotification(0)}
                                     onMouseLeave={() => setHoveredNotification(null)}
@@ -233,7 +233,7 @@ const Header = () => {
                                         <CheckCircleIcon
                                             style={{
                                                 ...dropdownItemIconStyle,
-                                                color: "var(--color-green-600)",
+                                                color: isDarkMode ? "#4ade80" : "var(--color-green-600)",
                                                 flexShrink: 0,
                                             }}
                                         />
@@ -243,7 +243,7 @@ const Header = () => {
                                                     margin: 0,
                                                     fontWeight: 600,
                                                     fontSize: "0.9rem",
-                                                    color: hoveredNotification === 0 ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                                    color: hoveredNotification === 0 ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                                 }}
                                             >
                                                 Session Complete!
@@ -279,7 +279,7 @@ const Header = () => {
                                         gap: "0.5rem",
                                         paddingTop: "1rem",
                                         paddingBottom: "1rem",
-                                        backgroundColor: hoveredNotification === 1 ? "var(--color-gray-100)" : "transparent",
+                                        backgroundColor: hoveredNotification === 1 ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
                                     }}
                                     onMouseEnter={() => setHoveredNotification(1)}
                                     onMouseLeave={() => setHoveredNotification(null)}
@@ -294,7 +294,7 @@ const Header = () => {
                                         <FireIcon
                                             style={{
                                                 ...dropdownItemIconStyle,
-                                                color: "var(--color-orange-500)",
+                                                color: isDarkMode ? "#fb923c" : "var(--color-orange-500)",
                                                 flexShrink: 0,
                                             }}
                                         />
@@ -304,7 +304,7 @@ const Header = () => {
                                                     margin: 0,
                                                     fontWeight: 600,
                                                     fontSize: "0.9rem",
-                                                    color: hoveredNotification === 1 ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                                    color: hoveredNotification === 1 ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                                 }}
                                             >
                                                 5-Day Streak!
@@ -340,7 +340,7 @@ const Header = () => {
                                         gap: "0.5rem",
                                         paddingTop: "1rem",
                                         paddingBottom: "1rem",
-                                        backgroundColor: hoveredNotification === 2 ? "var(--color-gray-100)" : "transparent",
+                                        backgroundColor: hoveredNotification === 2 ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
                                     }}
                                     onMouseEnter={() => setHoveredNotification(2)}
                                     onMouseLeave={() => setHoveredNotification(null)}
@@ -355,7 +355,7 @@ const Header = () => {
                                         <BellIcon
                                             style={{
                                                 ...dropdownItemIconStyle,
-                                                color: "var(--color-primary-600)",
+                                                color: isDarkMode ? "#38bdf8" : "var(--color-primary-600)",
                                                 flexShrink: 0,
                                             }}
                                         />
@@ -365,7 +365,7 @@ const Header = () => {
                                                     margin: 0,
                                                     fontWeight: 600,
                                                     fontSize: "0.9rem",
-                                                    color: hoveredNotification === 2 ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                                    color: hoveredNotification === 2 ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                                 }}
                                             >
                                                 Break Reminder
@@ -403,8 +403,8 @@ const Header = () => {
                                         justifyContent: "center",
                                         fontWeight: 600,
                                         fontSize: "0.9rem",
-                                        backgroundColor: hoveredNotification === 'viewAll' ? "var(--color-gray-100)" : "transparent",
-                                        color: hoveredNotification === 'viewAll' ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                        backgroundColor: hoveredNotification === 'viewAll' ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
+                                        color: hoveredNotification === 'viewAll' ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                     }}
                                     onMouseEnter={() => setHoveredNotification('viewAll')}
                                     onMouseLeave={() => setHoveredNotification(null)}
@@ -456,8 +456,8 @@ const Header = () => {
                                     to="/profile"
                                     style={{
                                         ...dropdownItemStyle,
-                                        backgroundColor: hoveredProfileItem === 'profile' ? "var(--color-gray-100)" : "transparent",
-                                        color: hoveredProfileItem === 'profile' ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                        backgroundColor: hoveredProfileItem === 'profile' ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
+                                        color: hoveredProfileItem === 'profile' ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                     }}
                                     onMouseEnter={() => setHoveredProfileItem('profile')}
                                     onMouseLeave={() => setHoveredProfileItem(null)}
@@ -472,8 +472,8 @@ const Header = () => {
                                             to="/settings"
                                             style={{
                                                 ...dropdownItemStyle,
-                                                backgroundColor: hoveredProfileItem === 'settings' ? "var(--color-gray-100)" : "transparent",
-                                                color: hoveredProfileItem === 'settings' ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                                backgroundColor: hoveredProfileItem === 'settings' ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
+                                                color: hoveredProfileItem === 'settings' ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                             }}
                                             onMouseEnter={() => setHoveredProfileItem('settings')}
                                             onMouseLeave={() => setHoveredProfileItem(null)}
@@ -486,8 +486,8 @@ const Header = () => {
                                             to="/help-support"
                                             style={{
                                                 ...dropdownItemStyle,
-                                                backgroundColor: hoveredProfileItem === 'help' ? "var(--color-gray-100)" : "transparent",
-                                                color: hoveredProfileItem === 'help' ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                                backgroundColor: hoveredProfileItem === 'help' ? (isDarkMode ? "rgba(56, 189, 248, 0.2)" : "var(--color-gray-100)") : "transparent",
+                                                color: hoveredProfileItem === 'help' ? (isDarkMode ? "#38bdf8" : "var(--color-primary-600)") : "var(--color-gray-900)",
                                             }}
                                             onMouseEnter={() => setHoveredProfileItem('help')}
                                             onMouseLeave={() => setHoveredProfileItem(null)}
@@ -506,8 +506,8 @@ const Header = () => {
                                         width: "100%",
                                         border: "none",
                                         background: "transparent",
-                                        backgroundColor: hoveredProfileItem === 'logout' ? "var(--color-gray-100)" : "transparent",
-                                        color: hoveredProfileItem === 'logout' ? "var(--color-primary-600)" : "var(--color-gray-900)",
+                                        backgroundColor: hoveredProfileItem === 'logout' ? (isDarkMode ? "rgba(239, 68, 68, 0.2)" : "var(--color-gray-100)") : "transparent",
+                                        color: hoveredProfileItem === 'logout' ? (isDarkMode ? "#fca5a5" : "var(--color-gray-900)") : "var(--color-gray-900)",
                                     }}
                                     onMouseEnter={() => setHoveredProfileItem('logout')}
                                     onMouseLeave={() => setHoveredProfileItem(null)}

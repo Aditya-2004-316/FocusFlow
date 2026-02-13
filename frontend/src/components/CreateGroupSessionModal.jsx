@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { XMarkIcon, ClockIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../context/ToastContext";
+import { useTheme } from "../context/ThemeContext";
 
 const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, communityName }) => {
     const toast = useToast();
+    const { isDarkMode } = useTheme();
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -78,7 +80,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
     const overlayStyle = {
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.7)" : "rgba(15, 23, 42, 0.3)",
         backdropFilter: "blur(4px)",
         display: "flex",
         alignItems: "center",
@@ -88,14 +90,14 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
     };
 
     const modalStyle = {
-        background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+        background: isDarkMode ? "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)" : "#ffffff",
         borderRadius: "1.5rem",
         width: "100%",
         maxWidth: "560px",
         maxHeight: "90vh",
         overflow: "auto",
-        border: "1px solid rgba(56, 189, 248, 0.2)",
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+        border: `1px solid ${isDarkMode ? "rgba(56, 189, 248, 0.2)" : "#e2e8f0"}`,
+        boxShadow: isDarkMode ? "0 25px 50px -12px rgba(0, 0, 0, 0.5)" : "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
     };
 
     const headerStyle = {
@@ -103,7 +105,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
         justifyContent: "space-between",
         alignItems: "center",
         padding: "1.5rem 2rem",
-        borderBottom: "1px solid rgba(255,255,255,0.1)",
+        borderBottom: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`,
     };
 
     const bodyStyle = {
@@ -114,9 +116,9 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
         width: "100%",
         padding: "0.875rem 1rem",
         borderRadius: "0.75rem",
-        border: "1px solid rgba(255,255,255,0.15)",
-        background: "rgba(255,255,255,0.05)",
-        color: "#f8fafc",
+        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.15)" : "#e2e8f0"}`,
+        background: isDarkMode ? "#1e293b" : "#f8fafc",
+        color: isDarkMode ? "#f8fafc" : "#0f172a",
         fontSize: "1rem",
         outline: "none",
         transition: "all 0.2s",
@@ -127,7 +129,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
         marginBottom: "0.5rem",
         fontSize: "0.9rem",
         fontWeight: 600,
-        color: "#94a3b8",
+        color: isDarkMode ? "#94a3b8" : "#64748b",
     };
 
     const sectionStyle = {
@@ -157,22 +159,22 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                 {/* Header */}
                 <div style={headerStyle}>
                     <div>
-                        <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#f8fafc", margin: 0 }}>
+                        <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: isDarkMode ? "#f8fafc" : "#0f172a", margin: 0 }}>
                             Create Focus Session
                         </h2>
-                        <p style={{ color: "#94a3b8", fontSize: "0.9rem", marginTop: "0.25rem" }}>
+                        <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.9rem", marginTop: "0.25rem" }}>
                             for {communityName}
                         </p>
                     </div>
                     <button
                         onClick={onClose}
                         style={{
-                            background: "rgba(255,255,255,0.1)",
+                            background: isDarkMode ? "rgba(255,255,255,0.1)" : "#f1f5f9",
                             border: "none",
                             borderRadius: "0.5rem",
                             padding: "0.5rem",
                             cursor: "pointer",
-                            color: "#94a3b8",
+                            color: isDarkMode ? "#94a3b8" : "#64748b",
                         }}
                     >
                         <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
@@ -216,7 +218,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                     <div style={sectionStyle}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
                             <ClockIcon style={{ width: "1.25rem", height: "1.25rem", color: "#38bdf8" }} />
-                            <span style={{ fontWeight: 600, color: "#f8fafc" }}>Timer Settings</span>
+                            <span style={{ fontWeight: 600, color: isDarkMode ? "#f8fafc" : "#0f172a" }}>Timer Settings</span>
                         </div>
                         <div style={rowStyle}>
                             <div>
@@ -227,13 +229,13 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     onChange={handleChange}
                                     style={inputStyle}
                                 >
-                                    <option value={15}>15 minutes</option>
-                                    <option value={25}>25 minutes</option>
-                                    <option value={30}>30 minutes</option>
-                                    <option value={45}>45 minutes</option>
-                                    <option value={60}>60 minutes</option>
-                                    <option value={90}>90 minutes</option>
-                                    <option value={120}>120 minutes</option>
+                                    <option value={15} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>15 minutes</option>
+                                    <option value={25} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>25 minutes</option>
+                                    <option value={30} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>30 minutes</option>
+                                    <option value={45} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>45 minutes</option>
+                                    <option value={60} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>60 minutes</option>
+                                    <option value={90} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>90 minutes</option>
+                                    <option value={120} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>120 minutes</option>
                                 </select>
                             </div>
                             <div>
@@ -244,10 +246,10 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     onChange={handleChange}
                                     style={inputStyle}
                                 >
-                                    <option value={0}>No break</option>
-                                    <option value={5}>5 minutes</option>
-                                    <option value={10}>10 minutes</option>
-                                    <option value={15}>15 minutes</option>
+                                    <option value={0} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>No break</option>
+                                    <option value={5} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>5 minutes</option>
+                                    <option value={10} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>10 minutes</option>
+                                    <option value={15} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>15 minutes</option>
                                 </select>
                             </div>
                         </div>
@@ -263,7 +265,9 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                             style={inputStyle}
                         >
                             {relaxationOptions.map(opt => (
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                <option key={opt.value} value={opt.value} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>
+                                    {opt.label}
+                                </option>
                             ))}
                         </select>
                         {formData.relaxationActivity && (
@@ -275,10 +279,10 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     onChange={handleChange}
                                     style={inputStyle}
                                 >
-                                    <option value={2}>2 minutes</option>
-                                    <option value={3}>3 minutes</option>
-                                    <option value={5}>5 minutes</option>
-                                    <option value={10}>10 minutes</option>
+                                    <option value={2} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>2 minutes</option>
+                                    <option value={3} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>3 minutes</option>
+                                    <option value={5} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>5 minutes</option>
+                                    <option value={10} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>10 minutes</option>
                                 </select>
                             </div>
                         )}
@@ -288,7 +292,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                     <div style={sectionStyle}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
                             <UserGroupIcon style={{ width: "1.25rem", height: "1.25rem", color: "#38bdf8" }} />
-                            <span style={{ fontWeight: 600, color: "#f8fafc" }}>Participant Settings</span>
+                            <span style={{ fontWeight: 600, color: isDarkMode ? "#f8fafc" : "#0f172a" }}>Participant Settings</span>
                         </div>
                         <div style={rowStyle}>
                             <div>
@@ -299,11 +303,11 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     onChange={handleChange}
                                     style={inputStyle}
                                 >
-                                    <option value={5}>5 people</option>
-                                    <option value={10}>10 people</option>
-                                    <option value={15}>15 people</option>
-                                    <option value={20}>20 people</option>
-                                    <option value={50}>50 people</option>
+                                    <option value={5} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>5 people</option>
+                                    <option value={10} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>10 people</option>
+                                    <option value={15} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>15 people</option>
+                                    <option value={20} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>20 people</option>
+                                    <option value={50} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>50 people</option>
                                 </select>
                             </div>
                             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", paddingTop: "1.5rem" }}>
@@ -315,7 +319,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     id="allowLateJoin"
                                     style={{ width: "1.25rem", height: "1.25rem", accentColor: "#38bdf8" }}
                                 />
-                                <label htmlFor="allowLateJoin" style={{ color: "#94a3b8", fontSize: "0.9rem" }}>
+                                <label htmlFor="allowLateJoin" style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.9rem" }}>
                                     Allow late join
                                 </label>
                             </div>
@@ -329,8 +333,9 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                             onClick={onClose}
                             style={{
                                 ...buttonStyle,
-                                background: "rgba(255,255,255,0.1)",
-                                color: "#94a3b8",
+                                background: isDarkMode ? "rgba(255,255,255,0.1)" : "#f1f5f9",
+                                color: isDarkMode ? "#94a3b8" : "#64748b",
+                                border: isDarkMode ? "none" : "1px solid #e2e8f0"
                             }}
                         >
                             Cancel

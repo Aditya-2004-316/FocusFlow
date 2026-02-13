@@ -13,10 +13,12 @@ import {
     EyeIcon,
     ClipboardDocumentIcon,
     XMarkIcon,
+    TrashIcon,
 } from "@heroicons/react/24/outline";
 import CommunityCard from "../components/CommunityCard";
 import CommunityModal from "../components/CommunityModal";
 import CommunityDetail from "../components/CommunityDetail";
+import MemberManagementModal from "../components/MemberManagementModal";
 import { communityAPI } from "../utils/communityAPI";
 import { userAPI } from "../utils/userAPI";
 import { useAuth } from "../context/AuthContext";
@@ -56,6 +58,12 @@ const DashboardCommunity = () => {
     const [leaderboardData, setLeaderboardData] = useState([]);
     const [loadingFocusing, setLoadingFocusing] = useState(false);
     const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+
+    // Member Management States
+    const [showMemberModal, setShowMemberModal] = useState(false);
+    const [memberModalCommunity, setMemberModalCommunity] = useState(null);
+    const [visibleBrowseCount, setVisibleBrowseCount] = useState(6);
+    const [visibleMyCount, setVisibleMyCount] = useState(6);
 
 
     const [communityStats, setCommunityStats] = useState({
@@ -254,8 +262,15 @@ const DashboardCommunity = () => {
             return isCreator || isMember || hasPendingRequest;
         });
 
-        console.log("Filtered myCommunities count:", filtered.length);
-        setMyCommunities(filtered);
+        // Sort by joinedAt descending (most recent first)
+        const sorted = filtered.sort((a, b) => {
+            const dateA = a.joinedAt ? new Date(a.joinedAt) : new Date(0);
+            const dateB = b.joinedAt ? new Date(b.joinedAt) : new Date(0);
+            return dateB - dateA;
+        });
+
+        console.log("Filtered myCommunities count:", sorted.length);
+        setMyCommunities(sorted);
     };
 
     const loadActivities = async () => {
@@ -357,6 +372,31 @@ const DashboardCommunity = () => {
         }
     };
 
+    const handleOpenMemberModal = (community) => {
+        setMemberModalCommunity(community);
+        setShowMemberModal(true);
+    };
+
+    const handleDeleteCommunity = async (community) => {
+        const confirmed = await confirm({
+            title: "Delete Community?",
+            message: `Are you sure you want to delete "${community.name}"? This action is permanent and will remove all members, posts, and chat history.`,
+            confirmText: "Delete Permanent",
+            cancelText: "Cancel",
+            variant: "danger",
+        });
+
+        if (!confirmed) return;
+
+        try {
+            await communityAPI.deleteCommunity(community._id);
+            toast.success("Community deleted successfully");
+            await loadCommunities();
+        } catch (err) {
+            toast.error(err.message || "Failed to delete community");
+        }
+    };
+
     const handleViewCommunity = (community) => {
         setSelectedCommunity(community);
         setShowDetailModal(true);
@@ -365,21 +405,23 @@ const DashboardCommunity = () => {
 
 
     const filteredCommunities = communities.filter(
-        (community) =>
-            community.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            community.description
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase()) ||
-            community.tags?.some((tag) =>
-                tag.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-    );
+        (community) => {
+            const matchesSearch = community.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                community.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                community.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
+            // Exclude communities the user is already part of from Browse section
+            const isMemberOrCreator = community.isMember || community.memberRole === "Owner";
+
+            return matchesSearch && !isMemberOrCreator;
+        }
+    ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     // Styles
     const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
         let gridCols = 3;
-        if (width < 640) gridCols = 1;
-        else if (width < 1205) gridCols = 2;
+        if (width < 922) gridCols = 1;
+        else if (width < 1280) gridCols = 2;
 
         return {
             container: {
@@ -460,6 +502,7 @@ const DashboardCommunity = () => {
             grid: {
                 display: "grid",
                 gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+                gridAutoRows: isMobile ? "auto" : "1fr",
                 gap: isMobile ? "1rem" : "1.5rem",
                 alignItems: "stretch",
             },
@@ -557,6 +600,7 @@ const DashboardCommunity = () => {
                 color: "#fff",
                 fontWeight: 700,
                 fontSize: "1rem",
+                flexShrink: 0,
             }
         };
     };
@@ -627,8 +671,9 @@ const DashboardCommunity = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             color: "#38bdf8",
+                            flexShrink: 0,
                         }}>
-                            <UserGroupIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                            <UserGroupIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
                         </div>
                         <div>
                             <h3 style={{ fontSize: "1.4rem", fontWeight: 700, margin: 0, color: "var(--color-gray-900)" }}>
@@ -647,8 +692,9 @@ const DashboardCommunity = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             color: "#f59e0b",
+                            flexShrink: 0,
                         }}>
-                            <TrophyIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                            <TrophyIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
                         </div>
                         <div>
                             <h3 style={{ fontSize: "1.4rem", fontWeight: 700, margin: 0, color: "var(--color-gray-900)" }}>
@@ -667,8 +713,9 @@ const DashboardCommunity = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             color: "#22c55e",
+                            flexShrink: 0,
                         }}>
-                            <FireIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                            <FireIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
                         </div>
                         <div>
                             <h3 style={{ fontSize: "1.4rem", fontWeight: 700, margin: 0, color: "var(--color-gray-900)" }}>
@@ -687,8 +734,9 @@ const DashboardCommunity = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             color: "#818cf8",
+                            flexShrink: 0,
                         }}>
-                            <StarIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                            <StarIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
                         </div>
                         <div>
                             <h3 style={{ fontSize: "1.4rem", fontWeight: 700, margin: 0, color: "var(--color-gray-900)" }}>
@@ -739,7 +787,7 @@ const DashboardCommunity = () => {
                         {/* Search & Create Controls */}
                         <div style={styles.controls}>
                             <div style={styles.searchBox}>
-                                <MagnifyingGlassIcon style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-gray-600)" }} />
+                                <MagnifyingGlassIcon style={{ width: "1.25rem", height: "1.25rem", color: "var(--color-gray-600)", flexShrink: 0 }} />
                                 <input
                                     style={{
                                         flex: 1,
@@ -761,7 +809,7 @@ const DashboardCommunity = () => {
                                 onClick={() => setShowCreateModal(true)}
                                 type="button"
                             >
-                                <PlusIcon style={{ width: "1.25rem", height: "1.25rem" }} />
+                                <PlusIcon style={{ width: "1.25rem", height: "1.25rem", flexShrink: 0 }} />
                                 Create
                             </button>
                         </div>
@@ -781,7 +829,7 @@ const DashboardCommunity = () => {
                             border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
                         }}>
                             <h3 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem", color: "var(--color-gray-900)" }}>
-                                {searchQuery ? "No communities found" : "No communities yet"}
+                                {searchQuery ? "No communities found" : "No new communities yet"}
                             </h3>
                             <p
                                 style={{
@@ -791,43 +839,78 @@ const DashboardCommunity = () => {
                             >
                                 {searchQuery
                                     ? `No results for "${searchQuery}". Try a different search.`
-                                    : "Be the first to create a community!"}
+                                    : "You've joined all available communities!"}
                             </p>
                         </div>
                     ) : (
-                        <div style={styles.grid}>
-                            {filteredCommunities.map((community) => {
-                                const userId = currentUser?._id || currentUser?.id;
-                                const creatorId = community.creator?._id || community.creator?.id || community.creator;
-                                const isCreator = creatorId === userId;
-                                const isMember = community.members && community.members.some(m => {
-                                    const mId = typeof m === 'string' ? m : (m._id || m.id);
-                                    return mId === userId;
-                                });
+                        <>
+                            <div style={styles.grid}>
+                                {filteredCommunities.slice(0, visibleBrowseCount).map((community) => {
+                                    const userId = currentUser?._id || currentUser?.id;
+                                    const creatorId = community.creator?._id || community.creator?.id || community.creator;
+                                    const isCreator = creatorId === userId;
+                                    const isMember = community.isMember || (community.members && community.members.some(m => {
+                                        const mId = typeof m === 'string' ? m : (m._id || m.id);
+                                        return mId === userId;
+                                    }));
 
-                                return (
-                                    <div
-                                        key={community._id}
+                                    return (
+                                        <div
+                                            key={community._id}
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                height: "100%",
+                                            }}
+                                        >
+                                            <CommunityCard
+                                                community={community}
+                                                onViewClick={handleViewCommunity}
+                                                onJoinClick={handleJoinCommunity}
+                                                onLeaveClick={handleLeaveCommunity}
+                                                onEditClick={handleEditCommunity}
+                                                isMember={isMember}
+                                                isCreator={isCreator}
+                                                creatorControlsHeight={0}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {filteredCommunities.length > visibleBrowseCount && (
+                                <div style={{ display: "flex", justifyContent: "center", marginTop: "2.5rem" }}>
+                                    <button
+                                        onClick={() => setVisibleBrowseCount(prev => prev + 6)}
                                         style={{
+                                            padding: "0.85rem 2.5rem",
+                                            borderRadius: "999px",
+                                            background: "rgba(56, 189, 248, 0.1)",
+                                            color: "#38bdf8",
+                                            border: "1px solid rgba(56, 189, 248, 0.3)",
+                                            fontSize: "0.95rem",
+                                            fontWeight: 700,
+                                            cursor: "pointer",
+                                            transition: "all 0.2s ease",
                                             display: "flex",
-                                            flexDirection: "column",
-                                            height: "100%",
+                                            alignItems: "center",
+                                            gap: "0.75rem",
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = "rgba(56, 189, 248, 0.15)";
+                                            e.currentTarget.style.transform = "translateY(-2px)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = "rgba(56, 189, 248, 0.1)";
+                                            e.currentTarget.style.transform = "translateY(0)";
                                         }}
                                     >
-                                        <CommunityCard
-                                            community={community}
-                                            onViewClick={handleViewCommunity}
-                                            onJoinClick={handleJoinCommunity}
-                                            onLeaveClick={handleLeaveCommunity}
-                                            onEditClick={handleEditCommunity}
-                                            isMember={isMember}
-                                            isCreator={isCreator}
-                                            creatorControlsHeight={0}
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </div>
+                                        <SparklesIcon style={{ width: "1.25rem", height: "1.25rem", flexShrink: 0 }} />
+                                        View More Communities
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
                 {/* Recent Activity */}
@@ -893,426 +976,843 @@ const DashboardCommunity = () => {
                     )}
                 </div>
 
+                {/* My Communities Section */}
+                <div style={{
+                    background: "var(--panel-bg)",
+                    borderRadius: "1.05rem",
+                    padding: isMobile ? "1.25rem" : "1.75rem",
+                    border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
+                    boxShadow: "var(--shadow-md)",
+                    marginBottom: "1.5rem",
+                }}>
+                    <h2 style={{ ...styles.sectionHeading, marginBottom: "1rem" }}>My Communities</h2>
+                    <p style={{ color: "var(--color-gray-600)", marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+                        Quickly access the communities you're a part of or those you've created.
+                    </p>
 
-            </div>
-
-            <CommunityModal
-                isOpen={showCreateModal}
-                onClose={() => setShowCreateModal(false)}
-                onSubmit={handleCreateCommunity}
-            />
-
-            {editingCommunity && (
-                <CommunityModal
-                    isOpen={showEditModal}
-                    onClose={() => {
-                        setShowEditModal(false);
-                        setEditingCommunity(null);
-                    }}
-                    onSubmit={handleUpdateCommunity}
-                    initialData={{
-                        name: editingCommunity.name,
-                        description: editingCommunity.description,
-                        goal: editingCommunity.goal,
-                        commitment: editingCommunity.commitment,
-                        tags: editingCommunity.tags?.join(", ") || "",
-                        visibility: editingCommunity.visibility,
-                        rules: editingCommunity.rules || "",
-                    }}
-                />
-            )}
-
-            {selectedCommunity && (
-                <CommunityDetail
-                    isOpen={showDetailModal}
-                    onClose={() => {
-                        setShowDetailModal(false);
-                        setSelectedCommunity(null);
-                        loadCommunities();
-                    }}
-                    communityId={selectedCommunity._id}
-                    currentUserId={currentUser?._id || currentUser?.id}
-                />
-            )}
-
-
-
-            {/* Invite Friends Modal */}
-            {showInviteModal && (
-                <div style={styles.modalWrapper} onClick={() => setShowInviteModal(false)}>
-                    <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-                            <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                                <ShareIcon style={{ width: "1.75rem", height: "1.75rem", color: "#38bdf8" }} />
-                                Invite Friends
-                            </h2>
-                            <button onClick={() => setShowInviteModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
-                                <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
-                            </button>
+                    {loading ? (
+                        <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>
+                            <p>Loading your communities...</p>
                         </div>
-                        <p style={{ color: "var(--color-gray-600)", marginBottom: "1.5rem", lineHeight: 1.6 }}>
-                            Share FocusFlow with your friends and build an accountability network together!
-                        </p>
+                    ) : myCommunities.length === 0 ? (
                         <div style={{
-                            background: "rgba(56, 189, 248, 0.1)",
-                            border: "1px solid rgba(56, 189, 248, 0.3)",
-                            borderRadius: "0.75rem",
-                            padding: "1rem",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.75rem",
-                            marginBottom: "1.5rem",
+                            textAlign: "center",
+                            padding: "2.5rem 1rem",
+                            background: "rgba(255, 255, 255, 0.02)",
+                            borderRadius: "1rem",
+                            border: "1px dashed color-mix(in srgb, var(--panel-bg) 85%, black 15%)",
                         }}>
-                            <input
-                                type="text"
-                                readOnly
-                                value={`${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`}
-                                style={{
-                                    flex: 1,
-                                    background: "transparent",
-                                    border: "none",
-                                    color: "var(--color-gray-900)",
-                                    fontSize: "0.9rem",
-                                    outline: "none",
-                                }}
-                            />
-                            <button
-                                onClick={() => {
-                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                    navigator.clipboard.writeText(link);
-                                    toast.success("Invite link copied to clipboard!");
-                                }}
-                                style={{
-                                    background: "linear-gradient(135deg, #38bdf8, #818cf8)",
-                                    border: "none",
-                                    borderRadius: "0.5rem",
-                                    padding: "0.5rem 1rem",
-                                    color: "#fff",
-                                    fontWeight: 600,
-                                    cursor: "pointer",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "0.5rem",
-                                }}
-                            >
-                                <ClipboardDocumentIcon style={{ width: "1rem", height: "1rem" }} />
-                                Copy
-                            </button>
+                            <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--color-gray-900)", marginBottom: "0.5rem" }}>
+                                No communities yet
+                            </h3>
+                            <p style={{ color: "var(--color-gray-500)", fontSize: "0.9rem" }}>
+                                Join a community above or create your own to get started!
+                            </p>
                         </div>
-                        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-                            <button
-                                onClick={() => {
-                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                    window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20FocusFlow%20-%20the%20ultimate%20productivity%20app!&url=${encodeURIComponent(link)}`, '_blank')
-                                }}
-                                style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(29, 161, 242, 0.1)", color: "#1DA1F2", fontWeight: 600, cursor: "pointer" }}
-                            >
-                                Twitter/X
-                            </button>
-                            <button
-                                onClick={() => {
-                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`, '_blank')
-                                }}
-                                style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(10, 102, 194, 0.1)", color: "#0A66C2", fontWeight: 600, cursor: "pointer" }}
-                            >
-                                LinkedIn
-                            </button>
-                            <button
-                                onClick={() => {
-                                    const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                    window.open(`mailto:?subject=Join%20FocusFlow&body=Hey!%20Check%20out%20FocusFlow%20for%20better%20productivity:%20${encodeURIComponent(link)}`, '_blank')
-                                }}
-                                style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(234, 88, 12, 0.1)", color: "#ea580c", fontWeight: 600, cursor: "pointer" }}
-                            >
-                                Email
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                    ) : (
+                        <>
+                            <div style={styles.grid}>
+                                {myCommunities.slice(0, visibleMyCount).map((community) => {
+                                    const userId = currentUser?._id || currentUser?.id;
+                                    const creatorId = community.creator?._id || community.creator?.id || community.creator;
+                                    const isCreator = creatorId === userId;
+                                    const isMember = community.members && community.members.some(m => {
+                                        const mId = typeof m === 'string' ? m : (m._id || m.id);
+                                        return mId === userId;
+                                    });
 
-            {/* Who's Focusing Modal */}
-            {showFocusingModal && (
-                <div style={styles.modalWrapper} onClick={() => setShowFocusingModal(false)}>
-                    <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-                            <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                                <EyeIcon style={{ width: "1.75rem", height: "1.75rem", color: "#22c55e" }} />
-                                Who's Focusing
-                            </h2>
-                            <button onClick={() => setShowFocusingModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
-                                <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
-                            </button>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem", padding: "0.75rem 1rem", background: "rgba(34, 197, 94, 0.1)", borderRadius: "0.75rem", border: "1px solid rgba(34, 197, 94, 0.3)" }}>
-                            <div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite" }} />
-                            <span style={{ color: "#22c55e", fontWeight: 600 }}>{focusingUsers.length} member{focusingUsers.length !== 1 ? 's' : ''} currently focusing</span>
-                        </div>
-                        {loadingFocusing ? (
-                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
-                        ) : focusingUsers.length === 0 ? (
-                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>No one is focusing right now. Start a session to be the first!</div>
-                        ) : focusingUsers.map((user, idx) => {
-                            const elapsedMins = Math.floor(user.timeElapsed / 60);
-                            const elapsedSecs = user.timeElapsed % 60;
-                            const timeStr = `${elapsedMins}:${elapsedSecs.toString().padStart(2, '0')}`;
-                            return (
-                                <div key={idx} style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "1rem",
-                                    padding: "1rem",
-                                    background: "rgba(255, 255, 255, 0.03)",
-                                    borderRadius: "0.75rem",
-                                    marginBottom: "0.75rem",
-                                    border: "1px solid rgba(255, 255, 255, 0.06)",
-                                }}>
-                                    <div style={{
-                                        width: "3rem",
-                                        height: "3rem",
-                                        borderRadius: "50%",
-                                        background: `linear-gradient(135deg, ${['#38bdf8', '#818cf8', '#22c55e', '#f59e0b', '#ec4899'][idx % 5]}, ${['#818cf8', '#22c55e', '#f59e0b', '#ec4899', '#38bdf8'][idx % 5]})`,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        color: "#fff",
-                                        fontWeight: 700,
-                                        fontSize: "1.1rem",
-                                    }}>
-                                        {user.name.charAt(0)}
-                                    </div>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: 600, color: "var(--color-gray-900)", marginBottom: "0.25rem" }}>{user.name}</div>
-                                        <div style={{ fontSize: "0.85rem", color: "var(--color-gray-600)" }}>Ready to work</div>
-                                    </div>
-                                    <div style={{ textAlign: "right" }}>
-                                        <div style={{ fontWeight: 700, color: "#22c55e", fontFamily: "monospace", fontSize: "1.1rem" }}>{timeStr}</div>
-                                        <div style={{ fontSize: "0.75rem", color: "#64748b" }}>{user.status}</div>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            )}
+                                    const roleBadge = isCreator ? (
+                                        <span style={{
+                                            fontSize: "0.72rem",
+                                            fontWeight: 700,
+                                            padding: "0.25rem 0.75rem",
+                                            borderRadius: "2rem",
+                                            background: "rgba(245, 158, 11, 0.12)",
+                                            color: "#f59e0b",
+                                            border: "1px solid rgba(245, 158, 11, 0.2)",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "0.4rem",
+                                            letterSpacing: "0.01em",
+                                        }}>
+                                            👑 Creator
+                                        </span>
+                                    ) : isMember ? (
+                                        <span style={{
+                                            fontSize: "0.72rem",
+                                            fontWeight: 700,
+                                            padding: "0.25rem 0.75rem",
+                                            borderRadius: "2rem",
+                                            background: "rgba(16, 185, 129, 0.12)",
+                                            color: "#10b981",
+                                            border: "1px solid rgba(16, 185, 129, 0.2)",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "0.4rem",
+                                            letterSpacing: "0.01em",
+                                        }}>
+                                            👥 Member
+                                        </span>
+                                    ) : null;
 
-            {/* Leaderboard Modal */}
-            {showLeaderboardModal && (
-                <div style={styles.modalWrapper} onClick={() => setShowLeaderboardModal(false)}>
-                    <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-                            <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                                <TrophyIcon style={{ width: "1.75rem", height: "1.75rem", color: "#f59e0b" }} />
-                                Weekly Leaderboard
-                            </h2>
-                            <button onClick={() => setShowLeaderboardModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
-                                <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
-                            </button>
-                        </div>
-                        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
-                            {["week", "month", "all"].map((period) => (
-                                <button
-                                    key={period}
-                                    onClick={() => setLeaderboardPeriod(period)}
-                                    style={{
-                                        flex: 1,
-                                        padding: "0.5rem",
-                                        borderRadius: "0.5rem",
-                                        border: leaderboardPeriod === period ? "1px solid rgba(245, 158, 11, 0.5)" : "1px solid #334155",
-                                        background: leaderboardPeriod === period ? "rgba(245, 158, 11, 0.15)" : "transparent",
-                                        color: leaderboardPeriod === period ? "#f59e0b" : "#94a3b8",
-                                        fontWeight: 600,
-                                        fontSize: "0.85rem",
-                                        cursor: "pointer",
-                                        textTransform: "capitalize"
-                                    }}>
-                                    This {period === 'all' ? 'Time' : period}
-                                </button>
-                            ))}
-                        </div>
-                        {loadingLeaderboard ? (
-                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
-                        ) : leaderboardData.length > 0 ? (
-                            leaderboardData.map((user, idx) => (
-                                <div key={idx} style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "1rem",
-                                    padding: "1rem",
-                                    background: (user.username === currentUser?.username) ? "rgba(245, 158, 11, 0.1)" : "rgba(255, 255, 255, 0.03)",
-                                    borderRadius: "0.75rem",
-                                    marginBottom: "0.75rem",
-                                    border: (user.username === currentUser?.username) ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(255, 255, 255, 0.06)",
-                                }}>
-                                    <div style={{
-                                        width: "2.5rem",
-                                        height: "2.5rem",
-                                        borderRadius: "0.5rem",
-                                        background: idx < 3 ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.05)",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        fontWeight: 700,
-                                        color: idx < 3 ? "#f59e0b" : "var(--color-gray-600)",
-                                        fontSize: "1.2rem",
-                                    }}>
-                                        {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
-                                    </div>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: 600, color: "var(--color-gray-900)" }}>{user.name}</div>
-                                        <div style={{ fontSize: "0.75rem", color: "var(--color-gray-600)" }}>{user.sessions} sessions • {Math.round(user.points)} pts</div>
-                                    </div>
-                                    <div style={{ textAlign: "right" }}>
-                                        <div style={{ fontWeight: 700, color: "var(--color-gray-900)" }}>{user.hours}h</div>
-                                        <div style={{ fontSize: "0.75rem", color: "#64748b" }}>Focus Time</div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div style={{ textAlign: "center", padding: "3rem", color: "var(--color-gray-600)" }}>
-                                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏙️</div>
-                                <div style={{ fontSize: "1.1rem", fontWeight: 600 }}>No users on the leaderboard yet.</div>
-                                <div style={{ fontSize: "0.9rem", marginTop: "0.5rem" }}>Be the first to claim the top spot!</div>
+                                    return (
+                                        <div
+                                            key={`my-${community._id}`}
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                height: "100%",
+                                                minWidth: 0, // Prevent flex item from overflowing
+                                            }}
+                                        >
+                                            <CommunityCard
+                                                community={community}
+                                                onViewClick={handleViewCommunity}
+                                                onJoinClick={handleJoinCommunity}
+                                                onLeaveClick={handleLeaveCommunity}
+                                                onEditClick={handleEditCommunity}
+                                                isMember={isMember}
+                                                isCreator={isCreator}
+                                                roleBadge={roleBadge}
+                                            >
+                                                {/* Community Roles Section */}
+                                                <div style={{
+                                                    background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(56, 189, 248, 0.05))",
+                                                    border: "1px solid rgba(56, 189, 248, 0.2)",
+                                                    borderRadius: "0.85rem",
+                                                    padding: isMobile ? "0.85rem" : "1rem",
+                                                    minHeight: isMobile ? "auto" : "9.5rem", // Responsive height
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                }}>
+                                                    <h4 style={{
+                                                        fontSize: "0.7rem",
+                                                        fontWeight: 800,
+                                                        color: "var(--color-gray-400)",
+                                                        textTransform: "uppercase",
+                                                        letterSpacing: "0.08em",
+                                                        marginBottom: "1rem",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "0.4rem",
+                                                    }}>
+                                                        Community Roles
+                                                    </h4>
+
+                                                    <div style={{
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        gap: "0.65rem",
+                                                        marginBottom: "auto",
+                                                    }}>
+                                                        {/* Always show the standard 3 roles as badges */}
+                                                        <span style={{
+                                                            fontSize: "0.75rem",
+                                                            fontWeight: 700,
+                                                            padding: "0.35rem 0.85rem",
+                                                            borderRadius: "0.6rem",
+                                                            background: "rgba(245, 158, 11, 0.1)",
+                                                            color: "#f59e0b",
+                                                            border: "1px solid rgba(245, 158, 11, 0.15)",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "0.5rem",
+                                                            width: "fit-content",
+                                                        }}>
+                                                            👑 Creator
+                                                        </span>
+
+                                                        <span style={{
+                                                            fontSize: "0.75rem",
+                                                            fontWeight: 700,
+                                                            padding: "0.35rem 0.85rem",
+                                                            borderRadius: "0.6rem",
+                                                            background: "rgba(139, 92, 246, 0.1)",
+                                                            color: "#8b5cf6",
+                                                            border: "1px solid rgba(139, 92, 246, 0.15)",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "0.5rem",
+                                                            width: "fit-content",
+                                                        }}>
+                                                            🎯 Administrator
+                                                        </span>
+
+                                                        <span style={{
+                                                            fontSize: "0.75rem",
+                                                            fontWeight: 700,
+                                                            padding: "0.35rem 0.85rem",
+                                                            borderRadius: "0.6rem",
+                                                            background: "rgba(16, 185, 129, 0.1)",
+                                                            color: "#10b981",
+                                                            border: "1px solid rgba(16, 185, 129, 0.15)",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            gap: "0.5rem",
+                                                            width: "fit-content",
+                                                        }}>
+                                                            👥 Member
+                                                        </span>
+                                                    </div>
+
+                                                    <p style={{
+                                                        fontSize: "0.72rem",
+                                                        color: "#9fb2d6",
+                                                        marginTop: "1rem",
+                                                        lineHeight: 1.6,
+                                                        margin: 0,
+                                                    }}>
+                                                        {isCreator
+                                                            ? "Manage member roles and permissions to organize your community effectively."
+                                                            : "Your current participation level and recognized contribution within this group."}
+                                                    </p>
+                                                </div>
+                                                {/* Creator Controls Section with Uniform Height */}
+                                                <div style={{
+                                                    minHeight: isMobile ? "auto" : "7rem", // Responsive height
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    marginTop: isMobile ? "0.5rem" : "0",
+                                                }}>
+                                                    {isCreator ? (
+                                                        <div style={{
+                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(239, 68, 68, 0.02))",
+                                                            border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
+                                                            borderRadius: "0.85rem",
+                                                            padding: isMobile ? "0.85rem" : "1rem",
+                                                            flex: 1,
+                                                        }}>
+                                                            <h4 style={{
+                                                                fontSize: "0.7rem",
+                                                                fontWeight: 800,
+                                                                color: "var(--color-gray-400)",
+                                                                textTransform: "uppercase",
+                                                                letterSpacing: "0.08em",
+                                                                marginBottom: "1rem",
+                                                            }}>
+                                                                Creator Controls
+                                                            </h4>
+
+                                                            <div style={{
+                                                                display: "flex",
+                                                                gap: "0.75rem",
+                                                                alignItems: "stretch",
+                                                                flexDirection: (width >= 800 && width <= 1100) || isSmallMobile ? "column" : "row",
+                                                            }}>
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleOpenMemberModal(community);
+                                                                    }}
+                                                                    style={{
+                                                                        display: "flex",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "center",
+                                                                        gap: "0.6rem",
+                                                                        flex: 1,
+                                                                        padding: "0.7rem 1.15rem",
+                                                                        borderRadius: "0.6rem",
+                                                                        background: "color-mix(in srgb, var(--panel-bg) 85%, var(--color-gray-100) 15%)",
+                                                                        color: "var(--color-gray-900)",
+                                                                        border: "1px solid var(--color-gray-300)",
+                                                                        fontSize: "0.85rem",
+                                                                        fontWeight: 700,
+                                                                        cursor: "pointer",
+                                                                        transition: "all 0.2s ease",
+                                                                    }}
+                                                                >
+                                                                    <UserGroupIcon style={{ width: "1.15rem", height: "1.15rem", color: "#38bdf8", flexShrink: 0 }} />
+                                                                    Members
+                                                                </button>
+
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDeleteCommunity(community);
+                                                                    }}
+                                                                    style={{
+                                                                        display: "flex",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "center",
+                                                                        gap: "0.6rem",
+                                                                        flex: 1,
+                                                                        padding: "0.7rem 1.15rem",
+                                                                        borderRadius: "0.6rem",
+                                                                        background: "rgba(239, 68, 68, 0.05)",
+                                                                        color: "#ef4444",
+                                                                        border: "1px solid rgba(239, 68, 68, 0.2)",
+                                                                        fontSize: "0.85rem",
+                                                                        fontWeight: 700,
+                                                                        cursor: "pointer",
+                                                                        transition: "all 0.2s ease",
+                                                                    }}
+                                                                >
+                                                                    <TrashIcon style={{ width: "1.15rem", height: "1.15rem", flexShrink: 0 }} />
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ) : isMember ? (
+                                                        <div style={{
+                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(16, 185, 129, 0.03))",
+                                                            border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
+                                                            borderRadius: "0.85rem",
+                                                            padding: isMobile ? "0.85rem" : "1rem",
+                                                            flex: 1,
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                        }}>
+                                                            <h4 style={{
+                                                                fontSize: "0.7rem",
+                                                                fontWeight: 800,
+                                                                color: "var(--color-gray-400)",
+                                                                textTransform: "uppercase",
+                                                                letterSpacing: "0.08em",
+                                                                marginBottom: "0.85rem",
+                                                            }}>
+                                                                Your Contribution
+                                                            </h4>
+
+                                                            <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginTop: "auto", marginBottom: "auto" }}>
+                                                                <div style={{
+                                                                    flex: 1,
+                                                                    height: "0.6rem",
+                                                                    background: "color-mix(in srgb, var(--panel-bg) 70%, black 30%)",
+                                                                    borderRadius: "1rem",
+                                                                    overflow: "hidden",
+                                                                    boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
+                                                                }}>
+                                                                    <div style={{
+                                                                        width: `${community.contributionScore || 15}%`,
+                                                                        height: "100%",
+                                                                        background: "linear-gradient(90deg, #38bdf8, #10b981)",
+                                                                        borderRadius: "1rem",
+                                                                        boxShadow: "0 0 12px rgba(16, 185, 129, 0.4)",
+                                                                        transition: "width 1s ease-in-out",
+                                                                    }} />
+                                                                </div>
+                                                                <span style={{
+                                                                    fontSize: "0.95rem",
+                                                                    fontWeight: 800,
+                                                                    color: "#10b981",
+                                                                    minWidth: "2.75rem",
+                                                                    textAlign: "right"
+                                                                }}>
+                                                                    {community.contributionScore || 15}%
+                                                                </span>
+                                                            </div>
+
+                                                            <div style={{
+                                                                display: "flex",
+                                                                justifyContent: "space-between",
+                                                                alignItems: "center",
+                                                                marginTop: "0.5rem"
+                                                            }}>
+                                                                <span style={{ fontSize: "0.72rem", color: "var(--color-gray-500)", fontWeight: 600 }}>
+                                                                    Participation Score
+                                                                </span>
+                                                                <span style={{
+                                                                    fontSize: "0.65rem",
+                                                                    padding: "0.15rem 0.45rem",
+                                                                    borderRadius: "0.35rem",
+                                                                    background: "rgba(16, 185, 129, 0.1)",
+                                                                    color: "#10b981",
+                                                                    fontWeight: 700
+                                                                }}>
+                                                                    Active
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div style={{ flex: 1 }} /> // Fallback spacer
+                                                    )}
+                                                </div>
+                                            </CommunityCard>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        )}
-                    </div>
+                            {
+                                myCommunities.length > visibleMyCount && (
+                                    <div style={{ display: "flex", justifyContent: "center", marginTop: "2.5rem" }}>
+                                        <button
+                                            onClick={() => setVisibleMyCount(prev => prev + 6)}
+                                            style={{
+                                                padding: "0.85rem 2.5rem",
+                                                borderRadius: "999px",
+                                                background: "rgba(56, 189, 248, 0.1)",
+                                                color: "#38bdf8",
+                                                border: "1px solid rgba(56, 189, 248, 0.3)",
+                                                fontSize: "0.95rem",
+                                                fontWeight: 700,
+                                                cursor: "pointer",
+                                                transition: "all 0.2s ease",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "0.75rem",
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = "rgba(56, 189, 248, 0.15)";
+                                                e.currentTarget.style.transform = "translateY(-2px)";
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = "rgba(56, 189, 248, 0.1)";
+                                                e.currentTarget.style.transform = "translateY(0)";
+                                            }}
+                                        >
+                                            <SparklesIcon style={{ width: "1.25rem", height: "1.25rem", flexShrink: 0 }} />
+                                            View More My Communities
+                                        </button>
+                                    </div>
+                                )}
+                        </>
+                    )}
                 </div>
-            )}
 
-            {/* Weekly Challenge Modal */}
-            {showChallengeModal && (
-                <div style={styles.modalWrapper} onClick={() => setShowChallengeModal(false)}>
-                    <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-                            <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                                <FireIcon style={{ width: "1.75rem", height: "1.75rem", color: "#ef4444" }} />
-                                Weekly Challenge
-                            </h2>
-                            <button onClick={() => setShowChallengeModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
-                                <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
-                            </button>
-                        </div>
+                <CommunityModal
+                    isOpen={showCreateModal}
+                    onClose={() => setShowCreateModal(false)}
+                    onSubmit={handleCreateCommunity}
+                />
 
-                        {loadingChallenge ? (
-                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
-                        ) : challengeData ? (
-                            <div style={{
-                                background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.1))",
-                                border: "1px solid rgba(239, 68, 68, 0.3)",
-                                borderRadius: "1rem",
-                                padding: "1.25rem",
-                                marginBottom: "1rem",
-                            }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                                    <span style={{ fontSize: "1.3rem" }}>🎯</span>
-                                    <span style={{ color: "#fbbf24", fontWeight: 700, fontSize: "1rem" }}>CHALLENGE OF THE WEEK</span>
+                {
+                    editingCommunity && (
+                        <CommunityModal
+                            isOpen={showEditModal}
+                            onClose={() => {
+                                setShowEditModal(false);
+                                setEditingCommunity(null);
+                            }}
+                            onSubmit={handleUpdateCommunity}
+                            initialData={{
+                                name: editingCommunity.name,
+                                description: editingCommunity.description,
+                                goal: editingCommunity.goal,
+                                commitment: editingCommunity.commitment,
+                                tags: editingCommunity.tags?.join(", ") || "",
+                                visibility: editingCommunity.visibility,
+                                rules: editingCommunity.rules || "",
+                            }}
+                        />
+                    )
+                }
+
+                {
+                    selectedCommunity && (
+                        <CommunityDetail
+                            isOpen={showDetailModal}
+                            onClose={() => {
+                                setShowDetailModal(false);
+                                setSelectedCommunity(null);
+                                loadCommunities();
+                            }}
+                            communityId={selectedCommunity._id}
+                            currentUserId={currentUser?._id || currentUser?.id}
+                        />
+                    )
+                }
+
+                {
+                    showMemberModal && memberModalCommunity && (
+                        <MemberManagementModal
+                            isOpen={showMemberModal}
+                            onClose={() => {
+                                setShowMemberModal(false);
+                                setMemberModalCommunity(null);
+                                loadCommunities();
+                            }}
+                            communityId={memberModalCommunity._id}
+                            creatorId={memberModalCommunity.creator?._id || memberModalCommunity.creator}
+                            currentUserId={currentUser?._id || currentUser?.id}
+                        />
+                    )
+                }
+
+
+                {/* Invite Friends Modal */}
+                {
+                    showInviteModal && (
+                        <div style={styles.modalWrapper} onClick={() => setShowInviteModal(false)}>
+                            <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                                    <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                                        <ShareIcon style={{ width: "1.75rem", height: "1.75rem", color: "#38bdf8" }} />
+                                        Invite Friends
+                                    </h2>
+                                    <button onClick={() => setShowInviteModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
+                                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                                    </button>
                                 </div>
-                                <h3 style={{ color: "var(--color-gray-900)", fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>
-                                    "{challengeData.title}"
-                                </h3>
-                                <p style={{ color: "var(--color-gray-600)", lineHeight: 1.5, marginBottom: "1rem", fontSize: "0.95rem" }}>
-                                    {challengeData.description}
+                                <p style={{ color: "var(--color-gray-600)", marginBottom: "1.5rem", lineHeight: 1.6 }}>
+                                    Share FocusFlow with your friends and build an accountability network together!
                                 </p>
-                                <div style={{ marginBottom: "1rem" }}>
-                                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                                        <span style={{ color: "var(--color-gray-600)", fontSize: "0.9rem" }}>Your Progress</span>
-                                        <span style={{ color: "var(--color-gray-900)", fontWeight: 600 }}>{challengeData.progress} / {challengeData.target} {challengeData.unit || "Sessions"}</span>
-                                    </div>
-                                    <div style={{ height: "0.75rem", background: "#1e293b", borderRadius: "999px", overflow: "hidden" }}>
-                                        <div style={{ width: `${(challengeData.progress / challengeData.target) * 100}%`, height: "100%", background: "linear-gradient(90deg, #ef4444, #f59e0b)", borderRadius: "999px" }} />
-                                    </div>
+                                <div style={{
+                                    background: "rgba(56, 189, 248, 0.1)",
+                                    border: "1px solid rgba(56, 189, 248, 0.3)",
+                                    borderRadius: "0.75rem",
+                                    padding: "1rem",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.75rem",
+                                    marginBottom: "1.5rem",
+                                }}>
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={`${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`}
+                                        style={{
+                                            flex: 1,
+                                            background: "transparent",
+                                            border: "none",
+                                            color: "var(--color-gray-900)",
+                                            fontSize: "0.9rem",
+                                            outline: "none",
+                                        }}
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                            navigator.clipboard.writeText(link);
+                                            toast.success("Invite link copied to clipboard!");
+                                        }}
+                                        style={{
+                                            background: "linear-gradient(135deg, #38bdf8, #818cf8)",
+                                            border: "none",
+                                            borderRadius: "0.5rem",
+                                            padding: "0.5rem 1rem",
+                                            color: "#fff",
+                                            fontWeight: 600,
+                                            cursor: "pointer",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "0.5rem",
+                                        }}
+                                    >
+                                        <ClipboardDocumentIcon style={{ width: "1rem", height: "1rem" }} />
+                                        Copy
+                                    </button>
                                 </div>
-                                <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.85rem" }}>
-                                    <span>⏰ {challengeData.daysRemaining} days remaining</span>
-                                    <span>👥 {challengeData.participants} participants</span>
+                                <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                                    <button
+                                        onClick={() => {
+                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                            window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20FocusFlow%20-%20the%20ultimate%20productivity%20app!&url=${encodeURIComponent(link)}`, '_blank')
+                                        }}
+                                        style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(29, 161, 242, 0.1)", color: "#1DA1F2", fontWeight: 600, cursor: "pointer" }}
+                                    >
+                                        Twitter/X
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`, '_blank')
+                                        }}
+                                        style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(10, 102, 194, 0.1)", color: "#0A66C2", fontWeight: 600, cursor: "pointer" }}
+                                    >
+                                        LinkedIn
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                            window.open(`mailto:?subject=Join%20FocusFlow&body=Hey!%20Check%20out%20FocusFlow%20for%20better%20productivity:%20${encodeURIComponent(link)}`, '_blank')
+                                        }}
+                                        style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(234, 88, 12, 0.1)", color: "#ea580c", fontWeight: 600, cursor: "pointer" }}
+                                    >
+                                        Email
+                                    </button>
                                 </div>
                             </div>
-                        ) : (
-                            <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Failed to load challenge data.</div>
-                        )}
+                        </div>
+                    )
+                }
 
-                        {/* Rewards */}
-                        {challengeData && (
-                            <div style={{ marginBottom: "1.5rem" }}>
-                                <h4 style={{ color: "var(--color-gray-900)", fontWeight: 600, marginBottom: "1rem" }}>🏆 Rewards</h4>
-                                <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.75rem" }}>
-                                    {challengeData.rewards.map((reward, ridx) => (
-                                        <div key={ridx} style={{
+                {/* Who's Focusing Modal */}
+                {
+                    showFocusingModal && (
+                        <div style={styles.modalWrapper} onClick={() => setShowFocusingModal(false)}>
+                            <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                                    <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                                        <EyeIcon style={{ width: "1.75rem", height: "1.75rem", color: "#22c55e" }} />
+                                        Who's Focusing
+                                    </h2>
+                                    <button onClick={() => setShowFocusingModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
+                                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                                    </button>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem", padding: "0.75rem 1rem", background: "rgba(34, 197, 94, 0.1)", borderRadius: "0.75rem", border: "1px solid rgba(34, 197, 94, 0.3)" }}>
+                                    <div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "50%", background: "#22c55e", animation: "pulse 2s infinite" }} />
+                                    <span style={{ color: "#22c55e", fontWeight: 600 }}>{focusingUsers.length} member{focusingUsers.length !== 1 ? 's' : ''} currently focusing</span>
+                                </div>
+                                {loadingFocusing ? (
+                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                                ) : focusingUsers.length === 0 ? (
+                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>No one is focusing right now. Start a session to be the first!</div>
+                                ) : focusingUsers.map((user, idx) => {
+                                    const elapsedMins = Math.floor(user.timeElapsed / 60);
+                                    const elapsedSecs = user.timeElapsed % 60;
+                                    const timeStr = `${elapsedMins}:${elapsedSecs.toString().padStart(2, '0')}`;
+                                    return (
+                                        <div key={idx} style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "1rem",
                                             padding: "1rem",
                                             background: "rgba(255, 255, 255, 0.03)",
                                             borderRadius: "0.75rem",
+                                            marginBottom: "0.75rem",
                                             border: "1px solid rgba(255, 255, 255, 0.06)",
                                         }}>
-                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
-                                                <span style={{ fontSize: "1.5rem" }}>{reward.icon}</span>
-                                                <div style={{ color: "var(--color-gray-900)", fontWeight: 700, fontSize: "1rem" }}>{reward.title}</div>
+                                            <div style={{
+                                                width: "3rem",
+                                                height: "3rem",
+                                                borderRadius: "50%",
+                                                background: `linear-gradient(135deg, ${['#38bdf8', '#818cf8', '#22c55e', '#f59e0b', '#ec4899'][idx % 5]}, ${['#818cf8', '#22c55e', '#f59e0b', '#ec4899', '#38bdf8'][idx % 5]})`,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                color: "#fff",
+                                                fontWeight: 700,
+                                                fontSize: "1.1rem",
+                                                flexShrink: 0,
+                                            }}>
+                                                {user.name.charAt(0)}
                                             </div>
-                                            <div style={{ color: "#64748b", fontSize: "0.8rem", textAlign: "center" }}>{reward.subtitle}</div>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontWeight: 600, color: "var(--color-gray-900)", marginBottom: "0.25rem" }}>{user.name}</div>
+                                                <div style={{ fontSize: "0.85rem", color: "var(--color-gray-600)" }}>Ready to work</div>
+                                            </div>
+                                            <div style={{ textAlign: "right" }}>
+                                                <div style={{ fontWeight: 700, color: "#22c55e", fontFamily: "monospace", fontSize: "1.1rem" }}>{timeStr}</div>
+                                                <div style={{ fontSize: "0.75rem", color: "#64748b" }}>{user.status}</div>
+                                            </div>
                                         </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )
+                }
+
+                {/* Leaderboard Modal */}
+                {
+                    showLeaderboardModal && (
+                        <div style={styles.modalWrapper} onClick={() => setShowLeaderboardModal(false)}>
+                            <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                                    <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                                        <TrophyIcon style={{ width: "1.75rem", height: "1.75rem", color: "#f59e0b", flexShrink: 0 }} />
+                                        Weekly Leaderboard
+                                    </h2>
+                                    <button onClick={() => setShowLeaderboardModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
+                                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
+                                    </button>
+                                </div>
+                                <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
+                                    {["week", "month", "all"].map((period) => (
+                                        <button
+                                            key={period}
+                                            onClick={() => setLeaderboardPeriod(period)}
+                                            style={{
+                                                flex: 1,
+                                                padding: "0.5rem",
+                                                borderRadius: "0.5rem",
+                                                border: leaderboardPeriod === period ? "1px solid rgba(245, 158, 11, 0.5)" : "1px solid #334155",
+                                                background: leaderboardPeriod === period ? "rgba(245, 158, 11, 0.15)" : "transparent",
+                                                color: leaderboardPeriod === period ? "#f59e0b" : "#94a3b8",
+                                                fontWeight: 600,
+                                                fontSize: "0.85rem",
+                                                cursor: "pointer",
+                                                textTransform: "capitalize"
+                                            }}>
+                                            This {period === 'all' ? 'Time' : period}
+                                        </button>
                                     ))}
                                 </div>
+                                {loadingLeaderboard ? (
+                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                                ) : leaderboardData.length > 0 ? (
+                                    leaderboardData.map((user, idx) => (
+                                        <div key={idx} style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "1rem",
+                                            padding: "1rem",
+                                            background: (user.username === currentUser?.username) ? "rgba(245, 158, 11, 0.1)" : "rgba(255, 255, 255, 0.03)",
+                                            borderRadius: "0.75rem",
+                                            marginBottom: "0.75rem",
+                                            border: (user.username === currentUser?.username) ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(255, 255, 255, 0.06)",
+                                        }}>
+                                            <div style={{
+                                                width: "2.5rem",
+                                                height: "2.5rem",
+                                                borderRadius: "0.5rem",
+                                                background: idx < 3 ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontWeight: 700,
+                                                color: idx < 3 ? "#f59e0b" : "var(--color-gray-600)",
+                                                fontSize: "1.2rem",
+                                            }}>
+                                                {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontWeight: 600, color: "var(--color-gray-900)" }}>{user.name}</div>
+                                                <div style={{ fontSize: "0.75rem", color: "var(--color-gray-600)" }}>{user.sessions} sessions • {Math.round(user.points)} pts</div>
+                                            </div>
+                                            <div style={{ textAlign: "right" }}>
+                                                <div style={{ fontWeight: 700, color: "var(--color-gray-900)" }}>{user.hours}h</div>
+                                                <div style={{ fontSize: "0.75rem", color: "#64748b" }}>Focus Time</div>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div style={{ textAlign: "center", padding: "3rem", color: "var(--color-gray-600)" }}>
+                                        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏙️</div>
+                                        <div style={{ fontSize: "1.1rem", fontWeight: 600 }}>No users on the leaderboard yet.</div>
+                                        <div style={{ fontSize: "0.9rem", marginTop: "0.5rem" }}>Be the first to claim the top spot!</div>
+                                    </div>
+                                )}
                             </div>
-                        )}
-
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-                            <button
-                                onClick={handleChallengeAction}
-                                style={{
-                                    flex: 2,
-                                    minWidth: "200px",
-                                    padding: "0.75rem 1rem",
-                                    background: challengeData?.hasStarted ? "linear-gradient(135deg, #ef4444, #f59e0b)" : "linear-gradient(135deg, #38bdf8, #818cf8)",
-                                    border: "none",
-                                    borderRadius: "0.75rem",
-                                    color: "#fff",
-                                    fontWeight: 700,
-                                    fontSize: "1rem",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                                    boxShadow: challengeData?.hasStarted ? "0 4px 15px rgba(239, 68, 68, 0.2)" : "0 4px 15px rgba(56, 189, 248, 0.2)"
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.opacity = "0.95";
-                                    e.currentTarget.style.transform = "translateY(-1px)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.opacity = "1";
-                                    e.currentTarget.style.transform = "translateY(0)";
-                                }}
-                            >
-                                {challengeData?.hasStarted ? "Continue Challenge 🚀" : "Start Challenge 🎯"}
-                            </button>
-
-                            {challengeData?.hasStarted && (
-                                <button
-                                    onClick={handleLeaveChallenge}
-                                    style={{
-                                        flex: 1,
-                                        minWidth: "140px",
-                                        padding: "0.75rem 1rem",
-                                        background: "transparent",
-                                        border: "2px solid rgba(239, 68, 68, 0.5)",
-                                        borderRadius: "0.75rem",
-                                        color: "#ef4444",
-                                        fontWeight: 700,
-                                        fontSize: "0.95rem",
-                                        cursor: "pointer",
-                                        transition: "all 0.2s ease",
-                                    }}
-                                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.05)"}
-                                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                >
-                                    Leave Challenge
-                                </button>
-                            )}
                         </div>
-                    </div>
-                </div>
-            )
-            }
-        </div >
+                    )
+                }
+
+                {/* Weekly Challenge Modal */}
+                {
+                    showChallengeModal && (
+                        <div style={styles.modalWrapper} onClick={() => setShowChallengeModal(false)}>
+                            <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+                                    <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                                        <FireIcon style={{ width: "1.75rem", height: "1.75rem", color: "#ef4444", flexShrink: 0 }} />
+                                        Weekly Challenge
+                                    </h2>
+                                    <button onClick={() => setShowChallengeModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
+                                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
+                                    </button>
+                                </div>
+
+                                {loadingChallenge ? (
+                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                                ) : challengeData ? (
+                                    <div style={{
+                                        background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.1))",
+                                        border: "1px solid rgba(239, 68, 68, 0.3)",
+                                        borderRadius: "1rem",
+                                        padding: "1.25rem",
+                                        marginBottom: "1rem",
+                                    }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                                            <span style={{ fontSize: "1.3rem" }}>🎯</span>
+                                            <span style={{ color: "#fbbf24", fontWeight: 700, fontSize: "1rem" }}>CHALLENGE OF THE WEEK</span>
+                                        </div>
+                                        <h3 style={{ color: "var(--color-gray-900)", fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+                                            "{challengeData.title}"
+                                        </h3>
+                                        <p style={{ color: "var(--color-gray-600)", lineHeight: 1.5, marginBottom: "1rem", fontSize: "0.95rem" }}>
+                                            {challengeData.description}
+                                        </p>
+                                        <div style={{ marginBottom: "1rem" }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                                                <span style={{ color: "var(--color-gray-600)", fontSize: "0.9rem" }}>Your Progress</span>
+                                                <span style={{ color: "var(--color-gray-900)", fontWeight: 600 }}>{challengeData.progress} / {challengeData.target} {challengeData.unit || "Sessions"}</span>
+                                            </div>
+                                            <div style={{ height: "0.75rem", background: "#1e293b", borderRadius: "999px", overflow: "hidden" }}>
+                                                <div style={{ width: `${(challengeData.progress / challengeData.target) * 100}%`, height: "100%", background: "linear-gradient(90deg, #ef4444, #f59e0b)", borderRadius: "999px" }} />
+                                            </div>
+                                        </div>
+                                        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.85rem" }}>
+                                            <span>⏰ {challengeData.daysRemaining} days remaining</span>
+                                            <span>👥 {challengeData.participants} participants</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Failed to load challenge data.</div>
+                                )}
+
+                                {/* Rewards */}
+                                {challengeData && (
+                                    <div style={{ marginBottom: "1.5rem" }}>
+                                        <h4 style={{ color: "var(--color-gray-900)", fontWeight: 600, marginBottom: "1rem" }}>🏆 Rewards</h4>
+                                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.75rem" }}>
+                                            {challengeData.rewards.map((reward, ridx) => (
+                                                <div key={ridx} style={{
+                                                    padding: "1rem",
+                                                    background: "rgba(255, 255, 255, 0.03)",
+                                                    borderRadius: "0.75rem",
+                                                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                                                }}>
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+                                                        <span style={{ fontSize: "1.5rem" }}>{reward.icon}</span>
+                                                        <div style={{ color: "var(--color-gray-900)", fontWeight: 700, fontSize: "1rem" }}>{reward.title}</div>
+                                                    </div>
+                                                    <div style={{ color: "#64748b", fontSize: "0.8rem", textAlign: "center" }}>{reward.subtitle}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                                    <button
+                                        onClick={handleChallengeAction}
+                                        style={{
+                                            flex: 2,
+                                            minWidth: "200px",
+                                            padding: "0.75rem 1rem",
+                                            background: challengeData?.hasStarted ? "linear-gradient(135deg, #ef4444, #f59e0b)" : "linear-gradient(135deg, #38bdf8, #818cf8)",
+                                            border: "none",
+                                            borderRadius: "0.75rem",
+                                            color: "#fff",
+                                            fontWeight: 700,
+                                            fontSize: "1rem",
+                                            cursor: "pointer",
+                                            transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                                            boxShadow: challengeData?.hasStarted ? "0 4px 15px rgba(239, 68, 68, 0.2)" : "0 4px 15px rgba(56, 189, 248, 0.2)"
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.opacity = "0.95";
+                                            e.currentTarget.style.transform = "translateY(-1px)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.opacity = "1";
+                                            e.currentTarget.style.transform = "translateY(0)";
+                                        }}
+                                    >
+                                        {challengeData?.hasStarted ? "Continue Challenge 🚀" : "Start Challenge 🎯"}
+                                    </button>
+
+                                    {challengeData?.hasStarted && (
+                                        <button
+                                            onClick={handleLeaveChallenge}
+                                            style={{
+                                                flex: 1,
+                                                minWidth: "140px",
+                                                padding: "0.75rem 1rem",
+                                                background: "transparent",
+                                                border: "2px solid rgba(239, 68, 68, 0.5)",
+                                                borderRadius: "0.75rem",
+                                                color: "#ef4444",
+                                                fontWeight: 700,
+                                                fontSize: "0.95rem",
+                                                cursor: "pointer",
+                                                transition: "all 0.2s ease",
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.05)"}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                                        >
+                                            Leave Challenge
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+        </div>
     );
 };
-
 export default DashboardCommunity;

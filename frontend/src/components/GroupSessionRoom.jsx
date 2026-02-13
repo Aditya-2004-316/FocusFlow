@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSocket } from "../context/SocketContext";
 import { useToast } from "../context/ToastContext";
+import { useTheme } from "../context/ThemeContext";
 import { groupSessionAPI } from "../utils/groupSessionAPI";
 import {
     XMarkIcon,
@@ -14,6 +15,7 @@ import {
 const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
     const { socket, isConnected, subscribe, joinSession, leaveSession, updateStatus, startSession, advanceSession, sendHeartbeat } = useSocket();
     const toast = useToast();
+    const { isDarkMode } = useTheme();
 
     const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -292,9 +294,9 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
 
     if (loading) {
         return (
-            <div style={overlayStyle}>
-                <div style={loadingStyle}>
-                    <div style={spinnerStyle} />
+            <div style={currentOverlayStyle}>
+                <div style={loadingStyle(isDarkMode)}>
+                    <div style={spinnerStyle(isDarkMode)} />
                     <p>Loading session...</p>
                 </div>
             </div>
@@ -303,10 +305,10 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
 
     if (!session) {
         return (
-            <div style={overlayStyle}>
-                <div style={errorContainerStyle}>
+            <div style={currentOverlayStyle}>
+                <div style={errorContainerStyle(isDarkMode)}>
                     <p>Session not found</p>
-                    <button onClick={onClose} style={buttonSecondaryStyle}>Close</button>
+                    <button onClick={onClose} style={{ padding: "0.75rem 1.5rem", borderRadius: "0.5rem", border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.2)" : "#e2e8f0"}`, background: isDarkMode ? "transparent" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a", cursor: "pointer" }}>Close</button>
                 </div>
             </div>
         );
@@ -331,7 +333,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
 
     // Responsive styles
     const responsiveRoomStyle = {
-        ...roomStyle,
+        ...roomStyle(isDarkMode),
         gridTemplateColumns: isMobile ? "1fr" : "1fr 280px",
         maxWidth: isMobile ? "100%" : "900px",
         borderRadius: isMobile ? "0" : "1.5rem",
@@ -344,26 +346,32 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
         minHeight: isMobile ? "300px" : "400px",
     };
 
+    const sidebarStyleVal = sidebarStyleFn(isDarkMode);
     const responsiveSidebarStyle = {
-        ...sidebarStyle,
+        ...sidebarStyleVal,
         display: isMobile && !showSidebar ? "none" : "block",
         position: isMobile ? "fixed" : "relative",
         inset: isMobile ? "0" : "auto",
         zIndex: isMobile ? 1200 : "auto",
-        background: isMobile ? "rgba(15, 23, 42, 0.98)" : sidebarStyle.background,
+        background: isMobile ? (isDarkMode ? "rgba(15, 23, 42, 0.98)" : "rgba(255, 255, 255, 0.98)") : sidebarStyleVal.background,
         borderRadius: isMobile ? "0" : "0",
     };
 
+    const currentHeaderStyle = headerStyleFn(isDarkMode);
+    const currentCloseButtonStyle = closeButtonStyleFn(isDarkMode);
+    const currentStatsBoxStyle = statsBoxStyleFn(isDarkMode);
+    const currentOverlayStyle = overlayStyle(isDarkMode);
+
     return (
-        <div style={overlayStyle}>
+        <div style={currentOverlayStyle}>
             <div style={responsiveRoomStyle}>
                 {/* Header */}
-                <div style={headerStyle}>
+                <div style={currentHeaderStyle}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                        <h2 style={{ fontSize: isMobile ? "1.2rem" : "1.5rem", fontWeight: 700, color: "#f8fafc", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        <h2 style={{ fontSize: isMobile ? "1.2rem" : "1.5rem", fontWeight: 700, color: isDarkMode ? "#f8fafc" : "#0f172a", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {session.title}
                         </h2>
-                        <p style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.25rem" }}>
+                        <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem", marginTop: "0.25rem" }}>
                             {session.communityId?.name || "Community Session"}
                         </p>
                     </div>
@@ -373,7 +381,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             <button
                                 onClick={() => setShowSidebar(!showSidebar)}
                                 style={{
-                                    ...closeButtonStyle,
+                                    ...currentCloseButtonStyle,
                                     position: "relative",
                                 }}
                             >
@@ -397,7 +405,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                                 </span>
                             </button>
                         )}
-                        <button onClick={handleLeave} style={closeButtonStyle}>
+                        <button onClick={handleLeave} style={currentCloseButtonStyle}>
                             <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
                         </button>
                     </div>
@@ -409,10 +417,10 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                     {session.status === "lobby" && (
                         <div style={lobbyStyle}>
                             <div style={lobbyIconStyle}>🎯</div>
-                            <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#f8fafc", margin: 0 }}>
+                            <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: isDarkMode ? "#f8fafc" : "#0f172a", margin: 0 }}>
                                 Waiting for everyone to get ready
                             </h3>
-                            <p style={{ color: "#94a3b8", marginTop: "0.5rem" }}>
+                            <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
                                 {session.settings?.focusDuration} min focus session
                                 {session.settings?.relaxationActivity && ` with ${session.settings.relaxationDuration} min relaxation`}
                             </p>
@@ -454,7 +462,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             <h3 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#a855f7", margin: 0 }}>
                                 Relaxation Time
                             </h3>
-                            <p style={{ color: "#94a3b8", marginTop: "0.5rem" }}>
+                            <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
                                 {session.settings?.relaxationActivity === "meditation" && "Take a moment to clear your mind..."}
                                 {session.settings?.relaxationActivity === "breathing" && "Follow the breathing pattern..."}
                                 {session.settings?.relaxationActivity === "music" && "Enjoy the calming music..."}
@@ -479,7 +487,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#f59e0b", margin: 0 }}>
                                 Focus Mode Active
                             </h3>
-                            <p style={{ color: "#94a3b8", marginTop: "0.5rem" }}>
+                            <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
                                 Stay focused with your group!
                             </p>
 
@@ -499,7 +507,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             <h3 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#3b82f6", margin: 0 }}>
                                 Break Time
                             </h3>
-                            <p style={{ color: "#94a3b8", marginTop: "0.5rem" }}>
+                            <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
                                 Great work! Take a well-deserved break.
                             </p>
 
@@ -519,24 +527,29 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             <h3 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#22c55e", margin: 0 }}>
                                 Session Complete!
                             </h3>
-                            <p style={{ color: "#94a3b8", marginTop: "0.5rem" }}>
+                            <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
                                 You focused for {session.settings?.focusDuration} minutes together!
                             </p>
-                            <div style={statsBoxStyle}>
+                            <div style={currentStatsBoxStyle}>
                                 <div>
                                     <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "#38bdf8" }}>
                                         {session.stats?.participantCount || activeParticipants.length}
                                     </span>
-                                    <span style={{ color: "#94a3b8", fontSize: "0.85rem", display: "block" }}>Participants</span>
+                                    <span style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem", display: "block" }}>Participants</span>
                                 </div>
                                 <div>
                                     <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "#22c55e" }}>
                                         {session.settings?.focusDuration}
                                     </span>
-                                    <span style={{ color: "#94a3b8", fontSize: "0.85rem", display: "block" }}>Minutes Focused</span>
+                                    <span style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem", display: "block" }}>Minutes Focused</span>
                                 </div>
                             </div>
-                            <button onClick={onClose} style={closeSessionButtonStyle}>
+                            <button onClick={onClose} style={{
+                                ...closeSessionButtonStyle,
+                                background: isDarkMode ? "rgba(255,255,255,0.1)" : "#f1f5f9",
+                                color: isDarkMode ? "#f8fafc" : "#0f172a",
+                                border: isDarkMode ? "none" : "1px solid #e2e8f0"
+                            }}>
                                 Close
                             </button>
                         </div>
@@ -548,14 +561,14 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                             <UserGroupIcon style={{ width: "1.25rem", height: "1.25rem", color: "#38bdf8" }} />
-                            <span style={{ fontWeight: 600, color: "#f8fafc" }}>
+                            <span style={{ fontWeight: 600, color: isDarkMode ? "#f8fafc" : "#0f172a" }}>
                                 Participants ({activeParticipants.length})
                             </span>
                         </div>
                         {isMobile && (
                             <button
                                 onClick={() => setShowSidebar(false)}
-                                style={closeButtonStyle}
+                                style={currentCloseButtonStyle}
                             >
                                 <XMarkIcon style={{ width: "1.25rem", height: "1.25rem" }} />
                             </button>
@@ -564,12 +577,12 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
 
                     <div style={participantListStyle}>
                         {activeParticipants.map(p => (
-                            <div key={p.userId?._id || p.userId} style={participantItemStyle}>
+                            <div key={p.userId?._id || p.userId} style={participantItemStyleFn(isDarkMode)}>
                                 <div style={participantAvatarStyle}>
                                     {(p.userId?.username || "?").slice(0, 2).toUpperCase()}
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ color: "#f8fafc", fontWeight: 500, fontSize: "0.9rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    <div style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", fontWeight: 500, fontSize: "0.9rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                         {p.userId?.username || "Unknown"}
                                         {(p.userId?._id || p.userId || "").toString() === currentUserId?.toString() && (
                                             <span style={{ color: "#38bdf8", marginLeft: "0.25rem" }}>(You)</span>
@@ -645,20 +658,20 @@ const getStatusText = (status) => {
 };
 
 // Styles
-const overlayStyle = {
+const overlayStyle = (isDarkMode) => ({
     position: "fixed",
     inset: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.85)" : "rgba(15, 23, 42, 0.3)",
     backdropFilter: "blur(8px)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1100,
     padding: "1rem",
-};
+});
 
-const roomStyle = {
-    background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+const roomStyle = (isDarkMode) => ({
+    background: isDarkMode ? "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)" : "#ffffff",
     borderRadius: "1.5rem",
     width: "100%",
     maxWidth: "900px",
@@ -666,19 +679,19 @@ const roomStyle = {
     display: "grid",
     gridTemplateColumns: "1fr 280px",
     gridTemplateRows: "auto 1fr",
-    border: "1px solid rgba(56, 189, 248, 0.2)",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+    border: `1px solid ${isDarkMode ? "rgba(56, 189, 248, 0.2)" : "#e2e8f0"}`,
+    boxShadow: isDarkMode ? "0 25px 50px -12px rgba(0, 0, 0, 0.5)" : "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
     overflow: "hidden",
-};
+});
 
-const headerStyle = {
+const headerStyleFn = (isDarkMode) => ({
     gridColumn: "1 / -1",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "1.25rem 1.5rem",
-    borderBottom: "1px solid rgba(255,255,255,0.1)",
-};
+    borderBottom: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`,
+});
 
 const contentStyle = {
     padding: "2rem",
@@ -689,12 +702,12 @@ const contentStyle = {
     minHeight: "400px",
 };
 
-const sidebarStyle = {
-    background: "rgba(0,0,0,0.2)",
+const sidebarStyleFn = (isDarkMode) => ({
+    background: isDarkMode ? "rgba(0,0,0,0.2)" : "#f8fafc",
     padding: "1.25rem",
-    borderLeft: "1px solid rgba(255,255,255,0.1)",
+    borderLeft: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`,
     overflowY: "auto",
-};
+});
 
 const lobbyStyle = {
     textAlign: "center",
@@ -741,15 +754,15 @@ const celebrationStyle = {
     animation: "bounce 1s ease infinite",
 };
 
-const statsBoxStyle = {
+const statsBoxStyleFn = (isDarkMode) => ({
     display: "flex",
     gap: "3rem",
     justifyContent: "center",
     marginTop: "1.5rem",
     padding: "1.5rem",
-    background: "rgba(255,255,255,0.05)",
+    background: isDarkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9",
     borderRadius: "1rem",
-};
+});
 
 const participantListStyle = {
     display: "flex",
@@ -757,14 +770,15 @@ const participantListStyle = {
     gap: "0.75rem",
 };
 
-const participantItemStyle = {
+const participantItemStyleFn = (isDarkMode) => ({
     display: "flex",
     alignItems: "center",
     gap: "0.75rem",
     padding: "0.75rem",
     borderRadius: "0.75rem",
-    background: "rgba(255,255,255,0.05)",
-};
+    background: isDarkMode ? "rgba(255,255,255,0.05)" : "#ffffff",
+    border: isDarkMode ? "none" : "1px solid #e2e8f0",
+});
 
 const participantAvatarStyle = {
     width: "2.25rem",
@@ -789,14 +803,14 @@ const hostBadgeStyle = {
     color: "#f59e0b",
 };
 
-const closeButtonStyle = {
-    background: "rgba(255,255,255,0.1)",
+const closeButtonStyleFn = (isDarkMode) => ({
+    background: isDarkMode ? "rgba(255,255,255,0.1)" : "#f1f5f9",
     border: "none",
     borderRadius: "0.5rem",
     padding: "0.5rem",
     cursor: "pointer",
-    color: "#94a3b8",
-};
+    color: isDarkMode ? "#94a3b8" : "#64748b",
+});
 
 const readyButtonStyle = {
     display: "inline-flex",
@@ -871,39 +885,39 @@ const closeSessionButtonStyle = {
     marginTop: "1.5rem",
 };
 
-const loadingStyle = {
+const loadingStyle = (isDarkMode) => ({
     textAlign: "center",
-    color: "#f8fafc",
-};
+    color: isDarkMode ? "#f8fafc" : "var(--color-gray-900)",
+});
 
-const spinnerStyle = {
+const spinnerStyle = (isDarkMode) => ({
     width: "3rem",
     height: "3rem",
-    border: "3px solid rgba(255,255,255,0.1)",
+    border: `3px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(15, 23, 42, 0.1)"}`,
     borderTopColor: "#38bdf8",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
     margin: "0 auto 1rem",
-};
+});
 
-const errorContainerStyle = {
+const errorContainerStyle = (isDarkMode) => ({
     textAlign: "center",
-    color: "#fca5a5",
+    color: isDarkMode ? "#fca5a5" : "#b91c1c",
     padding: "2rem",
-    background: "rgba(239, 68, 68, 0.1)",
+    background: isDarkMode ? "rgba(239, 68, 68, 0.1)" : "#fef2f2",
     borderRadius: "1rem",
-};
+});
 
-const errorBannerStyle = {
+const errorBannerStyle = (isDarkMode) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0.75rem 1.5rem",
-    background: "rgba(239, 68, 68, 0.1)",
-    borderBottom: "1px solid rgba(239, 68, 68, 0.3)",
-    color: "#fca5a5",
+    background: isDarkMode ? "rgba(239, 68, 68, 0.1)" : "#fef2f2",
+    borderBottom: isDarkMode ? "1px solid rgba(239, 68, 68, 0.3)" : "1px solid #fca5a5",
+    color: isDarkMode ? "#fca5a5" : "#b91c1c",
     gridColumn: "1 / -1",
-};
+});
 
 const buttonSecondaryStyle = {
     padding: "0.75rem 1.5rem",

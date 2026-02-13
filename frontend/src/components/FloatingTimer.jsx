@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useTheme } from "../context/ThemeContext";
 import {
     XMarkIcon,
     ChevronUpIcon,
@@ -21,6 +22,7 @@ const FloatingTimer = ({
     const [position, setPosition] = useState({ x: 20, y: 20 });
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const floatingRef = useRef(null);
+    const { isDarkMode: isDarkTheme } = useTheme();
 
     const handleMouseDown = (e) => {
         if (e.target.closest("button") || isMinimized) return;
@@ -78,9 +80,6 @@ const FloatingTimer = ({
 
     const progressPercent =
         totalTime > 0 ? ((totalTime - timeLeft) / totalTime) * 100 : 0;
-    const isDarkTheme =
-        typeof document !== "undefined" &&
-        document.documentElement.classList.contains("dark");
 
     const timerColor =
         sessionType === "break"
@@ -241,9 +240,8 @@ const FloatingTimer = ({
                                 fill="none"
                                 stroke={timerColor}
                                 strokeWidth="4"
-                                strokeDasharray={`${
-                                    (progressPercent / 100) * 314
-                                } 314`}
+                                strokeDasharray={`${(progressPercent / 100) * 314
+                                    } 314`}
                                 style={{
                                     transition: "stroke-dasharray 0.3s linear",
                                 }}

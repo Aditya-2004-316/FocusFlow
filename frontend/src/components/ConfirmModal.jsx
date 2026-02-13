@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 // Context for confirm modal
 const ConfirmContext = createContext(null);
@@ -54,28 +55,29 @@ export const useConfirm = () => {
 
 // The modal component
 const ConfirmModal = ({ isOpen, title, message, confirmText, cancelText, variant, onConfirm, onCancel }) => {
+    const { isDarkMode } = useTheme();
     if (!isOpen) return null;
 
     const getVariantColors = () => {
         const variants = {
             danger: {
                 primary: "#ef4444",
-                background: "rgba(239, 68, 68, 0.1)",
-                border: "rgba(239, 68, 68, 0.3)",
+                background: isDarkMode ? "rgba(239, 68, 68, 0.1)" : "rgba(239, 68, 68, 0.08)",
+                border: isDarkMode ? "rgba(239, 68, 68, 0.3)" : "rgba(239, 68, 68, 0.2)",
                 gradient: "linear-gradient(135deg, #ef4444, #dc2626)",
                 icon: "⚠️",
             },
             warning: {
                 primary: "#f59e0b",
-                background: "rgba(245, 158, 11, 0.1)",
-                border: "rgba(245, 158, 11, 0.3)",
+                background: isDarkMode ? "rgba(245, 158, 11, 0.1)" : "rgba(245, 158, 11, 0.08)",
+                border: isDarkMode ? "rgba(245, 158, 11, 0.3)" : "rgba(245, 158, 11, 0.2)",
                 gradient: "linear-gradient(135deg, #f59e0b, #d97706)",
                 icon: "⚡",
             },
             info: {
                 primary: "#3b82f6",
-                background: "rgba(59, 130, 246, 0.1)",
-                border: "rgba(59, 130, 246, 0.3)",
+                background: isDarkMode ? "rgba(59, 130, 246, 0.1)" : "rgba(59, 130, 246, 0.08)",
+                border: isDarkMode ? "rgba(59, 130, 246, 0.3)" : "rgba(59, 130, 246, 0.2)",
                 gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
                 icon: "ℹ️",
             },
@@ -103,8 +105,8 @@ const ConfirmModal = ({ isOpen, title, message, confirmText, cancelText, variant
                     }
                 }
             `}</style>
-            <div style={overlayStyle} onClick={onCancel}>
-                <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+            <div style={getOverlayStyle(isDarkMode)} onClick={onCancel}>
+                <div style={getModalStyle(isDarkMode)} onClick={(e) => e.stopPropagation()}>
                     {/* Icon */}
                     <div style={{
                         ...iconContainerStyle,
@@ -115,22 +117,40 @@ const ConfirmModal = ({ isOpen, title, message, confirmText, cancelText, variant
                     </div>
 
                     {/* Content */}
-                    <h3 style={titleStyle}>{title}</h3>
-                    <p style={messageStyle}>{message}</p>
+                    <h3 style={getTitleStyle(isDarkMode)}>{title}</h3>
+                    <p style={getMessageStyle(isDarkMode)}>{message}</p>
 
                     {/* Buttons */}
                     <div style={buttonContainerStyle}>
                         <button
                             onClick={onCancel}
-                            style={cancelButtonStyle}
+                            style={getCancelButtonStyle(isDarkMode)}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = isDarkMode ? "rgba(255, 255, 255, 0.1)" : "var(--color-gray-100)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = isDarkMode ? "rgba(255, 255, 255, 0.05)" : "var(--color-gray-50)";
+                            }}
                         >
                             {cancelText}
                         </button>
                         <button
                             onClick={onConfirm}
                             style={{
-                                ...confirmButtonStyle,
+                                ...getConfirmButtonStyle(isDarkMode),
                                 background: colors.gradient,
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = "translateY(-1px)";
+                                e.currentTarget.style.boxShadow = isDarkMode
+                                    ? "0 6px 20px rgba(0, 0, 0, 0.4)"
+                                    : "0 6px 16px rgba(59, 130, 246, 0.35)";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = "translateY(0)";
+                                e.currentTarget.style.boxShadow = isDarkMode
+                                    ? "0 4px 15px rgba(0, 0, 0, 0.3)"
+                                    : "0 4px 12px rgba(59, 130, 246, 0.25)";
                             }}
                         >
                             {confirmText}
@@ -143,10 +163,10 @@ const ConfirmModal = ({ isOpen, title, message, confirmText, cancelText, variant
 };
 
 // Styles
-const overlayStyle = {
+const getOverlayStyle = (isDarkMode) => ({
     position: "fixed",
     inset: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.75)" : "rgba(15, 23, 42, 0.45)",
     backdropFilter: "blur(8px)",
     WebkitBackdropFilter: "blur(8px)",
     display: "flex",
@@ -155,19 +175,25 @@ const overlayStyle = {
     zIndex: 10000,
     padding: "1rem",
     animation: "confirmModalFadeIn 0.2s ease-out",
-};
+});
 
-const modalStyle = {
-    background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+const getModalStyle = (isDarkMode) => ({
+    background: isDarkMode
+        ? "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)"
+        : "var(--color-white)",
     borderRadius: "1.5rem",
     padding: "2rem",
     maxWidth: "420px",
     width: "100%",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 50px rgba(56, 189, 248, 0.1)",
+    border: isDarkMode
+        ? "1px solid rgba(255, 255, 255, 0.1)"
+        : "1px solid var(--color-gray-200)",
+    boxShadow: isDarkMode
+        ? "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 50px rgba(56, 189, 248, 0.1)"
+        : "0 25px 50px -12px rgba(15, 23, 42, 0.15), 0 0 20px rgba(59, 130, 246, 0.05)",
     textAlign: "center",
     animation: "confirmModalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-};
+});
 
 const iconContainerStyle = {
     width: "4.5rem",
@@ -179,41 +205,45 @@ const iconContainerStyle = {
     margin: "0 auto 1.25rem",
 };
 
-const titleStyle = {
+const getTitleStyle = (isDarkMode) => ({
     fontSize: "1.35rem",
     fontWeight: 700,
-    color: "#f8fafc",
+    color: isDarkMode ? "#f8fafc" : "var(--color-gray-900)",
     margin: 0,
     marginBottom: "0.75rem",
-};
+});
 
-const messageStyle = {
+const getMessageStyle = (isDarkMode) => ({
     fontSize: "0.95rem",
-    color: "#94a3b8",
+    color: isDarkMode ? "#94a3b8" : "var(--color-gray-600)",
     lineHeight: 1.6,
     margin: 0,
     marginBottom: "1.75rem",
-};
+});
 
 const buttonContainerStyle = {
     display: "flex",
     gap: "0.75rem",
 };
 
-const cancelButtonStyle = {
+const getCancelButtonStyle = (isDarkMode) => ({
     flex: 1,
     padding: "0.875rem 1.5rem",
     borderRadius: "0.75rem",
-    border: "1px solid rgba(255, 255, 255, 0.15)",
-    background: "rgba(255, 255, 255, 0.05)",
-    color: "#94a3b8",
+    border: isDarkMode
+        ? "1px solid rgba(255, 255, 255, 0.15)"
+        : "1px solid var(--color-gray-200)",
+    background: isDarkMode
+        ? "rgba(255, 255, 255, 0.05)"
+        : "var(--color-gray-50)",
+    color: isDarkMode ? "#94a3b8" : "var(--color-gray-700)",
     fontSize: "0.95rem",
     fontWeight: 600,
     cursor: "pointer",
     transition: "all 0.2s ease",
-};
+});
 
-const confirmButtonStyle = {
+const getConfirmButtonStyle = (isDarkMode) => ({
     flex: 1,
     padding: "0.875rem 1.5rem",
     borderRadius: "0.75rem",
@@ -223,7 +253,9 @@ const confirmButtonStyle = {
     fontWeight: 700,
     cursor: "pointer",
     transition: "all 0.2s ease",
-    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
-};
+    boxShadow: isDarkMode
+        ? "0 4px 15px rgba(0, 0, 0, 0.3)"
+        : "0 4px 12px rgba(59, 130, 246, 0.25)",
+});
 
 export default ConfirmModal;

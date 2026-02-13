@@ -18,7 +18,7 @@ import {
 const router = express.Router();
 
 // Public routes (optionalAuth allows user identification when logged in)
-router.get("/", getCommunities);
+router.get("/", optionalAuth, getCommunities);
 router.get("/:id", optionalAuth, getCommunity);
 
 // Protected routes

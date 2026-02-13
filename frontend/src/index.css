@@ -130,6 +130,26 @@
     opacity: 0.8;
 }
 
+/* Fix for native select dropdowns in dark mode */
+.dark select {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+.dark select option {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+/* Ensure better visibility for autofill and selections */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #f8fafc;
+    -webkit-box-shadow: 0 0 0px 1000px #1e293b inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Basic CSS Reset */
 *,
 *::before,
@@ -178,6 +198,7 @@ canvas,
 svg {
     display: block;
     max-width: 100%;
+    flex-shrink: 0;
 }
 
 /* Remove built-in form typography styles */

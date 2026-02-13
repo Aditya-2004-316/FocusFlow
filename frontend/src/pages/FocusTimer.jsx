@@ -1879,7 +1879,6 @@ const FocusTimer = () => {
                 <FloatingTimerPermissionDialog
                     onAllow={handleRequestFloatingTimerPermission}
                     onDeny={handleDenyFloatingTimerPermission}
-                    isDarkTheme={false}
                 />
             )}
 

@@ -312,19 +312,25 @@ function Dashboard() {
         },
     ]);
 
-    // Save daily focus plan to localStorage and Backend
+    // Save daily focus plan to localStorage and Backend (with debounce)
     useEffect(() => {
         localStorage.setItem(
             "dailyFocusPlan",
             JSON.stringify(dailyFocusPlanItems)
         );
-        updatePlannerOnBackend("dailyFocusPlan", dailyFocusPlanItems);
+        const timeoutId = setTimeout(() => {
+            updatePlannerOnBackend("dailyFocusPlan", dailyFocusPlanItems);
+        }, 1000);
+        return () => clearTimeout(timeoutId);
     }, [dailyFocusPlanItems]);
 
-    // Save weekly plan to localStorage and Backend
+    // Save weekly plan to localStorage and Backend (with debounce)
     useEffect(() => {
         localStorage.setItem("weeklyPlan", JSON.stringify(weeklyPlanItems));
-        updatePlannerOnBackend("weeklyPlan", weeklyPlanItems);
+        const timeoutId = setTimeout(() => {
+            updatePlannerOnBackend("weeklyPlan", weeklyPlanItems);
+        }, 1000);
+        return () => clearTimeout(timeoutId);
     }, [weeklyPlanItems]);
 
     // Check if cooldown is active on component mount
@@ -614,50 +620,44 @@ function Dashboard() {
         setDistractions((prev) => prev.filter((d) => d.id !== id));
     };
 
-    const heroGradient = "linear-gradient(to right, #38bdf8, #60a5fa)";
+    const heroGradient = "linear-gradient(to right, #38bdf8, #818cf8)";
     const heroBorderLight =
-        "1px solid color-mix(in srgb, var(--color-primary-200) 65%, transparent)";
-    const heroShadowLight = "0 32px 72px -36px rgba(14,165,233,0.65)";
-    const heroTextLight = "#f8fafc";
-    const heroLeadLight =
-        "color-mix(in srgb, #f8fafc 82%, rgba(224,242,254,0.8))";
-    const heroChipBgLight =
-        "color-mix(in srgb, rgba(255,255,255,0.24) 70%, transparent)";
-    const heroChipBorderLight = "1px solid rgba(248,250,252,0.4)";
-    const heroChipColorLight = "#f8fafc";
+        "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)";
+    const heroShadowLight = "var(--shadow-soft)";
+    const heroTextLight = "var(--color-gray-900)";
+    const heroLeadLight = "var(--color-gray-600)";
+    const heroChipBgLight = "rgba(59,130,246,0.12)";
+    const heroChipBorderLight = "1px solid rgba(56,189,248,0.28)";
+    const heroChipColorLight = "var(--color-primary-700)";
     const heroSecondaryButtonBgLight =
-        "color-mix(in srgb, rgba(255,255,255,0.18) 75%, transparent)";
-    const heroSecondaryButtonBorderLight = "1px solid rgba(248,250,252,0.55)";
-    const heroSecondaryButtonColorLight = "#f8fafc";
+        "linear-gradient(110deg, rgba(59,130,246,0.08), rgba(14,165,233,0.08))";
+    const heroSecondaryButtonBorderLight = "1px solid rgba(56,189,248,0.28)";
+    const heroSecondaryButtonColorLight = "var(--color-primary-700)";
 
-    const recentCardBgLight =
-        "color-mix(in srgb, rgba(96,165,250,0.12) 55%, var(--panel-bg))";
+    const recentCardBgLight = "var(--panel-bg)";
     const recentCardBorderLight =
-        "1px solid color-mix(in srgb, var(--color-primary-200) 40%, var(--input-border))";
-    const recentCardShadowLight = "0 26px 56px -40px rgba(96,165,250,0.45)";
+        "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)";
+    const recentCardShadowLight = "var(--shadow-md)";
 
-    const snapshotCardBgLight =
-        "color-mix(in srgb, rgba(56,189,248,0.18) 65%, var(--color-white))";
+    const snapshotCardBgLight = "var(--color-white)";
     const snapshotCardBorderLight =
-        "1px solid color-mix(in srgb, var(--color-primary-200) 60%, transparent)";
-    const snapshotCardShadowLight = "0 22px 48px -32px rgba(56,189,248,0.45)";
+        "1px solid color-mix(in srgb, var(--color-white) 90%, var(--panel-bg) 10%)";
+    const snapshotCardShadowLight = "var(--shadow-soft)";
 
-    const momentumCardBgLight =
-        "color-mix(in srgb, rgba(59,130,246,0.16) 55%, var(--panel-bg))";
+    const momentumCardBgLight = "var(--panel-bg)";
     const momentumCardBorderLight =
-        "1px solid color-mix(in srgb, var(--color-primary-200) 55%, transparent)";
-    const momentumCardShadowLight = "0 30px 64px -46px rgba(59,130,246,0.5)";
+        "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)";
+    const momentumCardShadowLight = "var(--shadow-md)";
 
     const dashboardStyles = {
         wrapper: {
             minHeight: "100%",
             padding: isMobile ? "2rem 1rem 3rem" : isTablet ? "2.5rem 1.5rem 3.5rem" : "3.5rem 2rem 4rem",
-            background: isDarkTheme
-                ? "var(--color-white)"
-                : "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #f0fdf4 50%, #fdf4ff 75%, #fff7ed 100%)",
+            background: "var(--color-white)",
             color: "var(--color-gray-900)",
             position: "relative",
             overflow: "hidden",
+            transition: "background 0.3s ease, color 0.3s ease",
         },
         inner: {
             maxWidth: "1120px",
@@ -667,17 +667,15 @@ function Dashboard() {
             gap: isMobile ? "1.75rem" : isTablet ? "2.25rem" : "2.75rem",
         },
         hero: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #8b5cf6 100%)",
+            background: "var(--panel-bg)",
             borderRadius: isMobile ? "1.25rem" : "2rem",
             border: isDarkTheme
                 ? "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)"
-                : "2px solid rgba(255,255,255,0.2)",
+                : heroBorderLight,
             padding: isMobile ? "1.5rem 1.25rem" : isTablet ? "2rem" : "3rem",
             boxShadow: isDarkTheme
                 ? "none"
-                : "0 25px 50px -12px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+                : heroShadowLight,
             display: "flex",
             flexDirection: "column",
             gap: isMobile ? "1.25rem" : "2rem",
@@ -689,14 +687,14 @@ function Dashboard() {
             fontSize: isMobile ? "1.5rem" : isTablet ? "2rem" : "2.75rem",
             fontWeight: 800,
             lineHeight: 1.15,
-            color: isDarkTheme ? "var(--color-gray-900)" : heroTextLight,
-            textShadow: isDarkTheme ? "none" : "0 2px 4px rgba(0,0,0,0.1)",
+            background: "linear-gradient(to right, #38bdf8, #818cf8)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
             letterSpacing: "-0.025em",
         },
         heroAccent: {
-            background: isDarkTheme
-                ? "linear-gradient(to right, #38bdf8, #818cf8)"
-                : "linear-gradient(135deg, #fbbf24, #f472b6, #a78bfa)",
+            background: "linear-gradient(to right, #38bdf8, #818cf8)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -780,10 +778,12 @@ function Dashboard() {
             ...(isDarkTheme
                 ? {}
                 : {
-                    background: "rgba(255,255,255,0.25)",
-                    color: "#1e293b",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    boxShadow: "0 8px 32px rgba(59,130,246,0.1)",
+                    background: heroChipBgLight,
+                    color: heroChipColorLight,
+                    border: heroChipBorderLight,
+                    boxShadow: "none",
+                    backdropFilter: "none",
+                    WebkitBackdropFilter: "none",
                 }),
         },
         tabBar: {
@@ -868,18 +868,14 @@ function Dashboard() {
             padding: isMobile ? "0.75rem 1rem" : "0.85rem 1.2rem",
             minHeight: "44px",
             borderRadius: "0.9rem",
-            border: isDarkTheme
-                ? "1px solid rgba(14, 165, 233, 0.45)"
-                : "1px solid color-mix(in srgb, var(--color-primary-300) 70%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--color-primary-300) 70%, transparent)",
             background: isDarkTheme
                 ? "rgba(14, 165, 233, 0.15)"
-                : "linear-gradient(120deg, color-mix(in srgb, var(--color-primary-100) 70%, var(--panel-bg)), color-mix(in srgb, var(--color-primary-200) 45%, var(--panel-bg)))",
+                : "var(--color-primary-100)",
             color: "var(--color-primary-700)",
             fontWeight: 600,
             cursor: "pointer",
-            boxShadow: isDarkTheme
-                ? "0 8px 24px -10px rgba(14, 165, 233, 0.5)"
-                : "var(--shadow-soft)",
+            boxShadow: "var(--shadow-soft)",
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             width: "fit-content",
             marginLeft: isMobile ? "auto" : undefined,
@@ -924,10 +920,8 @@ function Dashboard() {
             gap: "0.35rem",
             padding: isMobile ? "0.25rem 0.6rem" : "0.3rem 0.7rem",
             borderRadius: "9999px",
-            background: isDarkTheme
-                ? "rgba(148, 163, 184, 0.12)"
-                : "color-mix(in srgb, var(--color-gray-100) 65%, var(--panel-bg))",
-            color: isDarkTheme ? "var(--color-gray-400)" : "var(--color-gray-700)",
+            background: "rgba(148, 163, 184, 0.15)",
+            color: "var(--color-gray-700)",
             fontSize: isMobile ? "0.7rem" : "0.78rem",
             fontWeight: 600,
         },
@@ -967,12 +961,8 @@ function Dashboard() {
             gridTemplateColumns: width >= 1240 ? "repeat(4, 1fr)" : width >= 696 ? "repeat(2, 1fr)" : "1fr",
         },
         quickStatCard: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.7)",
-            border: isDarkTheme
-                ? "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)"
-                : "1px solid rgba(255,255,255,0.3)",
+            background: "var(--panel-bg)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             borderRadius: isMobile ? "1.15rem" : "1.5rem",
             padding: isMobile ? "1.15rem" : "1.5rem",
             display: "flex",
@@ -980,10 +970,9 @@ function Dashboard() {
             gap: "0.45rem",
             boxShadow: isDarkTheme
                 ? "none"
-                : "0 20px 25px -5px rgba(59,130,246,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)",
-            backdropFilter: isDarkTheme ? "none" : "blur(20px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(20px)",
+                : "var(--shadow-md)",
             position: "relative",
+            overflow: "hidden",
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         },
         statHeaderRow: {
@@ -995,7 +984,7 @@ function Dashboard() {
             width: isMobile ? "2.1rem" : "2.5rem",
             height: isMobile ? "2.1rem" : "2.5rem",
             borderRadius: "0.75rem",
-            background: "rgba(59,130,246,0.18)",
+            background: "rgba(56, 189, 248, 0.12)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1028,18 +1017,12 @@ function Dashboard() {
             color: "var(--color-red-500)",
         },
         card: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.8)",
+            background: "var(--panel-bg)",
             borderRadius: isMobile ? "1.15rem" : "1.5rem",
-            border: isDarkTheme
-                ? "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)"
-                : "1px solid rgba(255,255,255,0.4)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             boxShadow: isDarkTheme
                 ? "none"
-                : "0 25px 50px -12px rgba(59,130,246,0.15)",
-            backdropFilter: isDarkTheme ? "none" : "blur(16px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(16px)",
+                : "var(--shadow-lg)",
             position: "relative",
             overflow: "hidden",
         },
@@ -1060,45 +1043,32 @@ function Dashboard() {
             width: isMobile ? "2.4rem" : "3rem",
             height: isMobile ? "2.4rem" : "3rem",
             borderRadius: isMobile ? "0.75rem" : "1rem",
-            background: isDarkTheme
-                ? "rgba(59,130,246,0.18)"
-                : "linear-gradient(135deg, rgba(59,130,246,0.2), rgba(147,51,234,0.2))",
+            background: "rgba(56, 189, 248, 0.12)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: isDarkTheme ? "var(--color-primary-600)" : "#4c1d95",
-            boxShadow: isDarkTheme
-                ? "none"
-                : "0 10px 15px -3px rgba(59,130,246,0.1)",
+            color: "var(--color-primary-600)",
             flexShrink: 0,
         },
         activityTitle: {
             fontSize: isMobile ? "0.9rem" : "1rem",
             fontWeight: 600,
-            color: isDarkTheme ? "var(--color-gray-900)" : heroTextLight,
+            color: "var(--color-gray-900)",
         },
         activityTime: {
             fontSize: isMobile ? "0.78rem" : "0.85rem",
-            color: isDarkTheme
-                ? "var(--color-gray-600)"
-                : "color-mix(in srgb, #f8fafc 78%, rgba(226,232,240,0.6))",
+            color: "var(--color-gray-600)",
         },
         focusPlanSection: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.7)",
+            background: "var(--panel-bg)",
             borderRadius: isMobile ? "1.25rem" : "2rem",
-            border: isDarkTheme
-                ? "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)"
-                : "1px solid rgba(255,255,255,0.4)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             boxShadow: isDarkTheme
                 ? "none"
-                : "0 25px 50px -12px rgba(34,197,94,0.15)",
+                : "var(--shadow-lg)",
             padding: isMobile ? "1.5rem 1.25rem" : isTablet ? "2rem" : "3rem",
             display: "grid",
             gap: isMobile ? "1.5rem" : "2.5rem",
-            backdropFilter: isDarkTheme ? "none" : "blur(16px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(16px)",
             position: "relative",
         },
         focusPlanHeader: {
@@ -1197,21 +1167,15 @@ function Dashboard() {
             whiteSpace: "nowrap",
         },
         companionSection: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.6)",
+            background: "var(--panel-bg)",
             borderRadius: isMobile ? "1.25rem" : "2rem",
-            border: isDarkTheme
-                ? "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)"
-                : "1px solid rgba(255,255,255,0.3)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             boxShadow: isDarkTheme
                 ? "none"
-                : "0 25px 50px -12px rgba(139,92,246,0.2)",
+                : "var(--shadow-lg)",
             padding: isMobile ? "1.5rem 1.25rem" : isTablet ? "2rem" : "3rem",
             display: "grid",
             gap: isMobile ? "1.25rem" : "2rem",
-            backdropFilter: isDarkTheme ? "none" : "blur(20px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(20px)",
             position: "relative",
         },
         companionHeader: {
@@ -1294,21 +1258,15 @@ function Dashboard() {
             gap: isMobile ? "1rem" : "1.4rem",
         },
         momentumCard: {
-            background: isDarkTheme
-                ? "var(--panel-bg)"
-                : "rgba(255,255,255,0.75)",
-            border: isDarkTheme
-                ? "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)"
-                : "1px solid rgba(255,255,255,0.35)",
+            background: "var(--panel-bg)",
+            border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
             borderRadius: isMobile ? "1.25rem" : "1.75rem",
             padding: isMobile ? "1.5rem" : "2.25rem",
             display: "grid",
             gap: isMobile ? "1rem" : "1.5rem",
             boxShadow: isDarkTheme
                 ? "none"
-                : "0 25px 50px -12px rgba(99,102,241,0.15)",
-            backdropFilter: isDarkTheme ? "none" : "blur(20px)",
-            WebkitBackdropFilter: isDarkTheme ? "none" : "blur(20px)",
+                : "var(--shadow-lg)",
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             position: "relative",
             overflow: "hidden",
@@ -1323,7 +1281,7 @@ function Dashboard() {
         momentumTitle: {
             fontSize: isMobile ? "0.98rem" : "1.1rem",
             fontWeight: 600,
-            color: isDarkTheme ? "var(--color-gray-900)" : "#0f172a",
+            color: "var(--color-gray-900)",
             margin: 0,
         },
         momentumTitleRow: {
@@ -1334,9 +1292,7 @@ function Dashboard() {
         momentumDescription: {
             fontSize: isMobile ? "0.85rem" : "0.95rem",
             lineHeight: 1.7,
-            color: isDarkTheme
-                ? "var(--color-gray-600)"
-                : "color-mix(in srgb, #0f172a 70%, rgba(15,23,42,0.45))",
+            color: "var(--color-gray-600)",
         },
         momentumTrend: {
             display: "inline-flex",
@@ -1346,10 +1302,10 @@ function Dashboard() {
             fontWeight: 600,
         },
         momentumTrendPositive: {
-            color: isDarkTheme ? "var(--color-primary-600)" : "#0f172a",
+            color: "var(--color-primary-600)",
         },
         momentumTrendNegative: {
-            color: "#f87171",
+            color: "var(--color-red-500)",
         },
         momentumAction: {
             display: "inline-flex",
@@ -1581,121 +1537,7 @@ function Dashboard() {
 
     return (
         <div style={dashboardStyles.wrapper}>
-            {/* Global Styles - Light Mode Only */}
-            {!isDarkTheme && (
-                <style
-                    dangerouslySetInnerHTML={{
-                        __html: `
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            25% { transform: translateY(-20px) translateX(10px); }
-            50% { transform: translateY(-10px) translateX(-15px); }
-            75% { transform: translateY(-30px) translateX(5px); }
-          }
 
-          @keyframes shimmer {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-          }
-
-          @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-          }
-
-          @keyframes pulse-glow {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
-          }
-
-          .floating-orb {
-            animation: float 6s ease-in-out infinite;
-          }
-
-          .floating-orb:nth-child(2) {
-            animation: float 8s ease-in-out infinite reverse;
-            animation-delay: -2s;
-          }
-
-          .floating-orb:nth-child(3) {
-            animation: float 7s ease-in-out infinite;
-            animation-delay: -4s;
-          }
-        `,
-                    }}
-                />
-            )}
-
-            {/* Floating Background Orbs - Light Mode Only */}
-            {!isDarkTheme && (
-                <>
-                    <div
-                        className="floating-orb"
-                        style={{
-                            position: "absolute",
-                            top: "10%",
-                            left: "5%",
-                            width: "300px",
-                            height: "300px",
-                            background:
-                                "linear-gradient(135deg, rgba(59,130,246,0.12), rgba(147,51,234,0.1))",
-                            borderRadius: "50%",
-                            filter: "blur(40px)",
-                            zIndex: 0,
-                        }}
-                    />
-                    <div
-                        className="floating-orb"
-                        style={{
-                            position: "absolute",
-                            top: "60%",
-                            right: "10%",
-                            width: "250px",
-                            height: "250px",
-                            background:
-                                "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(59,130,246,0.1))",
-                            borderRadius: "50%",
-                            filter: "blur(40px)",
-                            zIndex: 0,
-                        }}
-                    />
-                    <div
-                        className="floating-orb"
-                        style={{
-                            position: "absolute",
-                            top: "30%",
-                            right: "20%",
-                            width: "180px",
-                            height: "180px",
-                            background:
-                                "linear-gradient(135deg, rgba(236,72,153,0.1), rgba(59,130,246,0.08))",
-                            borderRadius: "50%",
-                            filter: "blur(30px)",
-                            zIndex: 0,
-                        }}
-                    />
-
-                    {/* Additional Mesh Gradient Background */}
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            background: `
-                radial-gradient(circle at 25% 25%, rgba(99,102,241,0.05) 0%, transparent 70%),
-                radial-gradient(circle at 75% 75%, rgba(34,197,94,0.05) 0%, transparent 70%),
-                radial-gradient(circle at 75% 25%, rgba(236,72,153,0.05) 0%, transparent 70%),
-                radial-gradient(circle at 25% 75%, rgba(59,130,246,0.05) 0%, transparent 70%)
-              `,
-                            animation: "gradient-shift 20s ease infinite",
-                            backgroundSize: "200% 200%",
-                            zIndex: 0,
-                        }}
-                    />
-                </>
-            )}
             <Notification
                 message={notification?.message}
                 type={notification?.type}
