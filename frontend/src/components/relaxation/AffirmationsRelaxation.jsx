@@ -4,11 +4,14 @@ import { ActionRow, ActionButton } from "./shared/ActivityActions.jsx";
 import {
     ArrowPathIcon,
     SpeakerWaveIcon,
-    HeartIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useTheme } from "../../context/ThemeContext";
+import useResponsive from "../../hooks/useResponsive";
 
 const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const { isDarkMode } = useTheme();
+    const { width } = useResponsive();
     const [timeLeft, setTimeLeft] = useState(180);
     const [sessionComplete, setSessionComplete] = useState(false);
     const [currentAffirmation, setCurrentAffirmation] = useState(0);
@@ -174,11 +177,11 @@ const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             background: "var(--panel-bg)",
             border: "1px solid var(--input-border)",
             borderRadius: "1.5rem",
-            padding: "3rem",
+            padding: "2rem",
             boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
             display: "flex",
             flexDirection: "column",
-            gap: "2.5rem",
+            gap: "1.5rem",
             alignItems: "center",
             animation: "slideUp 0.3s ease-out",
             maxHeight: "90vh",
@@ -205,6 +208,7 @@ const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             fontSize: "1.5rem",
             fontWeight: 600,
             color: "var(--color-primary-600)",
+            marginRight: "2rem",
         },
         affirmationDisplay: {
             textAlign: "center",
@@ -213,7 +217,7 @@ const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                 "linear-gradient(135deg, rgba(56,189,248,0.1), rgba(129,140,248,0.1))",
             borderRadius: "1.5rem",
             border: "2px solid var(--color-primary-200)",
-            minHeight: "200px",
+            minHeight: width < 500 ? "360px" : "200px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -300,9 +304,9 @@ const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         skipButton: {
             padding: "0.7rem 1.5rem",
             borderRadius: "0.9rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",
@@ -311,7 +315,6 @@ const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             justifyContent: "center",
             gap: "0.5rem",
             transition: "all 0.2s ease",
-            marginTop: "1rem",
         },
     };
 
@@ -479,75 +482,26 @@ const AffirmationsRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                         </ActionButton>
 
                         <ActionButton
-                            onClick={toggleFavorite}
-                            style={{
-                                ...styles.button,
-                                ...(favorites.includes(currentAffirmation)
-                                    ? styles.favoriteButtonActive
-                                    : styles.favoriteButton),
-                            }}
+                            onClick={onSkipToFocus}
+                            style={styles.skipButton}
                             onMouseEnter={(e) => {
-                                if (!favorites.includes(currentAffirmation)) {
-                                    e.currentTarget.style.background =
-                                        "var(--color-pink-200)";
-                                }
+                                e.currentTarget.style.background =
+                                    "var(--color-primary-200)";
+                                e.currentTarget.style.transform =
+                                    "translateY(-2px)";
                             }}
                             onMouseLeave={(e) => {
-                                if (!favorites.includes(currentAffirmation)) {
-                                    e.currentTarget.style.background =
-                                        "var(--color-pink-100)";
-                                }
+                                e.currentTarget.style.background =
+                                    "var(--color-primary-100)";
+                                e.currentTarget.style.transform = "translateY(0)";
                             }}
                         >
-                            <HeartIcon
-                                style={{
-                                    width: "20px",
-                                    height: "20px",
-                                    fill: favorites.includes(currentAffirmation)
-                                        ? "currentColor"
-                                        : "none",
-                                }}
-                            />
-                            {favorites.includes(currentAffirmation)
-                                ? "Favorited"
-                                : "Favorite"}
+                            Skip to Focus Session
                         </ActionButton>
                     </ActionRow>
 
-                    {favorites.length > 0 && (
-                        <div style={styles.favoritesSection}>
-                            <p style={styles.favoritesTitle}>
-                                ❤️ Your Favorites ({favorites.length})
-                            </p>
-                            <div style={styles.favoritesList}>
-                                {favorites.map((index) => (
-                                    <p
-                                        key={index}
-                                        style={{ margin: "0.5rem 0" }}
-                                    >
-                                        • {affirmations[index]}
-                                    </p>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                    <button
-                        onClick={onSkipToFocus}
-                        style={styles.skipButton}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background =
-                                "var(--color-primary-200)";
-                            e.currentTarget.style.transform =
-                                "translateY(-2px)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background =
-                                "var(--color-primary-100)";
-                            e.currentTarget.style.transform = "translateY(0)";
-                        }}
-                    >
-                        Skip to Focus Session
-                    </button>
+
+
                 </div>
             </div>
         </>,

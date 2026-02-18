@@ -16,6 +16,7 @@ import {
     SignalIcon,
     VideoCameraIcon,
 } from "@heroicons/react/24/outline";
+import { useTheme } from "../context/ThemeContext";
 
 const heroTags = ["Quick filters", "Templates free", "Swap categories"];
 
@@ -307,7 +308,7 @@ const resourceTypeLabels = {
     template: "Template",
 };
 
-const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
+const getStyles = (isMobile, isTablet, isSmallMobile, width, isDarkMode) => {
     const sharedStyles = sharedFocusShell(isMobile);
 
     // Dynamic column counts
@@ -781,7 +782,9 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
             borderRadius: "999px",
             background:
                 "color-mix(in srgb, var(--color-primary-500) 16%, transparent)",
-            color: "var(--color-primary-100)",
+            color: isDarkMode
+                ? "var(--color-primary-100)"
+                : "var(--color-primary-700)",
             fontSize: "0.78rem",
             fontWeight: 600,
             minWidth: "70px",
@@ -846,7 +849,9 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
         highlightCard: {
             borderRadius: "1.2rem",
             border: "1px solid rgba(56, 189, 248, 0.2)",
-            background: "rgba(56, 189, 248, 0.08)",
+            background: isDarkMode
+                ? "rgba(56, 189, 248, 0.08)"
+                : "rgba(56, 189, 248, 0.15)",
             boxShadow: "var(--shadow-md)",
             padding: "1.85rem",
             display: "grid",
@@ -896,7 +901,9 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
             borderRadius: "999px",
             background:
                 "color-mix(in srgb, var(--color-cyan-400) 18%, transparent)",
-            color: "var(--color-primary-100)",
+            color: isDarkMode
+                ? "var(--color-primary-100)"
+                : "var(--color-primary-800)",
             fontSize: "0.78rem",
             fontWeight: 600,
         },
@@ -928,7 +935,7 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
             borderRadius: "0.85rem",
             background:
                 "color-mix(in srgb, var(--color-cyan-400) 22%, transparent)",
-            color: "var(--color-cyan-100)",
+            color: isDarkMode ? "var(--color-cyan-100)" : "var(--color-cyan-800)",
             fontSize: "0.78rem",
             fontWeight: 600,
         },
@@ -1008,11 +1015,13 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
 
 const Resources = () => {
     const { isMobile, isTablet, isSmallMobile, width } = useResponsive();
+    const { isDarkMode } = useTheme();
     const { styles, modalStyles } = getStyles(
         isMobile,
         isTablet,
         isSmallMobile,
-        width
+        width,
+        isDarkMode
     );
     const [activeCategory, setActiveCategory] = useState("all");
     const [query, setQuery] = useState("");

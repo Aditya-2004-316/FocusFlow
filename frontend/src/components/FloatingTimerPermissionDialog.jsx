@@ -75,6 +75,31 @@ const FloatingTimerPermissionDialog = ({ onAllow, onDeny }) => {
                             Always-On-Top Timer
                         </h3>
                     </div>
+                    <button
+                        onClick={onDeny}
+                        style={{
+                            background: "transparent",
+                            border: "none",
+                            color: isDarkTheme ? "#94a3b8" : "#64748b",
+                            cursor: "pointer",
+                            padding: "0.5rem",
+                            borderRadius: "50%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "background 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = isDarkTheme
+                                ? "rgba(255, 255, 255, 0.1)"
+                                : "rgba(0, 0, 0, 0.05)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                        }}
+                    >
+                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
+                    </button>
                 </div>
 
                 {/* Body */}

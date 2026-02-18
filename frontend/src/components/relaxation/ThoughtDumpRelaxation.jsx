@@ -6,8 +6,10 @@ import {
     PaperAirplaneIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useTheme } from "../../context/ThemeContext";
 
 const ThoughtDumpRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const { isDarkMode } = useTheme();
     const [timeLeft, setTimeLeft] = useState(180);
     const [sessionComplete, setSessionComplete] = useState(false);
     const [thoughts, setThoughts] = useState("");
@@ -172,7 +174,7 @@ const ThoughtDumpRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         },
         textarea: {
             width: "100%",
-            minHeight: "300px",
+            minHeight: "200px",
             padding: "1.5rem",
             borderRadius: "1rem",
             border: "2px solid var(--input-border)",
@@ -240,9 +242,9 @@ const ThoughtDumpRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             minHeight: "3rem",
             minWidth: "230px",
             borderRadius: "0.9rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",

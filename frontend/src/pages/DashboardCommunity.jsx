@@ -14,6 +14,7 @@ import {
     ClipboardDocumentIcon,
     XMarkIcon,
     TrashIcon,
+    ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
 import CommunityCard from "../components/CommunityCard";
 import CommunityModal from "../components/CommunityModal";
@@ -25,11 +26,13 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { useConfirm } from "../components/ConfirmModal";
 import useResponsive from "../hooks/useResponsive";
+import { useTheme } from "../context/ThemeContext";
 import { API_BASE_URL as API_BASE } from "../config/api";
 import { useNavigate } from "react-router-dom";
 
 const DashboardCommunity = () => {
     const { isMobile, isTablet, isSmallMobile, width } = useResponsive();
+    const { isDarkMode } = useTheme();
     const { user: authUser } = useAuth();
     const navigate = useNavigate();
     const toast = useToast();
@@ -77,6 +80,14 @@ const DashboardCommunity = () => {
     const [leaderboardPeriod, setLeaderboardPeriod] = useState("week");
     const [challengeData, setChallengeData] = useState(null);
     const [loadingChallenge, setLoadingChallenge] = useState(false);
+
+    // Helper to convert hex to rgb for rgba usage
+    const hexToRgb = (hex) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `${r}, ${g}, ${b}`;
+    };
 
 
 
@@ -418,7 +429,7 @@ const DashboardCommunity = () => {
     ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     // Styles
-    const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
+    const getStyles = (isMobile, isTablet, isSmallMobile, width, isDarkMode) => {
         let gridCols = 3;
         if (width < 922) gridCols = 1;
         else if (width < 1280) gridCols = 2;
@@ -546,7 +557,7 @@ const DashboardCommunity = () => {
             sectionHeading: {
                 fontSize: isMobile ? "1.35rem" : "1.5rem",
                 fontWeight: 700,
-                color: "var(--color-gray-900)",
+                color: isDarkMode ? "var(--color-gray-900)" : "#0f172a",
                 marginBottom: "0.5rem",
             },
             modalWrapper: {
@@ -605,7 +616,7 @@ const DashboardCommunity = () => {
         };
     };
 
-    const styles = getStyles(isMobile, isTablet, isSmallMobile, width);
+    const styles = getStyles(isMobile, isTablet, isSmallMobile, width, isDarkMode);
 
 
 
@@ -751,18 +762,36 @@ const DashboardCommunity = () => {
                 <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}>
                     <div style={styles.quickGrid}>
                         {[
-                            { icon: UserPlusIcon, label: "Invite Friends", action: () => setShowInviteModal(true) },
-                            { icon: EyeIcon, label: "Who's Focusing", action: () => setShowFocusingModal(true) },
-                            { icon: TrophyIcon, label: "Leaderboard", action: () => setShowLeaderboardModal(true) },
-                            { icon: FireIcon, label: "Weekly Challenge", action: () => setShowChallengeModal(true) }
+                            { icon: UserPlusIcon, label: "Invite Friends", action: () => setShowInviteModal(true), color: "#38bdf8", shadow: "rgba(56, 189, 248, 0.4)" },
+                            { icon: EyeIcon, label: "Who's Focusing", action: () => setShowFocusingModal(true), color: "#22c55e", shadow: "rgba(34, 197, 94, 0.4)" },
+                            { icon: TrophyIcon, label: "Leaderboard", action: () => setShowLeaderboardModal(true), color: "#f59e0b", shadow: "rgba(245, 158, 11, 0.4)" },
+                            { icon: FireIcon, label: "Weekly Challenge", action: () => setShowChallengeModal(true), color: "#ef4444", shadow: "rgba(239, 68, 68, 0.4)" }
                         ].map((item, idx) => (
                             <button
                                 key={idx}
                                 type="button"
-                                style={styles.quickActionButton}
+                                style={{
+                                    ...styles.quickActionButton,
+                                    background: isDarkMode ? `rgba(${hexToRgb(item.color)}, 0.12)` : "var(--panel-bg)",
+                                    border: `1px solid ${isDarkMode ? `rgba(${hexToRgb(item.color)}, 0.2)` : "#e2e8f0"}`,
+                                    color: item.color,
+                                    boxShadow: isDarkMode ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+                                }}
                                 onClick={item.action}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = "translateY(-4px)";
+                                    e.currentTarget.style.background = isDarkMode ? `rgba(${hexToRgb(item.color)}, 0.2)` : item.color;
+                                    e.currentTarget.style.color = isDarkMode ? item.color : "#fff";
+                                    e.currentTarget.style.boxShadow = `0 10px 20px -10px ${item.shadow}`;
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = "translateY(0)";
+                                    e.currentTarget.style.background = isDarkMode ? `rgba(${hexToRgb(item.color)}, 0.12)` : "var(--panel-bg)";
+                                    e.currentTarget.style.color = item.color;
+                                    e.currentTarget.style.boxShadow = isDarkMode ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.05)";
+                                }}
                             >
-                                <item.icon style={{ width: "1.1rem", height: "1.1rem", flexShrink: 0 }} />
+                                <item.icon style={{ width: "1.2rem", height: "1.2rem", flexShrink: 0 }} />
                                 {item.label}
                             </button>
                         ))}
@@ -1436,25 +1465,28 @@ const DashboardCommunity = () => {
                             <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
                                     <h2 style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-gray-900)", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                                        <ShareIcon style={{ width: "1.75rem", height: "1.75rem", color: "#38bdf8" }} />
+                                        <div style={{ background: "rgba(56, 189, 248, 0.15)", padding: "0.5rem", borderRadius: "0.75rem" }}>
+                                            <ShareIcon style={{ width: "1.75rem", height: "1.75rem", color: "#38bdf8" }} />
+                                        </div>
                                         Invite Friends
                                     </h2>
-                                    <button onClick={() => setShowInviteModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
+                                    <button onClick={() => setShowInviteModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem", borderRadius: "50%", transition: "background 0.2s" }} onMouseEnter={e => e.currentTarget.style.background = "rgba(0,0,0,0.05)"} onMouseLeave={e => e.currentTarget.style.background = "none"}>
                                         <XMarkIcon style={{ width: "1.5rem", height: "1.5rem" }} />
                                     </button>
                                 </div>
-                                <p style={{ color: "var(--color-gray-600)", marginBottom: "1.5rem", lineHeight: 1.6 }}>
+                                <p style={{ color: "var(--color-gray-600)", marginBottom: "1.5rem", lineHeight: 1.6, fontSize: "1rem" }}>
                                     Share FocusFlow with your friends and build an accountability network together!
                                 </p>
                                 <div style={{
-                                    background: "rgba(56, 189, 248, 0.1)",
-                                    border: "1px solid rgba(56, 189, 248, 0.3)",
-                                    borderRadius: "0.75rem",
-                                    padding: "1rem",
+                                    background: isDarkMode ? "rgba(56, 189, 248, 0.05)" : "#f8fafc",
+                                    border: `1px solid ${isDarkMode ? "rgba(56, 189, 248, 0.2)" : "#e2e8f0"}`,
+                                    borderRadius: "1rem",
+                                    padding: "0.75rem",
                                     display: "flex",
                                     alignItems: "center",
                                     gap: "0.75rem",
-                                    marginBottom: "1.5rem",
+                                    marginBottom: "2rem",
+                                    boxShadow: isDarkMode ? "inset 0 2px 4px rgba(0,0,0,0.2)" : "inset 0 2px 4px rgba(0,0,0,0.02)"
                                 }}>
                                     <input
                                         type="text"
@@ -1467,8 +1499,32 @@ const DashboardCommunity = () => {
                                             color: "var(--color-gray-900)",
                                             fontSize: "0.9rem",
                                             outline: "none",
+                                            padding: "0.5rem",
+                                            fontFamily: "monospace"
                                         }}
                                     />
+                                    <button
+                                        onClick={() => {
+                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
+                                            window.open(link, '_blank');
+                                        }}
+                                        title="Open Link"
+                                        style={{
+                                            background: "none",
+                                            border: "none",
+                                            color: "#38bdf8",
+                                            cursor: "pointer",
+                                            padding: "0.5rem",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            transition: "color 0.2s"
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.color = "#818cf8"}
+                                        onMouseLeave={e => e.currentTarget.style.color = "#38bdf8"}
+                                    >
+                                        <ArrowTopRightOnSquareIcon style={{ width: "1.25rem", height: "1.25rem" }} />
+                                    </button>
                                     <button
                                         onClick={() => {
                                             const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
@@ -1478,48 +1534,56 @@ const DashboardCommunity = () => {
                                         style={{
                                             background: "linear-gradient(135deg, #38bdf8, #818cf8)",
                                             border: "none",
-                                            borderRadius: "0.5rem",
-                                            padding: "0.5rem 1rem",
+                                            borderRadius: "0.75rem",
+                                            padding: "0.75rem 1.25rem",
                                             color: "#fff",
-                                            fontWeight: 600,
+                                            fontWeight: 700,
                                             cursor: "pointer",
                                             display: "flex",
                                             alignItems: "center",
-                                            gap: "0.5rem",
+                                            gap: "0.6rem",
+                                            boxShadow: "0 4px 12px rgba(56, 189, 248, 0.3)",
+                                            transition: "all 0.2s"
                                         }}
+                                        onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.02)"; e.currentTarget.style.boxShadow = "0 6px 16px rgba(56, 189, 248, 0.4)"; }}
+                                        onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(56, 189, 248, 0.3)"; }}
                                     >
-                                        <ClipboardDocumentIcon style={{ width: "1rem", height: "1rem" }} />
+                                        <ClipboardDocumentIcon style={{ width: "1.1rem", height: "1.1rem" }} />
                                         Copy
                                     </button>
                                 </div>
-                                <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-                                    <button
-                                        onClick={() => {
-                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                            window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20FocusFlow%20-%20the%20ultimate%20productivity%20app!&url=${encodeURIComponent(link)}`, '_blank')
-                                        }}
-                                        style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(29, 161, 242, 0.1)", color: "#1DA1F2", fontWeight: 600, cursor: "pointer" }}
-                                    >
-                                        Twitter/X
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`, '_blank')
-                                        }}
-                                        style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(10, 102, 194, 0.1)", color: "#0A66C2", fontWeight: 600, cursor: "pointer" }}
-                                    >
-                                        LinkedIn
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`;
-                                            window.open(`mailto:?subject=Join%20FocusFlow&body=Hey!%20Check%20out%20FocusFlow%20for%20better%20productivity:%20${encodeURIComponent(link)}`, '_blank')
-                                        }}
-                                        style={{ flex: 1, minWidth: "120px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid #334155", background: "rgba(234, 88, 12, 0.1)", color: "#ea580c", fontWeight: 600, cursor: "pointer" }}
-                                    >
-                                        Email
-                                    </button>
+
+                                <div style={{ marginBottom: "1rem" }}>
+                                    <h4 style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--color-gray-500)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>Direct Share</h4>
+                                    <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                                        {[
+                                            { name: "Twitter/X", color: "#1DA1F2", bg: "rgba(29, 161, 242, 0.1)", action: () => { const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`; window.open(`https://twitter.com/intent/tweet?text=Join%20me%20on%20FocusFlow%20-%20the%20ultimate%20productivity%20app!&url=${encodeURIComponent(link)}`, '_blank') } },
+                                            { name: "LinkedIn", color: "#0A66C2", bg: "rgba(10, 102, 194, 0.1)", action: () => { const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`; window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`, '_blank') } },
+                                            { name: "Email", color: "#ea580c", bg: "rgba(234, 88, 12, 0.1)", action: () => { const link = `${window.location.origin}/signup?ref=${currentUser?.username || currentUser?._id || 'focusflow'}`; window.open(`mailto:?subject=Join%20FocusFlow&body=Hey!%20Check%20out%20FocusFlow%20for%20better%20productivity:%20${encodeURIComponent(link)}`, '_blank') } }
+                                        ].map(platform => (
+                                            <button
+                                                key={platform.name}
+                                                onClick={platform.action}
+                                                style={{
+                                                    flex: 1,
+                                                    minWidth: "120px",
+                                                    padding: "0.85rem",
+                                                    borderRadius: "0.85rem",
+                                                    border: `1px solid ${platform.color}44`,
+                                                    background: platform.bg,
+                                                    color: platform.color,
+                                                    fontWeight: 700,
+                                                    fontSize: "0.9rem",
+                                                    cursor: "pointer",
+                                                    transition: "all 0.2s"
+                                                }}
+                                                onMouseEnter={e => { e.currentTarget.style.background = platform.color; e.currentTarget.style.color = "#fff"; }}
+                                                onMouseLeave={e => { e.currentTarget.style.background = platform.bg; e.currentTarget.style.color = platform.color; }}
+                                            >
+                                                {platform.name}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1638,32 +1702,39 @@ const DashboardCommunity = () => {
                                             alignItems: "center",
                                             gap: "1rem",
                                             padding: "1rem",
-                                            background: (user.username === currentUser?.username) ? "rgba(245, 158, 11, 0.1)" : "rgba(255, 255, 255, 0.03)",
-                                            borderRadius: "0.75rem",
+                                            background: (user.username === currentUser?.username) ? (isDarkMode ? "rgba(245, 158, 11, 0.1)" : "#fffcf0") : (isDarkMode ? "rgba(255, 255, 255, 0.03)" : "#ffffff"),
+                                            borderRadius: "1rem",
                                             marginBottom: "0.75rem",
-                                            border: (user.username === currentUser?.username) ? "1px solid rgba(245, 158, 11, 0.3)" : "1px solid rgba(255, 255, 255, 0.06)",
-                                        }}>
+                                            border: (user.username === currentUser?.username) ? "1px solid rgba(245, 158, 11, 0.4)" : `1px solid ${isDarkMode ? "rgba(255, 255, 255, 0.06)" : "#e2e8f0"}`,
+                                            boxShadow: (user.username === currentUser?.username) ? "0 4px 12px rgba(245, 158, 11, 0.1)" : "none",
+                                            transition: "transform 0.2s"
+                                        }} onMouseEnter={e => e.currentTarget.style.transform = "translateX(4px)"} onMouseLeave={e => e.currentTarget.style.transform = "translateX(0)"}>
                                             <div style={{
-                                                width: "2.5rem",
-                                                height: "2.5rem",
-                                                borderRadius: "0.5rem",
-                                                background: idx < 3 ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                                                width: "2.75rem",
+                                                height: "2.75rem",
+                                                borderRadius: "0.75rem",
+                                                background: idx === 0 ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : (idx === 1 ? "linear-gradient(135deg, #94a3b8, #64748b)" : (idx === 2 ? "linear-gradient(135deg, #d97706, #92400e)" : (isDarkMode ? "rgba(255, 255, 255, 0.05)" : "#f1f5f9"))),
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "center",
-                                                fontWeight: 700,
-                                                color: idx < 3 ? "#f59e0b" : "var(--color-gray-600)",
-                                                fontSize: "1.2rem",
+                                                fontWeight: 800,
+                                                color: idx < 3 ? "#fff" : (isDarkMode ? "#94a3b8" : "#64748b"),
+                                                fontSize: idx < 3 ? "1.25rem" : "1.1rem",
+                                                boxShadow: idx < 3 ? "0 4px 10px rgba(0,0,0,0.15)" : "none",
+                                                flexShrink: 0
                                             }}>
                                                 {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
                                             </div>
                                             <div style={{ flex: 1 }}>
-                                                <div style={{ fontWeight: 600, color: "var(--color-gray-900)" }}>{user.name}</div>
-                                                <div style={{ fontSize: "0.75rem", color: "var(--color-gray-600)" }}>{user.sessions} sessions • {Math.round(user.points)} pts</div>
+                                                <div style={{ fontWeight: 700, color: "var(--color-gray-900)", fontSize: "1rem" }}>{user.name}</div>
+                                                <div style={{ fontSize: "0.8rem", color: "var(--color-gray-600)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                                                    <FireIcon style={{ width: "0.9rem", color: "#f59e0b" }} />
+                                                    {user.sessions} sessions • {Math.round(user.points)} pts
+                                                </div>
                                             </div>
                                             <div style={{ textAlign: "right" }}>
-                                                <div style={{ fontWeight: 700, color: "var(--color-gray-900)" }}>{user.hours}h</div>
-                                                <div style={{ fontSize: "0.75rem", color: "#64748b" }}>Focus Time</div>
+                                                <div style={{ fontWeight: 800, color: "var(--color-gray-900)", fontSize: "1.1rem" }}>{user.hours}h</div>
+                                                <div style={{ fontSize: "0.7rem", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.02em" }}>Focus</div>
                                             </div>
                                         </div>
                                     ))
@@ -1689,66 +1760,70 @@ const DashboardCommunity = () => {
                                         <FireIcon style={{ width: "1.75rem", height: "1.75rem", color: "#ef4444", flexShrink: 0 }} />
                                         Weekly Challenge
                                     </h2>
-                                    <button onClick={() => setShowChallengeModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.5rem" }}>
-                                        <XMarkIcon style={{ width: "1.5rem", height: "1.5rem", flexShrink: 0 }} />
+                                    <button onClick={() => setShowChallengeModal(false)} style={{ background: "none", border: "none", color: "var(--color-gray-600)", cursor: "pointer", padding: "0.25rem" }}>
+                                        <XMarkIcon style={{ width: "1.25rem", height: "1.25rem", flexShrink: 0 }} />
                                     </button>
                                 </div>
 
                                 {loadingChallenge ? (
-                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Loading...</div>
+                                    <div style={{ textAlign: "center", padding: "1.5rem", color: "var(--color-gray-600)" }}>Loading...</div>
                                 ) : challengeData ? (
                                     <div style={{
                                         background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.1))",
                                         border: "1px solid rgba(239, 68, 68, 0.3)",
-                                        borderRadius: "1rem",
-                                        padding: "1.25rem",
-                                        marginBottom: "1rem",
+                                        borderRadius: "0.75rem",
+                                        padding: "1rem",
+                                        marginBottom: "0.75rem",
                                     }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                                            <span style={{ fontSize: "1.3rem" }}>🎯</span>
-                                            <span style={{ color: "#fbbf24", fontWeight: 700, fontSize: "1rem" }}>CHALLENGE OF THE WEEK</span>
+                                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+                                            <span style={{ fontSize: "1.1rem" }}>🎯</span>
+                                            <span style={{ color: "#fbbf24", fontWeight: 700, fontSize: "0.85rem" }}>CHALLENGE OF THE WEEK</span>
                                         </div>
-                                        <h3 style={{ color: "var(--color-gray-900)", fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+                                        <h3 style={{ color: "var(--color-gray-900)", fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.25rem" }}>
                                             "{challengeData.title}"
                                         </h3>
-                                        <p style={{ color: "var(--color-gray-600)", lineHeight: 1.5, marginBottom: "1rem", fontSize: "0.95rem" }}>
+                                        <p style={{ color: "var(--color-gray-600)", lineHeight: 1.4, marginBottom: "0.75rem", fontSize: "0.9rem" }}>
                                             {challengeData.description}
                                         </p>
-                                        <div style={{ marginBottom: "1rem" }}>
-                                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                                                <span style={{ color: "var(--color-gray-600)", fontSize: "0.9rem" }}>Your Progress</span>
-                                                <span style={{ color: "var(--color-gray-900)", fontWeight: 600 }}>{challengeData.progress} / {challengeData.target} {challengeData.unit || "Sessions"}</span>
+                                        <div style={{ marginBottom: "0.75rem" }}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem" }}>
+                                                <span style={{ color: "var(--color-gray-600)", fontSize: "0.8rem" }}>Your Progress</span>
+                                                <span style={{ color: "var(--color-gray-900)", fontWeight: 600, fontSize: "0.9rem" }}>{challengeData.progress} / {challengeData.target} {challengeData.unit || "Sessions"}</span>
                                             </div>
-                                            <div style={{ height: "0.75rem", background: "#1e293b", borderRadius: "999px", overflow: "hidden" }}>
-                                                <div style={{ width: `${(challengeData.progress / challengeData.target) * 100}%`, height: "100%", background: "linear-gradient(90deg, #ef4444, #f59e0b)", borderRadius: "999px" }} />
+                                            <div style={{ height: "0.6rem", background: isDarkMode ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.05)", borderRadius: "999px", overflow: "hidden", border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"}`, padding: "1px" }}>
+                                                <div style={{ width: `${Math.min(100, (challengeData.progress / challengeData.target) * 100)}%`, height: "100%", background: "linear-gradient(90deg, #ef4444, #f59e0b, #fbbf24)", borderRadius: "999px", boxShadow: "0 0 10px rgba(239, 68, 68, 0.4)", transition: "width 1s cubic-bezier(0.4, 0, 0.2, 1)" }} />
                                             </div>
                                         </div>
-                                        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.85rem" }}>
+                                        <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.8rem" }}>
                                             <span>⏰ {challengeData.daysRemaining} days remaining</span>
                                             <span>👥 {challengeData.participants} participants</span>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-gray-600)" }}>Failed to load challenge data.</div>
+                                    <div style={{ textAlign: "center", padding: "1.5rem", color: "var(--color-gray-600)" }}>Failed to load challenge data.</div>
                                 )}
 
                                 {/* Rewards */}
                                 {challengeData && (
-                                    <div style={{ marginBottom: "1.5rem" }}>
-                                        <h4 style={{ color: "var(--color-gray-900)", fontWeight: 600, marginBottom: "1rem" }}>🏆 Rewards</h4>
-                                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.75rem" }}>
+                                    <div style={{ marginBottom: "1rem" }}>
+                                        <h4 style={{ color: "var(--color-gray-900)", fontWeight: 600, marginBottom: "0.5rem", fontSize: "0.9rem" }}>🏆 Rewards</h4>
+                                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "0.5rem" }}>
                                             {challengeData.rewards.map((reward, ridx) => (
                                                 <div key={ridx} style={{
-                                                    padding: "1rem",
+                                                    padding: "0.75rem",
                                                     background: "rgba(255, 255, 255, 0.03)",
-                                                    borderRadius: "0.75rem",
+                                                    borderRadius: "0.5rem",
                                                     border: "1px solid rgba(255, 255, 255, 0.06)",
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    gap: "0.25rem"
                                                 }}>
-                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
-                                                        <span style={{ fontSize: "1.5rem" }}>{reward.icon}</span>
-                                                        <div style={{ color: "var(--color-gray-900)", fontWeight: 700, fontSize: "1rem" }}>{reward.title}</div>
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
+                                                        <span style={{ fontSize: "1.2rem" }}>{reward.icon}</span>
+                                                        <div style={{ color: "var(--color-gray-900)", fontWeight: 700, fontSize: "0.9rem" }}>{reward.title}</div>
                                                     </div>
-                                                    <div style={{ color: "#64748b", fontSize: "0.8rem", textAlign: "center" }}>{reward.subtitle}</div>
+                                                    <div style={{ color: "#64748b", fontSize: "0.75rem", textAlign: "center" }}>{reward.subtitle}</div>
                                                 </div>
                                             ))}
                                         </div>

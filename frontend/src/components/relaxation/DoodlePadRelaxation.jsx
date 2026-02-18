@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ActionRow, ActionButton } from "./shared/ActivityActions.jsx";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "../../context/ThemeContext";
 
 const DoodlePadRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const { isDarkMode } = useTheme();
     const [timeLeft, setTimeLeft] = useState(180);
     const [sessionComplete, setSessionComplete] = useState(false);
     const [isDrawing, setIsDrawing] = useState(false);
@@ -215,6 +217,7 @@ const DoodlePadRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             fontSize: "1.5rem",
             fontWeight: 600,
             color: "var(--color-primary-600)",
+            marginRight: "2rem",
         },
         toolbar: {
             display: "flex",
@@ -260,17 +263,17 @@ const DoodlePadRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         toolButton: {
             padding: "0.5rem 1rem",
             borderRadius: "0.5rem",
-            border: "1px solid var(--input-border)",
-            background: "var(--color-white)",
-            color: "var(--color-gray-700)",
+            border: isDarkMode ? "1px solid transparent" : "1px solid var(--input-border)",
+            background: isDarkMode ? "transparent" : "var(--color-white)",
+            color: isDarkMode ? "#ffffff" : "var(--color-gray-700)",
             fontWeight: 600,
             cursor: "pointer",
             transition: "all 0.2s ease",
         },
         toolButtonActive: {
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
-            border: "1px solid var(--color-primary-300)",
+            background: isDarkMode ? "var(--color-primary-900)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-500)" : "1px solid var(--color-primary-300)",
         },
         slider: {
             width: "150px",
@@ -326,9 +329,9 @@ const DoodlePadRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         skipButton: {
             padding: "0.7rem 1.5rem",
             borderRadius: "0.9rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",
@@ -451,15 +454,7 @@ const DoodlePadRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                 </button>
                 <div style={styles.header}>
                     <h1 style={styles.title}>🎨 Doodle Pad</h1>
-                </div>
-                <div
-                    style={Object.assign({}, styles.timer, {
-                        textAlign: "center",
-                        marginTop: "-1rem",
-                        marginBottom: "1rem",
-                    })}
-                >
-                    {formatTime(timeLeft)}
+                    <div style={styles.timer}>{formatTime(timeLeft)}</div>
                 </div>
 
                 <div style={styles.toolbar}>

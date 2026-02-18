@@ -1,9 +1,10 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { sharedFocusShell } from "./FocusTimer.jsx";
 import useResponsive from "../hooks/useResponsive";
+import { useTheme } from "../context/ThemeContext";
 import { API_BASE_URL as API_BASE } from "../config/api";
 
-const getStyles = (isMobile, range) => {
+const getStyles = (isMobile, range, isDarkMode) => {
     const sharedStyles = sharedFocusShell(isMobile);
     const styles = {
         ...sharedStyles,
@@ -39,7 +40,7 @@ const getStyles = (isMobile, range) => {
         heroLead: {
             fontSize: "1.05rem",
             lineHeight: 1.75,
-            color: "var(--color-gray-300)",
+            color: isDarkMode ? "var(--color-gray-300)" : "var(--color-gray-600)",
             maxWidth: "48rem",
         },
         heroBadges: {
@@ -520,8 +521,9 @@ const getStyles = (isMobile, range) => {
 
 const Statistics = () => {
     const { isMobile } = useResponsive();
+    const { isDarkMode } = useTheme();
     const [range, setRange] = useState("week");
-    const { styles, heroHighlights, metricCards, timeRangeOptions, focusBlocks, insights, goalBlueprints, suggestions } = getStyles(isMobile, range);
+    const { styles, heroHighlights, metricCards, timeRangeOptions, focusBlocks, insights, goalBlueprints, suggestions } = getStyles(isMobile, range, isDarkMode);
     const [statsData, setStatsData] = useState({
         metrics: {
             totalFocusTime: "0h 0m",
@@ -636,7 +638,7 @@ const Statistics = () => {
     ];
 
     const goalsToDisplay = statsData.goals?.length > 0 ? statsData.goals : goalBlueprints;
-    const suggestionsToDisplay = statsData.suggestions?.length > 0 ? statsData.suggestions : suggestions;
+    const suggestionsToDisplay = suggestions; // statsData.suggestions?.length > 0 ? statsData.suggestions : suggestions;
 
     return (
         <div style={styles.page}>

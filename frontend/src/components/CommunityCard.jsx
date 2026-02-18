@@ -1,9 +1,11 @@
 import React from "react";
 import { UserGroupIcon, TagIcon, EyeIcon, ArrowRightOnRectangleIcon, PencilIcon } from "@heroicons/react/24/outline";
 import useResponsive from "../hooks/useResponsive";
+import { useTheme } from "../context/ThemeContext";
 
 const CommunityCard = ({ community, onViewClick, onJoinClick, onLeaveClick, onEditClick, isMember, isCreator, creatorControlsHeight = 0, roleBadge, children }) => {
     const { isMobile } = useResponsive();
+    const { isDarkMode } = useTheme();
     const cardStyle = {
         background: "color-mix(in srgb, var(--panel-bg) 85%, var(--color-white) 15%)",
         borderRadius: "1rem",
@@ -26,7 +28,7 @@ const CommunityCard = ({ community, onViewClick, onJoinClick, onLeaveClick, onEd
     const titleStyle = {
         fontSize: "1.1rem",
         fontWeight: 700,
-        color: "#f8fafc",
+        color: isDarkMode ? "#f8fafc" : "#0284c7",
         margin: 0,
         lineHeight: 1.3,
     };

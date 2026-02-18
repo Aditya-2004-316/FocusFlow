@@ -9,13 +9,15 @@ import {
     MusicalNoteIcon,
     ArrowPathIcon,
 } from "@heroicons/react/24/outline";
+import useResponsive from "../../hooks/useResponsive";
+import { useTheme } from "../../context/ThemeContext";
 
 const TRACKS = [
     {
         id: "ambient",
         title: "Ambient Soundscape",
         subtitle: "Soothing synth pads",
-        url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_e5064cde6d.mp3?filename=calm-and-peaceful-110437.mp3",
+        url: "https://cdn.pixabay.com/download/audio/2022/10/03/audio_8e1b7beb2e.mp3?filename=deep-relaxation-ambient-120300.mp3",
     },
     {
         id: "forest",
@@ -46,6 +48,8 @@ const TRACKS = [
 const SESSION_DURATION = 180;
 
 const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const { isMobile } = useResponsive();
+    const { isDarkMode } = useTheme();
     const [timeLeft, setTimeLeft] = useState(SESSION_DURATION);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(0.6);
@@ -99,9 +103,9 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             }
             if (audioCtxRef.current) {
                 // keep context for reuse; do not close for iOS
-                audioCtxRef.current.suspend().catch(() => {});
+                audioCtxRef.current.suspend().catch(() => { });
             }
-        } catch {}
+        } catch { }
         setUsingFallback(false);
         setIsActuallyPlaying(false);
     };
@@ -115,7 +119,7 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         const ctx = audioCtxRef.current;
         try {
             await ctx.resume();
-        } catch {}
+        } catch { }
 
         const master = ctx.createGain();
         master.gain.value = 0.15; // gentle volume
@@ -451,7 +455,7 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             display: "grid",
             gap: "1.25rem",
             width: "100%",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
         },
         trackButton: {
             padding: "1.1rem 1.25rem",
@@ -530,9 +534,9 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             width: "60px",
             height: "60px",
             borderRadius: "50%",
-            border: "2px solid var(--color-primary-500)",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "2px solid var(--color-primary-400)" : "2px solid var(--color-primary-500)",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -571,9 +575,9 @@ const MusicRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             minHeight: "3rem",
             minWidth: 0,
             borderRadius: "0.9rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",

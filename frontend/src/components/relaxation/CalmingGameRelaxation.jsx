@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ActionRow, ActionButton } from "./shared/ActivityActions.jsx";
+import { useTheme } from "../../context/ThemeContext";
+import useResponsive from "../../hooks/useResponsive";
 
 const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const { isDarkMode } = useTheme();
+    const { width } = useResponsive();
     const [timeLeft, setTimeLeft] = useState(180);
     const [sessionComplete, setSessionComplete] = useState(false);
     const [activeGame, setActiveGame] = useState("memory");
@@ -369,17 +373,17 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         tabButton: {
             padding: "0.45rem 0.9rem",
             borderRadius: "0.6rem",
-            border: "1px solid var(--input-border)",
-            background: "var(--color-white)",
-            color: "var(--color-gray-800)",
+            border: isDarkMode ? "1px solid transparent" : "1px solid var(--input-border)",
+            background: isDarkMode ? "transparent" : "var(--color-white)",
+            color: isDarkMode ? "#ffffff" : "var(--color-gray-800)",
             fontWeight: 600,
             cursor: "pointer",
             transition: "all 0.2s ease",
         },
         tabActive: {
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-800)",
-            borderColor: "var(--color-primary-300)",
+            background: isDarkMode ? "var(--color-primary-900)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-800)",
+            borderColor: isDarkMode ? "var(--color-primary-500)" : "var(--color-primary-300)",
         },
         title: {
             fontSize: "2rem",
@@ -407,7 +411,7 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         },
         gameBoard: {
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateColumns: width < 480 ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
             gap: "1rem",
             margin: "1rem 0",
         },
@@ -440,9 +444,9 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         button: {
             padding: "0.75rem 1.5rem",
             borderRadius: "0.75rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",
@@ -454,7 +458,8 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         },
         bubbleArea: {
             position: "relative",
-            height: "260px",
+            minHeight: width < 660 ? "560px" : "260px",
+            flexShrink: 0,
             width: "100%",
             borderRadius: "1rem",
             border: "1px solid var(--input-border)",
@@ -527,9 +532,9 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
         skipButton: {
             padding: "0.7rem 1.5rem",
             borderRadius: "0.9rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",
@@ -815,10 +820,10 @@ const CalmingGameRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                                         ...(isBlank
                                             ? styles.sliderBlank
                                             : {
-                                                  backgroundImage: `url(${puzzleImageUrl})`,
-                                                  backgroundPosition: bgPos,
-                                                  color: "transparent",
-                                              }),
+                                                backgroundImage: `url(${puzzleImageUrl})`,
+                                                backgroundPosition: bgPos,
+                                                color: "transparent",
+                                            }),
                                         ...(isMovable
                                             ? styles.sliderMovable
                                             : {}),

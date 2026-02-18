@@ -254,11 +254,68 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
             case "relaxation":
                 return (
                     <div style={{ padding: "2rem", overflowY: "auto", height: "100%", minHeight: 0 }}>
-                        <div style={{ display: "grid", gridTemplateColumns: isTiny ? "1fr" : (isSmall ? "repeat(2, 1fr)" : "repeat(3, 1fr)"), gap: "1rem" }}>
-                            {[{ title: "Soundscapes", icon: "🎧", modal: "music" }, { title: "Meditation", icon: "🧘", modal: "meditation" }, { title: "Thought Dump", icon: "📝", modal: "thoughtDump" }, { title: "Relaxing Games", icon: "🎮", modal: "calmingGame" }, { title: "Doodle Pad", icon: "🎨", modal: "doodlePad" }, { title: "Affirmations", icon: "💬", modal: "affirmations" }].map(item => (
-                                <div key={item.title} onClick={() => setActiveRelaxationModal(item.modal)} style={{ background: isDarkMode ? "rgba(255,255,255,0.03)" : "#f8fafc", padding: "1.5rem", borderRadius: "1rem", border: `1px solid ${isDarkMode ? "rgba(168, 85, 247, 0.2)" : "#e9d5ff"}`, cursor: "pointer", textAlign: "center", boxShadow: isDarkMode ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.1)" }}>
-                                    <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{item.icon}</div>
-                                    <h4 style={{ color: isDarkMode ? "#f8fafc" : "#0f172a" }}>{item.title}</h4>
+                        <div style={{ display: "grid", gridTemplateColumns: isTiny ? "1fr" : (isSmall ? "repeat(2, 1fr)" : "repeat(3, 1fr)"), gap: "1.25rem" }}>
+                            {[
+                                { title: "Soundscapes", icon: "🎧", modal: "music", subtitle: "Ambient audio", color: "#38bdf8" },
+                                { title: "Meditation", icon: "🧘", modal: "meditation", subtitle: "Breath work", color: "#a855f7" },
+                                { title: "Thought Dump", icon: "📝", modal: "thoughtDump", subtitle: "Clear mind", color: "#f59e0b" },
+                                { title: "Relaxing Games", icon: "🎮", modal: "calmingGame", subtitle: "Gentle play", color: "#10b981" },
+                                { title: "Doodle Pad", icon: "🎨", modal: "doodlePad", subtitle: "Creative flow", color: "#ec4899" },
+                                { title: "Affirmations", icon: "💬", modal: "affirmations", subtitle: "Daily positive", color: "#6366f1" }
+                            ].map(item => (
+                                <div
+                                    key={item.title}
+                                    onClick={() => setActiveRelaxationModal(item.modal)}
+                                    style={{
+                                        background: isDarkMode ? "rgba(255,255,255,0.03)" : "#ffffff",
+                                        padding: "1.75rem 1.25rem",
+                                        borderRadius: "1.25rem",
+                                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.08)" : "#e2e8f0"}`,
+                                        cursor: "pointer",
+                                        textAlign: "center",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        gap: "0.75rem",
+                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        boxShadow: isDarkMode ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+                                        position: "relative",
+                                        overflow: "hidden"
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = "translateY(-4px)";
+                                        e.currentTarget.style.borderColor = item.color;
+                                        e.currentTarget.style.boxShadow = isDarkMode
+                                            ? `0 10px 20px -10px ${item.color}44`
+                                            : `0 10px 15px -3px ${item.color}22`;
+                                        if (isDarkMode) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = "translateY(0)";
+                                        e.currentTarget.style.borderColor = isDarkMode ? "rgba(255,255,255,0.08)" : "#e2e8f0";
+                                        e.currentTarget.style.boxShadow = isDarkMode ? "none" : "0 4px 6px -1px rgba(0, 0, 0, 0.05)";
+                                        if (isDarkMode) e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                                    }}
+                                >
+                                    <div style={{
+                                        fontSize: "2.5rem",
+                                        padding: "1rem",
+                                        borderRadius: "1rem",
+                                        background: isDarkMode ? `rgba(${hexToRgb(item.color)}, 0.1)` : `${item.color}11`,
+                                        color: item.color,
+                                        width: "60px",
+                                        height: "60px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        marginBottom: "0.5rem"
+                                    }}>
+                                        {item.icon}
+                                    </div>
+                                    <div>
+                                        <h4 style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>{item.title}</h4>
+                                        <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", margin: "0.25rem 0 0 0", fontSize: "0.85rem" }}>{item.subtitle}</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -274,7 +331,55 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
                                     <div style={{ width: "2.5rem", height: "2.5rem", borderRadius: "50%", background: "linear-gradient(135deg, #6366f1, #8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700 }}>
                                         {(member.userId?.username || "?")[0].toUpperCase()}
                                     </div>
-                                    <span style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", fontWeight: 600 }}>{member.userId?.username}</span>
+                                    <div style={{ flex: 1, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <div style={{ display: "flex", flexDirection: "column" }}>
+                                            <span style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", fontWeight: 600 }}>{member.userId?.username}</span>
+                                            <span style={{ fontSize: "0.75rem", color: isDarkMode ? "#64748b" : "#94a3b8" }}>{member.role || "Member"}</span>
+                                        </div>
+
+                                        {isOwner && member.userId?._id !== currentUserId && (
+                                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                                <select
+                                                    value={member.role}
+                                                    onChange={(e) => handleAssignRole(member.userId._id, e.target.value)}
+                                                    style={{
+                                                        background: isDarkMode ? "#1e293b" : "#fff",
+                                                        color: isDarkMode ? "#f8fafc" : "#0f172a",
+                                                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`,
+                                                        borderRadius: "0.375rem",
+                                                        padding: "0.25rem 0.5rem",
+                                                        fontSize: "0.85rem",
+                                                        outline: "none",
+                                                        cursor: "pointer"
+                                                    }}
+                                                >
+                                                    <option value="Member">Member</option>
+                                                    <option value="Moderator">Moderator</option>
+                                                    <option value="Admin">Admin</option>
+                                                </select>
+                                                <button
+                                                    onClick={() => handleRemoveMember(member.userId._id)}
+                                                    style={{
+                                                        background: "rgba(239, 68, 68, 0.1)",
+                                                        color: "#ef4444",
+                                                        border: "none",
+                                                        borderRadius: "0.375rem",
+                                                        padding: "0.4rem",
+                                                        cursor: "pointer",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        transition: "all 0.2s"
+                                                    }}
+                                                    title="Remove Member"
+                                                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.2)"}
+                                                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"}
+                                                >
+                                                    <TrashIcon style={{ width: "1.1rem" }} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -315,6 +420,19 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
                 );
             default: return null;
         }
+    };
+
+    // Helper to convert hex to rgb for rgba usage
+    const hexToRgb = (hex) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `${r}, ${g}, ${b}`;
+    };
+
+    const handleSkipToFocus = () => {
+        setActiveRelaxationModal(null);
+        setActiveChannel("focus-sessions");
     };
 
     return (
@@ -409,12 +527,12 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
                 )}
             </div>
 
-            <MusicRelaxation isOpen={activeRelaxationModal === "music"} onClose={() => setActiveRelaxationModal(null)} />
-            <MeditationRelaxation isOpen={activeRelaxationModal === "meditation"} onClose={() => setActiveRelaxationModal(null)} />
-            <ThoughtDumpRelaxation isOpen={activeRelaxationModal === "thoughtDump"} onClose={() => setActiveRelaxationModal(null)} />
-            <CalmingGameRelaxation isOpen={activeRelaxationModal === "calmingGame"} onClose={() => setActiveRelaxationModal(null)} />
-            <DoodlePadRelaxation isOpen={activeRelaxationModal === "doodlePad"} onClose={() => setActiveRelaxationModal(null)} />
-            <AffirmationsRelaxation isOpen={activeRelaxationModal === "affirmations"} onClose={() => setActiveRelaxationModal(null)} />
+            <MusicRelaxation isOpen={activeRelaxationModal === "music"} onClose={() => setActiveRelaxationModal(null)} onSkipToFocus={handleSkipToFocus} />
+            <MeditationRelaxation isOpen={activeRelaxationModal === "meditation"} onClose={() => setActiveRelaxationModal(null)} onSkipToFocus={handleSkipToFocus} />
+            <ThoughtDumpRelaxation isOpen={activeRelaxationModal === "thoughtDump"} onClose={() => setActiveRelaxationModal(null)} onSkipToFocus={handleSkipToFocus} />
+            <CalmingGameRelaxation isOpen={activeRelaxationModal === "calmingGame"} onClose={() => setActiveRelaxationModal(null)} onSkipToFocus={handleSkipToFocus} />
+            <DoodlePadRelaxation isOpen={activeRelaxationModal === "doodlePad"} onClose={() => setActiveRelaxationModal(null)} onSkipToFocus={handleSkipToFocus} />
+            <AffirmationsRelaxation isOpen={activeRelaxationModal === "affirmations"} onClose={() => setActiveRelaxationModal(null)} onSkipToFocus={handleSkipToFocus} />
 
             <style>{`
                 #community-main-scroll ::-webkit-scrollbar { width: 8px; height: 8px; }

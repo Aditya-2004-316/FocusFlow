@@ -687,11 +687,9 @@ function Dashboard() {
             fontSize: isMobile ? "1.5rem" : isTablet ? "2rem" : "2.75rem",
             fontWeight: 800,
             lineHeight: 1.15,
-            background: "linear-gradient(to right, #38bdf8, #818cf8)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
+            color: isDarkTheme ? "#f8fafc" : "#0f172a",
             letterSpacing: "-0.025em",
+            margin: 0,
         },
         heroAccent: {
             background: "linear-gradient(to right, #38bdf8, #818cf8)",
@@ -1567,13 +1565,16 @@ function Dashboard() {
                             }}
                         />
                     )}
-                    <div style={{ position: "relative", zIndex: 2 }}>
-                        <h1
-                            style={{
-                                ...dashboardStyles.heroTitle,
-                                marginBottom: "1.5rem",
-                            }}
-                        >
+                    <div
+                        style={{
+                            position: "relative",
+                            zIndex: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: isMobile ? "1.25rem" : "2rem",
+                        }}
+                    >
+                        <h1 style={dashboardStyles.heroTitle}>
                             {displayName ? (
                                 <>
                                     Welcome back,{" "}
@@ -1595,50 +1596,50 @@ function Dashboard() {
                             breaks, and community accountability—everything you
                             need to keep momentum compounding.
                         </p>
-                    </div>
-                    <div style={dashboardStyles.heroActions}>
-                        <button
-                            style={dashboardStyles.primaryButton}
-                            onClick={() => navigate("/focus-timer")}
-                        >
-                            <PlayIcon
-                                style={{ width: "1.2rem", height: "1.2rem" }}
-                            />
-                            Start focus session
-                        </button>
-                        <button
-                            style={dashboardStyles.secondaryButton}
-                            onClick={() => {
-                                setActiveTab("distractions");
-                                setTimeout(() => {
-                                    const tabBar =
-                                        document.getElementById(
-                                            "dashboard-tab-bar"
-                                        );
-                                    if (tabBar) {
-                                        tabBar.scrollIntoView({
-                                            behavior: "smooth",
-                                            block: "start",
-                                        });
-                                    }
-                                }, 100);
-                            }}
-                        >
-                            <PlusIcon
-                                style={{ width: "1.2rem", height: "1.2rem" }}
-                            />
-                            Log distraction
-                        </button>
-                    </div>
-                    <div style={dashboardStyles.heroBadgeRow}>
-                        {heroBadges.map((badge) => (
-                            <span
-                                key={badge}
-                                style={dashboardStyles.actionChip}
+                        <div style={dashboardStyles.heroActions}>
+                            <button
+                                style={dashboardStyles.primaryButton}
+                                onClick={() => navigate("/focus-timer")}
                             >
-                                {badge}
-                            </span>
-                        ))}
+                                <PlayIcon
+                                    style={{ width: "1.2rem", height: "1.2rem" }}
+                                />
+                                Start focus session
+                            </button>
+                            <button
+                                style={dashboardStyles.secondaryButton}
+                                onClick={() => {
+                                    setActiveTab("distractions");
+                                    setTimeout(() => {
+                                        const tabBar =
+                                            document.getElementById(
+                                                "dashboard-tab-bar"
+                                            );
+                                        if (tabBar) {
+                                            tabBar.scrollIntoView({
+                                                behavior: "smooth",
+                                                block: "start",
+                                            });
+                                        }
+                                    }, 100);
+                                }}
+                            >
+                                <PlusIcon
+                                    style={{ width: "1.2rem", height: "1.2rem" }}
+                                />
+                                Log distraction
+                            </button>
+                        </div>
+                        <div style={dashboardStyles.heroBadgeRow}>
+                            {heroBadges.map((badge) => (
+                                <span
+                                    key={badge}
+                                    style={dashboardStyles.actionChip}
+                                >
+                                    {badge}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </section>
 

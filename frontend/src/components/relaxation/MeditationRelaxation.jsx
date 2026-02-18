@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { XMarkIcon, SpeakerWaveIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "../../context/ThemeContext";
+import useResponsive from "../../hooks/useResponsive";
 
 const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
+    const { isDarkMode } = useTheme();
+    const { width } = useResponsive();
+    const isCompact = width < 720;
     const [timeLeft, setTimeLeft] = useState(180);
     const [sessionComplete, setSessionComplete] = useState(false);
     const [currentPhase, setCurrentPhase] = useState(0);
@@ -342,9 +347,9 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             transform: "translateY(-50%)",
             padding: "0.5rem",
             borderRadius: "0.5rem",
-            border: "1px solid var(--color-primary-300)",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "1px solid var(--color-primary-300)",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
@@ -375,9 +380,9 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
             minHeight: "3rem",
             minWidth: "230px",
             borderRadius: "0.9rem",
-            border: "none",
-            background: "var(--color-primary-100)",
-            color: "var(--color-primary-700)",
+            border: isDarkMode ? "1px solid var(--color-primary-700)" : "none",
+            background: isDarkMode ? "var(--color-gray-800)" : "var(--color-primary-100)",
+            color: isDarkMode ? "var(--color-primary-300)" : "var(--color-primary-700)",
             fontWeight: 600,
             fontSize: "1rem",
             cursor: "pointer",
@@ -481,58 +486,91 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                     <p style={styles.prompt}>
                         {meditationPhases[currentPhase].prompt}
                     </p>
-                    <div style={{ position: "relative", paddingRight: "3rem" }}>
+                    <div style={{ position: "relative", paddingRight: isCompact ? 0 : "3rem" }}>
                         <p style={styles.instruction}>
                             {meditationPhases[currentPhase].instruction}
                         </p>
-                        <button
-                            onClick={handlePhaseNarration}
-                            disabled={isPhaseReading}
-                            style={{
-                                ...styles.speakButton,
-                                opacity: isPhaseReading ? 0.6 : 1,
-                            }}
-                            onMouseEnter={(e) => {
-                                if (!isPhaseReading) {
-                                    e.currentTarget.style.background =
-                                        "var(--color-primary-200)";
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background =
-                                    "var(--color-primary-100)";
-                            }}
-                            title="Read text aloud"
-                        >
-                            <SpeakerWaveIcon
-                                style={{ width: "18px", height: "18px" }}
-                            />
-                            <span
+                        {!isCompact && (
+                            <button
+                                onClick={handlePhaseNarration}
+                                disabled={isPhaseReading}
                                 style={{
-                                    marginLeft: "0.35rem",
-                                    fontSize: "0.85rem",
-                                    fontWeight: 600,
+                                    ...styles.speakButton,
+                                    opacity: isPhaseReading ? 0.6 : 1,
                                 }}
+                                onMouseEnter={(e) => {
+                                    if (!isPhaseReading) {
+                                        e.currentTarget.style.background =
+                                            "var(--color-primary-200)";
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background =
+                                        "var(--color-primary-100)";
+                                }}
+                                title="Read text aloud"
                             >
-                                Listen
-                            </span>
-                        </button>
+                                <SpeakerWaveIcon
+                                    style={{ width: "18px", height: "18px" }}
+                                />
+                                <span
+                                    style={{
+                                        marginLeft: "0.35rem",
+                                        fontSize: "0.85rem",
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Listen
+                                </span>
+                            </button>
+                        )}
                     </div>
                 </div>
 
-                <div style={styles.phaseIndicators}>
-                    {meditationPhases.map((_, index) => (
-                        <div
-                            key={index}
-                            style={{
-                                ...styles.phaseIndicator,
-                                ...(index === currentPhase
-                                    ? styles.phaseIndicatorActive
-                                    : {}),
-                            }}
+
+
+
+
+                {isCompact && (
+                    <button
+                        onClick={handlePhaseNarration}
+                        disabled={isPhaseReading}
+                        style={{
+                            ...styles.speakButton,
+                            position: "static",
+                            transform: "none",
+                            marginBottom: "1rem",
+                            marginTop: "1rem",
+                            opacity: isPhaseReading ? 0.6 : 1,
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isPhaseReading) {
+                                e.currentTarget.style.background =
+                                    "var(--color-primary-200)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background =
+                                "var(--color-primary-100)";
+                        }}
+                        title="Read text aloud"
+                    >
+                        <SpeakerWaveIcon
+                            style={{ width: "18px", height: "18px" }}
                         />
-                    ))}
-                </div>
+                        <span
+                            style={{
+                                marginLeft: "0.35rem",
+                                fontSize: "0.85rem",
+                                fontWeight: 600,
+                            }}
+                        >
+                            Listen
+                        </span>
+                    </button>
+                )}
+
+                {!isCompact && <div style={{ height: "1rem" }} />}
                 <button
                     onClick={onSkipToFocus}
                     style={styles.skipButton}
@@ -550,7 +588,7 @@ const MeditationRelaxation = ({ isOpen, onClose, onSkipToFocus }) => {
                     Skip to Focus Session
                 </button>
             </div>
-        </div>,
+        </div >,
         document.body
     );
 };
