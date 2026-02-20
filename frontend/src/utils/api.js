@@ -66,7 +66,8 @@ export const apiCall = async (endpoint, options = {}) => {
 
                     if (!retryResponse.ok) {
                         const errorData = await retryResponse.json().catch(() => ({}));
-                        throw new Error(errorData.error || `API Error: ${retryResponse.statusText}`);
+                        const msg = errorData.error || errorData.message || `API Error: ${retryResponse.status}${retryResponse.statusText ? ` ${retryResponse.statusText}` : ''}`;
+                        throw new Error(msg);
                     }
                     return await retryResponse.json();
                 }
@@ -81,7 +82,10 @@ export const apiCall = async (endpoint, options = {}) => {
 
         if (!response.ok) {
             const error = await response.json().catch(() => ({}));
-            throw new Error(error.error || `API Error: ${response.statusText}`);
+            // In HTTP/2 (used by most cloud hosts), statusText is always empty.
+            // Fall back to the status code so the error is always meaningful.
+            const errorMessage = error.error || error.message || `API Error: ${response.status}${response.statusText ? ` ${response.statusText}` : ''}`;
+            throw new Error(errorMessage);
         }
 
         return await response.json();

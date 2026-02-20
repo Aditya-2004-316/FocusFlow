@@ -292,6 +292,14 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
         }
     };
 
+
+    // ---- Compute all style variables BEFORE any early returns ----
+    // (Avoids "Cannot access before initialization" TDZ errors in loading/error states)
+    const currentOverlayStyle = overlayStyle(isDarkMode);
+    const currentHeaderStyle = headerStyleFn(isDarkMode);
+    const currentCloseButtonStyle = closeButtonStyleFn(isDarkMode);
+    const currentStatsBoxStyle = statsBoxStyleFn(isDarkMode);
+
     if (loading) {
         return (
             <div style={currentOverlayStyle}>
@@ -313,6 +321,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
             </div>
         );
     }
+
 
     const isHost = (session.hostId?._id || session.hostId)?.toString() === currentUserId?.toString();
     const activeParticipants = session.participants?.filter(
@@ -356,11 +365,6 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
         background: isMobile ? (isDarkMode ? "rgba(15, 23, 42, 0.98)" : "rgba(255, 255, 255, 0.98)") : sidebarStyleVal.background,
         borderRadius: isMobile ? "0" : "0",
     };
-
-    const currentHeaderStyle = headerStyleFn(isDarkMode);
-    const currentCloseButtonStyle = closeButtonStyleFn(isDarkMode);
-    const currentStatsBoxStyle = statsBoxStyleFn(isDarkMode);
-    const currentOverlayStyle = overlayStyle(isDarkMode);
 
     return (
         <div style={currentOverlayStyle}>
