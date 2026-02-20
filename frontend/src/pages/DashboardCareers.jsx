@@ -164,11 +164,20 @@ const sectionTitleStyle = {
 const roleCardStyle = {
     background: "var(--panel-bg)",
     border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
+    borderColor: "color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
     borderRadius: "1rem",
     overflow: "hidden",
     boxShadow: "var(--shadow-soft)",
     display: "flex",
     flexDirection: "column",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+    transform: "translateY(0)",
+};
+
+const roleCardHoverStyle = {
+    transform: "translateY(-6px)",
+    boxShadow: "0 20px 32px rgba(15, 118, 110, 0.18)",
+    borderColor: "var(--color-primary-300)",
 };
 
 const roleHeaderStyle = {
@@ -310,6 +319,7 @@ const DashboardCareers = () => {
     const [secondaryButtonHovered, setSecondaryButtonHovered] = useState(false);
     const [readMoreHovered, setReadMoreHovered] = useState({});
     const [applyHovered, setApplyHovered] = useState({});
+    const [cardHovered, setCardHovered] = useState(null);
 
     const isExtraSmall = width < 400;
 
@@ -442,7 +452,16 @@ const DashboardCareers = () => {
                     </div>
                     <div style={rolesGridStyle}>
                         {roles.map((role) => (
-                            <div key={role.title} style={roleCardStyle}>
+                            <div
+                                key={role.title}
+                                style={
+                                    cardHovered === role.title
+                                        ? { ...roleCardStyle, ...roleCardHoverStyle }
+                                        : roleCardStyle
+                                }
+                                onMouseEnter={() => setCardHovered(role.title)}
+                                onMouseLeave={() => setCardHovered(null)}
+                            >
                                 <div style={roleHeaderStyle}>
                                     <div style={roleIconStyle}>{role.icon}</div>
                                     <div style={roleTeamTagStyle}>{role.team}</div>

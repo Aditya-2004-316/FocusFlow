@@ -2,8 +2,6 @@ import React, { useMemo, useState } from "react";
 import useResponsive from "../hooks/useResponsive";
 import {
     FaQuestionCircle,
-    FaChevronDown,
-    FaChevronUp,
     FaLightbulb,
     FaComments,
     FaBookOpen,
@@ -12,66 +10,68 @@ import {
     FaHandsHelping,
     FaRegCompass,
     FaChalkboardTeacher,
+    FaArrowLeft,
+    FaArrowRight,
 } from "react-icons/fa";
 
 const faqs = [
     {
         question: "What is FocusFlow?",
-        answer:
-            "FocusFlow is a student project to help you manage your time and stay productive by combining timers, analytics, and collaborative tools.",
+        summary: "FocusFlow is a student project to help you manage your time and stay productive.",
+        fullContent: [
+            "FocusFlow began as a passion project by a group of students who were tired of bloated, expensive productivity apps that focused more on 'features' than on actual 'focus'. Our mission is to provide a clean, science-backed environment where deep work can flourish.",
+            "The app combines three core pillars: structured planning (Task Management), active execution (Focus Timers), and data-driven reflection (Analytics). By bringing these together, we eliminate the need to switch between multiple tools, reducing cognitive friction.",
+            "As a student project, we prioritize user experience and transparency. We are constantly iterating based on community feedback, ensuring that every update serves the goal of helping you stay in flow longer and achieve more with less stress.",
+            "Whether you're a student preparing for exams, a remote professional managing projects, or a creator building your next big thing, FocusFlow is designed to adapt to your unique rhythm."
+        ]
     },
     {
         question: "Is FocusFlow free?",
-        answer:
-            "Yes! All features are free to use. You can optionally create an account to sync your data across devices and unlock advanced insights.",
+        summary: "Yes! All core features are free to use.",
+        fullContent: [
+            "We believe that productivity tools should be accessible to everyone, especially students. That's why every core feature—from unlimited task creation to focus timers and basic analytics—is completely free.",
+            "Currently, there are no hidden tiers or 'Pro' locks on our primary workflows. You can sync your data across devices and collaborate with small teams without paying a cent.",
+            "In the future, we may introduce premium integrations or advanced enterprise features to help sustain the project's growth, but the 'FocusFlow Essentials' will always remain free for our community of individual users.",
+            "Our focus is on building value first. We're supported by the community through feedback, word-of-mouth, and the occasional donation that goes directly into server costs and development resources."
+        ]
     },
     {
-        question: "How do I use the timer?",
-        answer:
-            "Visit the dashboard, choose a focus session preset or customize your intervals, then press start. FocusFlow will track your streaks automatically.",
-    },
-    {
-        question: "Can I use FocusFlow for studying?",
-        answer:
-            "Absolutely. Students use FocusFlow to plan study blocks, log distractions, and compare productivity trends over time for each subject.",
-    },
-    {
-        question: "Do I need to create an account?",
-        answer:
-            "No account is required for core timers and task lists. Creating an account lets you save history, collaborate, and access your data anywhere.",
+        question: "How do I use the timer effectively?",
+        summary: "Choose a focus session preset or customize your intervals to build momentum.",
+        fullContent: [
+            "The Focus Timer is most effective when paired with a specific objective. Before you press start, select one task from your dashboard that you intend to work on during that block.",
+            "The Pomodoro Method (25 minutes of work followed by a 5-minute break) is our most popular preset. It's designed to prevent mental fatigue by forcing regular resets. However, if you find yourself in a 'flow state', don't be afraid to use our Custom mode to lengthen the work block to 50 or 90 minutes.",
+            "During the session, FocusFlow minimizes distractions by simplifying your dashboard. We recommend enabling our browser extension to block distracting websites that might pull you away from your task.",
+            "The break is just as important as the work. Use those 5 minutes to stand up, stretch, or grab water. Avoid checking social media during breaks, as this often leads to 'context switching' that makes it harder to refocus when the next session starts."
+        ]
     },
     {
         question: "How do I log a distraction?",
-        answer:
-            "During a session, hit “Log Distraction” to capture what pulled you away. Review trends later to adjust routines and stay in flow.",
+        summary: "Hit 'Log Distraction' during a session to capture what pulled you away.",
+        fullContent: [
+            "Distraction logging is one of FocusFlow's unique features. It's based on the idea that once you acknowledge a distracting thought or interruption, it's easier to set it aside and return to work.",
+            "When you get an 'internal' distraction (like remembering you need to buy milk) or an 'external' one (like a Slack notification), just tap the Log button. Choose a category and optionally add a short note.",
+            "This process takes less than 3 seconds and keeps the thought from looping in your working memory. At the end of the day or week, visit the Analytics tab to see a breakdown of your most frequent distractions.",
+            "By seeing these patterns—for example, that you get most internal interruptions between 2 PM and 4 PM—you can adjust your routine, such as taking a longer walk before that period or moving simpler 'admin' tasks to that time slot."
+        ]
     },
     {
         question: "Is my data private?",
-        answer:
-            "Yes. Your data remains private to you. We do not sell or share personal information, and you can export or delete your records anytime.",
-    },
-    {
-        question: "Can I contribute to FocusFlow?",
-        answer:
-            "We welcome contributors! Suggest features, report bugs, or collaborate on code via our GitHub repo and community channels.",
-    },
-    {
-        question: "Who built FocusFlow?",
-        answer:
-            "FocusFlow was created by students passionate about deep work. Read the About page to meet the makers and learn about our mission.",
-    },
-    {
-        question: "How can I give feedback?",
-        answer:
-            "Share feedback from the dashboard, join our community sessions, or email us at focusflow@studentproject.com. We respond within a day.",
+        summary: "Yes. Your data remains private to you and is never sold.",
+        fullContent: [
+            "We take privacy seriously. In an age where digital behavior is often treated as a product, FocusFlow treats your focus data as a private asset that belongs only to you.",
+            "All session logs and task details are stored using industry-standard encryption. We do not sell, trade, or share your personal information or productivity patterns with any third parties.",
+            "If you use our account-syncing features, your data is stored securely in the cloud to allow for cross-device access. If you prefer to stay local, you can use the core timer features without ever creating an account.",
+            "You have full control over your data. At any time, you can export your entire history for your own records or permanently delete your account and all associated data with a single click in your settings."
+        ]
     },
 ];
 
 const faqHighlights = [
     "Quick answers for every workflow",
-    "Guides for both individuals and teams",
-    "Transparent roadmap and changelog",
-    "Support from real students and mentors",
+    "Guides for individuals & teams",
+    "Transparent roadmap & changelog",
+    "Support from real students",
 ];
 
 const engagementTips = [
@@ -85,6 +85,11 @@ const heroLeftColumnStyle = {
     display: "flex",
     flexDirection: "column",
     gap: "1.85rem",
+};
+
+const heroRightColumnStyle = {
+    display: "flex",
+    flexDirection: "column",
 };
 
 const heroContentStyle = {
@@ -134,6 +139,7 @@ const heroPrimaryButtonStyle = {
     alignItems: "center",
     gap: "0.6rem",
     boxShadow: "0 16px 32px rgba(8, 145, 178, 0.28)",
+    cursor: "pointer",
 };
 
 const heroSecondaryButtonStyle = {
@@ -148,25 +154,18 @@ const heroSecondaryButtonStyle = {
     display: "inline-flex",
     alignItems: "center",
     gap: "0.5rem",
+    cursor: "pointer",
 };
 
 const heroPrimaryButtonHoverStyle = {
     ...heroPrimaryButtonStyle,
-    transform: "scale(1.05)",
-    boxShadow: "0 20px 40px rgba(8, 145, 178, 0.4)",
+    transform: "scale(1.02)",
     background: "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600))",
 };
 
 const heroSecondaryButtonHoverStyle = {
     ...heroSecondaryButtonStyle,
-    background: "rgba(56, 189, 248, 0.1)",
-    borderColor: "var(--color-primary-500)",
-};
-
-const heroRightColumnStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.5rem",
+    background: "rgba(56, 189, 248, 0.05)",
 };
 
 const highlightPanelStyle = {
@@ -222,81 +221,100 @@ const sectionTitleStyle = {
 const faqCardStyle = {
     background: "var(--panel-bg)",
     border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
-    borderRadius: "1rem",
-    padding: "1.5rem 1.75rem",
+    borderColor: "color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
+    borderRadius: "1.25rem",
+    padding: "1.75rem",
     boxShadow: "var(--shadow-soft)",
-    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
     cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
 };
 
 const faqCardHoverStyle = {
-    transform: "translateY(-4px)",
+    transform: "translateY(-6px)",
     boxShadow: "0 20px 32px rgba(15, 118, 110, 0.18)",
     borderColor: "var(--color-primary-300)",
 };
 
 const questionStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    fontSize: "1.1rem",
-    fontWeight: 600,
-    color: "var(--color-gray-900)",
-};
-
-const answerContainerStyle = {
-    marginTop: "1.1rem",
-    borderTop: "1px solid var(--input-border)",
-    paddingTop: "0.9rem",
-    display: "flex",
-    gap: "0.85rem",
-};
-
-const answerMarkerStyle = {
-    width: "1.75rem",
-    height: "1.75rem",
-    borderRadius: "0.5rem",
-    background: "rgba(56, 189, 248, 0.15)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "var(--color-primary-600)",
-    fontSize: "0.95rem",
-    flexShrink: 0,
-};
-
-const answerStyle = {
-    color: "var(--color-gray-700)",
-    fontSize: "0.98rem",
-    lineHeight: 1.7,
-};
-
-const valuePanelTitleStyle = {
-    fontSize: "1.25rem",
+    fontSize: "1.15rem",
     fontWeight: 700,
-    color: "var(--color-gray-900)",
+    color: "var(--color-primary-700)",
+    margin: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem"
+};
+
+const summaryStyle = {
+    color: "var(--color-gray-600)",
+    fontSize: "1rem",
+    lineHeight: 1.6,
     margin: 0,
 };
 
-const valueListStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.75rem",
+const readMoreStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    color: "var(--color-primary-600)",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    transition: "color 0.2s ease, transform 0.2s ease",
 };
 
-const valueItemStyle = {
+const readMoreHoverStyle = {
+    color: "var(--color-primary-700)",
+};
+
+const backButtonStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    color: "var(--color-primary-600)",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    padding: 0,
+    textDecoration: "none",
+    transition: "color 0.2s ease, transform 0.2s ease",
+};
+
+/* ── Detail View Styles ────────────────────── */
+const detailViewWrapperStyle = {
     display: "flex",
-    gap: "0.6rem",
-    alignItems: "flex-start",
-    color: "var(--color-gray-600)",
-    lineHeight: 1.5,
-    fontSize: "0.95rem",
+    flexDirection: "column",
+    gap: "2rem",
+};
+
+const detailBodyStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
+};
+
+const detailParagraphStyle = {
+    fontSize: "1.05rem",
+    color: "var(--color-gray-700)",
+    lineHeight: 1.8,
+    margin: 0,
 };
 
 const DashboardFAQ = () => {
     const { isMobile, isTablet, width } = useResponsive();
-    const [openIdx, setOpenIdx] = useState(null);
     const [cardHovered, setCardHovered] = useState(null);
+    const [readMoreHovered, setReadMoreHovered] = useState({});
+    const [activeFaq, setActiveFaq] = useState(null);
+    const [backHovered, setBackHovered] = useState(false);
+    const [detailButtonHovered, setDetailButtonHovered] = useState(false);
 
     const isExtraSmall = width < 400;
 
@@ -328,41 +346,93 @@ const DashboardFAQ = () => {
         boxShadow: "var(--shadow-lg)",
     };
 
-    const heroTitleStyle = {
-        fontSize: isExtraSmall ? "1.75rem" : isMobile ? "1.85rem" : "clamp(2rem, 4vw, 2.6rem)",
-        fontWeight: 800,
-        letterSpacing: "-0.04em",
-        lineHeight: 1.15,
-        color: "var(--color-gray-900)",
+    const handleViewFaq = (faq) => {
+        setActiveFaq(faq);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    const highlightListStyle = {
-        display: "grid",
-        gridTemplateColumns: isExtraSmall ? "1fr" : "repeat(auto-fit, minmax(160px, 1fr))",
-        gap: "0.85rem",
+    const handleBack = () => {
+        setActiveFaq(null);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    const faqGridStyle = {
-        display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(320px, 1fr))",
-        gap: isMobile ? "1rem" : "1.5rem",
-    };
+    if (activeFaq) {
+        return (
+            <div style={pageWrapperStyle}>
+                <div style={containerStyle}>
+                    <div style={detailViewWrapperStyle}>
+                        <button
+                            onClick={handleBack}
+                            onMouseEnter={() => setBackHovered(true)}
+                            onMouseLeave={() => setBackHovered(false)}
+                            style={backHovered ? { ...backButtonStyle, ...readMoreHoverStyle } : backButtonStyle}
+                        >
+                            <FaArrowLeft style={{
+                                fontSize: "0.85rem",
+                                transition: "transform 0.2s ease",
+                                transform: backHovered ? "translateX(-4px)" : "translateX(0)"
+                            }} />
+                            Back to all questions
+                        </button>
 
-    const valuePanelsGridStyle = {
-        display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: "1.5rem",
-    };
+                        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                            <span style={heroBadgeStyle}>Full Answer</span>
+                            <h1 style={{
+                                fontSize: isExtraSmall ? "1.5rem" : isMobile ? "1.75rem" : "2.2rem",
+                                fontWeight: 800,
+                                margin: 0
+                            }}>
+                                {activeFaq.question}
+                            </h1>
+                        </div>
 
-    const quickLinks = useMemo(
-        () => [
-            "Start with our onboarding guide",
-            "Attend a live Q&A session",
-            "Browse community templates",
-            "Check status and release notes",
-        ],
-        []
-    );
+                        <div style={detailBodyStyle}>
+                            {activeFaq.fullContent.map((paragraph, i) => (
+                                <p key={i} style={{
+                                    ...detailParagraphStyle,
+                                    fontSize: isMobile ? "0.95rem" : "1.05rem",
+                                    lineHeight: isMobile ? 1.7 : 1.8
+                                }}>
+                                    {paragraph}
+                                </p>
+                            ))}
+                        </div>
+
+                        <div style={{
+                            borderTop: "1px solid color-mix(in srgb, var(--panel-bg) 88%, black 12%)",
+                            paddingTop: "2rem",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "1.25rem",
+                        }}>
+                            <h3 style={{
+                                fontSize: isMobile ? "1.05rem" : "1.1rem",
+                                fontWeight: 700,
+                                color: "var(--color-gray-700)",
+                                margin: 0,
+                            }}>
+                                Still have questions?
+                            </h3>
+                            <button
+                                onClick={handleBack}
+                                onMouseEnter={() => setDetailButtonHovered(true)}
+                                onMouseLeave={() => setDetailButtonHovered(false)}
+                                style={{
+                                    ...(detailButtonHovered ? heroPrimaryButtonHoverStyle : heroPrimaryButtonStyle),
+                                    alignSelf: "flex-start",
+                                    width: isExtraSmall ? "100%" : "auto",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <FaQuestionCircle style={{ fontSize: "0.9rem" }} />
+                                Browse FAQ again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <section style={pageWrapperStyle}>
@@ -374,7 +444,13 @@ const DashboardFAQ = () => {
                                 <FaQuestionCircle style={{ width: "1rem", height: "1rem" }} />
                                 FAQ
                             </span>
-                            <h1 style={heroTitleStyle}>Answers when you need them</h1>
+                            <h1 style={{
+                                fontSize: isExtraSmall ? "1.75rem" : isMobile ? "1.85rem" : "clamp(2rem, 4vw, 2.6rem)",
+                                fontWeight: 800,
+                                letterSpacing: "-0.04em",
+                                lineHeight: 1.15,
+                                color: "var(--color-gray-900)",
+                            }}>Answers when you need them</h1>
                             <p style={heroSubtitleStyle}>
                                 Explore the questions raised most often by individuals, teams, and educators using FocusFlow. Learn best practices, discover advanced tips, and find the fastest way to support.
                             </p>
@@ -392,18 +468,6 @@ const DashboardFAQ = () => {
                             >
                                 Browse top questions
                             </a>
-                            <a
-                                href="#resources"
-                                style={
-                                    cardHovered === "resources"
-                                        ? heroSecondaryButtonHoverStyle
-                                        : heroSecondaryButtonStyle
-                                }
-                                onMouseEnter={() => setCardHovered("resources")}
-                                onMouseLeave={() => setCardHovered(null)}
-                            >
-                                Explore resources
-                            </a>
                         </div>
                     </div>
 
@@ -414,9 +478,9 @@ const DashboardFAQ = () => {
                                     <FaQuestionCircle style={{ width: "1rem", height: "1rem" }} />
                                     FAQ focus
                                 </span>
-                                <h2 style={sectionTitleStyle}>Why this hub exists</h2>
+                                <h2 style={sectionTitleStyle}>In-depth clarity</h2>
                             </div>
-                            <div style={highlightListStyle}>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "0.75rem" }}>
                                 {faqHighlights.map((item) => (
                                     <div key={item} style={highlightChipStyle}>
                                         <FaCheckCircle style={highlightStatValueStyle} />
@@ -432,14 +496,19 @@ const DashboardFAQ = () => {
                     <div style={sectionHeaderStyle}>
                         <span style={heroBadgeStyle}>
                             <FaListUl style={{ width: "1rem", height: "1rem" }} />
-                            Most asked
+                            Quick Answers
                         </span>
-                        <h2 style={sectionTitleStyle}>Quick answers for your workflows</h2>
+                        <h2 style={sectionTitleStyle}>Frequently asked questions</h2>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <div style={{
+                        display: "grid",
+                        gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+                        gap: "1.5rem"
+                    }}>
                         {faqs.map((faq, idx) => (
                             <div
                                 key={faq.question}
+                                onClick={() => handleViewFaq(faq)}
                                 style={
                                     cardHovered === idx
                                         ? { ...faqCardStyle, ...faqCardHoverStyle }
@@ -448,81 +517,25 @@ const DashboardFAQ = () => {
                                 onMouseEnter={() => setCardHovered(idx)}
                                 onMouseLeave={() => setCardHovered(null)}
                             >
-                                <div
-                                    style={questionStyle}
-                                    onClick={() =>
-                                        setOpenIdx(openIdx === idx ? null : idx)
-                                    }
+                                <h3 style={questionStyle}>
+                                    <FaLightbulb style={{ fontSize: "1rem" }} />
+                                    {faq.question}
+                                </h3>
+                                <p style={summaryStyle}>{faq.summary}</p>
+                                <button
+                                    onMouseEnter={() => setReadMoreHovered({ ...readMoreHovered, [faq.question]: true })}
+                                    onMouseLeave={() => setReadMoreHovered({ ...readMoreHovered, [faq.question]: false })}
+                                    style={readMoreHovered[faq.question] ? { ...readMoreStyle, ...readMoreHoverStyle } : readMoreStyle}
                                 >
-                                    <span>{faq.question}</span>
-                                    {openIdx === idx ? (
-                                        <FaChevronUp
-                                            style={{
-                                                color: "var(--color-primary-600)",
-                                                fontSize: "1.2rem",
-                                            }}
-                                        />
-                                    ) : (
-                                        <FaChevronDown
-                                            style={{
-                                                color: "var(--color-primary-600)",
-                                                fontSize: "1.2rem",
-                                            }}
-                                        />
-                                    )}
-                                </div>
-                                {openIdx === idx && (
-                                    <div style={answerContainerStyle}>
-                                        <span style={answerMarkerStyle}>
-                                            <FaBookOpen style={{ fontSize: "0.85rem" }} />
-                                        </span>
-                                        <p style={answerStyle}>{faq.answer}</p>
-                                    </div>
-                                )}
+                                    View full answer
+                                    <FaArrowRight style={{
+                                        fontSize: "0.8rem",
+                                        transition: "transform 0.2s ease",
+                                        transform: readMoreHovered[faq.question] ? "translateX(4px)" : "translateX(0)"
+                                    }} />
+                                </button>
                             </div>
                         ))}
-                    </div>
-                </section>
-
-                <section id="resources" style={sectionWrapperStyle}>
-                    <div style={sectionHeaderStyle}>
-                        <span style={heroBadgeStyle}>
-                            <FaHandsHelping style={{ width: "1rem", height: "1rem" }} />
-                            Need more help?
-                        </span>
-                        <h2 style={sectionTitleStyle}>Resources and conversations beyond the FAQ</h2>
-                    </div>
-                    <div style={valuePanelsGridStyle}>
-                        <div style={highlightPanelStyle}>
-                            <span style={heroBadgeStyle}>
-                                <FaRegCompass style={{ width: "1rem", height: "1rem" }} />
-                                Reach out
-                            </span>
-                            <h3 style={valuePanelTitleStyle}>Talk to real people</h3>
-                            <div style={valueListStyle}>
-                                {quickLinks.map((item) => (
-                                    <div key={item} style={valueItemStyle}>
-                                        <FaCheckCircle style={highlightStatValueStyle} />
-                                        <span>{item}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div style={highlightPanelStyle}>
-                            <span style={heroBadgeStyle}>
-                                <FaChalkboardTeacher style={{ width: "1rem", height: "1rem" }} />
-                                Learn deeper
-                            </span>
-                            <h3 style={valuePanelTitleStyle}>Guides & playbooks</h3>
-                            <div style={valueListStyle}>
-                                {engagementTips.map((tip) => (
-                                    <div key={tip} style={valueItemStyle}>
-                                        <FaCheckCircle style={highlightStatValueStyle} />
-                                        <span>{tip}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
                     </div>
                 </section>
             </div>

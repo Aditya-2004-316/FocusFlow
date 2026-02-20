@@ -233,13 +233,15 @@ const sectionWrapperStyle = {
 const cardStyle = {
     background: "var(--panel-bg)",
     border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
+    borderColor: "color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
     borderRadius: "1rem",
     overflow: "hidden",
     boxShadow: "var(--shadow-soft)",
     display: "flex",
     flexDirection: "column",
     textDecoration: "none",
-    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+    transform: "translateY(0)",
 };
 
 const cardHoverStyle = {

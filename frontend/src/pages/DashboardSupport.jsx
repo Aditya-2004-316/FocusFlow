@@ -169,13 +169,21 @@ const sectionTitleStyle = {
 const supportCardStyle = {
     background: "var(--panel-bg)",
     border: "1px solid color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
+    borderColor: "color-mix(in srgb, var(--panel-bg) 92%, black 8%)",
     borderRadius: "1rem",
     overflow: "hidden",
     boxShadow: "var(--shadow-soft)",
     display: "flex",
     flexDirection: "column",
     textDecoration: "none",
-    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+    transform: "translateY(0)",
+};
+
+const supportCardHoverStyle = {
+    transform: "translateY(-6px)",
+    boxShadow: "0 20px 32px rgba(15, 118, 110, 0.18)",
+    borderColor: "var(--color-primary-300)",
 };
 
 const supportHeaderStyle = {
@@ -402,7 +410,7 @@ const DashboardSupport = () => {
                                 href={option.link}
                                 style={
                                     cardHovered === idx
-                                        ? { ...supportCardStyle, transform: "translateY(-4px)", boxShadow: "0 16px 32px rgba(14, 165, 233, 0.18)" }
+                                        ? { ...supportCardStyle, ...supportCardHoverStyle }
                                         : supportCardStyle
                                 }
                                 onMouseEnter={() => setCardHovered(idx)}
