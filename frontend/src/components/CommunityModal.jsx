@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useToast } from "../context/ToastContext";
 
@@ -16,6 +16,24 @@ const CommunityModal = ({ isOpen, onClose, onSubmit, initialData = null }) => {
         }
     );
     const [loading, setLoading] = useState(false);
+
+    // Reset form whenever the modal opens or the target community changes
+    useEffect(() => {
+        if (isOpen) {
+            setFormData(
+                initialData || {
+                    name: "",
+                    description: "",
+                    goal: "Deep Work",
+                    commitment: "Beginner",
+                    tags: "",
+                    visibility: "Public",
+                    rules: "",
+                }
+            );
+        }
+    }, [isOpen, initialData]);
+
 
     if (!isOpen) return null;
 

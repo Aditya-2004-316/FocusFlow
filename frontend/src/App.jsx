@@ -3495,9 +3495,7 @@ function Dashboard() {
 function App() {
     return (
         <ThemeProvider>
-            <SettingsProvider>
-                <AppContent />
-            </SettingsProvider>
+            <AppContent />
         </ThemeProvider>
     );
 }
@@ -3526,717 +3524,719 @@ function AppContent() {
     }, [width, wasSmallScreen]);
     return (
         <AuthProvider>
-            <SocketProvider>
-                <ToastProvider>
-                    <ConfirmProvider>
-                        <Router>
-                            <div className="App">
-                                <Routes>
-                                    <Route path="/" element={<LandingPage />} />
-                                    <Route path="/login" element={<Login />} />
-                                    <Route path="/signup" element={<Signup />} />
-                                    <Route
-                                        path="/dashboard"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+            <SettingsProvider>
+                <SocketProvider>
+                    <ToastProvider>
+                        <ConfirmProvider>
+                            <Router>
+                                <div className="App">
+                                    <Routes>
+                                        <Route path="/" element={<LandingPage />} />
+                                        <Route path="/login" element={<Login />} />
+                                        <Route path="/signup" element={<Signup />} />
+                                        <Route
+                                            path="/dashboard"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <Dashboard />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                }}
+                                                            >
+                                                                <Dashboard />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/focus-timer"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/focus-timer"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <FocusTimer />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <FocusTimer />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/statistics"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/statistics"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <Statistics />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <Statistics />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/settings"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/settings"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <Settings />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <Settings />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/profile"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/profile"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <Profile />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <Profile />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/focusflow-community"
-                                        element={<Community />}
-                                    />
-                                    <Route
-                                        path="/community"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/focusflow-community"
+                                            element={<Community />}
+                                        />
+                                        <Route
+                                            path="/community"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardCommunity />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardCommunity />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/resources"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/resources"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <Resources />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <Resources />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/help-support"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/help-support"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <HelpSupport />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <HelpSupport />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/about-us"
-                                        element={
-                                            <div>
-                                                <Header />
-                                                <Navbar
-                                                    isCollapsed={isCollapsed}
-                                                    setIsCollapsed={setIsCollapsed}
-                                                />
-                                                <AboutUs />
-                                                <Footer />
-                                            </div>
-                                        }
-                                    />
-                                    <Route
-                                        path="/contact-us"
-                                        element={
-                                            <div>
-                                                <Header />
-                                                <Navbar
-                                                    isCollapsed={isCollapsed}
-                                                    setIsCollapsed={setIsCollapsed}
-                                                />
-                                                <ContactUs />
-                                                <Footer />
-                                            </div>
-                                        }
-                                    />
-                                    <Route path="/features" element={<Features />} />
-                                    <Route
-                                        path="/dashboard/features"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/about-us"
+                                            element={
+                                                <div>
                                                     <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                    <Navbar
+                                                        isCollapsed={isCollapsed}
+                                                        setIsCollapsed={setIsCollapsed}
+                                                    />
+                                                    <AboutUs />
+                                                    <Footer />
+                                                </div>
+                                            }
+                                        />
+                                        <Route
+                                            path="/contact-us"
+                                            element={
+                                                <div>
+                                                    <Header />
+                                                    <Navbar
+                                                        isCollapsed={isCollapsed}
+                                                        setIsCollapsed={setIsCollapsed}
+                                                    />
+                                                    <ContactUs />
+                                                    <Footer />
+                                                </div>
+                                            }
+                                        />
+                                        <Route path="/features" element={<Features />} />
+                                        <Route
+                                            path="/dashboard/features"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardFeatures />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardFeatures />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/testimonials"
-                                        element={<Testimonials />}
-                                    />
-                                    <Route path="/faq" element={<FAQ />} />
-                                    <Route
-                                        path="/blog"
-                                        element={
-                                            <div>
-                                                <Header />
-                                                <Navbar
-                                                    isCollapsed={isCollapsed}
-                                                    setIsCollapsed={setIsCollapsed}
-                                                />
-                                                <Blog />
-                                                <Footer />
-                                            </div>
-                                        }
-                                    />
-                                    <Route
-                                        path="/guides"
-                                        element={
-                                            <div>
-                                                <Header />
-                                                <Navbar
-                                                    isCollapsed={isCollapsed}
-                                                    setIsCollapsed={setIsCollapsed}
-                                                />
-                                                <Guides />
-                                                <Footer />
-                                            </div>
-                                        }
-                                    />
-                                    <Route
-                                        path="/support"
-                                        element={
-                                            <div>
-                                                <Header />
-                                                <Navbar
-                                                    isCollapsed={isCollapsed}
-                                                    setIsCollapsed={setIsCollapsed}
-                                                />
-                                                <Support />
-                                                <Footer />
-                                            </div>
-                                        }
-                                    />
-                                    <Route path="/careers" element={<LandingCareers />} />
-                                    <Route path="/cookies" element={<Cookies />} />
-                                    <Route path="/about" element={<About />} />
-                                    <Route path="/contact" element={<Contact />} />
-                                    <Route path="/updates" element={<Updates />} />
-                                    <Route path="/product" element={<Product />} />
-                                    <Route path="/privacy" element={<Privacy />} />
-                                    <Route path="/terms" element={<Terms />} />
-                                    <Route path="/security" element={<Security />} />
-                                    <Route path="*" element={<Navigate to="/" replace />} />
-                                    <Route
-                                        path="/dashboard/faq"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/testimonials"
+                                            element={<Testimonials />}
+                                        />
+                                        <Route path="/faq" element={<FAQ />} />
+                                        <Route
+                                            path="/blog"
+                                            element={
+                                                <div>
                                                     <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                    <Navbar
+                                                        isCollapsed={isCollapsed}
+                                                        setIsCollapsed={setIsCollapsed}
+                                                    />
+                                                    <Blog />
+                                                    <Footer />
+                                                </div>
+                                            }
+                                        />
+                                        <Route
+                                            path="/guides"
+                                            element={
+                                                <div>
+                                                    <Header />
+                                                    <Navbar
+                                                        isCollapsed={isCollapsed}
+                                                        setIsCollapsed={setIsCollapsed}
+                                                    />
+                                                    <Guides />
+                                                    <Footer />
+                                                </div>
+                                            }
+                                        />
+                                        <Route
+                                            path="/support"
+                                            element={
+                                                <div>
+                                                    <Header />
+                                                    <Navbar
+                                                        isCollapsed={isCollapsed}
+                                                        setIsCollapsed={setIsCollapsed}
+                                                    />
+                                                    <Support />
+                                                    <Footer />
+                                                </div>
+                                            }
+                                        />
+                                        <Route path="/careers" element={<LandingCareers />} />
+                                        <Route path="/cookies" element={<Cookies />} />
+                                        <Route path="/about" element={<About />} />
+                                        <Route path="/contact" element={<Contact />} />
+                                        <Route path="/updates" element={<Updates />} />
+                                        <Route path="/product" element={<Product />} />
+                                        <Route path="/privacy" element={<Privacy />} />
+                                        <Route path="/terms" element={<Terms />} />
+                                        <Route path="/security" element={<Security />} />
+                                        <Route path="*" element={<Navigate to="/" replace />} />
+                                        <Route
+                                            path="/dashboard/faq"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardFAQ />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardFAQ />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/about"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/about"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardAbout />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardAbout />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/careers"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/careers"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardCareers />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardCareers />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/contact"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/contact"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardContact />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardContact />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/privacy"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/privacy"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardPrivacy />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardPrivacy />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/terms"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/terms"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardTerms />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardTerms />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/cookies"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/cookies"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardCookies />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardCookies />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/blog"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/blog"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardBlog />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardBlog />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/guides"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/guides"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardGuides />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardGuides />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                    <Route
-                                        path="/dashboard/support"
-                                        element={
-                                            <ProtectedRoute>
-                                                <>
-                                                    <Header />
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: isMobile ? "column" : "row",
-                                                            minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
-                                                            paddingBottom: isMobile ? "4.5rem" : "0",
-                                                        }}
-                                                    >
-                                                        <Navbar
-                                                            isCollapsed={isCollapsed}
-                                                            setIsCollapsed={setIsCollapsed}
-                                                        />
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                        <Route
+                                            path="/dashboard/support"
+                                            element={
+                                                <ProtectedRoute>
+                                                    <>
+                                                        <Header />
                                                         <div
                                                             style={{
-                                                                flex: 1,
-                                                                overflow: "auto",
+                                                                display: "flex",
+                                                                flexDirection: isMobile ? "column" : "row",
+                                                                minHeight: isMobile ? "auto" : "calc(100vh - 8rem)",
+                                                                paddingBottom: isMobile ? "4.5rem" : "0",
                                                             }}
                                                         >
-                                                            <DashboardSupport />
+                                                            <Navbar
+                                                                isCollapsed={isCollapsed}
+                                                                setIsCollapsed={setIsCollapsed}
+                                                            />
+                                                            <div
+                                                                style={{
+                                                                    flex: 1,
+                                                                    overflow: "auto",
+                                                                }}
+                                                            >
+                                                                <DashboardSupport />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Footer />
-                                                </>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                </Routes>
-                            </div>
-                        </Router>
-                    </ConfirmProvider>
-                </ToastProvider>
-            </SocketProvider>
+                                                        <Footer />
+                                                    </>
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                    </Routes>
+                                </div>
+                            </Router>
+                        </ConfirmProvider>
+                    </ToastProvider>
+                </SocketProvider>
+            </SettingsProvider>
         </AuthProvider>
     );
 }

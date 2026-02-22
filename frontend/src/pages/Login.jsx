@@ -234,6 +234,16 @@ const Login = () => {
                         color: #f9fafb !important;
                         transform: scale(1.1);
                     }
+                    /* Fix autofill: browser overrides inline background, so use inset box-shadow trick */
+                    input:-webkit-autofill,
+                    input:-webkit-autofill:hover,
+                    input:-webkit-autofill:focus,
+                    input:-webkit-autofill:active {
+                        -webkit-box-shadow: 0 0 0px 1000px #020617 inset !important;
+                        -webkit-text-fill-color: #e5e7eb !important;
+                        caret-color: #e5e7eb;
+                        transition: background-color 9999s ease-in-out 0s;
+                    }
                 `}
             </style>
             <div style={styles.page}>

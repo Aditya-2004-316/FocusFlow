@@ -249,9 +249,11 @@ const DashboardCommunity = () => {
         if (!userData) return;
 
         const userId = userData._id || userData.id;
-        console.log("Filtering for user:", userData.username || userData.email, "ID:", userId);
 
         const filtered = communityList.filter((c) => {
+            // Use the server-supplied isMember flag first (most accurate)
+            if (c.isMember || c.memberRole === "Owner") return true;
+
             const creatorId = c.creator?._id || c.creator?.id || c.creator;
             const isCreator = creatorId === userId;
 
@@ -260,17 +262,8 @@ const DashboardCommunity = () => {
                 return mId === userId;
             });
 
-            // Also check if user has a pending join request
-            const hasPendingRequest = c.joinRequests && c.joinRequests.some(r => {
-                const reqUserId = typeof r.userId === 'string' ? r.userId : (r.userId?._id || r.userId?.id);
-                return reqUserId === userId;
-            });
-
-            if (isCreator || isMember || hasPendingRequest) {
-                console.log(`  ✓ Including "${c.name}" - isCreator:${isCreator}, isMember:${isMember}, hasPending:${hasPendingRequest}`);
-            }
-
-            return isCreator || isMember || hasPendingRequest;
+            // Pending-request users are NOT members yet — exclude from My Communities
+            return isCreator || isMember;
         });
 
         // Sort by joinedAt descending (most recent first)
@@ -280,7 +273,6 @@ const DashboardCommunity = () => {
             return dateB - dateA;
         });
 
-        console.log("Filtered myCommunities count:", sorted.length);
         setMyCommunities(sorted);
     };
 
@@ -288,7 +280,6 @@ const DashboardCommunity = () => {
         setLoadingActivities(true);
         try {
             const data = await userAPI.getRecentActivity();
-            console.log("Recent activities loaded:", data.data);
             setActivities(data.data || []);
         } catch (err) {
             console.error("Failed to load activities:", err);
@@ -300,7 +291,7 @@ const DashboardCommunity = () => {
     const loadCommunities = async () => {
         setLoading(true);
         try {
-            const data = await communityAPI.getCommunities(1, 100);
+            const data = await communityAPI.getCommunities(1, 500);
             setCommunities(data.data || []);
         } catch (err) {
             toast.error(err.message || "Failed to load communities");
@@ -1622,10 +1613,10 @@ const DashboardCommunity = () => {
                                             alignItems: "center",
                                             gap: "1rem",
                                             padding: "1rem",
-                                            background: "rgba(255, 255, 255, 0.03)",
+                                            background: "var(--input-bg)",
                                             borderRadius: "0.75rem",
                                             marginBottom: "0.75rem",
-                                            border: "1px solid rgba(255, 255, 255, 0.06)",
+                                            border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
                                         }}>
                                             <div style={{
                                                 width: "3rem",

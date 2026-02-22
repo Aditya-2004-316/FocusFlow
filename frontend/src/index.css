@@ -141,13 +141,26 @@
     color: #f8fafc;
 }
 
-/* Ensure better visibility for autofill and selections */
+/* Autofill fix — light mode (uses CSS variable colours) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-gray-900);
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+    caret-color: var(--color-gray-900);
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Autofill fix — dark mode (overrides the variable version above) */
 .dark input:-webkit-autofill,
 .dark input:-webkit-autofill:hover,
-.dark input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #f8fafc;
-    -webkit-box-shadow: 0 0 0px 1000px #1e293b inset;
-    transition: background-color 5000s ease-in-out 0s;
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+    -webkit-text-fill-color: #f8fafc !important;
+    -webkit-box-shadow: 0 0 0px 1000px #1e293b inset !important;
+    caret-color: #f8fafc;
+    transition: background-color 9999s ease-in-out 0s;
 }
 
 /* Basic CSS Reset */
