@@ -19,12 +19,17 @@ const router = express.Router();
 // All routes are protected
 router.use(protect);
 
+// IMPORTANT: Specific routes must come BEFORE wildcard /:id routes
+// to prevent Express from treating literal path segments as IDs
+
+// Debug / cleanup (must be before /:id)
+router.delete("/debug/cleanup", deleteAllSessions);
+
 // Session CRUD
 router.post("/", createGroupSession);
 router.get("/community/:communityId", getCommunityGroupSessions);
 router.get("/:id", getGroupSession);
 router.delete("/:id", cancelSession);
-router.delete("/debug/cleanup", deleteAllSessions);
 
 // Participant actions
 router.post("/:id/join", joinGroupSession);

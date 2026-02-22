@@ -2,14 +2,18 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
-    // Dev bypass: skip JWT and inject a dev user if DISABLE_AUTH=true
+    // Dev bypass: skip JWT and inject a stable dev user if DISABLE_AUTH=true.
+    // Always resolves to a single deterministic user (by email) so that multi-user
+    // dev databases do NOT accidentally route all requests to whatever user happens
+    // to be first in the collection.
     if (process.env.DISABLE_AUTH === "true") {
         try {
-            let user = await User.findOne();
+            const devEmail = process.env.DEV_USER_EMAIL || "dev@example.com";
+            let user = await User.findOne({ email: devEmail });
             if (!user) {
                 user = await User.create({
-                    email: "dev@example.com",
-                    username: "devuser",
+                    email: devEmail,
+                    username: process.env.DEV_USER_USERNAME || "devuser",
                     password: "password123",
                     isEmailVerified: true,
                 });
@@ -85,7 +89,6 @@ export const protect = async (req, res, next) => {
         let errorMessage = "Not authorized to access this route";
         if (error.name === "TokenExpiredError") {
             errorMessage = "Token expired";
-            console.log("Token expired at:", error.expiredAt);
         } else if (error.name === "JsonWebTokenError") {
             errorMessage = "Invalid token";
         }
@@ -99,14 +102,17 @@ export const protect = async (req, res, next) => {
 
 // Optional auth middleware - doesn't fail if no token
 export const optionalAuth = async (req, res, next) => {
-    // Dev bypass: inject dev user if available
+    // Dev bypass: inject stable dev user if DISABLE_AUTH=true.
+    // Uses the same deterministic email lookup as protect() so all routes
+    // resolve to the same user in local development.
     if (process.env.DISABLE_AUTH === "true") {
         try {
-            let user = await User.findOne();
+            const devEmail = process.env.DEV_USER_EMAIL || "dev@example.com";
+            let user = await User.findOne({ email: devEmail });
             if (!user) {
                 user = await User.create({
-                    email: "dev@example.com",
-                    username: "devuser",
+                    email: devEmail,
+                    username: process.env.DEV_USER_USERNAME || "devuser",
                     password: "password123",
                     isEmailVerified: true,
                 });

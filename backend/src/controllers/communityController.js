@@ -126,7 +126,6 @@ export const getCommunity = async (req, res) => {
                 memberRole = "Owner";
             }
 
-            console.log(`isMember verification for user ${userId}: result=${isMember}, role=${memberRole}`);
         }
 
         res.status(200).json({
@@ -153,14 +152,6 @@ export const getCommunity = async (req, res) => {
  */
 export const createCommunity = async (req, res) => {
     try {
-        // Debug: log auth info for troubleshooting
-        try {
-            const authHeader = req.headers.authorization;
-            const cookiePresent = !!(req.cookies && req.cookies.accessToken);
-            console.debug(
-                `createCommunity called - authHeaderPresent=${!!authHeader} cookiePresent=${cookiePresent}`
-            );
-        } catch (e) { }
         const { name, description, goal, commitment, tags, visibility, rules } =
             req.body;
 
@@ -227,7 +218,8 @@ export const createCommunity = async (req, res) => {
  */
 export const updateCommunity = async (req, res) => {
     try {
-        const community = await Community.findById(req.params.id);
+        // First check authorization without loading the full document for mutation.
+        const community = await Community.findById(req.params.id).select("creator");
 
         if (!community) {
             return res.status(404).json({
@@ -236,7 +228,6 @@ export const updateCommunity = async (req, res) => {
             });
         }
 
-        // Check if user is creator
         if (community.creator.toString() !== req.user._id.toString()) {
             return res.status(403).json({
                 success: false,
@@ -244,23 +235,33 @@ export const updateCommunity = async (req, res) => {
             });
         }
 
-        const { name, description, goal, commitment, tags, visibility, rules } =
-            req.body;
+        const { name, description, goal, commitment, tags, visibility, rules } = req.body;
 
-        // Update fields
-        if (name) community.name = name;
-        if (description) community.description = description;
-        if (goal) community.goal = goal;
-        if (commitment) community.commitment = commitment;
-        if (tags) community.tags = tags;
-        if (visibility) community.visibility = visibility;
-        if (rules !== undefined) community.rules = rules;
+        // Build update object only for provided fields.
+        // Using findOneAndUpdate avoids the read-modify-save pattern that would
+        // silently overwrite concurrent field edits from other admins.
+        const updateFields = {};
+        if (name !== undefined) updateFields.name = name;
+        if (description !== undefined) updateFields.description = description;
+        if (goal !== undefined) updateFields.goal = goal;
+        if (commitment !== undefined) updateFields.commitment = commitment;
+        if (tags !== undefined) updateFields.tags = tags;
+        if (visibility !== undefined) updateFields.visibility = visibility;
+        if (rules !== undefined) updateFields.rules = rules;
 
-        await community.save();
+        const updated = await Community.findOneAndUpdate(
+            { _id: req.params.id, creator: req.user._id },
+            { $set: updateFields },
+            { new: true, runValidators: true }
+        );
+
+        if (!updated) {
+            return res.status(404).json({ success: false, error: "Community not found" });
+        }
 
         res.status(200).json({
             success: true,
-            data: community,
+            data: updated,
         });
     } catch (error) {
         res.status(500).json({
@@ -277,6 +278,7 @@ export const updateCommunity = async (req, res) => {
  */
 export const joinCommunity = async (req, res) => {
     try {
+        // Load the community to check visibility and existing requests
         const community = await Community.findById(req.params.id);
 
         if (!community) {
@@ -286,58 +288,47 @@ export const joinCommunity = async (req, res) => {
             });
         }
 
-        // Check if already a member using both the array and the Member collection for robustness
-        const membershipInArray = community.members.some(
-            (m) => m.toString() === req.user._id.toString()
-        );
-
-        const memberDoc = await CommunityMember.findOne({
+        // Check CommunityMember (source of truth for membership)
+        const existing = await CommunityMember.findOne({
             communityId: community._id,
-            userId: req.user._id
+            userId: req.user._id,
         });
 
-        if (memberDoc) {
+        if (existing) {
+            // If membership record exists but not in array, repair the array atomically
+            await Community.findByIdAndUpdate(community._id, {
+                $addToSet: { members: req.user._id },
+            });
             return res.status(400).json({
                 success: false,
                 error: "Already a member of this community",
             });
         }
 
-        // Handle case where user is in members array but no Member doc exists (restore inconsistency)
-        if (membershipInArray && !memberDoc) {
-            console.warn(`Inconsistency found: User ${req.user._id} in members array but no CommunityMember doc for community ${community._id}. Restoring doc...`);
+        if (community.visibility === "Public") {
+            // Atomic: add to members array (no-op if already present) and increment count.
+            // $addToSet prevents duplicate IDs even under concurrent requests.
+            await Community.findByIdAndUpdate(community._id, {
+                $addToSet: { members: req.user._id },
+                $inc: { memberCount: 1 },
+            });
+
+            // CommunityMember has a unique index on (communityId, userId) — concurrent
+            // duplicate inserts will throw a duplicate-key error which we handle below.
             await CommunityMember.create({
                 communityId: community._id,
                 userId: req.user._id,
                 role: "Member",
             });
+
+            const updated = await Community.findById(community._id);
             return res.status(200).json({
                 success: true,
-                message: "Membership restored",
-                data: community
-            });
-        }
-
-        // If public, add directly. If request-to-join, add to join requests
-        if (community.visibility === "Public") {
-            community.members.push(req.user._id);
-            community.memberCount += 1;
-            await community.save();
-
-            // Create membership record
-            await CommunityMember.create({
-                communityId: community._id,
-                userId: req.user._id,
-                role: "Member",
-            });
-
-            res.status(200).json({
-                success: true,
                 message: "Successfully joined community",
-                data: community,
+                data: updated,
             });
         } else {
-            // Request-to-Join: add to join requests
+            // Request-to-Join: only add request if none is pending
             const existingRequest = community.joinRequests.find(
                 (r) => r.userId.toString() === req.user._id.toString()
             );
@@ -349,19 +340,24 @@ export const joinCommunity = async (req, res) => {
                 });
             }
 
-            community.joinRequests.push({
-                userId: req.user._id,
-                status: "Pending",
+            // Atomic push of the join request
+            await Community.findByIdAndUpdate(community._id, {
+                $push: { joinRequests: { userId: req.user._id, status: "Pending" } },
             });
-            await community.save();
 
-            res.status(202).json({
+            return res.status(202).json({
                 success: true,
                 message: "Join request submitted",
-                data: community,
             });
         }
     } catch (error) {
+        // Unique index violation on CommunityMember — concurrent duplicate join
+        if (error.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                error: "Already a member of this community",
+            });
+        }
         res.status(500).json({
             success: false,
             error: error.message || "An unexpected error occurred while joining the community",
@@ -385,18 +381,6 @@ export const leaveCommunity = async (req, res) => {
             });
         }
 
-        // Check if member
-        const isMember = community.members.some(
-            (m) => m.toString() === req.user._id.toString()
-        );
-
-        if (!isMember) {
-            return res.status(400).json({
-                success: false,
-                error: "You are not a member of this community",
-            });
-        }
-
         // Don't allow creator to leave (must delete community)
         if (community.creator.toString() === req.user._id.toString()) {
             return res.status(400).json({
@@ -405,12 +389,25 @@ export const leaveCommunity = async (req, res) => {
             });
         }
 
-        // Remove from members
-        community.members = community.members.filter(
-            (m) => m.toString() !== req.user._id.toString()
-        );
-        community.memberCount = Math.max(0, community.memberCount - 1);
-        await community.save();
+        // Verify membership via CommunityMember (source of truth)
+        const memberDoc = await CommunityMember.findOne({
+            communityId: community._id,
+            userId: req.user._id,
+        });
+
+        if (!memberDoc) {
+            return res.status(400).json({
+                success: false,
+                error: "You are not a member of this community",
+            });
+        }
+
+        // Atomic: remove from members array and decrement count in one operation.
+        // $pull is idempotent — safe against concurrent leave requests.
+        await Community.findByIdAndUpdate(community._id, {
+            $pull: { members: req.user._id },
+            $inc: { memberCount: -1 },
+        });
 
         // Remove membership record
         await CommunityMember.deleteOne({
@@ -438,51 +435,56 @@ export const leaveCommunity = async (req, res) => {
 export const approveJoinRequest = async (req, res) => {
     try {
         const { userId } = req.body;
-        const community = await Community.findById(req.params.id);
 
-        if (!community) {
-            return res.status(404).json({
-                success: false,
-                error: "Community not found",
-            });
-        }
-
-        // Check if user is admin
-        const memberDoc = await CommunityMember.findOne({
-            communityId: community._id,
+        // Verify the approver is an Admin
+        const approverDoc = await CommunityMember.findOne({
+            communityId: req.params.id,
             userId: req.user._id,
         });
 
-        if (!memberDoc || memberDoc.role !== "Admin") {
+        if (!approverDoc || approverDoc.role !== "Admin") {
             return res.status(403).json({
                 success: false,
                 error: "Not authorized to approve join requests",
             });
         }
 
-        // Find and approve request
-        const joinRequest = community.joinRequests.find(
-            (r) => r.userId.toString() === userId && r.status === "Pending"
+        // Atomic: mark the specific join request as Approved and add the user to members.
+        // The condition on joinRequests element ensures only a pending request is matched;
+        // if another admin already approved it, this update returns null and we return a
+        // useful error instead of creating a duplicate member.
+        const community = await Community.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                "joinRequests.userId": userId,
+                "joinRequests.status": "Pending",
+            },
+            {
+                $set: { "joinRequests.$.status": "Approved" },
+                $addToSet: { members: userId },
+                $inc: { memberCount: 1 },
+            },
+            { new: true }
         );
 
-        if (!joinRequest) {
+        if (!community) {
             return res.status(404).json({
                 success: false,
-                error: "Join request not found",
+                error: "Join request not found or already processed",
             });
         }
 
-        joinRequest.status = "Approved";
-        community.members.push(userId);
-        community.memberCount += 1;
-        await community.save();
-
-        // Create membership record
-        await CommunityMember.create({
-            communityId: community._id,
-            userId,
-            role: "Member",
-        });
+        // CommunityMember has a unique index — concurrent approvals won't create duplicates.
+        try {
+            await CommunityMember.create({
+                communityId: community._id,
+                userId,
+                role: "Member",
+            });
+        } catch (dupErr) {
+            if (dupErr.code !== 11000) throw dupErr;
+            // Duplicate-key: user already has a membership record — no-op, still success.
+        }
 
         res.status(200).json({
             success: true,
@@ -505,42 +507,39 @@ export const approveJoinRequest = async (req, res) => {
 export const rejectJoinRequest = async (req, res) => {
     try {
         const { userId } = req.body;
-        const community = await Community.findById(req.params.id);
 
-        if (!community) {
-            return res.status(404).json({
-                success: false,
-                error: "Community not found",
-            });
-        }
-
-        // Check if user is admin
-        const memberDoc = await CommunityMember.findOne({
-            communityId: community._id,
+        // Verify the rejector is an Admin
+        const approverDoc = await CommunityMember.findOne({
+            communityId: req.params.id,
             userId: req.user._id,
         });
 
-        if (!memberDoc || memberDoc.role !== "Admin") {
+        if (!approverDoc || approverDoc.role !== "Admin") {
             return res.status(403).json({
                 success: false,
                 error: "Not authorized to reject join requests",
             });
         }
 
-        // Find and reject request
-        const joinRequest = community.joinRequests.find(
-            (r) => r.userId.toString() === userId && r.status === "Pending"
+        // Atomic: mark only a Pending request as Rejected.
+        // If another admin already rejected/approved it, the condition won't
+        // match and we return a clean 404 instead of a silent no-op.
+        const community = await Community.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                "joinRequests.userId": userId,
+                "joinRequests.status": "Pending",
+            },
+            { $set: { "joinRequests.$.status": "Rejected" } },
+            { new: true }
         );
 
-        if (!joinRequest) {
+        if (!community) {
             return res.status(404).json({
                 success: false,
-                error: "Join request not found",
+                error: "Join request not found or already processed",
             });
         }
-
-        joinRequest.status = "Rejected";
-        await community.save();
 
         res.status(200).json({
             success: true,
@@ -561,28 +560,27 @@ export const rejectJoinRequest = async (req, res) => {
  */
 export const deleteCommunity = async (req, res) => {
     try {
-        const community = await Community.findById(req.params.id);
+        // Atomic soft-delete: the creator check is embedded in the query filter
+        // so no separate read is needed and there's no window for a race.
+        const community = await Community.findOneAndUpdate(
+            { _id: req.params.id, creator: req.user._id },
+            { $set: { isActive: false } },
+            { new: true }
+        );
 
         if (!community) {
-            return res.status(404).json({
-                success: false,
-                error: "Community not found",
-            });
-        }
-
-        // Check if user is creator
-        if (community.creator.toString() !== req.user._id.toString()) {
+            // Either not found OR the requester is not the creator
+            const exists = await Community.exists({ _id: req.params.id });
+            if (!exists) {
+                return res.status(404).json({ success: false, error: "Community not found" });
+            }
             return res.status(403).json({
                 success: false,
                 error: "Not authorized to delete this community",
             });
         }
 
-        // Soft delete
-        community.isActive = false;
-        await community.save();
-
-        // Also soft delete all posts
+        // Soft-delete all posts in the community (already uses updateMany — atomic)
         await CommunityPost.updateMany(
             { communityId: community._id },
             { isDeleted: true }
@@ -712,7 +710,8 @@ export const assignMemberRole = async (req, res) => {
  */
 export const removeMember = async (req, res) => {
     try {
-        const community = await Community.findById(req.params.id);
+        // Only fetch fields needed for authorization checks
+        const community = await Community.findById(req.params.id).select("creator");
         if (!community) {
             return res.status(404).json({
                 success: false,
@@ -736,12 +735,12 @@ export const removeMember = async (req, res) => {
             });
         }
 
-        // Remove from members array
-        community.members = community.members.filter(
-            (m) => m.toString() !== req.params.userId
-        );
-        community.memberCount = community.members.length;
-        await community.save();
+        // Atomic: remove from members array and decrement count.
+        // $pull is idempotent — safe against duplicate or concurrent calls.
+        await Community.findByIdAndUpdate(req.params.id, {
+            $pull: { members: req.params.userId },
+            $inc: { memberCount: -1 },
+        });
 
         // Remove from CommunityMember
         await CommunityMember.deleteOne({

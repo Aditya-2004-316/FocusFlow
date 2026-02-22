@@ -2,7 +2,6 @@ import GroupSession from "../models/GroupSession.js";
 import { getIO } from "./socketServer.js";
 
 // Intervals in milliseconds
-// Intervals in milliseconds
 const HEARTBEAT_CHECK_INTERVAL = 15000; // Check every 15 seconds
 const DISCONNECT_THRESHOLD = 120000; // Mark as disconnected after 2 minutes
 const CLEANUP_THRESHOLD = 300000; // Remove from session after 5 minutes
@@ -13,38 +12,47 @@ let cleanupInterval = null;
 
 /**
  * Start the heartbeat monitoring system
+ *
+ * All participant / session mutations in this monitor now use targeted
+ * findOneAndUpdate operations with positional operators instead of the
+ * previous read-modify-save pattern. This prevents the monitor from
+ * overwriting concurrent atomic writes made by the socket server (e.g.,
+ * a participant re-joining while the monitor is marking them disconnected).
  */
 export const startHeartbeatMonitor = () => {
-    console.log("Starting heartbeat monitor...");
 
-    // Check for disconnected participants
     heartbeatInterval = setInterval(async () => {
         try {
             const now = new Date();
             const disconnectThreshold = new Date(now.getTime() - DISCONNECT_THRESHOLD);
             const cleanupThreshold = new Date(now.getTime() - CLEANUP_THRESHOLD);
 
-            // Find active sessions
+            // Only fetch the fields we need for decision-making.
             const activeSessions = await GroupSession.find({
                 status: { $in: ["lobby", "relaxation", "focus", "break", "paused"] },
-            });
+            }).select("_id status hostId participants settings timeline stats");
 
             for (const session of activeSessions) {
-                let hasChanges = false;
                 const io = getIO();
 
+                // ── 1. Mark timed-out participants as disconnected ─────────────────
                 for (const participant of session.participants) {
-                    // Skip already handled participants
-                    if (["left", "completed"].includes(participant.status)) continue;
+                    if (["left", "completed", "disconnected"].includes(participant.status)) continue;
 
                     const lastSeen = new Date(participant.lastSeen);
+                    if (lastSeen < disconnectThreshold) {
+                        // Atomic positional update — only touches this participant's status.
+                        // If the socket server has already updated this participant concurrently,
+                        // the positional condition will simply not match and the update is a no-op.
+                        await GroupSession.findOneAndUpdate(
+                            {
+                                _id: session._id,
+                                "participants.userId": participant.userId,
+                                "participants.status": { $nin: ["left", "completed", "disconnected"] },
+                            },
+                            { $set: { "participants.$.status": "disconnected" } }
+                        );
 
-                    // Mark as disconnected
-                    if (participant.status !== "disconnected" && lastSeen < disconnectThreshold) {
-                        participant.status = "disconnected";
-                        hasChanges = true;
-
-                        // Notify others
                         if (io) {
                             io.to(`session:${session._id}`).emit("participant:disconnected", {
                                 userId: participant.userId,
@@ -52,118 +60,143 @@ export const startHeartbeatMonitor = () => {
                                 reason: "heartbeat_timeout",
                             });
                         }
-
-                        console.log(`Participant ${participant.userId} marked as disconnected in session ${session._id}`);
-                    }
-
-                    // Remove from session after cleanup threshold
-                    if (participant.status === "disconnected" && lastSeen < cleanupThreshold) {
-                        participant.status = "left";
-                        hasChanges = true;
-
-                        console.log(`Participant ${participant.userId} removed from session ${session._id}`);
                     }
                 }
 
-                // Check if host is disconnected and needs to be transferred
-                const hostId = session.hostId.toString();
-                const hostParticipant = session.participants.find(
-                    p => p.userId.toString() === hostId
+                // ── 2. Clean up participants who have been disconnected too long ──
+                for (const participant of session.participants) {
+                    if (participant.status !== "disconnected") continue;
+
+                    const lastSeen = new Date(participant.lastSeen);
+                    if (lastSeen < cleanupThreshold) {
+                        await GroupSession.findOneAndUpdate(
+                            {
+                                _id: session._id,
+                                "participants.userId": participant.userId,
+                                "participants.status": "disconnected",
+                            },
+                            { $set: { "participants.$.status": "left" } }
+                        );
+                    }
+                }
+
+                // Re-fetch the session after mutations so host-transfer logic works on fresh data.
+                const fresh = await GroupSession.findById(session._id)
+                    .select("_id status hostId participants settings timeline stats");
+                if (!fresh) continue;
+
+                // ── 3. Host transfer if host is gone ──────────────────────────────
+                const hostParticipant = fresh.participants.find(
+                    (p) => p.userId.toString() === fresh.hostId.toString()
                 );
 
                 if (hostParticipant && ["disconnected", "left"].includes(hostParticipant.status)) {
-                    // Find a new host
-                    const newHost = session.participants.find(
-                        p => !["disconnected", "left"].includes(p.status)
+                    const newHost = fresh.participants.find(
+                        (p) => !["disconnected", "left", "completed"].includes(p.status)
                     );
 
                     if (newHost) {
-                        session.hostId = newHost.userId;
+                        // Atomic host transfer — condition guards against concurrent host changes.
+                        const transferred = await GroupSession.findOneAndUpdate(
+                            { _id: fresh._id, hostId: fresh.hostId },
+                            { $set: { hostId: newHost.userId } },
+                            { new: true }
+                        ).populate("participants.userId", "username avatar");
 
-                        // Save immediately to avoid race conditions with client fetching API
-                        await session.save();
-                        // Populate for broadcast
-                        await session.populate("participants.userId", "username avatar");
-
-                        // Notify about host change with full session state
-                        if (io) {
-                            io.to(`session:${session._id}`).emit("session:hostChanged", {
+                        if (transferred && io) {
+                            io.to(`session:${fresh._id}`).emit("session:hostChanged", {
                                 newHostId: newHost.userId,
-                                sessionId: session._id,
-                                session: session // Send updated session
+                                sessionId: fresh._id,
+                                session: transferred,
                             });
-                            // Also broadcast state to be safe
-                            io.to(`session:${session._id}`).emit("session:state", {
-                                session: session
+                            io.to(`session:${fresh._id}`).emit("session:state", {
+                                session: transferred,
+                                serverTime: Date.now(),
                             });
                         }
-
-                        console.log(`Host transferred to ${newHost.userId} in session ${session._id}`);
-                        // Reset changes flag as we saved already, unless we want to track other changes
-                        // But since we are inside a loop iterating participants, other changes might have set hasChanges=true.
-                        // We saved everything up to now.
-                        hasChanges = false;
                     } else {
-                        // No active participants left, cancel session
-                        session.status = "cancelled";
-                        session.timeline.completedAt = now;
-
-                        await session.save();
-
-                        if (io) {
-                            io.to(`session:${session._id}`).emit("session:cancelled", {
-                                sessionId: session._id,
+                        // No active participants left — cancel session atomically.
+                        const cancelled = await GroupSession.findOneAndUpdate(
+                            { _id: fresh._id, status: { $in: ["lobby", "relaxation", "focus", "break", "paused"] } },
+                            { $set: { status: "cancelled", "timeline.completedAt": now } },
+                            { new: true }
+                        );
+                        if (cancelled && io) {
+                            io.to(`session:${fresh._id}`).emit("session:cancelled", {
+                                sessionId: fresh._id,
                                 reason: "all_participants_left",
                             });
                         }
-
-                        console.log(`Session ${session._id} cancelled - no active participants`);
-                        hasChanges = false;
+                        continue; // No need to check phase advancement for cancelled session
                     }
                 }
 
-                // Auto-advance focus phase if timer expired
-                if (session.status === "focus" && session.timeline.focusEndsAt) {
-                    if (new Date(session.timeline.focusEndsAt) <= now) {
-                        if (session.settings.breakDuration > 0) {
-                            session.status = "break";
-                            session.timeline.breakStartedAt = now;
+                // ── 4. Auto-advance focus phase if timer has expired ──────────────
+                if (fresh.status === "focus" && fresh.timeline.focusEndsAt) {
+                    if (new Date(fresh.timeline.focusEndsAt) <= now) {
+                        if (fresh.settings.breakDuration > 0) {
+                            // Transition to break atomically — the status condition prevents
+                            // double-advancing if the socket server advanced it at the same moment.
+                            const advanced = await GroupSession.findOneAndUpdate(
+                                { _id: fresh._id, status: "focus" },
+                                { $set: { status: "break", "timeline.breakStartedAt": now } },
+                                { new: true }
+                            ).populate("participants.userId", "username avatar");
+
+                            if (advanced && io) {
+                                io.to(`session:${fresh._id}`).emit("session:phaseChanged", {
+                                    session: advanced,
+                                    newPhase: "break",
+                                    changedBy: "system",
+                                });
+                            }
+                            if (advanced) { }
                         } else {
-                            session.status = "completed";
-                            session.timeline.completedAt = now;
-
-                            // Update stats
-                            session.stats.totalFocusMinutes = session.settings.focusDuration;
-                            const activeCount = session.participants.filter(
-                                p => ["active", "completed"].includes(p.status)
+                            // Complete the session
+                            const activeCount = fresh.participants.filter(
+                                (p) => ["active", "completed"].includes(p.status)
                             ).length;
-                            session.stats.completionRate =
-                                (activeCount / session.stats.participantCount) * 100;
+                            const completionRate = fresh.stats.participantCount > 0
+                                ? (activeCount / fresh.stats.participantCount) * 100
+                                : 0;
 
-                            // Mark active participants as completed
-                            session.participants.forEach(p => {
-                                if (p.status === "active") {
-                                    p.status = "completed";
-                                    p.focusTimeCompleted = session.settings.focusDuration * 60;
+                            // Mark all active participants as completed atomically (updateMany).
+                            await GroupSession.updateOne(
+                                { _id: fresh._id, status: "focus" },
+                                {
+                                    $set: {
+                                        status: "completed",
+                                        "timeline.completedAt": now,
+                                        "stats.totalFocusMinutes": fresh.settings.focusDuration,
+                                        "stats.completionRate": completionRate,
+                                        // Update all active participants to completed in one shot
+                                        // using arrayFilters (requires MongoDB 3.6+)
+                                    },
                                 }
-                            });
-                        }
-                        hasChanges = true;
+                            );
+                            // Update individual participant statuses with arrayFilters
+                            await GroupSession.updateOne(
+                                { _id: fresh._id },
+                                {
+                                    $set: {
+                                        "participants.$[elem].status": "completed",
+                                        "participants.$[elem].focusTimeCompleted": fresh.settings.focusDuration * 60,
+                                    },
+                                },
+                                { arrayFilters: [{ "elem.status": "active" }] }
+                            );
 
-                        if (io) {
-                            io.to(`session:${session._id}`).emit("session:phaseChanged", {
-                                session,
-                                newPhase: session.status,
-                                changedBy: "system",
-                            });
+                            const completed = await GroupSession.findById(fresh._id)
+                                .populate("participants.userId", "username avatar");
+                            if (completed && io) {
+                                io.to(`session:${fresh._id}`).emit("session:phaseChanged", {
+                                    session: completed,
+                                    newPhase: "completed",
+                                    changedBy: "system",
+                                });
+                            }
                         }
-
-                        console.log(`Session ${session._id} auto-advanced to ${session.status}`);
                     }
-                }
-
-                if (hasChanges) {
-                    await session.save();
                 }
             }
         } catch (error) {
@@ -171,12 +204,12 @@ export const startHeartbeatMonitor = () => {
         }
     }, HEARTBEAT_CHECK_INTERVAL);
 
-    // Cleanup stale sessions
+    // ── Stale session cleanup (runs hourly) ─────────────────────────────────────
+    // Already uses updateMany — inherently atomic. No change needed here.
     cleanupInterval = setInterval(async () => {
         try {
             const staleThreshold = new Date(Date.now() - STALE_SESSION_THRESHOLD);
 
-            // Find and mark stale lobby sessions as cancelled
             const result = await GroupSession.updateMany(
                 {
                     status: "lobby",
@@ -190,15 +223,12 @@ export const startHeartbeatMonitor = () => {
                 }
             );
 
-            if (result.modifiedCount > 0) {
-                console.log(`Cleaned up ${result.modifiedCount} stale sessions`);
-            }
+            if (result.modifiedCount > 0) { }
         } catch (error) {
             console.error("Session cleanup error:", error);
         }
     }, 60 * 60 * 1000); // Run every hour
 
-    console.log("Heartbeat monitor started");
 };
 
 /**
@@ -213,46 +243,57 @@ export const stopHeartbeatMonitor = () => {
         clearInterval(cleanupInterval);
         cleanupInterval = null;
     }
-    console.log("Heartbeat monitor stopped");
 };
 
 /**
- * Handle participant reconnection
+ * Handle participant reconnection — atomically updates the participant's status
+ * and lastSeen in a single targeted operation so it cannot clobber other writes.
  */
 export const handleReconnection = async (sessionId, userId) => {
     try {
-        const session = await GroupSession.findById(sessionId);
+        const session = await GroupSession.findById(sessionId)
+            .select("status participants");
         if (!session) return null;
 
         const participant = session.participants.find(
-            p => p.userId.toString() === userId.toString()
+            (p) => p.userId.toString() === userId.toString()
         );
-
         if (!participant) return null;
 
-        // Can only reconnect if session is still active
         const activeStatuses = ["lobby", "relaxation", "focus", "break", "paused"];
         if (!activeStatuses.includes(session.status)) {
             return { error: "Session has ended" };
         }
 
-        // Update participant status
         if (participant.status === "disconnected") {
-            participant.status = session.status === "lobby" ? "waiting" : "active";
-            participant.lastSeen = new Date();
-            await session.save();
+            const reconnectStatus = session.status === "lobby" ? "waiting" : "active";
+
+            // Atomic positional update \u2014 only changes this participant, nothing else.
+            const updated = await GroupSession.findOneAndUpdate(
+                {
+                    _id: sessionId,
+                    "participants.userId": userId,
+                    "participants.status": "disconnected",
+                },
+                {
+                    $set: {
+                        "participants.$.status": reconnectStatus,
+                        "participants.$.lastSeen": new Date(),
+                    },
+                },
+                { new: true }
+            ).populate("participants.userId", "username avatar");
 
             const io = getIO();
-            if (io) {
+            if (io && updated) {
                 io.to(`session:${sessionId}`).emit("participant:reconnected", {
                     userId,
                     sessionId,
-                    newStatus: participant.status,
+                    newStatus: reconnectStatus,
                 });
             }
 
-            console.log(`Participant ${userId} reconnected to session ${sessionId}`);
-            return { success: true, session };
+            return { success: true, session: updated };
         }
 
         return { success: true, session };

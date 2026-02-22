@@ -100,24 +100,26 @@ export const initializeSocket = (httpServer) => {
                     return;
                 }
 
-                // Check if user was disconnected and handle reconnection
-                const participant = session.getParticipant(socket.userId);
+                // Check if user was disconnected and handle reconnection atomically
+                const participant = session.participants.find(
+                    p => p.userId.toString() === socket.userId
+                );
                 if (participant && participant.status === "disconnected") {
-                    // Handle reconnection
                     const activeStatuses = ["lobby", "relaxation", "focus", "break", "paused"];
                     if (activeStatuses.includes(session.status)) {
-                        participant.status = session.status === "lobby" ? "waiting" : "active";
-                        participant.lastSeen = new Date();
-                        await session.save();
+                        const reconnectStatus = session.status === "lobby" ? "waiting" : "active";
+                        // Atomic update — no separate save() needed
+                        await GroupSession.findOneAndUpdate(
+                            { _id: sessionId, "participants.userId": socket.userId },
+                            { $set: { "participants.$.status": reconnectStatus, "participants.$.lastSeen": new Date() } }
+                        );
 
-                        // Notify others about reconnection
                         socket.to(`session:${sessionId}`).emit("participant:reconnected", {
                             user: socket.user,
                             sessionId,
-                            newStatus: participant.status,
+                            newStatus: reconnectStatus,
                         });
 
-                        // Broadcast updated session state
                         const updatedSessionOnReconnect = await GroupSession.findById(sessionId)
                             .populate("participants.userId", "username avatar");
                         io.in(`session:${sessionId}`).emit("session:state", {
@@ -182,96 +184,103 @@ export const initializeSocket = (httpServer) => {
             console.log(`${socket.user.username} left session ${sessionId}`);
         });
 
-        // Update participant status
+        // Update participant status via socket (atomic)
         socket.on("participant:status", async ({ sessionId, status }) => {
             try {
-                const session = await GroupSession.findById(sessionId);
+                const now = new Date();
+                const setFields = {
+                    "participants.$.status": status,
+                    "participants.$.lastSeen": now,
+                };
+                if (status === "ready") setFields["participants.$.readyAt"] = now;
+
+                const session = await GroupSession.findOneAndUpdate(
+                    {
+                        _id: sessionId,
+                        "participants.userId": socket.userId,
+                        "participants.status": { $nin: ["left", "disconnected"] },
+                    },
+                    { $set: setFields },
+                    { new: true }
+                ).populate("participants.userId", "username avatar");
+
                 if (!session) return;
 
-                const participant = session.getParticipant(socket.userId);
-                if (!participant) return;
-
-                participant.status = status;
-                participant.lastSeen = new Date();
-
-                if (status === "ready") {
-                    participant.readyAt = new Date();
-                }
-
-                await session.save();
-                await session.populate("participants.userId", "username avatar");
-
-                // Broadcast status update to all in session (including sender)
                 io.in(`session:${sessionId}`).emit("participant:statusUpdated", {
                     userId: socket.userId,
                     user: socket.user,
                     status,
                     allReady: session.allParticipantsReady(),
-                    session, // Include full session state
+                    session,
                 });
             } catch (error) {
                 console.error("Error updating status:", error);
             }
         });
 
-        // Heartbeat
+        // Heartbeat — pure atomic update, no document load needed
         socket.on("heartbeat", async (sessionId) => {
             try {
                 if (!sessionId) return;
-
-                const session = await GroupSession.findById(sessionId);
-                if (!session) return;
-
-                const participant = session.getParticipant(socket.userId);
-                if (participant) {
-                    participant.lastSeen = new Date();
-                    await session.save();
-                }
+                await GroupSession.findOneAndUpdate(
+                    { _id: sessionId, "participants.userId": socket.userId },
+                    { $set: { "participants.$.lastSeen": new Date() } }
+                );
             } catch (error) {
                 console.error("Heartbeat error:", error);
             }
         });
 
-        // Host starts the session
+        // Host starts the session — atomic, idempotent
         socket.on("session:start", async (sessionId) => {
             try {
-                const session = await GroupSession.findById(sessionId);
-                if (!session) return;
+                const current = await GroupSession.findById(sessionId);
+                if (!current) return;
 
-                if (session.hostId.toString() !== socket.userId) {
+                if (current.hostId.toString() !== socket.userId) {
                     socket.emit("error", { message: "Only host can start the session" });
                     return;
                 }
 
-                if (session.status !== "lobby") {
+                if (current.status !== "lobby") {
                     socket.emit("error", { message: "Session already started" });
                     return;
                 }
 
-                // Start with relaxation or focus
                 const startTime = new Date();
-                if (session.settings.relaxationActivity) {
-                    session.status = "relaxation";
-                    session.timeline.relaxationStartedAt = startTime;
-                } else {
-                    session.status = "focus";
-                    session.timeline.focusStartedAt = startTime;
-                    session.timeline.focusEndsAt = new Date(
-                        startTime.getTime() + (session.settings.focusDuration * 60 * 1000)
-                    );
+                const hasRelaxation = !!current.settings.relaxationActivity;
+                const timelineUpdate = hasRelaxation
+                    ? { "timeline.relaxationStartedAt": startTime }
+                    : {
+                        "timeline.focusStartedAt": startTime,
+                        "timeline.focusEndsAt": new Date(
+                            startTime.getTime() + current.settings.focusDuration * 60 * 1000
+                        ),
+                    };
+
+                // Atomic: only succeeds if still in lobby
+                const session = await GroupSession.findOneAndUpdate(
+                    { _id: sessionId, status: "lobby", hostId: socket.userId },
+                    {
+                        $set: {
+                            status: hasRelaxation ? "relaxation" : "focus",
+                            ...timelineUpdate,
+                            "participants.$[active].status": "active",
+                        },
+                    },
+                    {
+                        new: true,
+                        arrayFilters: [{ "active.status": { $in: ["waiting", "ready"] } }],
+                    }
+                );
+
+                if (!session) {
+                    socket.emit("error", { message: "Session already started" });
+                    return;
                 }
 
-                // Update participants
-                session.participants.forEach(p => {
-                    if (["waiting", "ready"].includes(p.status)) {
-                        p.status = "active";
-                    }
-                });
-
-                await session.save();
                 await session.populate("participants.userId", "username avatar");
 
-                // Broadcast to all participants (including host who started)
                 io.in(`session:${sessionId}`).emit("session:started", {
                     session,
                     startedBy: socket.user,
@@ -285,70 +294,75 @@ export const initializeSocket = (httpServer) => {
             }
         });
 
-        // Advance session phase
+        // Advance session phase — atomic, condition-locked
         socket.on("session:advance", async (sessionId) => {
             try {
-                const session = await GroupSession.findById(sessionId);
-                if (!session) return;
+                const current = await GroupSession.findById(sessionId);
+                if (!current) return;
 
-                if (session.hostId.toString() !== socket.userId) {
+                if (current.hostId.toString() !== socket.userId) {
                     socket.emit("error", { message: "Only host can advance the session" });
                     return;
                 }
 
                 const now = new Date();
-                let newStatus = session.status;
+                let newStatus;
+                let timelineUpdate = {};
+                let arrayFilters;
 
-                switch (session.status) {
+                switch (current.status) {
                     case "relaxation":
-                        session.status = "focus";
-                        session.timeline.focusStartedAt = now;
-                        session.timeline.focusEndsAt = new Date(
-                            now.getTime() + (session.settings.focusDuration * 60 * 1000)
-                        );
                         newStatus = "focus";
+                        timelineUpdate = {
+                            "timeline.focusStartedAt": now,
+                            "timeline.focusEndsAt": new Date(
+                                now.getTime() + current.settings.focusDuration * 60 * 1000
+                            ),
+                        };
                         break;
-
                     case "focus":
-                        if (session.settings.breakDuration > 0) {
-                            session.status = "break";
-                            session.timeline.breakStartedAt = now;
+                        if (current.settings.breakDuration > 0) {
                             newStatus = "break";
+                            timelineUpdate = { "timeline.breakStartedAt": now };
                         } else {
-                            session.status = "completed";
-                            session.timeline.completedAt = now;
                             newStatus = "completed";
+                            timelineUpdate = { "timeline.completedAt": now };
                         }
                         break;
-
                     case "break":
-                        session.status = "completed";
-                        session.timeline.completedAt = now;
                         newStatus = "completed";
+                        timelineUpdate = { "timeline.completedAt": now };
                         break;
+                    default:
+                        socket.emit("error", { message: "Cannot advance from current status" });
+                        return;
                 }
 
-                // If completed, update stats
+                const setOp = { status: newStatus, ...timelineUpdate };
                 if (newStatus === "completed") {
-                    session.stats.totalFocusMinutes = session.settings.focusDuration;
-                    const completedCount = session.participants.filter(p =>
-                        ["active", "completed"].includes(p.status)
-                    ).length;
-                    session.stats.completionRate =
-                        (completedCount / session.stats.participantCount) * 100;
-
-                    session.participants.forEach(p => {
-                        if (p.status === "active") {
-                            p.status = "completed";
-                            p.focusTimeCompleted = session.settings.focusDuration * 60;
-                        }
-                    });
+                    setOp["participants.$[active].status"] = "completed";
+                    setOp["participants.$[active].focusTimeCompleted"] = current.settings.focusDuration * 60;
+                    const count = current.participants.filter(p => ["active", "completed"].includes(p.status)).length;
+                    setOp["stats.totalFocusMinutes"] = current.settings.focusDuration;
+                    setOp["stats.completionRate"] = current.stats.participantCount > 0
+                        ? (count / current.stats.participantCount) * 100 : 0;
+                    arrayFilters = [{ "active.status": "active" }];
                 }
 
-                await session.save();
+                // Atomic: condition on current status prevents double-advance
+                const session = await GroupSession.findOneAndUpdate(
+                    { _id: sessionId, status: current.status, hostId: socket.userId },
+                    { $set: setOp },
+                    { new: true, ...(arrayFilters ? { arrayFilters } : {}) }
+                );
+
+                if (!session) {
+                    socket.emit("error", { message: "Session state changed — refresh needed" });
+                    return;
+                }
+
                 await session.populate("participants.userId", "username avatar");
 
-                // Broadcast phase change (including host)
                 io.in(`session:${sessionId}`).emit("session:phaseChanged", {
                     session,
                     newPhase: newStatus,
@@ -363,35 +377,41 @@ export const initializeSocket = (httpServer) => {
             }
         });
 
-        // Handle disconnect
+        // Handle disconnect — atomic status update
         socket.on("disconnect", async () => {
             console.log(`User disconnected: ${socket.user.username}`);
 
             if (socket.currentSessionId) {
                 try {
-                    const session = await GroupSession.findById(socket.currentSessionId);
+                    // Atomic: only updates if participant is not already left/completed
+                    const session = await GroupSession.findOneAndUpdate(
+                        {
+                            _id: socket.currentSessionId,
+                            "participants.userId": socket.userId,
+                            "participants.status": { $nin: ["left", "completed"] },
+                        },
+                        {
+                            $set: {
+                                "participants.$.status": "disconnected",
+                                "participants.$.lastSeen": new Date(),
+                            },
+                        },
+                        { new: true }
+                    );
+
                     if (session) {
-                        const participant = session.getParticipant(socket.userId);
-                        if (participant && !["left", "completed"].includes(participant.status)) {
-                            participant.status = "disconnected";
-                            participant.lastSeen = new Date();
-                            await session.save();
+                        const updatedSession = await GroupSession.findById(socket.currentSessionId)
+                            .populate("participants.userId", "username avatar");
 
-                            const updatedSessionOnDisconnect = await GroupSession.findById(socket.currentSessionId)
-                                .populate("participants.userId", "username avatar");
+                        socket.to(`session:${socket.currentSessionId}`).emit("participant:disconnected", {
+                            user: socket.user,
+                            sessionId: socket.currentSessionId,
+                        });
 
-                            // Notify others specifically (for toasts)
-                            socket.to(`session:${socket.currentSessionId}`).emit("participant:disconnected", {
-                                user: socket.user,
-                                sessionId: socket.currentSessionId,
-                            });
-
-                            // Broadcast updated state to everyone else
-                            socket.to(`session:${socket.currentSessionId}`).emit("session:state", {
-                                session: updatedSessionOnDisconnect,
-                                serverTime: Date.now(),
-                            });
-                        }
+                        socket.to(`session:${socket.currentSessionId}`).emit("session:state", {
+                            session: updatedSession,
+                            serverTime: Date.now(),
+                        });
                     }
                 } catch (error) {
                     console.error("Error handling disconnect:", error);

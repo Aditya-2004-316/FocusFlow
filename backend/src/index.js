@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { connectDB } from "./config/database.js";
 import { initializeSocket } from "./socket/socketServer.js";
+import { startHeartbeatMonitor } from "./socket/heartbeatMonitor.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { notFound } from "./middleware/notFound.js";
 import { checkDBConnection } from "./middleware/dbCheck.js";
@@ -34,6 +35,12 @@ const app = express();
 const httpServer = createServer(app);
 const PORT = process.env.PORT || 5000;
 
+// Trust the first proxy so that req.ip resolves correctly behind
+// reverse proxies (e.g. Render, Nginx, Cloudflare). Without this,
+// everyone behind the same proxy appears to come from the same IP
+// and rate-limit counters are shared across all users unintentionally.
+app.set("trust proxy", 1);
+
 // Connect to MongoDB
 connectDB();
 
@@ -41,7 +48,6 @@ connectDB();
 const io = initializeSocket(httpServer);
 
 // Start heartbeat monitor for group sessions
-import { startHeartbeatMonitor } from "./socket/heartbeatMonitor.js";
 startHeartbeatMonitor();
 
 // Security middleware
@@ -85,15 +91,34 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Rate limiting
+// Rate limiting — two tiers:
+//  1. Global IP-based limiter on all /api/* routes.
+//  2. Per-user limiter for authenticated routes (keyed by user ID), so that
+//     one user's burst of requests doesn't exhaust the limit for everyone
+//     sharing the same office/CDN IP address.
 const limiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"), // 15 minutes
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || (process.env.NODE_ENV === "production" ? "100" : "10000")), // limit each IP: 100 (prod) or 10000 (dev) per windowMs
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || (process.env.NODE_ENV === "production" ? "200" : "10000")),
     message: "Too many requests from this IP, please try again later.",
     standardHeaders: true,
     legacyHeaders: false,
 });
 app.use("/api/", limiter);
+
+// Per-user rate limiter applied after auth middleware on protected routes.
+// Falls back to IP if user is not yet authenticated (e.g., on login/register).
+const userRateLimiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000"),
+    max: parseInt(process.env.USER_RATE_LIMIT_MAX_REQUESTS || (process.env.NODE_ENV === "production" ? "500" : "50000")),
+    keyGenerator: (req) => {
+        // Use user ID as the rate-limit key for authenticated requests so
+        // users behind a shared IP (proxy, office, CDN) don't interfere.
+        return req.user ? req.user._id.toString() : req.ip;
+    },
+    message: "Too many requests, please slow down.",
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
@@ -130,25 +155,29 @@ app.get("/", (req, res) => {
 });
 
 // API routes (with database connection check)
+// Public auth routes use only IP-based rate limiting (the global limiter above).
+// All other routes also use the per-user limiter so one user cannot consume
+// another user's rate-limit quota when they share the same IP.
 app.use("/api/auth", checkDBConnection, authRoutes);
-app.use("/api/users", checkDBConnection, userRoutes);
-app.use("/api/timers", checkDBConnection, timerRoutes);
-app.use("/api/distractions", checkDBConnection, distractionRoutes);
-app.use("/api/stats", checkDBConnection, statsRoutes);
-app.use("/api/settings", checkDBConnection, settingsRoutes);
-app.use("/api/communities", checkDBConnection, communitiesRoutes);
-app.use("/api/communities/:id/posts", checkDBConnection, communityPostsRoutes);
+app.use("/api/users", checkDBConnection, userRateLimiter, userRoutes);
+app.use("/api/timers", checkDBConnection, userRateLimiter, timerRoutes);
+app.use("/api/distractions", checkDBConnection, userRateLimiter, distractionRoutes);
+app.use("/api/stats", checkDBConnection, userRateLimiter, statsRoutes);
+app.use("/api/settings", checkDBConnection, userRateLimiter, settingsRoutes);
+app.use("/api/communities", checkDBConnection, userRateLimiter, communitiesRoutes);
+app.use("/api/communities/:id/posts", checkDBConnection, userRateLimiter, communityPostsRoutes);
 app.use(
     "/api/communities/:id/posts/:postId/comments",
     checkDBConnection,
+    userRateLimiter,
     communityCommentsRoutes
 );
-app.use("/api/group-sessions", checkDBConnection, groupSessionsRoutes);
-app.use("/api/chat", checkDBConnection, (req, res, next) => {
+app.use("/api/group-sessions", checkDBConnection, userRateLimiter, groupSessionsRoutes);
+app.use("/api/chat", checkDBConnection, userRateLimiter, (req, res, next) => {
     req.io = io;
     next();
 }, chatRoutes);
-app.use("/api/community-events", checkDBConnection, communityEventsRoutes);
+app.use("/api/community-events", checkDBConnection, userRateLimiter, communityEventsRoutes);
 
 // API documentation endpoint
 app.get("/api", (req, res) => {
@@ -175,12 +204,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Start server with Socket.io support
-httpServer.listen(PORT, () => {
-    console.log(`🚀 FocusFlow API server running on port ${PORT}`);
-    console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-    console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-    console.log(`📚 API docs: http://localhost:${PORT}/api`);
-    console.log(`🔌 Socket.io enabled`);
-});
+httpServer.listen(PORT);
 
 export default app;

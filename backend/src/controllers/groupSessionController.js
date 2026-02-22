@@ -14,16 +14,10 @@ export const createGroupSession = async (req, res) => {
         // Verify community exists and user is a member
         const community = await Community.findById(communityId);
         if (!community) {
-            return res.status(404).json({
-                success: false,
-                error: "Community not found",
-            });
+            return res.status(404).json({ success: false, error: "Community not found" });
         }
 
-        // Check if user is a member of the community
-        const isMember = community.members.some(
-            m => m.toString() === req.user._id.toString()
-        );
+        const isMember = community.members.some(m => m.toString() === req.user._id.toString());
         const isCreator = community.creator.toString() === req.user._id.toString();
 
         if (!isMember && !isCreator) {
@@ -33,7 +27,6 @@ export const createGroupSession = async (req, res) => {
             });
         }
 
-        // Create the session
         const session = await GroupSession.create({
             communityId,
             hostId: req.user._id,
@@ -58,7 +51,6 @@ export const createGroupSession = async (req, res) => {
             }],
         });
 
-        // Populate host info
         await session.populate("hostId", "username avatar");
         await session.populate("communityId", "name");
 
@@ -69,10 +61,7 @@ export const createGroupSession = async (req, res) => {
         });
     } catch (error) {
         console.error("Create group session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to create session" });
     }
 };
 
@@ -88,7 +77,6 @@ export const getCommunityGroupSessions = async (req, res) => {
 
         const query = { communityId };
 
-        // Filter by status if provided
         if (status) {
             if (status === "active") {
                 query.status = { $in: ["lobby", "relaxation", "focus", "break", "paused"] };
@@ -123,10 +111,7 @@ export const getCommunityGroupSessions = async (req, res) => {
         });
     } catch (error) {
         console.error("Get community sessions error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to fetch sessions" });
     }
 };
 
@@ -143,22 +128,13 @@ export const getGroupSession = async (req, res) => {
             .populate("participants.userId", "username avatar");
 
         if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
+            return res.status(404).json({ success: false, error: "Session not found" });
         }
 
-        res.status(200).json({
-            success: true,
-            data: session,
-        });
+        res.status(200).json({ success: true, data: session });
     } catch (error) {
         console.error("Get group session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to fetch session" });
     }
 };
 
@@ -166,23 +142,23 @@ export const getGroupSession = async (req, res) => {
  * @desc    Join a group session
  * @route   POST /api/group-sessions/:id/join
  * @access  Protected
+ *
+ * Uses findOneAndUpdate with $push/$set (atomic) to avoid read-modify-save
+ * race conditions when multiple users join at the same time.
  */
 export const joinGroupSession = async (req, res) => {
     try {
-        const session = await GroupSession.findById(req.params.id);
+        const userId = req.user._id;
+        const sessionId = req.params.id;
 
+        // First, check session state (read-only – race-safe since we validate atomically below)
+        const session = await GroupSession.findById(sessionId);
         if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
+            return res.status(404).json({ success: false, error: "Session not found" });
         }
 
-        // Check if session is joinable
         const joinableStatuses = ["lobby"];
-        if (session.settings.allowLateJoin) {
-            joinableStatuses.push("relaxation", "focus");
-        }
+        if (session.settings.allowLateJoin) joinableStatuses.push("relaxation", "focus");
 
         if (!joinableStatuses.includes(session.status)) {
             return res.status(400).json({
@@ -191,58 +167,110 @@ export const joinGroupSession = async (req, res) => {
             });
         }
 
-        // Check if already a participant
-        const existingParticipant = session.getParticipant(req.user._id);
-        if (existingParticipant && !["left", "disconnected"].includes(existingParticipant.status)) {
-            return res.status(400).json({
-                success: false,
-                error: "You are already in this session",
-            });
+        // Check if already an active participant
+        const existingParticipant = session.participants.find(
+            p => p.userId.toString() === userId.toString()
+        );
+        const isActiveParticipant = existingParticipant &&
+            !["left", "disconnected"].includes(existingParticipant.status);
+
+        if (isActiveParticipant) {
+            return res.status(400).json({ success: false, error: "You are already in this session" });
         }
 
-        // Check max participants
-        const activeCount = session.participants.filter(p =>
-            !["left", "disconnected"].includes(p.status)
-        ).length;
+        const newParticipantStatus = session.status === "lobby" ? "waiting" : "active";
+        const now = new Date();
 
-        if (activeCount >= session.settings.maxParticipants) {
-            return res.status(400).json({
-                success: false,
-                error: "Session is full",
-            });
-        }
+        let updatedSession;
 
-        // Add or update participant
         if (existingParticipant) {
-            existingParticipant.status = session.status === "lobby" ? "waiting" : "active";
-            existingParticipant.joinedAt = new Date();
-            existingParticipant.lastSeen = new Date();
+            // Re-joining (was left/disconnected) — atomic positional update
+            updatedSession = await GroupSession.findOneAndUpdate(
+                {
+                    _id: sessionId,
+                    "participants.userId": userId,
+                    // Ensure the session is still in a joinable state (atomic check)
+                    status: { $in: joinableStatuses },
+                },
+                {
+                    $set: {
+                        "participants.$.status": newParticipantStatus,
+                        "participants.$.joinedAt": now,
+                        "participants.$.lastSeen": now,
+                    },
+                },
+                { new: true }
+            );
         } else {
-            session.participants.push({
-                userId: req.user._id,
-                status: session.status === "lobby" ? "waiting" : "active",
-                joinedAt: new Date(),
-                lastSeen: new Date(),
+            // New participant — atomic push with capacity guard
+            updatedSession = await GroupSession.findOneAndUpdate(
+                {
+                    _id: sessionId,
+                    // Ensure the session is still in a joinable state (atomic check)
+                    status: { $in: joinableStatuses },
+                    // Atomic max-participant guard: only update if active count < max
+                    $expr: {
+                        $lt: [
+                            {
+                                $size: {
+                                    $filter: {
+                                        input: "$participants",
+                                        as: "p",
+                                        cond: { $not: [{ $in: ["$$p.status", ["left", "disconnected"]] }] },
+                                    },
+                                },
+                            },
+                            "$settings.maxParticipants",
+                        ],
+                    },
+                },
+                {
+                    $push: {
+                        participants: {
+                            userId,
+                            status: newParticipantStatus,
+                            joinedAt: now,
+                            lastSeen: now,
+                        },
+                    },
+                },
+                { new: true }
+            );
+
+            if (!updatedSession) {
+                // Either status changed or session is full — re-read to give meaningful error
+                const recheck = await GroupSession.findById(sessionId);
+                if (!recheck) {
+                    return res.status(404).json({ success: false, error: "Session not found" });
+                }
+                if (!joinableStatuses.includes(recheck.status)) {
+                    return res.status(400).json({
+                        success: false,
+                        error: "This session is no longer accepting participants",
+                    });
+                }
+                return res.status(400).json({ success: false, error: "Session is full" });
+            }
+        }
+
+        if (!updatedSession) {
+            return res.status(400).json({
+                success: false,
+                error: "Could not join session — it may have just closed",
             });
         }
 
-        await session.save();
-
-        // Populate for response
-        await session.populate("hostId", "username avatar");
-        await session.populate("participants.userId", "username avatar");
+        await updatedSession.populate("hostId", "username avatar");
+        await updatedSession.populate("participants.userId", "username avatar");
 
         res.status(200).json({
             success: true,
             message: "Joined session successfully",
-            data: session,
+            data: updatedSession,
         });
     } catch (error) {
         console.error("Join group session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to join session" });
     }
 };
 
@@ -253,55 +281,43 @@ export const joinGroupSession = async (req, res) => {
  */
 export const leaveGroupSession = async (req, res) => {
     try {
-        const session = await GroupSession.findById(req.params.id);
+        const userId = req.user._id;
+        const sessionId = req.params.id;
+
+        // Atomically mark this participant as "left"
+        const session = await GroupSession.findOneAndUpdate(
+            { _id: sessionId, "participants.userId": userId },
+            { $set: { "participants.$.status": "left" } },
+            { new: true }
+        );
 
         if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
+            return res.status(404).json({ success: false, error: "Session not found or you are not in it" });
         }
 
-        const participant = session.getParticipant(req.user._id);
-        if (!participant) {
-            return res.status(400).json({
-                success: false,
-                error: "You are not in this session",
-            });
-        }
-
-        // Mark as left
-        participant.status = "left";
-
-        // If host leaves, transfer host role or cancel session
-        if (session.hostId.toString() === req.user._id.toString()) {
-            const remainingParticipants = session.participants.filter(p =>
-                p.userId.toString() !== req.user._id.toString() &&
-                !["left", "disconnected"].includes(p.status)
+        // Handle host transfer / session cancellation as a second atomic step
+        const isHost = session.hostId.toString() === userId.toString();
+        if (isHost) {
+            const remainingParticipants = session.participants.filter(
+                p => p.userId.toString() !== userId.toString() &&
+                    !["left", "disconnected"].includes(p.status)
             );
 
             if (remainingParticipants.length > 0) {
-                // Transfer host to first remaining participant
-                session.hostId = remainingParticipants[0].userId;
+                await GroupSession.findByIdAndUpdate(sessionId, {
+                    $set: { hostId: remainingParticipants[0].userId },
+                });
             } else {
-                // No one left, cancel session
-                session.status = "cancelled";
-                session.timeline.completedAt = new Date();
+                await GroupSession.findByIdAndUpdate(sessionId, {
+                    $set: { status: "cancelled", "timeline.completedAt": new Date() },
+                });
             }
         }
 
-        await session.save();
-
-        res.status(200).json({
-            success: true,
-            message: "Left session successfully",
-        });
+        res.status(200).json({ success: true, message: "Left session successfully" });
     } catch (error) {
         console.error("Leave group session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to leave session" });
     }
 };
 
@@ -309,6 +325,8 @@ export const leaveGroupSession = async (req, res) => {
  * @desc    Update participant status (ready, paused, etc.)
  * @route   PUT /api/group-sessions/:id/status
  * @access  Protected
+ *
+ * Atomic positional update — no read-modify-save race condition.
  */
 export const updateParticipantStatus = async (req, res) => {
     try {
@@ -316,57 +334,48 @@ export const updateParticipantStatus = async (req, res) => {
         const validStatuses = ["waiting", "ready", "active", "paused"];
 
         if (!validStatuses.includes(status)) {
-            return res.status(400).json({
-                success: false,
-                error: "Invalid status",
-            });
+            return res.status(400).json({ success: false, error: "Invalid status" });
         }
 
-        const session = await GroupSession.findById(req.params.id);
+        const userId = req.user._id;
+        const now = new Date();
+
+        const updateFields = {
+            "participants.$.status": status,
+            "participants.$.lastSeen": now,
+        };
+        if (status === "ready") {
+            updateFields["participants.$.readyAt"] = now;
+        }
+
+        const session = await GroupSession.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                "participants.userId": userId,
+                // Only update if participant is currently active (not left/disconnected)
+                "participants.status": { $nin: ["left", "disconnected"] },
+            },
+            { $set: updateFields },
+            { new: true }
+        ).populate("participants.userId", "username avatar");
 
         if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
-        }
-
-        const participant = session.getParticipant(req.user._id);
-        if (!participant) {
             return res.status(400).json({
                 success: false,
-                error: "You are not in this session",
+                error: "Session not found or you are not an active participant",
             });
         }
 
-        participant.status = status;
-        participant.lastSeen = new Date();
-
-        if (status === "ready") {
-            participant.readyAt = new Date();
-        }
-
-        await session.save();
-
-        // Check if all participants are ready (for auto-start)
         const allReady = session.allParticipantsReady();
-
-        await session.populate("participants.userId", "username avatar");
 
         res.status(200).json({
             success: true,
             message: "Status updated",
-            data: {
-                session,
-                allReady,
-            },
+            data: { session, allReady },
         });
     } catch (error) {
         console.error("Update participant status error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to update status" });
     }
 };
 
@@ -374,174 +383,182 @@ export const updateParticipantStatus = async (req, res) => {
  * @desc    Start the session (host only)
  * @route   POST /api/group-sessions/:id/start
  * @access  Protected
+ *
+ * Uses findOneAndUpdate with status:"lobby" condition so only ONE concurrent
+ * start request can succeed — the condition acts as a distributed lock.
  */
 export const startSession = async (req, res) => {
     try {
-        const session = await GroupSession.findById(req.params.id);
+        const userId = req.user._id;
+        const sessionId = req.params.id;
+        const startTime = new Date();
 
-        if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
+        // Read session settings first (needed to compute focusEndsAt etc.)
+        const current = await GroupSession.findById(sessionId);
+        if (!current) {
+            return res.status(404).json({ success: false, error: "Session not found" });
         }
 
-        // Only host can start
-        if (session.hostId.toString() !== req.user._id.toString()) {
-            return res.status(403).json({
-                success: false,
-                error: "Only the host can start the session",
-            });
+        if (current.hostId.toString() !== userId.toString()) {
+            return res.status(403).json({ success: false, error: "Only the host can start the session" });
         }
 
-        // Must be in lobby
-        if (session.status !== "lobby") {
+        if (current.status !== "lobby") {
+            return res.status(400).json({ success: false, error: "Session has already started" });
+        }
+
+        const activeParticipants = current.participants.filter(
+            p => !["left", "disconnected"].includes(p.status)
+        );
+        if (activeParticipants.length < current.settings.minParticipants) {
             return res.status(400).json({
                 success: false,
-                error: "Session has already started",
+                error: `Need at least ${current.settings.minParticipants} participants to start`,
             });
         }
 
-        // Check minimum participants
-        const activeParticipants = session.participants.filter(p =>
-            !["left", "disconnected"].includes(p.status)
+        // Determine new state
+        const hasRelaxation = !!current.settings.relaxationActivity;
+        const timelineUpdate = hasRelaxation
+            ? { "timeline.relaxationStartedAt": startTime }
+            : {
+                "timeline.focusStartedAt": startTime,
+                "timeline.focusEndsAt": new Date(
+                    startTime.getTime() + current.settings.focusDuration * 60 * 1000
+                ),
+            };
+
+        // Atomic update: condition status:"lobby" ensures idempotency
+        const session = await GroupSession.findOneAndUpdate(
+            { _id: sessionId, status: "lobby", hostId: userId },
+            {
+                $set: {
+                    status: hasRelaxation ? "relaxation" : "focus",
+                    ...timelineUpdate,
+                    // Atomically mark all waiting/ready participants as active
+                    "participants.$[active].status": "active",
+                },
+            },
+            {
+                new: true,
+                arrayFilters: [{ "active.status": { $in: ["waiting", "ready"] } }],
+            }
         );
 
-        if (activeParticipants.length < session.settings.minParticipants) {
-            return res.status(400).json({
-                success: false,
-                error: `Need at least ${session.settings.minParticipants} participants to start`,
-            });
+        if (!session) {
+            // Another request already started the session
+            return res.status(400).json({ success: false, error: "Session has already started" });
         }
 
-        // Start with relaxation or focus
-        const startTime = new Date();
-        if (session.settings.relaxationActivity) {
-            session.status = "relaxation";
-            session.timeline.relaxationStartedAt = startTime;
-        } else {
-            session.status = "focus";
-            session.timeline.focusStartedAt = startTime;
-            // Calculate end time from start time to ensure consistency across all clients
-            session.timeline.focusEndsAt = new Date(
-                startTime.getTime() + (session.settings.focusDuration * 60 * 1000)
-            );
-        }
-
-        // Update all waiting/ready participants to active
-        session.participants.forEach(p => {
-            if (["waiting", "ready"].includes(p.status)) {
-                p.status = "active";
-            }
-        });
-
-        await session.save();
         await session.populate("hostId", "username avatar");
         await session.populate("participants.userId", "username avatar");
 
-        res.status(200).json({
-            success: true,
-            message: "Session started",
-            data: session,
-        });
+        res.status(200).json({ success: true, message: "Session started", data: session });
     } catch (error) {
         console.error("Start session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to start session" });
     }
 };
 
 /**
- * @desc    Advance to next phase (relaxation -> focus, focus -> break/complete)
+ * @desc    Advance to next phase
  * @route   POST /api/group-sessions/:id/advance
  * @access  Protected
+ *
+ * Atomic phase transition — condition on current status prevents double-advance.
  */
 export const advanceSession = async (req, res) => {
     try {
-        const session = await GroupSession.findById(req.params.id);
+        const userId = req.user._id;
+        const sessionId = req.params.id;
 
-        if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
+        const current = await GroupSession.findById(sessionId);
+        if (!current) {
+            return res.status(404).json({ success: false, error: "Session not found" });
         }
 
-        // Only host can advance (or system via heartbeat)
-        if (session.hostId.toString() !== req.user._id.toString()) {
-            return res.status(403).json({
-                success: false,
-                error: "Only the host can advance the session",
-            });
+        if (current.hostId.toString() !== userId.toString()) {
+            return res.status(403).json({ success: false, error: "Only the host can advance the session" });
         }
 
         const now = new Date();
+        let newStatus;
+        let timelineUpdate = {};
+        let participantArrayFilter = null;
 
-        switch (session.status) {
+        switch (current.status) {
             case "relaxation":
-                session.status = "focus";
-                session.timeline.focusStartedAt = now;
-                // Calculate end time from start time to ensure consistency across all clients
-                session.timeline.focusEndsAt = new Date(
-                    now.getTime() + (session.settings.focusDuration * 60 * 1000)
-                );
+                newStatus = "focus";
+                timelineUpdate = {
+                    "timeline.focusStartedAt": now,
+                    "timeline.focusEndsAt": new Date(
+                        now.getTime() + current.settings.focusDuration * 60 * 1000
+                    ),
+                };
                 break;
 
             case "focus":
-                if (session.settings.breakDuration > 0) {
-                    session.status = "break";
-                    session.timeline.breakStartedAt = now;
+                if (current.settings.breakDuration > 0) {
+                    newStatus = "break";
+                    timelineUpdate = { "timeline.breakStartedAt": now };
                 } else {
-                    session.status = "completed";
-                    session.timeline.completedAt = now;
-                    // Calculate stats
-                    session.stats.totalFocusMinutes = session.settings.focusDuration;
-                    const completedCount = session.participants.filter(p =>
-                        ["active", "completed"].includes(p.status)
-                    ).length;
-                    session.stats.completionRate =
-                        (completedCount / session.stats.participantCount) * 100;
-
-                    // Mark active participants as completed
-                    session.participants.forEach(p => {
-                        if (p.status === "active") {
-                            p.status = "completed";
-                            p.focusTimeCompleted = session.settings.focusDuration * 60;
-                        }
-                    });
+                    newStatus = "completed";
+                    timelineUpdate = { "timeline.completedAt": now };
+                    participantArrayFilter = "active";
                 }
                 break;
 
             case "break":
-                session.status = "completed";
-                session.timeline.completedAt = now;
-                session.stats.totalFocusMinutes = session.settings.focusDuration;
-                const completedCount = session.participants.filter(p =>
-                    ["active", "completed"].includes(p.status)
-                ).length;
-                session.stats.completionRate =
-                    (completedCount / session.stats.participantCount) * 100;
-
-                session.participants.forEach(p => {
-                    if (p.status === "active") {
-                        p.status = "completed";
-                        p.focusTimeCompleted = session.settings.focusDuration * 60;
-                    }
-                });
+                newStatus = "completed";
+                timelineUpdate = { "timeline.completedAt": now };
+                participantArrayFilter = "active";
                 break;
 
             default:
-                return res.status(400).json({
-                    success: false,
-                    error: "Cannot advance from current status",
-                });
+                return res.status(400).json({ success: false, error: "Cannot advance from current status" });
         }
 
-        await session.save();
+        const updateOp = {
+            $set: {
+                status: newStatus,
+                ...timelineUpdate,
+            },
+        };
 
-        // If session completed, create timer records for all participants
+        // Mark active participants as completed atomically when entering completed state
+        if (participantArrayFilter) {
+            updateOp.$set["participants.$[active].status"] = "completed";
+            updateOp.$set["participants.$[active].focusTimeCompleted"] = current.settings.focusDuration * 60;
+        }
+
+        // Compute completion stats for completed state
+        if (newStatus === "completed") {
+            const completedCount = current.participants.filter(
+                p => ["active", "completed"].includes(p.status)
+            ).length;
+            updateOp.$set["stats.totalFocusMinutes"] = current.settings.focusDuration;
+            updateOp.$set["stats.completionRate"] =
+                current.stats.participantCount > 0
+                    ? (completedCount / current.stats.participantCount) * 100
+                    : 0;
+        }
+
+        const updateOptions = { new: true };
+        if (participantArrayFilter) {
+            updateOptions.arrayFilters = [{ "active.status": "active" }];
+        }
+
+        // Condition on current status — only one advance can win
+        const session = await GroupSession.findOneAndUpdate(
+            { _id: sessionId, status: current.status, hostId: userId },
+            updateOp,
+            updateOptions
+        );
+
+        if (!session) {
+            return res.status(400).json({ success: false, error: "Session state changed — please refresh" });
+        }
+
         if (session.status === "completed") {
             await createTimerRecordsForSession(session);
         }
@@ -556,10 +573,7 @@ export const advanceSession = async (req, res) => {
         });
     } catch (error) {
         console.error("Advance session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to advance session" });
     }
 };
 
@@ -590,7 +604,7 @@ const createTimerRecordsForSession = async (session) => {
         console.log(`Created ${completedParticipants.length} timer records for session ${session._id}`);
     } catch (error) {
         console.error("Error creating timer records:", error);
-        // Don't throw - this is a non-critical operation
+        // Non-critical — don't throw
     }
 };
 
@@ -601,46 +615,31 @@ const createTimerRecordsForSession = async (session) => {
  */
 export const cancelSession = async (req, res) => {
     try {
-        const session = await GroupSession.findById(req.params.id);
+        const session = await GroupSession.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                hostId: req.user._id,
+                status: { $ne: "completed" },
+            },
+            { $set: { status: "cancelled", "timeline.completedAt": new Date() } },
+            { new: true }
+        );
 
         if (!session) {
-            return res.status(404).json({
-                success: false,
-                error: "Session not found",
-            });
+            const recheck = await GroupSession.findById(req.params.id);
+            if (!recheck) {
+                return res.status(404).json({ success: false, error: "Session not found" });
+            }
+            if (recheck.hostId.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ success: false, error: "Only the host can cancel the session" });
+            }
+            return res.status(400).json({ success: false, error: "Cannot cancel a completed session" });
         }
 
-        // Only host can cancel
-        if (session.hostId.toString() !== req.user._id.toString()) {
-            return res.status(403).json({
-                success: false,
-                error: "Only the host can cancel the session",
-            });
-        }
-
-        // Can't cancel completed sessions
-        if (session.status === "completed") {
-            return res.status(400).json({
-                success: false,
-                error: "Cannot cancel a completed session",
-            });
-        }
-
-        session.status = "cancelled";
-        session.timeline.completedAt = new Date();
-
-        await session.save();
-
-        res.status(200).json({
-            success: true,
-            message: "Session cancelled",
-        });
+        res.status(200).json({ success: true, message: "Session cancelled" });
     } catch (error) {
         console.error("Cancel session error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to cancel session" });
     }
 };
 
@@ -648,44 +647,34 @@ export const cancelSession = async (req, res) => {
  * @desc    Update heartbeat (keep participant alive)
  * @route   POST /api/group-sessions/:id/heartbeat
  * @access  Protected
+ *
+ * Pure atomic update — does NOT load the whole document.
  */
 export const updateHeartbeat = async (req, res) => {
     try {
-        const session = await GroupSession.findById(req.params.id);
+        const session = await GroupSession.findOneAndUpdate(
+            { _id: req.params.id, "participants.userId": req.user._id },
+            { $set: { "participants.$.lastSeen": new Date() } },
+            { new: true, select: "status timeline" }
+        );
 
         if (!session) {
             return res.status(404).json({
                 success: false,
-                error: "Session not found",
+                error: "Session not found or you are not a participant",
             });
         }
-
-        const participant = session.getParticipant(req.user._id);
-        if (!participant) {
-            return res.status(400).json({
-                success: false,
-                error: "You are not in this session",
-            });
-        }
-
-        participant.lastSeen = new Date();
-        await session.save();
 
         res.status(200).json({
             success: true,
-            data: {
-                status: session.status,
-                timeline: session.timeline,
-            },
+            data: { status: session.status, timeline: session.timeline },
         });
     } catch (error) {
         console.error("Update heartbeat error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to update heartbeat" });
     }
 };
+
 /**
  * @desc    Delete group sessions for a specific community (Cleanup)
  * @route   DELETE /api/group-sessions/debug/cleanup
@@ -696,19 +685,12 @@ export const deleteAllSessions = async (req, res) => {
         const { communityId } = req.query;
 
         if (!communityId) {
-            return res.status(400).json({
-                success: false,
-                error: "Community ID is required for cleanup",
-            });
+            return res.status(400).json({ success: false, error: "Community ID is required for cleanup" });
         }
 
-        // Verify community exists and user is owner
         const community = await Community.findById(communityId);
         if (!community) {
-            return res.status(404).json({
-                success: false,
-                error: "Community not found",
-            });
+            return res.status(404).json({ success: false, error: "Community not found" });
         }
 
         if (community.creator.toString() !== req.user._id.toString()) {
@@ -726,9 +708,6 @@ export const deleteAllSessions = async (req, res) => {
         });
     } catch (error) {
         console.error("Cleanup sessions error:", error);
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message || "Failed to cleanup sessions" });
     }
 };

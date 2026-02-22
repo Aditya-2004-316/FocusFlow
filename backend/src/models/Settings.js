@@ -29,7 +29,7 @@ const SettingsSchema = new mongoose.Schema(
             longBreakDuration: { type: Number, min: 1, max: 60, default: 15 },
         },
         themeSettings: {
-            theme: { type: String, enum: ["light", "dark"], default: "light" },
+            theme: { type: String, enum: ["light", "dark"], default: "dark" },
             glassIntensity: { type: String, enum: ["low", "medium", "high"], default: "medium" },
         },
         notificationSettings: {

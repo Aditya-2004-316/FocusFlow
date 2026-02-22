@@ -27,7 +27,9 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
     const timerRef = useRef(null);
     const loadingRef = useRef(false);
     const hasJoinedRef = useRef(false);
-    const clockOffsetRef = useRef(0); // Track difference between client and server time
+    const clockOffsetRef = useRef(0);
+    // Keep a ref to the latest session for the timer + poll to access without stale closures
+    const sessionRef = useRef(null);
 
     // Handle window resize for responsive layout
     useEffect(() => {
@@ -38,72 +40,82 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    // Tracks whether an error has already been shown for this session load
+    // so the background poll never spams the user with repeated toasts.
+    const loadErrorShownRef = useRef(false);
+
     // Load session data
-    const loadSession = useCallback(async (force = false) => {
-        // Prevent concurrent loads unless forced
-        if (loadingRef.current && !force) {
-            return;
-        }
+    const loadSession = useCallback(async (silent = false) => {
+        // Prevent concurrent loads
+        if (loadingRef.current) return;
 
         loadingRef.current = true;
         try {
             const data = await groupSessionAPI.getGroupSession(sessionId);
             setSession(data.data);
-
+            loadErrorShownRef.current = false; // Reset on success
         } catch (err) {
-            toast.error(err.message || "Failed to load session");
+            // Silent background polls should NEVER show a toast —
+            // the socket keeps state in sync; a transient HTTP failure
+            // doesn't need to spam the user.
+            if (!silent && !loadErrorShownRef.current) {
+                loadErrorShownRef.current = true;
+                toast.error(err.message || "Failed to load session");
+            }
         } finally {
             setLoading(false);
             loadingRef.current = false;
         }
-    }, [sessionId, currentUserId, toast]);
+    }, [sessionId, toast]);
 
-    // Initial load and socket join
     // Initial load and socket join
     useEffect(() => {
-        console.log(`[GroupSessionRoom] Mounting/Updating session ${sessionId}, connected: ${isConnected}, joined: ${hasJoinedRef.current}`);
-        loadSession(true); // Force initial load
+        loadSession(false); // Show error toast only on initial load
 
         if (isConnected && !hasJoinedRef.current) {
-            console.log(`[GroupSessionRoom] Joining session room (emit): ${sessionId}`);
             joinSession(sessionId);
             hasJoinedRef.current = true;
         }
 
-        // Cleanup: only clear intervals. 
-        // We do NOT call leaveSession() here because it runs on every dependency change (like isConnected flickering).
-        // The server handles disconnects. Explicit leaving is done via handleLeave button.
         return () => {
-            console.log(`[GroupSessionRoom] Effect cleanup (intervals only) for session ${sessionId}`);
             if (heartbeatRef.current) clearInterval(heartbeatRef.current);
             if (timerRef.current) clearInterval(timerRef.current);
             loadingRef.current = false;
         };
-    }, [sessionId, isConnected, joinSession, loadSession]); // Removed leaveSession from deps
+    }, [sessionId, isConnected, joinSession, loadSession]);
 
-    // Heartbeat
+    // Heartbeat — sent via SOCKET only (the HTTP heartbeat endpoint was a duplicate
+    // that caused extra DB writes and added to the race-condition load).
+    // sendHeartbeat() emits a socket event; the server handles lastSeen atomically.
     useEffect(() => {
         if (isConnected && sessionId) {
             heartbeatRef.current = setInterval(() => {
                 sendHeartbeat(sessionId);
-            }, 10000);
+            }, 15000); // Every 15s is plenty; server pings every 25s
         }
         return () => {
-            if (heartbeatRef.current) {
-                clearInterval(heartbeatRef.current);
-            }
+            if (heartbeatRef.current) clearInterval(heartbeatRef.current);
         };
     }, [isConnected, sessionId, sendHeartbeat]);
 
-    // Safety Net: Poll session state every 5 seconds to ensure sync
+    // Safety-net poll: re-fetches session every 8s in case a socket event was missed.
+    // Stops automatically once session reaches a terminal state so it never
+    // keeps hammering the API after the session ends (which was causing the
+    // "unlimited repeated API errors" your friends saw).
     useEffect(() => {
-        if (sessionId) {
-            const syncInterval = setInterval(() => {
-                // Silent reload (don't show loading spinner)
-                loadSession(true);
-            }, 5000);
-            return () => clearInterval(syncInterval);
-        }
+        if (!sessionId) return;
+
+        const syncInterval = setInterval(() => {
+            // Don't poll anymore once session is done — socket already closed the room
+            const currentStatus = sessionRef.current?.status;
+            if (currentStatus === "completed" || currentStatus === "cancelled") {
+                clearInterval(syncInterval);
+                return;
+            }
+            loadSession(true); // silent=true so errors are swallowed
+        }, 8000);
+
+        return () => clearInterval(syncInterval);
     }, [sessionId, loadSession]);
 
     // Subscribe to socket events
@@ -222,8 +234,7 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
         };
     }, [socket, subscribe, currentUserId, loadSession, onClose, toast]);
 
-    // Keep a ref to the latest session for the timer to access without dependencies
-    const sessionRef = useRef(session);
+    // Keep sessionRef current whenever session state changes
     useEffect(() => {
         sessionRef.current = session;
     }, [session]);

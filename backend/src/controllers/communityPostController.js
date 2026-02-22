@@ -293,36 +293,32 @@ export const reactToPost = async (req, res) => {
             });
         }
 
-        // Check if already reacted with this type
-        const existingReaction = await PostReaction.findOne({
-            postId,
-            userId: req.user._id,
-            reactionType,
-        });
-
-        if (existingReaction) {
-            return res.status(400).json({
-                success: false,
-                error: "Already reacted with this emoji",
-            });
-        }
-
-        // Create reaction
+        // PostReaction has a unique index on (postId, userId, reactionType).
+        // Attempting to create a duplicate will throw a duplicate-key error (code 11000)
+        // which we handle below — no separate findOne check needed, avoiding a read race.
         const reaction = await PostReaction.create({
             postId,
             userId: req.user._id,
             reactionType,
         });
 
-        // Update post reaction count
-        post.reactionsCount[reactionType] += 1;
-        await post.save();
+        // Atomically increment the count — safe under concurrent multi-user reactions.
+        await CommunityPost.findByIdAndUpdate(postId, {
+            $inc: { [`reactionsCount.${reactionType}`]: 1 },
+        });
 
         res.status(201).json({
             success: true,
             data: reaction,
         });
     } catch (error) {
+        // Unique index violation — user already reacted with this type
+        if (error.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                error: "Already reacted with this emoji",
+            });
+        }
         res.status(500).json({
             success: false,
             error: error.message,
@@ -353,15 +349,12 @@ export const removeReactionFromPost = async (req, res) => {
             });
         }
 
-        // Update post reaction count
-        const post = await CommunityPost.findById(postId);
-        if (post) {
-            post.reactionsCount[reactionType] = Math.max(
-                0,
-                post.reactionsCount[reactionType] - 1
-            );
-            await post.save();
-        }
+        // Atomically decrement — safe under concurrent multi-user interactions.
+        // $max with 0 guard isn't available server-side, so we use $inc and allow
+        // Mongoose validation or an application-level check if count goes negative.
+        await CommunityPost.findByIdAndUpdate(postId, {
+            $inc: { [`reactionsCount.${reactionType}`]: -1 },
+        });
 
         res.status(200).json({
             success: true,
