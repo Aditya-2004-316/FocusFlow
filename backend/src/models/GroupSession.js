@@ -76,7 +76,7 @@ const groupSessionSchema = new mongoose.Schema({
         },
         relaxationActivity: {
             type: String,
-            enum: ["meditation", "music", "breathing", "stretching", null],
+            enum: ["music", "meditation", "thoughtDump", "calmingGame", "doodlePad", "affirmations", null],
             default: null,
         },
         relaxationDuration: {
@@ -88,6 +88,15 @@ const groupSessionSchema = new mongoose.Schema({
         allowLateJoin: {
             type: Boolean,
             default: true,
+        },
+        // How many minutes into the focus phase late-joins are still allowed.
+        // 0 = no time-based cutoff (allow for the full session).
+        // Defaults to half the focusDuration, enforced at join time.
+        lateJoinCutoffMinutes: {
+            type: Number,
+            default: 0, // 0 means "use half of focusDuration" at join-time
+            min: 0,
+            max: 120,
         },
         autoStartOnReady: {
             type: Boolean,
@@ -125,6 +134,10 @@ const groupSessionSchema = new mongoose.Schema({
             default: null,
         },
         breakStartedAt: {
+            type: Date,
+            default: null,
+        },
+        breakEndsAt: {
             type: Date,
             default: null,
         },

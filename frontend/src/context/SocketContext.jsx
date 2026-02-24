@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext";
 
@@ -12,11 +12,17 @@ export const SocketProvider = ({ children }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [connectionError, setConnectionError] = useState(null);
 
+    // Track the active session so we can re-join after a reconnect
+    const activeSessionIdRef = useRef(null);
+    // Keep a stable ref to the socket so visibility handlers can access it
+    const socketRef = useRef(null);
+
     useEffect(() => {
         if (!isAuthenticated) {
             // Disconnect if user logs out
-            if (socket) {
-                socket.disconnect();
+            if (socketRef.current) {
+                socketRef.current.disconnect();
+                socketRef.current = null;
                 setSocket(null);
                 setIsConnected(false);
             }
@@ -31,7 +37,7 @@ export const SocketProvider = ({ children }) => {
             auth: { token },
             transports: ["websocket", "polling"],
             reconnection: true,
-            reconnectionAttempts: 5,
+            reconnectionAttempts: Infinity,   // Never stop trying
             reconnectionDelay: 1000,
             reconnectionDelayMax: 5000,
         });
@@ -40,6 +46,12 @@ export const SocketProvider = ({ children }) => {
             console.log("Socket connected:", newSocket.id);
             setIsConnected(true);
             setConnectionError(null);
+
+            // If we were in a session when we lost connection, re-join it now
+            if (activeSessionIdRef.current) {
+                console.log("Re-joining session after reconnect:", activeSessionIdRef.current);
+                newSocket.emit("session:join", activeSessionIdRef.current);
+            }
         });
 
         newSocket.on("disconnect", (reason) => {
@@ -58,16 +70,48 @@ export const SocketProvider = ({ children }) => {
             setConnectionError(error.message);
         });
 
+        socketRef.current = newSocket;
         setSocket(newSocket);
+
+        // ── Page Visibility API ──────────────────────────────────────────────
+        // When the user switches back to the tab after doing their actual work,
+        // immediately fire a heartbeat and re-join the session room if needed.
+        // This prevents the server from marking them as disconnected.
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible") {
+                const sock = socketRef.current;
+                if (!sock) return;
+
+                if (!sock.connected) {
+                    // Socket dropped while in background – reconnect immediately
+                    console.log("Tab became visible — reconnecting socket");
+                    sock.connect();
+                } else {
+                    // Socket still alive — just fire an immediate heartbeat and
+                    // re-join the session room to refresh lastSeen on the server
+                    if (activeSessionIdRef.current) {
+                        console.log("Tab became visible — re-joining session and sending heartbeat");
+                        sock.emit("session:join", activeSessionIdRef.current);
+                        sock.emit("heartbeat", activeSessionIdRef.current);
+                    }
+                }
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         // Cleanup on unmount
         return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
             newSocket.disconnect();
+            socketRef.current = null;
         };
     }, [isAuthenticated]);
 
     // Join a session room
     const joinSession = useCallback((sessionId) => {
+        // Track session so we can auto-rejoin on reconnect / visibility restore
+        activeSessionIdRef.current = sessionId;
         if (socket && isConnected) {
             socket.emit("session:join", sessionId);
         }
@@ -75,6 +119,8 @@ export const SocketProvider = ({ children }) => {
 
     // Leave a session room
     const leaveSession = useCallback((sessionId) => {
+        // Clear tracked session so we don't rejoin after they intentionally left
+        activeSessionIdRef.current = null;
         if (socket && isConnected) {
             socket.emit("session:leave", sessionId);
         }

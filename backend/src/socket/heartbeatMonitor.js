@@ -2,9 +2,11 @@ import GroupSession from "../models/GroupSession.js";
 import { getIO } from "./socketServer.js";
 
 // Intervals in milliseconds
-const HEARTBEAT_CHECK_INTERVAL = 15000; // Check every 15 seconds
-const DISCONNECT_THRESHOLD = 120000; // Mark as disconnected after 2 minutes
-const CLEANUP_THRESHOLD = 300000; // Remove from session after 5 minutes
+const HEARTBEAT_CHECK_INTERVAL = 15000;  // Check every 15 seconds
+const DISCONNECT_THRESHOLD = 600000;     // Mark as disconnected after 10 minutes
+// (was 2 min — far too short for a focus session
+//  where users are intentionally in another app)
+const CLEANUP_THRESHOLD = 900000;        // Remove from session after 15 minutes
 const STALE_SESSION_THRESHOLD = 24 * 60 * 60 * 1000; // 24 hours
 
 let heartbeatInterval = null;
@@ -135,11 +137,16 @@ export const startHeartbeatMonitor = () => {
                 if (fresh.status === "focus" && fresh.timeline.focusEndsAt) {
                     if (new Date(fresh.timeline.focusEndsAt) <= now) {
                         if (fresh.settings.breakDuration > 0) {
-                            // Transition to break atomically — the status condition prevents
-                            // double-advancing if the socket server advanced it at the same moment.
+                            const breakEndsAt = new Date(now.getTime() + fresh.settings.breakDuration * 60 * 1000);
                             const advanced = await GroupSession.findOneAndUpdate(
                                 { _id: fresh._id, status: "focus" },
-                                { $set: { status: "break", "timeline.breakStartedAt": now } },
+                                {
+                                    $set: {
+                                        status: "break",
+                                        "timeline.breakStartedAt": now,
+                                        "timeline.breakEndsAt": breakEndsAt,
+                                    },
+                                },
                                 { new: true }
                             ).populate("participants.userId", "username avatar");
 
@@ -150,9 +157,8 @@ export const startHeartbeatMonitor = () => {
                                     changedBy: "system",
                                 });
                             }
-                            if (advanced) { }
                         } else {
-                            // Complete the session
+                            // No break — complete immediately
                             const activeCount = fresh.participants.filter(
                                 (p) => ["active", "completed"].includes(p.status)
                             ).length;
@@ -160,7 +166,6 @@ export const startHeartbeatMonitor = () => {
                                 ? (activeCount / fresh.stats.participantCount) * 100
                                 : 0;
 
-                            // Mark all active participants as completed atomically (updateMany).
                             await GroupSession.updateOne(
                                 { _id: fresh._id, status: "focus" },
                                 {
@@ -169,12 +174,9 @@ export const startHeartbeatMonitor = () => {
                                         "timeline.completedAt": now,
                                         "stats.totalFocusMinutes": fresh.settings.focusDuration,
                                         "stats.completionRate": completionRate,
-                                        // Update all active participants to completed in one shot
-                                        // using arrayFilters (requires MongoDB 3.6+)
                                     },
                                 }
                             );
-                            // Update individual participant statuses with arrayFilters
                             await GroupSession.updateOne(
                                 { _id: fresh._id },
                                 {
@@ -195,6 +197,50 @@ export const startHeartbeatMonitor = () => {
                                     changedBy: "system",
                                 });
                             }
+                        }
+                    }
+                }
+
+                // ── 5. Auto-advance break phase if break timer has expired ─────────
+                if (fresh.status === "break" && fresh.timeline.breakEndsAt) {
+                    if (new Date(fresh.timeline.breakEndsAt) <= now) {
+                        const activeCount = fresh.participants.filter(
+                            (p) => ["active", "completed"].includes(p.status)
+                        ).length;
+                        const completionRate = fresh.stats.participantCount > 0
+                            ? (activeCount / fresh.stats.participantCount) * 100
+                            : 0;
+
+                        await GroupSession.updateOne(
+                            { _id: fresh._id, status: "break" },
+                            {
+                                $set: {
+                                    status: "completed",
+                                    "timeline.completedAt": now,
+                                    "stats.totalFocusMinutes": fresh.settings.focusDuration,
+                                    "stats.completionRate": completionRate,
+                                },
+                            }
+                        );
+                        await GroupSession.updateOne(
+                            { _id: fresh._id },
+                            {
+                                $set: {
+                                    "participants.$[elem].status": "completed",
+                                    "participants.$[elem].focusTimeCompleted": fresh.settings.focusDuration * 60,
+                                },
+                            },
+                            { arrayFilters: [{ "elem.status": "active" }] }
+                        );
+
+                        const breakCompleted = await GroupSession.findById(fresh._id)
+                            .populate("participants.userId", "username avatar");
+                        if (breakCompleted && io) {
+                            io.to(`session:${fresh._id}`).emit("session:phaseChanged", {
+                                session: breakCompleted,
+                                newPhase: "completed",
+                                changedBy: "system",
+                            });
                         }
                     }
                 }

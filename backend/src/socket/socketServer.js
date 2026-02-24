@@ -5,6 +5,13 @@ import User from "../models/User.js";
 
 let io = null;
 
+// Grace-period timers: socketId -> NodeJS Timeout
+// When a socket disconnects we wait DISCONNECT_GRACE_MS before marking the
+// participant as disconnected in the DB, giving mobile browsers time to
+// reopen the WebSocket after switching back to the tab.
+const DISCONNECT_GRACE_MS = 30000; // 30 seconds
+const disconnectTimers = new Map();
+
 /**
  * Initialize Socket.io server
  */
@@ -77,6 +84,20 @@ export const initializeSocket = (httpServer) => {
     // Connection handler
     io.on("connection", (socket) => {
         console.log(`User connected: ${socket.user.username} (${socket.userId})`);
+
+        // Cancel any pending disconnect grace timer for this user.
+        // This handles the case where Socket.IO or the browser assigned a NEW
+        // socket ID on reconnect (common on mobile), yet the old socket's timer
+        // is still ticking in the background map.
+        for (const [oldSocketId, entry] of disconnectTimers.entries()) {
+            if (entry.userId === socket.userId) {
+                console.log(
+                    `Cancelling pending disconnect timer for ${socket.user.username} (old socket: ${oldSocketId})`
+                );
+                clearTimeout(entry.timer);
+                disconnectTimers.delete(oldSocketId);
+            }
+        }
 
         // Join a community room for chat
         socket.on("join_community", (communityId) => {
@@ -218,12 +239,39 @@ export const initializeSocket = (httpServer) => {
             }
         });
 
-        // Heartbeat — pure atomic update, no document load needed
+        // Heartbeat — pure atomic update, no document load needed.
+        // Belt-and-suspenders: also reverts a "disconnected" status back to
+        // "active" in case the grace-timer fired before the socket came back.
         socket.on("heartbeat", async (sessionId) => {
             try {
                 if (!sessionId) return;
+
+                // Cancel any lingering grace timer (edge case where
+                // heartbeat arrives before session:join on reconnect)
+                for (const [sid, entry] of disconnectTimers.entries()) {
+                    if (entry.userId === socket.userId && entry.sessionId === sessionId) {
+                        clearTimeout(entry.timer);
+                        disconnectTimers.delete(sid);
+                    }
+                }
+
+                // Update lastSeen. If the participant somehow slipped into
+                // "disconnected" state, put them back as "active".
                 await GroupSession.findOneAndUpdate(
-                    { _id: sessionId, "participants.userId": socket.userId },
+                    {
+                        _id: sessionId,
+                        "participants.userId": socket.userId,
+                        "participants.status": "disconnected",
+                    },
+                    { $set: { "participants.$.status": "active", "participants.$.lastSeen": new Date() } }
+                );
+                // For participants who are already active/waiting/ready, just touch lastSeen.
+                await GroupSession.findOneAndUpdate(
+                    {
+                        _id: sessionId,
+                        "participants.userId": socket.userId,
+                        "participants.status": { $nin: ["disconnected", "left", "completed"] },
+                    },
                     { $set: { "participants.$.lastSeen": new Date() } }
                 );
             } catch (error) {
@@ -323,7 +371,12 @@ export const initializeSocket = (httpServer) => {
                     case "focus":
                         if (current.settings.breakDuration > 0) {
                             newStatus = "break";
-                            timelineUpdate = { "timeline.breakStartedAt": now };
+                            timelineUpdate = {
+                                "timeline.breakStartedAt": now,
+                                "timeline.breakEndsAt": new Date(
+                                    now.getTime() + current.settings.breakDuration * 60 * 1000
+                                ),
+                            };
                         } else {
                             newStatus = "completed";
                             timelineUpdate = { "timeline.completedAt": now };
@@ -377,17 +430,27 @@ export const initializeSocket = (httpServer) => {
             }
         });
 
-        // Handle disconnect — atomic status update
-        socket.on("disconnect", async () => {
-            console.log(`User disconnected: ${socket.user.username}`);
+        // Handle disconnect — deferred grace-period update
+        socket.on("disconnect", async (reason) => {
+            console.log(`User disconnected: ${socket.user.username} (reason: ${reason})`);
 
-            if (socket.currentSessionId) {
+            if (!socket.currentSessionId) return;
+
+            const sessionId = socket.currentSessionId;
+            const userId = socket.userId;
+            const user = socket.user;
+
+            // Start a grace timer. If the same user reconnects (e.g., re-opens
+            // the tab on mobile) before it fires, we cancel it so they're never
+            // marked disconnected at all.
+            const timer = setTimeout(async () => {
+                disconnectTimers.delete(socket.id);
                 try {
                     // Atomic: only updates if participant is not already left/completed
                     const session = await GroupSession.findOneAndUpdate(
                         {
-                            _id: socket.currentSessionId,
-                            "participants.userId": socket.userId,
+                            _id: sessionId,
+                            "participants.userId": userId,
                             "participants.status": { $nin: ["left", "completed"] },
                         },
                         {
@@ -400,23 +463,26 @@ export const initializeSocket = (httpServer) => {
                     );
 
                     if (session) {
-                        const updatedSession = await GroupSession.findById(socket.currentSessionId)
+                        const updatedSession = await GroupSession.findById(sessionId)
                             .populate("participants.userId", "username avatar");
 
-                        socket.to(`session:${socket.currentSessionId}`).emit("participant:disconnected", {
-                            user: socket.user,
-                            sessionId: socket.currentSessionId,
-                        });
-
-                        socket.to(`session:${socket.currentSessionId}`).emit("session:state", {
-                            session: updatedSession,
-                            serverTime: Date.now(),
-                        });
+                        if (io) {
+                            io.to(`session:${sessionId}`).emit("participant:disconnected", {
+                                user,
+                                sessionId,
+                            });
+                            io.to(`session:${sessionId}`).emit("session:state", {
+                                session: updatedSession,
+                                serverTime: Date.now(),
+                            });
+                        }
                     }
                 } catch (error) {
-                    console.error("Error handling disconnect:", error);
+                    console.error("Error handling deferred disconnect:", error);
                 }
-            }
+            }, DISCONNECT_GRACE_MS);
+
+            disconnectTimers.set(socket.id, { timer, sessionId, userId });
         });
     });
 

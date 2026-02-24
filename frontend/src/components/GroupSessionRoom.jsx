@@ -10,7 +10,14 @@ import {
     ArrowRightIcon,
     CheckCircleIcon,
     UserGroupIcon,
+    InformationCircleIcon,
 } from "@heroicons/react/24/outline";
+import MeditationRelaxation from "./relaxation/MeditationRelaxation";
+import MusicRelaxation from "./relaxation/MusicRelaxation";
+import ThoughtDumpRelaxation from "./relaxation/ThoughtDumpRelaxation";
+import CalmingGameRelaxation from "./relaxation/CalmingGameRelaxation";
+import DoodlePadRelaxation from "./relaxation/DoodlePadRelaxation";
+import AffirmationsRelaxation from "./relaxation/AffirmationsRelaxation";
 
 const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
     const { socket, isConnected, subscribe, joinSession, leaveSession, updateStatus, startSession, advanceSession, sendHeartbeat } = useSocket();
@@ -20,6 +27,10 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
     const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
     const [timeRemaining, setTimeRemaining] = useState(null);
+    const [breakTimeRemaining, setBreakTimeRemaining] = useState(null);
+    const [relaxationModalOpen, setRelaxationModalOpen] = useState(false);
+    // Track number of times the relaxation activity modal has been opened this session (max 2)
+    const [relaxationUseCount, setRelaxationUseCount] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [showSidebar, setShowSidebar] = useState(false);
 
@@ -89,14 +100,40 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
     // sendHeartbeat() emits a socket event; the server handles lastSeen atomically.
     useEffect(() => {
         if (isConnected && sessionId) {
+            // Send at 10s intervals — tighter than 15s so browser throttling
+            // (which can stretch intervals to ~60s in background tabs) still
+            // fits within the 2-minute server disconnect threshold.
             heartbeatRef.current = setInterval(() => {
                 sendHeartbeat(sessionId);
-            }, 15000); // Every 15s is plenty; server pings every 25s
+            }, 10000);
         }
         return () => {
             if (heartbeatRef.current) clearInterval(heartbeatRef.current);
         };
     }, [isConnected, sessionId, sendHeartbeat]);
+
+    // Page Visibility API — secondary safety net inside GroupSessionRoom.
+    // When the user returns to this tab after doing their actual work in another
+    // app/window, immediately punch a heartbeat to the server so it knows the
+    // participant is still alive. This complements the SocketContext-level
+    // handler which re-joins the socket room on reconnect.
+    useEffect(() => {
+        if (!sessionId) return;
+
+        const handleVisibilityRestore = () => {
+            if (document.visibilityState === "visible" && isConnected) {
+                // Burst heartbeat — update lastSeen right now instead of waiting
+                // for the next timer tick (which may have been suppressed).
+                sendHeartbeat(sessionId);
+                // Also re-join the socket room in case the socket silently lost
+                // membership while backgrounded (common on mobile browsers).
+                joinSession(sessionId);
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityRestore);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityRestore);
+    }, [sessionId, isConnected, sendHeartbeat, joinSession]);
 
     // Safety-net poll: re-fetches session every 8s in case a socket event was missed.
     // Stops automatically once session reaches a terminal state so it never
@@ -244,12 +281,14 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
     useEffect(() => {
         const timerId = setInterval(() => {
             const currentSession = sessionRef.current;
+            const now = Date.now() - clockOffsetRef.current;
+
             if (currentSession?.status === "focus" && currentSession?.timeline?.focusEndsAt) {
                 const endTime = new Date(currentSession.timeline.focusEndsAt).getTime();
-                // Use server-synced time for more accurate countdown
-                const now = Date.now() - clockOffsetRef.current;
-                const remaining = Math.max(0, endTime - now);
-                setTimeRemaining(remaining);
+                setTimeRemaining(Math.max(0, endTime - now));
+            } else if (currentSession?.status === "break" && currentSession?.timeline?.breakEndsAt) {
+                const endTime = new Date(currentSession.timeline.breakEndsAt).getTime();
+                setBreakTimeRemaining(Math.max(0, endTime - now));
             }
         }, 1000);
 
@@ -296,12 +335,16 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
 
     const handleLeave = async () => {
         try {
+            // Signal SocketContext to clear its session-tracking ref so it
+            // won't automatically rejoin this room later.
+            leaveSession(sessionId);
             await groupSessionAPI.leaveGroupSession(sessionId);
             onClose();
         } catch (err) {
             toast.error(err.message || "Failed to leave session");
         }
     };
+
 
 
     // ---- Compute all style variables BEFORE any early returns ----
@@ -467,6 +510,15 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                                     </button>
                                 )}
                             </div>
+
+                            {/* Lobby connectivity tip */}
+                            <div style={{ ...connectivityTipStyle(isDarkMode), marginTop: "2rem" }}>
+                                <InformationCircleIcon style={{ width: "1.1rem", height: "1.1rem", flexShrink: 0, color: "#38bdf8" }} />
+                                <span style={{ textAlign: "left" }}>
+                                    <strong>Heads-up:</strong> Once the session starts, you can switch to your work app — this page will stay active in the background.
+                                    Just peek back here <strong>at least once every 9 minutes</strong> so the app knows you're still focusing.
+                                </span>
+                            </div>
                         </div>
                     )}
 
@@ -478,11 +530,57 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                                 Relaxation Time
                             </h3>
                             <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
-                                {session.settings?.relaxationActivity === "meditation" && "Take a moment to clear your mind..."}
-                                {session.settings?.relaxationActivity === "breathing" && "Follow the breathing pattern..."}
-                                {session.settings?.relaxationActivity === "music" && "Enjoy the calming music..."}
-                                {session.settings?.relaxationActivity === "stretching" && "Stretch and prepare your body..."}
+                                {session.settings?.relaxationActivity === "music" && "Relaxing soundscapes to set the mood."}
+                                {session.settings?.relaxationActivity === "meditation" && "Mini meditation before your focus session."}
+                                {session.settings?.relaxationActivity === "thoughtDump" && "Clear your mind with a thought dump."}
+                                {session.settings?.relaxationActivity === "calmingGame" && "Enjoy a short calming game."}
+                                {session.settings?.relaxationActivity === "doodlePad" && "Free-draw on the doodle pad."}
+                                {session.settings?.relaxationActivity === "affirmations" && "Positive affirmations to start strong."}
                             </p>
+
+                            {/* Max 2 uses per session */}
+                            {relaxationUseCount < 2 ? (
+                                <button
+                                    onClick={() => {
+                                        setRelaxationUseCount(c => c + 1);
+                                        setRelaxationModalOpen(true);
+                                    }}
+                                    style={{
+                                        ...advanceButtonStyle,
+                                        background: "linear-gradient(135deg, #a855f7, #7c3aed)",
+                                        marginTop: "1.5rem",
+                                    }}
+                                >
+                                    <PlayIcon style={{ width: "1.25rem", height: "1.25rem" }} />
+                                    Open Relaxation Activity
+                                    {relaxationUseCount === 1 && " (Last use)"}
+                                </button>
+                            ) : (
+                                <div style={{
+                                    marginTop: "1.5rem",
+                                    padding: "0.75rem 1.25rem",
+                                    borderRadius: "0.85rem",
+                                    background: isDarkMode ? "rgba(168,85,247,0.1)" : "rgba(168,85,247,0.08)",
+                                    border: "1px solid rgba(168,85,247,0.3)",
+                                    color: "#a855f7",
+                                    fontSize: "0.9rem",
+                                    fontWeight: 600,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem",
+                                }}>
+                                    ✅ You've completed this activity (max 2 uses per session)
+                                </div>
+                            )}
+
+                            {/* Relaxation connectivity tip */}
+                            <div style={{ ...connectivityTipStyle(isDarkMode), marginTop: "1.5rem" }}>
+                                <InformationCircleIcon style={{ width: "1.1rem", height: "1.1rem", flexShrink: 0, color: "#a855f7" }} />
+                                <span>
+                                    Feel free to step away briefly — the session runs in the background.
+                                    Return <strong>within 9 minutes</strong> to stay counted as active.
+                                </span>
+                            </div>
 
                             {isHost && (
                                 <button onClick={handleAdvance} style={advanceButtonStyle}>
@@ -492,6 +590,23 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             )}
                         </div>
                     )}
+
+                    {/* Relaxation Activity Modals */}
+                    {session.status === "relaxation" && (() => {
+                        const activity = session.settings?.relaxationActivity;
+                        const commonProps = {
+                            isOpen: relaxationModalOpen,
+                            onClose: () => setRelaxationModalOpen(false),
+                            onSkipToFocus: isHost ? () => { setRelaxationModalOpen(false); handleAdvance(); } : () => setRelaxationModalOpen(false),
+                        };
+                        if (activity === "meditation") return <MeditationRelaxation {...commonProps} />;
+                        if (activity === "music") return <MusicRelaxation {...commonProps} />;
+                        if (activity === "thoughtDump") return <ThoughtDumpRelaxation {...commonProps} />;
+                        if (activity === "calmingGame") return <CalmingGameRelaxation {...commonProps} />;
+                        if (activity === "doodlePad") return <DoodlePadRelaxation {...commonProps} />;
+                        if (activity === "affirmations") return <AffirmationsRelaxation {...commonProps} />;
+                        return null;
+                    })()}
 
                     {/* FOCUS STATE */}
                     {session.status === "focus" && (
@@ -505,6 +620,15 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                             <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", marginTop: "0.5rem" }}>
                                 Stay focused with your group!
                             </p>
+
+                            {/* Focus connectivity tip */}
+                            <div style={{ ...connectivityTipStyle(isDarkMode), marginTop: "1.5rem" }}>
+                                <InformationCircleIcon style={{ width: "1.1rem", height: "1.1rem", flexShrink: 0, color: "#f59e0b" }} />
+                                <span>
+                                    You can switch to your work app now — the session keeps running here.
+                                    Come back <strong>at least once every 9 minutes</strong> to stay counted as active.
+                                </span>
+                            </div>
 
                             {isHost && timeRemaining !== null && timeRemaining <= 0 && (
                                 <button onClick={handleAdvance} style={advanceButtonStyle}>
@@ -526,10 +650,26 @@ const GroupSessionRoom = ({ sessionId, currentUserId, onClose }) => {
                                 Great work! Take a well-deserved break.
                             </p>
 
+                            {/* Break countdown */}
+                            {session.timeline?.breakEndsAt && (
+                                <div style={{ ...timerDisplayStyle, fontSize: "2.5rem", color: "#3b82f6", marginTop: "1rem" }}>
+                                    {formatTime(breakTimeRemaining)}
+                                </div>
+                            )}
+
+                            {/* Break connectivity tip */}
+                            <div style={{ ...connectivityTipStyle(isDarkMode), marginTop: "1.5rem" }}>
+                                <InformationCircleIcon style={{ width: "1.1rem", height: "1.1rem", flexShrink: 0, color: "#3b82f6" }} />
+                                <span>
+                                    Enjoy your break! Just pop back here <strong>within 9 minutes</strong> so you're not marked as disconnected.
+                                    The session will complete automatically when the break ends.
+                                </span>
+                            </div>
+
                             {isHost && (
                                 <button onClick={handleAdvance} style={advanceButtonStyle}>
                                     <CheckCircleIcon style={{ width: "1.25rem", height: "1.25rem" }} />
-                                    Complete Session
+                                    End Break Early
                                 </button>
                             )}
                         </div>
@@ -932,6 +1072,19 @@ const errorBannerStyle = (isDarkMode) => ({
     borderBottom: isDarkMode ? "1px solid rgba(239, 68, 68, 0.3)" : "1px solid #fca5a5",
     color: isDarkMode ? "#fca5a5" : "#b91c1c",
     gridColumn: "1 / -1",
+});
+
+const connectivityTipStyle = (isDarkMode) => ({
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "0.75rem",
+    padding: "0.875rem 1rem",
+    borderRadius: "0.75rem",
+    background: isDarkMode ? "rgba(56, 189, 248, 0.1)" : "#f0f9ff",
+    border: `1px solid ${isDarkMode ? "rgba(56, 189, 248, 0.2)" : "#bae6fd"}`,
+    color: isDarkMode ? "#94a3b8" : "#475569",
+    fontSize: "0.85rem",
+    lineHeight: "1.4",
 });
 
 const buttonSecondaryStyle = {

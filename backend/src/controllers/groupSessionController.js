@@ -35,10 +35,13 @@ export const createGroupSession = async (req, res) => {
             scheduledAt: scheduledAt || null,
             settings: {
                 focusDuration: settings?.focusDuration || 25,
-                breakDuration: settings?.breakDuration || 5,
+                breakDuration: settings?.breakDuration !== undefined ? parseInt(settings.breakDuration) : 5,
                 relaxationActivity: settings?.relaxationActivity || null,
                 relaxationDuration: settings?.relaxationDuration || 3,
                 allowLateJoin: settings?.allowLateJoin !== false,
+                lateJoinCutoffMinutes: settings?.lateJoinCutoffMinutes !== undefined
+                    ? parseInt(settings.lateJoinCutoffMinutes)
+                    : 0, // 0 = use half of focusDuration at join-time
                 autoStartOnReady: settings?.autoStartOnReady || false,
                 minParticipants: settings?.minParticipants || 1,
                 maxParticipants: settings?.maxParticipants || 10,
@@ -158,7 +161,29 @@ export const joinGroupSession = async (req, res) => {
         }
 
         const joinableStatuses = ["lobby"];
-        if (session.settings.allowLateJoin) joinableStatuses.push("relaxation", "focus");
+        if (session.settings.allowLateJoin) {
+            joinableStatuses.push("relaxation");
+
+            // For focus phase, enforce a time-based cutoff.
+            // If lateJoinCutoffMinutes is 0 (unset), default to half the focus duration.
+            if (session.status === "focus" || true) {
+                const cutoff = session.settings.lateJoinCutoffMinutes > 0
+                    ? session.settings.lateJoinCutoffMinutes
+                    : Math.floor(session.settings.focusDuration / 2);
+
+                const focusStarted = session.timeline?.focusStartedAt;
+                if (focusStarted) {
+                    const minutesElapsed = (Date.now() - new Date(focusStarted).getTime()) / 60000;
+                    if (minutesElapsed <= cutoff) {
+                        joinableStatuses.push("focus");
+                    }
+                    // If minutesElapsed > cutoff, focus is NOT added — late join blocked
+                } else {
+                    // Focus hasn't technically started (still relaxation) — allow
+                    joinableStatuses.push("focus");
+                }
+            }
+        }
 
         if (!joinableStatuses.includes(session.status)) {
             return res.status(400).json({
@@ -500,7 +525,12 @@ export const advanceSession = async (req, res) => {
             case "focus":
                 if (current.settings.breakDuration > 0) {
                     newStatus = "break";
-                    timelineUpdate = { "timeline.breakStartedAt": now };
+                    timelineUpdate = {
+                        "timeline.breakStartedAt": now,
+                        "timeline.breakEndsAt": new Date(
+                            now.getTime() + current.settings.breakDuration * 60 * 1000
+                        ),
+                    };
                 } else {
                     newStatus = "completed";
                     timelineUpdate = { "timeline.completedAt": now };
