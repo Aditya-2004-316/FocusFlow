@@ -43,6 +43,11 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 690);
     const [isSmall, setIsSmall] = useState(window.innerWidth < 880);
     const [isTiny, setIsTiny] = useState(window.innerWidth < 380);
+    const [customRoles, setCustomRoles] = useState([]); // Community-defined custom roles
+    const [newRoleName, setNewRoleName] = useState("");
+    const [newRolePriority, setNewRolePriority] = useState(10);
+    const [newRoleColor, setNewRoleColor] = useState("#8b5cf6");
+    const [savingCustomRole, setSavingCustomRole] = useState(false);
     const { isDarkMode } = useTheme();
 
     const toast = useToast();
@@ -128,6 +133,7 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
         try {
             const data = await communityAPI.getMembers(communityId);
             setMembers(data.data || []);
+            setCustomRoles(data.customRoles || []);
         } catch (err) {
             toast.error("Failed to load members");
         } finally {
@@ -159,8 +165,47 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
         }
     };
 
+    const handleCreateCustomRole = async () => {
+        if (!newRoleName.trim()) return toast.error("Role name is required");
+        setSavingCustomRole(true);
+        try {
+            await communityAPI.createCustomRole(communityId, {
+                name: newRoleName.trim(),
+                priority: Number(newRolePriority),
+                color: newRoleColor,
+            });
+            toast.success(`Custom role "${newRoleName.trim()}" created`);
+            setNewRoleName("");
+            setNewRolePriority(10);
+            setNewRoleColor("#8b5cf6");
+            loadMembers(); // Refresh members + customRoles
+        } catch (err) {
+            toast.error(err.message || "Failed to create custom role");
+        } finally {
+            setSavingCustomRole(false);
+        }
+    };
+
+    const handleDeleteCustomRole = async (roleName) => {
+        const confirmed = await confirmDialog({
+            title: `Delete "${roleName}" Role?`,
+            message: `Deleting this role will demote all members with "${roleName}" back to Member. This cannot be undone.`,
+            confirmText: "Delete Role",
+            cancelText: "Cancel",
+            variant: "danger",
+        });
+        if (!confirmed) return;
+        try {
+            await communityAPI.deleteCustomRole(communityId, roleName);
+            toast.success(`Custom role "${roleName}" deleted`);
+            loadMembers();
+        } catch (err) {
+            toast.error(err.message || "Failed to delete custom role");
+        }
+    };
+
     const handleRemoveMember = async (userId) => {
-        const confirmed = await confirmDialog({ title: "Remove Member?", message: "Sure?", confirmText: "Remove", variant: "danger" });
+        const confirmed = await confirmDialog({ title: "Remove Member?", message: "This member will be removed from the community and will need to request access again if they want to rejoin.", confirmText: "Remove", cancelText: "Cancel", variant: "danger" });
         if (!confirmed) return;
         try {
             await communityAPI.removeMember(communityId, userId);
@@ -201,6 +246,8 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
     if (!isOpen || !communityId) return null;
 
     const isOwner = memberRole === "Owner";
+    const isAdmin = memberRole === "Admin" || memberRole === "Administrator";
+    const canManageMembers = isOwner || isAdmin;
     const channels = [
         { id: "focus-sessions", name: "Focus Sessions", icon: ClockIcon },
         { id: "chat", name: "Discussion", icon: HashtagIcon },
@@ -323,75 +370,303 @@ const CommunityDetail = ({ isOpen, onClose, communityId, currentUserId }) => {
                 );
             case "members":
                 return (
-                    <div style={{ padding: "1.5rem", height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}>
-                        <h3 style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", marginBottom: "1rem" }}>Members ({members.length})</h3>
-                        <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "0.75rem", minHeight: 0 }}>
-                            {members.map(member => (
-                                <div key={member._id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1rem", background: isDarkMode ? "rgba(255, 255, 255, 0.03)" : "#f8fafc", borderRadius: "0.5rem", border: isDarkMode ? "none" : "1px solid #e2e8f0" }}>
-                                    <div style={{ width: "2.5rem", height: "2.5rem", borderRadius: "50%", background: "linear-gradient(135deg, #6366f1, #8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700 }}>
-                                        {(member.userId?.username || "?")[0].toUpperCase()}
-                                    </div>
-                                    <div style={{ flex: 1, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <div style={{ display: "flex", flexDirection: "column" }}>
-                                            <span style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", fontWeight: 600 }}>{member.userId?.username}</span>
-                                            <span style={{ fontSize: "0.75rem", color: isDarkMode ? "#64748b" : "#94a3b8" }}>{member.role || "Member"}</span>
+                    <div style={{ padding: "1.5rem", height: "100%", display: "flex", flexDirection: "column", minHeight: 0, overflowY: "auto" }}>
+                        {/* Header */}
+                        <div style={{ marginBottom: "1.25rem", flexShrink: 0 }}>
+                            <h3 style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", margin: 0, fontSize: "1.15rem", fontWeight: 700 }}>
+                                Members <span style={{ color: isDarkMode ? "#64748b" : "#94a3b8", fontWeight: 500, fontSize: "0.95rem" }}>({members.length})</span>
+                            </h3>
+                            {canManageMembers && (
+                                <p style={{ margin: "0.35rem 0 0", fontSize: "0.8rem", color: isDarkMode ? "#64748b" : "#94a3b8" }}>
+                                    {isOwner ? "Assign roles or remove members as the community creator." : "As an Administrator, you can assign the Member role."}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Role legend — system roles + any custom roles */}
+                        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.25rem", flexShrink: 0 }}>
+                            {[
+                                { label: "Creator", bg: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "rgba(245,158,11,0.25)", icon: "👑" },
+                                { label: "Administrator", bg: "rgba(139,92,246,0.12)", color: "#8b5cf6", border: "rgba(139,92,246,0.25)", icon: "🎯" },
+                                { label: "Member", bg: "rgba(16,185,129,0.12)", color: "#10b981", border: "rgba(16,185,129,0.25)", icon: "👥" },
+                                ...customRoles.map(cr => ({
+                                    label: cr.name,
+                                    bg: `${cr.color}18`,
+                                    color: cr.color,
+                                    border: `${cr.color}40`,
+                                    icon: "⭐",
+                                })),
+                            ].map(r => (
+                                <span key={r.label} style={{
+                                    display: "inline-flex", alignItems: "center", gap: "0.35rem",
+                                    fontSize: "0.72rem", fontWeight: 700,
+                                    padding: "0.3rem 0.75rem", borderRadius: "2rem",
+                                    background: r.bg, color: r.color, border: `1px solid ${r.border}`,
+                                }}>
+                                    {r.icon} {r.label}
+                                </span>
+                            ))}
+                        </div>
+
+                        {/* Members list */}
+                        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.65rem", minHeight: 0 }}>
+                            {loadingMembers ? (
+                                <div style={{ textAlign: "center", padding: "2rem", color: isDarkMode ? "#64748b" : "#94a3b8" }}>Loading members…</div>
+                            ) : members.map(member => {
+                                const memberIsCreator = member.isCreator;
+                                const displayRole = member.role || "Member";
+
+                                // Look up custom role color if applicable
+                                const customRoleDef = customRoles.find(cr => cr.name === displayRole);
+                                const systemRoleConfig = {
+                                    Creator: { bg: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "rgba(245,158,11,0.2)", icon: "👑", avatarBg: "linear-gradient(135deg,#f59e0b,#fbbf24)" },
+                                    Administrator: { bg: "rgba(139,92,246,0.12)", color: "#8b5cf6", border: "rgba(139,92,246,0.2)", icon: "🎯", avatarBg: "linear-gradient(135deg,#8b5cf6,#a78bfa)" },
+                                    Member: { bg: "rgba(16,185,129,0.12)", color: "#10b981", border: "rgba(16,185,129,0.2)", icon: "👥", avatarBg: "linear-gradient(135deg,#10b981,#34d399)" },
+                                };
+                                const rc = systemRoleConfig[displayRole] || (customRoleDef ? {
+                                    bg: `${customRoleDef.color}18`,
+                                    color: customRoleDef.color,
+                                    border: `${customRoleDef.color}40`,
+                                    icon: "⭐",
+                                    avatarBg: `linear-gradient(135deg,${customRoleDef.color},${customRoleDef.color}aa)`,
+                                } : systemRoleConfig.Member);
+
+                                const isSelf = member.userId?._id === currentUserId;
+                                const canEdit = canManageMembers && !memberIsCreator && !isSelf;
+
+                                // Build role options for the dropdown
+                                const roleOptions = isOwner
+                                    ? [
+                                        ["Administrator", "🎯 Administrator"],
+                                        ["Member", "👥 Member"],
+                                        ...customRoles.map(cr => [cr.name, `⭐ ${cr.name}`]),
+                                    ]
+                                    : [["Member", "👥 Member"]]; // Admins can only assign Member
+
+                                return (
+                                    <div key={member._id} style={{
+                                        display: "flex", alignItems: "center", gap: "0.85rem",
+                                        padding: "0.85rem 1rem",
+                                        background: isDarkMode ? "rgba(255,255,255,0.03)" : "#f8fafc",
+                                        borderRadius: "0.75rem",
+                                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.07)" : "#e2e8f0"}`,
+                                        transition: "all 0.15s",
+                                    }}>
+                                        {/* Avatar */}
+                                        <div style={{
+                                            width: "2.6rem", height: "2.6rem", borderRadius: "50%",
+                                            background: rc.avatarBg,
+                                            display: "flex", alignItems: "center", justifyContent: "center",
+                                            color: "#fff", fontWeight: 700, fontSize: "1rem", flexShrink: 0,
+                                            boxShadow: `0 0 0 2px ${rc.border}`,
+                                        }}>
+                                            {(member.userId?.username || "?")[0].toUpperCase()}
                                         </div>
 
-                                        {isOwner && member.userId?._id !== currentUserId && (
-                                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                        {/* Info */}
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                                                <span style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", fontWeight: 600, fontSize: "0.9rem" }}>
+                                                    {member.userId?.username}
+                                                </span>
+                                                <span style={{
+                                                    display: "inline-flex", alignItems: "center", gap: "0.3rem",
+                                                    fontSize: "0.65rem", fontWeight: 700,
+                                                    padding: "0.2rem 0.55rem", borderRadius: "2rem",
+                                                    background: rc.bg, color: rc.color, border: `1px solid ${rc.border}`,
+                                                }}>
+                                                    {rc.icon} {displayRole}
+                                                </span>
+                                                {isSelf && (
+                                                    <span style={{ fontSize: "0.6rem", color: isDarkMode ? "#475569" : "#94a3b8", fontStyle: "italic" }}>(you)</span>
+                                                )}
+                                            </div>
+                                            <span style={{ fontSize: "0.72rem", color: isDarkMode ? "#475569" : "#94a3b8" }}>
+                                                Joined {member.joinedAt ? new Date(member.joinedAt).toLocaleDateString() : "—"}
+                                            </span>
+                                        </div>
+
+                                        {/* Controls */}
+                                        {canEdit && (
+                                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
                                                 <select
-                                                    value={member.role}
+                                                    value={displayRole}
                                                     onChange={(e) => handleAssignRole(member.userId._id, e.target.value)}
                                                     style={{
                                                         background: isDarkMode ? "#1e293b" : "#fff",
                                                         color: isDarkMode ? "#f8fafc" : "#0f172a",
-                                                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`,
-                                                        borderRadius: "0.375rem",
-                                                        padding: "0.25rem 0.5rem",
-                                                        fontSize: "0.85rem",
+                                                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.12)" : "#e2e8f0"}`,
+                                                        borderRadius: "0.5rem",
+                                                        padding: "0.3rem 1.8rem 0.3rem 0.6rem",
+                                                        fontSize: "0.8rem",
                                                         outline: "none",
-                                                        cursor: "pointer"
+                                                        cursor: "pointer",
+                                                        appearance: "auto",
+                                                        fontWeight: 600,
                                                     }}
                                                 >
-                                                    <option value="Member">Member</option>
-                                                    <option value="Moderator">Moderator</option>
-                                                    <option value="Admin">Admin</option>
+                                                    {roleOptions.map(([val, lbl]) => (
+                                                        <option key={val} value={val}>{lbl}</option>
+                                                    ))}
                                                 </select>
                                                 <button
                                                     onClick={() => handleRemoveMember(member.userId._id)}
+                                                    title="Remove member"
                                                     style={{
-                                                        background: "rgba(239, 68, 68, 0.1)",
+                                                        background: "rgba(239,68,68,0.1)",
                                                         color: "#ef4444",
-                                                        border: "none",
-                                                        borderRadius: "0.375rem",
-                                                        padding: "0.4rem",
+                                                        border: "1px solid rgba(239,68,68,0.2)",
+                                                        borderRadius: "0.5rem",
+                                                        padding: "0.35rem 0.45rem",
                                                         cursor: "pointer",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
-                                                        transition: "all 0.2s"
+                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                        transition: "all 0.2s",
                                                     }}
-                                                    title="Remove Member"
-                                                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.2)"}
-                                                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(239, 68, 68, 0.1)"}
+                                                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.22)"}
+                                                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.1)"}
                                                 >
-                                                    <TrashIcon style={{ width: "1.1rem" }} />
+                                                    <TrashIcon style={{ width: "1rem" }} />
                                                 </button>
                                             </div>
                                         )}
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 );
             case "settings":
                 return (
                     <div style={{ padding: "1.5rem", overflowY: "auto", height: "100%", minHeight: 0 }}>
-                        <h3 style={{ color: "#38bdf8", marginBottom: "1rem" }}>Settings</h3>
+                        <h3 style={{ color: "#38bdf8", marginBottom: "1.5rem" }}>Settings</h3>
 
                         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                            {/* Cleanup Section */}
+
+                            {/* Custom Roles Section — Creator only */}
+                            {isOwner && (
+                                <div style={{
+                                    background: isDarkMode ? "rgba(139,92,246,0.05)" : "#f5f3ff",
+                                    padding: "1.5rem", borderRadius: "1rem",
+                                    border: `1px solid ${isDarkMode ? "rgba(139,92,246,0.2)" : "#ddd6fe"}`,
+                                }}>
+                                    <h4 style={{ color: isDarkMode ? "#c4b5fd" : "#7c3aed", marginBottom: "0.35rem", fontSize: "1rem" }}>Custom Roles</h4>
+                                    <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.82rem", marginBottom: "1.25rem", lineHeight: 1.6 }}>
+                                        Create custom roles for your community. Higher priority = higher in hierarchy (above Member). Members can be assigned custom roles from the Members tab.
+                                    </p>
+
+                                    {/* Existing custom roles list */}
+                                    {customRoles.length > 0 && (
+                                        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "1.25rem" }}>
+                                            {[...customRoles].sort((a, b) => b.priority - a.priority).map(cr => (
+                                                <div key={cr.name} style={{
+                                                    display: "flex", alignItems: "center", gap: "0.75rem",
+                                                    background: isDarkMode ? "rgba(255,255,255,0.04)" : "#ffffff",
+                                                    border: `1px solid ${cr.color}40`,
+                                                    borderLeft: `3px solid ${cr.color}`,
+                                                    borderRadius: "0.6rem", padding: "0.6rem 0.85rem",
+                                                }}>
+                                                    <div style={{ width: "0.7rem", height: "0.7rem", borderRadius: "50%", background: cr.color, flexShrink: 0 }} />
+                                                    <span style={{ flex: 1, fontWeight: 700, color: cr.color, fontSize: "0.875rem" }}>{cr.name}</span>
+                                                    <span style={{
+                                                        fontSize: "0.7rem", fontWeight: 600,
+                                                        color: isDarkMode ? "#64748b" : "#94a3b8",
+                                                        background: isDarkMode ? "rgba(255,255,255,0.06)" : "#f1f5f9",
+                                                        padding: "0.15rem 0.5rem", borderRadius: "0.35rem",
+                                                    }}>Priority {cr.priority}</span>
+                                                    <button
+                                                        onClick={() => handleDeleteCustomRole(cr.name)}
+                                                        title={`Delete "${cr.name}" role`}
+                                                        style={{
+                                                            background: "none", border: "none", cursor: "pointer",
+                                                            color: isDarkMode ? "#64748b" : "#94a3b8",
+                                                            padding: "0.15rem", borderRadius: "0.25rem",
+                                                            display: "flex", alignItems: "center", transition: "color 0.15s",
+                                                        }}
+                                                        onMouseEnter={(e) => e.currentTarget.style.color = "#ef4444"}
+                                                        onMouseLeave={(e) => e.currentTarget.style.color = isDarkMode ? "#64748b" : "#94a3b8"}
+                                                    >
+                                                        <TrashIcon style={{ width: "0.9rem" }} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Create new custom role form */}
+                                    {customRoles.length < 10 && (
+                                        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                                            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+                                                <input
+                                                    value={newRoleName}
+                                                    onChange={(e) => setNewRoleName(e.target.value)}
+                                                    placeholder="Role name (e.g. Mentor, Veteran)"
+                                                    maxLength={30}
+                                                    style={{
+                                                        flex: "1 1 140px",
+                                                        padding: "0.55rem 0.85rem",
+                                                        background: isDarkMode ? "#1e293b" : "#ffffff",
+                                                        color: isDarkMode ? "#f8fafc" : "#0f172a",
+                                                        border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#ddd6fe"}`,
+                                                        borderRadius: "0.5rem", fontSize: "0.85rem", outline: "none",
+                                                    }}
+                                                />
+                                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flex: "0 0 auto" }}>
+                                                    <label style={{ fontSize: "0.78rem", color: isDarkMode ? "#94a3b8" : "#64748b", whiteSpace: "nowrap" }}>Priority</label>
+                                                    <input
+                                                        type="number"
+                                                        min={1} max={49}
+                                                        value={newRolePriority}
+                                                        onChange={(e) => setNewRolePriority(Number(e.target.value))}
+                                                        style={{
+                                                            width: "65px",
+                                                            padding: "0.55rem 0.6rem",
+                                                            background: isDarkMode ? "#1e293b" : "#ffffff",
+                                                            color: isDarkMode ? "#f8fafc" : "#0f172a",
+                                                            border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#ddd6fe"}`,
+                                                            borderRadius: "0.5rem", fontSize: "0.85rem", outline: "none",
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flex: "0 0 auto" }}>
+                                                    <label style={{ fontSize: "0.78rem", color: isDarkMode ? "#94a3b8" : "#64748b" }}>Color</label>
+                                                    <input
+                                                        type="color"
+                                                        value={newRoleColor}
+                                                        onChange={(e) => setNewRoleColor(e.target.value)}
+                                                        style={{ width: "36px", height: "36px", border: "none", background: "none", cursor: "pointer", padding: 0, borderRadius: "0.35rem" }}
+                                                    />
+                                                </div>
+                                                <button
+                                                    onClick={handleCreateCustomRole}
+                                                    disabled={savingCustomRole || !newRoleName.trim()}
+                                                    style={{
+                                                        padding: "0.55rem 1.1rem",
+                                                        background: savingCustomRole || !newRoleName.trim() ? "rgba(139,92,246,0.3)" : "rgba(139,92,246,0.85)",
+                                                        color: "#fff",
+                                                        border: "none", borderRadius: "0.5rem",
+                                                        fontWeight: 700, fontSize: "0.85rem",
+                                                        cursor: savingCustomRole || !newRoleName.trim() ? "not-allowed" : "pointer",
+                                                        display: "flex", alignItems: "center", gap: "0.4rem",
+                                                        transition: "all 0.2s",
+                                                        flex: "0 0 auto",
+                                                    }}
+                                                >
+                                                    <PlusIcon style={{ width: "0.9rem" }} />
+                                                    {savingCustomRole ? "Creating…" : "Add Role"}
+                                                </button>
+                                            </div>
+                                            <p style={{ fontSize: "0.73rem", color: isDarkMode ? "#475569" : "#94a3b8", margin: 0 }}>
+                                                Priority 1–49 (higher = more authority). System roles: Creator=100, Administrator=50, Member=0. Max 10 custom roles.
+                                            </p>
+                                        </div>
+                                    )}
+                                    {customRoles.length >= 10 && (
+                                        <p style={{ fontSize: "0.8rem", color: isDarkMode ? "#64748b" : "#94a3b8", fontStyle: "italic" }}>Maximum 10 custom roles reached.</p>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Session Management */}
                             <div style={{ background: isDarkMode ? "rgba(255, 255, 255, 0.03)" : "#f8fafc", padding: "1.5rem", borderRadius: "1rem", border: `1px solid ${isDarkMode ? "rgba(255, 255, 255, 0.05)" : "#e2e8f0"}` }}>
                                 <h4 style={{ color: isDarkMode ? "#f8fafc" : "#0f172a", marginBottom: "0.5rem" }}>Session Management</h4>
                                 <p style={{ color: isDarkMode ? "#94a3b8" : "#64748b", fontSize: "0.85rem", marginBottom: "1rem" }}>Clear all focus session history for this community.</p>

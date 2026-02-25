@@ -1041,37 +1041,32 @@ const DashboardCommunity = () => {
                                         return mId === userId;
                                     });
 
-                                    const roleBadge = isCreator ? (
+                                    // Map server-supplied memberRole to display label + style
+                                    const myRole = community.memberRole; // "Owner" | "Admin" | "Moderator" | "Member" | null
+                                    const roleBadgeConfig = isCreator || myRole === "Owner" ? {
+                                        icon: "👑", label: "Creator",
+                                        bg: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "rgba(245,158,11,0.2)"
+                                    } : myRole === "Admin" ? {
+                                        icon: "🎯", label: "Administrator",
+                                        bg: "rgba(139,92,246,0.12)", color: "#8b5cf6", border: "rgba(139,92,246,0.2)"
+                                    } : myRole === "Moderator" ? {
+                                        icon: "🛡️", label: "Moderator",
+                                        bg: "rgba(56,189,248,0.12)", color: "#38bdf8", border: "rgba(56,189,248,0.2)"
+                                    } : isMember ? {
+                                        icon: "👥", label: "Member",
+                                        bg: "rgba(16,185,129,0.12)", color: "#10b981", border: "rgba(16,185,129,0.2)"
+                                    } : null;
+
+                                    const roleBadge = roleBadgeConfig ? (
                                         <span style={{
-                                            fontSize: "0.72rem",
-                                            fontWeight: 700,
-                                            padding: "0.25rem 0.75rem",
-                                            borderRadius: "2rem",
-                                            background: "rgba(245, 158, 11, 0.12)",
-                                            color: "#f59e0b",
-                                            border: "1px solid rgba(245, 158, 11, 0.2)",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.4rem",
-                                            letterSpacing: "0.01em",
+                                            fontSize: "0.72rem", fontWeight: 700,
+                                            padding: "0.25rem 0.75rem", borderRadius: "2rem",
+                                            background: roleBadgeConfig.bg, color: roleBadgeConfig.color,
+                                            border: `1px solid ${roleBadgeConfig.border}`,
+                                            display: "flex", alignItems: "center",
+                                            gap: "0.4rem", letterSpacing: "0.01em",
                                         }}>
-                                            👑 Creator
-                                        </span>
-                                    ) : isMember ? (
-                                        <span style={{
-                                            fontSize: "0.72rem",
-                                            fontWeight: 700,
-                                            padding: "0.25rem 0.75rem",
-                                            borderRadius: "2rem",
-                                            background: "rgba(16, 185, 129, 0.12)",
-                                            color: "#10b981",
-                                            border: "1px solid rgba(16, 185, 129, 0.2)",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.4rem",
-                                            letterSpacing: "0.01em",
-                                        }}>
-                                            👥 Member
+                                            {roleBadgeConfig.icon} {roleBadgeConfig.label}
                                         </span>
                                     ) : null;
 
@@ -1177,94 +1172,68 @@ const DashboardCommunity = () => {
 
                                                     <p style={{
                                                         fontSize: "0.72rem",
-                                                        color: "#9fb2d6",
-                                                        marginTop: "1rem",
+                                                        color: "var(--color-gray-500)",
                                                         lineHeight: 1.6,
                                                         margin: 0,
                                                     }}>
                                                         {isCreator
                                                             ? "Manage member roles and permissions to organize your community effectively."
-                                                            : "Your current participation level and recognized contribution within this group."}
+                                                            : myRole === "Admin"
+                                                                ? "You have staff-level access to help manage and grow this community."
+                                                                : isMember
+                                                                    ? "Your current participation level and recognized contribution within this group."
+                                                                    : ""}
                                                     </p>
                                                 </div>
-                                                {/* Creator Controls Section with Uniform Height */}
+                                                {/* Role-specific bottom section */}
                                                 <div style={{
-                                                    minHeight: isMobile ? "auto" : "7rem", // Responsive height
+                                                    minHeight: isMobile ? "auto" : "7rem",
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     marginTop: isMobile ? "0.5rem" : "0",
                                                 }}>
                                                     {isCreator ? (
+                                                        /* ── Creator Controls ── */
                                                         <div style={{
-                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(239, 68, 68, 0.02))",
+                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(239,68,68,0.02))",
                                                             border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
                                                             borderRadius: "0.85rem",
                                                             padding: isMobile ? "0.85rem" : "1rem",
                                                             flex: 1,
                                                         }}>
                                                             <h4 style={{
-                                                                fontSize: "0.7rem",
-                                                                fontWeight: 800,
-                                                                color: "var(--color-gray-400)",
-                                                                textTransform: "uppercase",
-                                                                letterSpacing: "0.08em",
-                                                                marginBottom: "1rem",
+                                                                fontSize: "0.7rem", fontWeight: 800,
+                                                                color: "var(--color-gray-400)", textTransform: "uppercase",
+                                                                letterSpacing: "0.08em", marginBottom: "1rem",
                                                             }}>
                                                                 Creator Controls
                                                             </h4>
-
                                                             <div style={{
-                                                                display: "flex",
-                                                                gap: "0.75rem",
-                                                                alignItems: "stretch",
+                                                                display: "flex", gap: "0.75rem", alignItems: "stretch",
                                                                 flexDirection: (width >= 800 && width <= 1100) || isSmallMobile ? "column" : "row",
                                                             }}>
                                                                 <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleOpenMemberModal(community);
-                                                                    }}
+                                                                    onClick={(e) => { e.stopPropagation(); handleOpenMemberModal(community); }}
                                                                     style={{
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        justifyContent: "center",
-                                                                        gap: "0.6rem",
-                                                                        flex: 1,
-                                                                        padding: "0.7rem 1.15rem",
+                                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                                        gap: "0.6rem", flex: 1, padding: "0.7rem 1.15rem",
                                                                         borderRadius: "0.6rem",
                                                                         background: "color-mix(in srgb, var(--panel-bg) 85%, var(--color-gray-100) 15%)",
-                                                                        color: "var(--color-gray-900)",
-                                                                        border: "1px solid var(--color-gray-300)",
-                                                                        fontSize: "0.85rem",
-                                                                        fontWeight: 700,
-                                                                        cursor: "pointer",
-                                                                        transition: "all 0.2s ease",
+                                                                        color: "var(--color-gray-900)", border: "1px solid var(--color-gray-300)",
+                                                                        fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", transition: "all 0.2s ease",
                                                                     }}
                                                                 >
                                                                     <UserGroupIcon style={{ width: "1.15rem", height: "1.15rem", color: "#38bdf8", flexShrink: 0 }} />
                                                                     Members
                                                                 </button>
-
                                                                 <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleDeleteCommunity(community);
-                                                                    }}
+                                                                    onClick={(e) => { e.stopPropagation(); handleDeleteCommunity(community); }}
                                                                     style={{
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        justifyContent: "center",
-                                                                        gap: "0.6rem",
-                                                                        flex: 1,
-                                                                        padding: "0.7rem 1.15rem",
-                                                                        borderRadius: "0.6rem",
-                                                                        background: "rgba(239, 68, 68, 0.05)",
-                                                                        color: "#ef4444",
-                                                                        border: "1px solid rgba(239, 68, 68, 0.2)",
-                                                                        fontSize: "0.85rem",
-                                                                        fontWeight: 700,
-                                                                        cursor: "pointer",
-                                                                        transition: "all 0.2s ease",
+                                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                                        gap: "0.6rem", flex: 1, padding: "0.7rem 1.15rem",
+                                                                        borderRadius: "0.6rem", background: "rgba(239,68,68,0.05)",
+                                                                        color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)",
+                                                                        fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", transition: "all 0.2s ease",
                                                                     }}
                                                                 >
                                                                     <TrashIcon style={{ width: "1.15rem", height: "1.15rem", flexShrink: 0 }} />
@@ -1272,74 +1241,100 @@ const DashboardCommunity = () => {
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    ) : isMember ? (
+                                                    ) : myRole === "Admin" ? (
+                                                        /* ── Administrator: Staff Permissions ── */
                                                         <div style={{
-                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(16, 185, 129, 0.03))",
+                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(139,92,246,0.03))",
                                                             border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
                                                             borderRadius: "0.85rem",
                                                             padding: isMobile ? "0.85rem" : "1rem",
-                                                            flex: 1,
-                                                            display: "flex",
-                                                            flexDirection: "column",
+                                                            flex: 1, display: "flex", flexDirection: "column",
                                                         }}>
                                                             <h4 style={{
-                                                                fontSize: "0.7rem",
-                                                                fontWeight: 800,
-                                                                color: "var(--color-gray-400)",
-                                                                textTransform: "uppercase",
-                                                                letterSpacing: "0.08em",
-                                                                marginBottom: "0.85rem",
+                                                                fontSize: "0.7rem", fontWeight: 800,
+                                                                color: "var(--color-gray-400)", textTransform: "uppercase",
+                                                                letterSpacing: "0.08em", marginBottom: "0.75rem",
+                                                            }}>
+                                                                Staff Permissions
+                                                            </h4>
+                                                            <div style={{
+                                                                display: "grid",
+                                                                gridTemplateColumns: "1fr 1fr",
+                                                                gap: "0.45rem",
+                                                            }}>
+                                                                {[
+                                                                    { icon: "🛡️", label: "Manage Members" },
+                                                                    { icon: "📌", label: "Pin Discussions" },
+                                                                    { icon: "✅", label: "Approve Requests" },
+                                                                    { icon: "🚫", label: "Mute Members" },
+                                                                ].map(({ icon, label }) => (
+                                                                    <div key={label} style={{
+                                                                        display: "flex", alignItems: "center", gap: "0.4rem",
+                                                                        padding: "0.35rem 0.6rem", borderRadius: "0.5rem",
+                                                                        background: "rgba(139,92,246,0.07)",
+                                                                        border: "1px solid rgba(139,92,246,0.12)",
+                                                                        fontSize: "0.68rem", fontWeight: 600,
+                                                                        color: "var(--color-gray-700)",
+                                                                        whiteSpace: "nowrap", overflow: "hidden",
+                                                                    }}>
+                                                                        <span style={{ fontSize: "0.8rem", flexShrink: 0 }}>{icon}</span>
+                                                                        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ) : isMember ? (
+                                                        /* ── Custom Role / Member: Participation Score ── */
+                                                        <div style={{
+                                                            background: "color-mix(in srgb, var(--panel-bg) 40%, rgba(16,185,129,0.03))",
+                                                            border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
+                                                            borderRadius: "0.85rem",
+                                                            padding: isMobile ? "0.85rem" : "1rem",
+                                                            flex: 1, display: "flex", flexDirection: "column",
+                                                        }}>
+                                                            <h4 style={{
+                                                                fontSize: "0.7rem", fontWeight: 800,
+                                                                color: "var(--color-gray-400)", textTransform: "uppercase",
+                                                                letterSpacing: "0.08em", marginBottom: "0.85rem",
                                                             }}>
                                                                 Your Contribution
                                                             </h4>
-
                                                             <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginTop: "auto", marginBottom: "auto" }}>
                                                                 <div style={{
-                                                                    flex: 1,
-                                                                    height: "0.6rem",
+                                                                    flex: 1, height: "0.6rem",
                                                                     background: "color-mix(in srgb, var(--panel-bg) 70%, black 30%)",
-                                                                    borderRadius: "1rem",
-                                                                    overflow: "hidden",
+                                                                    borderRadius: "1rem", overflow: "hidden",
                                                                     boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)",
                                                                 }}>
                                                                     <div style={{
-                                                                        width: `${community.contributionScore || 15}%`,
+                                                                        width: `${community.contributionScore ?? 0}%`,
                                                                         height: "100%",
                                                                         background: "linear-gradient(90deg, #38bdf8, #10b981)",
                                                                         borderRadius: "1rem",
-                                                                        boxShadow: "0 0 12px rgba(16, 185, 129, 0.4)",
+                                                                        boxShadow: "0 0 12px rgba(16,185,129,0.4)",
                                                                         transition: "width 1s ease-in-out",
                                                                     }} />
                                                                 </div>
                                                                 <span style={{
-                                                                    fontSize: "0.95rem",
-                                                                    fontWeight: 800,
-                                                                    color: "#10b981",
-                                                                    minWidth: "2.75rem",
-                                                                    textAlign: "right"
+                                                                    fontSize: "0.95rem", fontWeight: 800, color: "#10b981",
+                                                                    minWidth: "2.75rem", textAlign: "right",
                                                                 }}>
-                                                                    {community.contributionScore || 15}%
+                                                                    {community.contributionScore ?? 0}%
                                                                 </span>
                                                             </div>
-
                                                             <div style={{
-                                                                display: "flex",
-                                                                justifyContent: "space-between",
-                                                                alignItems: "center",
-                                                                marginTop: "0.5rem"
+                                                                display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.5rem",
                                                             }}>
                                                                 <span style={{ fontSize: "0.72rem", color: "var(--color-gray-500)", fontWeight: 600 }}>
                                                                     Participation Score
                                                                 </span>
                                                                 <span style={{
-                                                                    fontSize: "0.65rem",
-                                                                    padding: "0.15rem 0.45rem",
-                                                                    borderRadius: "0.35rem",
-                                                                    background: "rgba(16, 185, 129, 0.1)",
-                                                                    color: "#10b981",
-                                                                    fontWeight: 700
+                                                                    fontSize: "0.65rem", padding: "0.15rem 0.45rem",
+                                                                    borderRadius: "0.35rem", fontWeight: 700,
+                                                                    background: (community.contributionScore ?? 0) > 0 ? "rgba(16,185,129,0.1)" : "rgba(100,116,139,0.1)",
+                                                                    color: (community.contributionScore ?? 0) > 0 ? "#10b981" : "var(--color-gray-500)",
                                                                 }}>
-                                                                    Active
+                                                                    {(community.contributionScore ?? 0) > 0 ? "Active" : "New"}
                                                                 </span>
                                                             </div>
                                                         </div>

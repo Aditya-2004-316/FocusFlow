@@ -73,7 +73,10 @@ const Settings = () => {
             const s = settings;
             setDisplayName(s?.profileSettings?.displayName || "");
             setBio(s?.profileSettings?.bio || "");
-            setIsDarkMode((s?.themeSettings?.theme || "light") === "dark");
+            // NOTE: Do NOT sync isDarkMode from settings here.
+            // ThemeContext manages dark mode independently via localStorage.
+            // Calling setIsDarkMode here would overwrite the user's current live
+            // theme every time the Settings page is opened.
             setGlassIntensity(s?.themeSettings?.glassIntensity || "medium");
             setNotifications(!!s?.notificationSettings?.notifications);
             setSoundEnabled(s?.notificationSettings?.soundEnabled ?? true);
@@ -84,7 +87,7 @@ const Settings = () => {
             setLeaderboardOptIn(s?.communitySettings?.leaderboardOptIn ?? true);
             setDataSharing(!!s?.privacySettings?.dataSharing);
         }
-    }, [settings, setIsDarkMode]);
+    }, [settings, setGlassIntensity]);
 
     const handleSave = async (overrides = {}) => {
         setIsSaving(true);

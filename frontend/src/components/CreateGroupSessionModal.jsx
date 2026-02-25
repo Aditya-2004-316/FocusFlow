@@ -136,6 +136,12 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
         marginBottom: "1.5rem",
     };
 
+    const selectStyle = {
+        ...inputStyle,
+        paddingRight: "2.5rem",
+        appearance: "auto",
+    };
+
     const rowStyle = {
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
@@ -227,7 +233,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     name="focusDuration"
                                     value={formData.focusDuration}
                                     onChange={handleChange}
-                                    style={inputStyle}
+                                    style={selectStyle}
                                 >
                                     <option value={15} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>15 minutes</option>
                                     <option value={25} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>25 minutes</option>
@@ -244,7 +250,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     name="breakDuration"
                                     value={formData.breakDuration}
                                     onChange={handleChange}
-                                    style={inputStyle}
+                                    style={selectStyle}
                                 >
                                     <option value={0} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>No break</option>
                                     <option value={5} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>5 minutes</option>
@@ -262,7 +268,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                             name="relaxationActivity"
                             value={formData.relaxationActivity}
                             onChange={handleChange}
-                            style={inputStyle}
+                            style={selectStyle}
                         >
                             {relaxationOptions.map(opt => (
                                 <option key={opt.value} value={opt.value} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>
@@ -277,7 +283,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     name="relaxationDuration"
                                     value={formData.relaxationDuration}
                                     onChange={handleChange}
-                                    style={inputStyle}
+                                    style={selectStyle}
                                 >
                                     <option value={2} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>2 minutes</option>
                                     <option value={3} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>3 minutes</option>
@@ -301,7 +307,7 @@ const CreateGroupSessionModal = ({ isOpen, onClose, onSubmit, communityId, commu
                                     name="maxParticipants"
                                     value={formData.maxParticipants}
                                     onChange={handleChange}
-                                    style={inputStyle}
+                                    style={selectStyle}
                                 >
                                     <option value={5} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>5 people</option>
                                     <option value={10} style={{ background: isDarkMode ? "#1e293b" : "#ffffff", color: isDarkMode ? "#f8fafc" : "#0f172a" }}>10 people</option>

@@ -13,6 +13,8 @@ import {
     getMembers,
     assignMemberRole,
     removeMember,
+    createCustomRole,
+    deleteCustomRole,
 } from "../controllers/communityController.js";
 
 const router = express.Router();
@@ -38,5 +40,9 @@ router.post("/:id/join-request/reject", protect, rejectJoinRequest);
 router.get("/:id/members", getMembers);
 router.put("/:id/members/:userId/role", protect, assignMemberRole);
 router.delete("/:id/members/:userId", protect, removeMember);
+
+// Custom role routes (Creator only)
+router.post("/:id/custom-roles", protect, createCustomRole);
+router.delete("/:id/custom-roles/:roleName", protect, deleteCustomRole);
 
 export default router;

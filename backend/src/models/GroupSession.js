@@ -69,9 +69,9 @@ const groupSessionSchema = new mongoose.Schema({
             max: [120, "Focus duration cannot exceed 120 minutes"],
         },
         breakDuration: {
-            type: Number, // in minutes
+            type: Number, // in minutes, 0 means no break
             default: 5,
-            min: [1, "Break duration must be at least 1 minute"],
+            min: [0, "Break duration cannot be negative"],
             max: [30, "Break duration cannot exceed 30 minutes"],
         },
         relaxationActivity: {

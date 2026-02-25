@@ -42,9 +42,14 @@ export const getCommunities = async (req, res) => {
                 if (isCreator) {
                     contributionScore = 100;
                 } else if (membership) {
-                    // Calculate a dynamic contribution score based on postCount and age
-                    const daysActive = Math.ceil((Date.now() - new Date(membership.joinedAt)) / (1000 * 60 * 60 * 24));
-                    contributionScore = Math.min(100, 15 + (membership.postCount * 12) + (daysActive * 2));
+                    // Score based on actual engagement activity:
+                    // Sessions attended: 15 pts each (max 60 from sessions = 4 sessions)
+                    // Chat messages: 1 pt each, capped at 30
+                    // Posts made: 5 pts each, capped at 25
+                    const sessionScore = Math.min(60, (membership.sessionCount || 0) * 15);
+                    const chatScore = Math.min(30, (membership.chatCount || 0) * 1);
+                    const postScore = Math.min(25, (membership.postCount || 0) * 5);
+                    contributionScore = Math.min(100, sessionScore + chatScore + postScore);
                 }
 
                 return {
@@ -611,22 +616,38 @@ export const getMembers = async (req, res) => {
             .populate("userId", "username avatar email")
             .sort({ joinedAt: -1 });
 
-        // Add creator info
+        // Load community for creator info AND custom roles
         const community = await Community.findById(req.params.id).select(
-            "creator"
+            "creator customRoles"
         );
 
-        const membersWithCreator = members.map((m) => ({
-            _id: m._id,
-            userId: m.userId,
-            role: m.role === "Admin" ? "Creator" : m.role, // Map Admin to Creator for display
-            joinedAt: m.joinedAt,
-            isCreator: community.creator.toString() === m.userId._id.toString(),
-        }));
+        const membersWithCreator = members.map((m) => {
+            const isMemberCreator = community.creator.toString() === m.userId._id.toString();
+            let displayRole;
+            if (isMemberCreator) {
+                displayRole = "Creator";
+            } else if (m.role === "Admin") {
+                displayRole = "Administrator";
+            } else if (m.role === "Custom" && m.customRole) {
+                displayRole = m.customRole;
+            } else {
+                displayRole = "Member";
+            }
+            return {
+                _id: m._id,
+                userId: m.userId,
+                role: displayRole,
+                dbRole: m.role,
+                customRole: m.customRole || null,
+                joinedAt: m.joinedAt,
+                isCreator: isMemberCreator,
+            };
+        });
 
         res.status(200).json({
             success: true,
             data: membersWithCreator,
+            customRoles: community.customRoles || [],
         });
     } catch (error) {
         res.status(500).json({
@@ -643,51 +664,73 @@ export const getMembers = async (req, res) => {
  */
 export const assignMemberRole = async (req, res) => {
     try {
-        const { role } = req.body;
+        const { role } = req.body; // Display name from frontend
 
-        if (!["Creator", "Moderator", "Member"].includes(role)) {
-            return res.status(400).json({
-                success: false,
-                error: "Invalid role. Must be Creator, Moderator, or Member",
-            });
+        if (!role) {
+            return res.status(400).json({ success: false, error: "Role is required" });
         }
 
         const community = await Community.findById(req.params.id);
         if (!community) {
-            return res.status(404).json({
-                success: false,
-                error: "Community not found",
-            });
+            return res.status(404).json({ success: false, error: "Community not found" });
         }
 
-        // Check if requester is creator
-        if (community.creator.toString() !== req.user._id.toString()) {
-            return res.status(403).json({
-                success: false,
-                error: "Not authorized to assign roles",
-            });
+        const isOwner = community.creator.toString() === req.user._id.toString();
+
+        const requesterDoc = await CommunityMember.findOne({
+            communityId: req.params.id,
+            userId: req.user._id,
+        });
+        const isAdmin = requesterDoc?.role === "Admin";
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ success: false, error: "Not authorized to assign roles" });
         }
 
-        // Can't reassign creator role
+        // Cannot reassign the creator's own role
+        if (community.creator.toString() === req.params.userId) {
+            return res.status(400).json({ success: false, error: "Cannot change the community creator's role" });
+        }
+
+        // Resolve the role display name → DB values
+        const systemRoles = { "Creator": null, "Administrator": "Admin", "Member": "Member" };
+        let dbRole, dbCustomRole = null;
+
         if (role === "Creator") {
-            return res.status(400).json({
-                success: false,
-                error: "Cannot reassign creator role",
-            });
+            return res.status(400).json({ success: false, error: "The Creator role cannot be assigned" });
+        } else if (role === "Administrator") {
+            // Only owner can assign Administrator
+            if (!isOwner) {
+                return res.status(403).json({ success: false, error: "Only the Creator can assign the Administrator role" });
+            }
+            dbRole = "Admin";
+        } else if (role === "Member") {
+            dbRole = "Member";
+        } else {
+            // Must be a custom role defined by this community
+            const customRoleDef = community.customRoles.find(r => r.name === role);
+            if (!customRoleDef) {
+                return res.status(400).json({
+                    success: false,
+                    error: `"${role}" is not a valid role for this community`,
+                });
+            }
+            // Only owner can assign custom roles
+            if (!isOwner) {
+                return res.status(403).json({ success: false, error: "Only the Creator can assign custom roles" });
+            }
+            dbRole = "Custom";
+            dbCustomRole = role;
         }
 
-        const memberRole = role === "Creator" ? "Admin" : role;
         const member = await CommunityMember.findOneAndUpdate(
             { communityId: req.params.id, userId: req.params.userId },
-            { role: memberRole },
+            { role: dbRole, customRole: dbCustomRole },
             { new: true }
         ).populate("userId", "username avatar");
 
         if (!member) {
-            return res.status(404).json({
-                success: false,
-                error: "Member not found",
-            });
+            return res.status(404).json({ success: false, error: "Member not found" });
         }
 
         res.status(200).json({
@@ -696,10 +739,93 @@ export const assignMemberRole = async (req, res) => {
             data: member,
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            error: error.message,
-        });
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+/**
+ * @desc    Create a custom role for a community (creator only)
+ * @route   POST /api/communities/:id/custom-roles
+ * @access  Protected (Creator only)
+ */
+export const createCustomRole = async (req, res) => {
+    try {
+        const { name, priority, color } = req.body;
+
+        if (!name || typeof name !== "string" || !name.trim()) {
+            return res.status(400).json({ success: false, error: "Role name is required" });
+        }
+        if (priority === undefined || isNaN(priority) || priority < 1 || priority > 49) {
+            return res.status(400).json({ success: false, error: "Priority must be between 1 and 49" });
+        }
+
+        // Prevent naming a custom role the same as system roles
+        const systemNames = ["creator", "administrator", "admin", "member"];
+        if (systemNames.includes(name.trim().toLowerCase())) {
+            return res.status(400).json({ success: false, error: `"${name}" is a reserved system role name` });
+        }
+
+        const community = await Community.findOne({ _id: req.params.id, creator: req.user._id });
+        if (!community) {
+            return res.status(403).json({ success: false, error: "Not authorized or community not found" });
+        }
+
+        // Prevent duplicate custom role names (case-insensitive)
+        const duplicate = community.customRoles.some(
+            r => r.name.toLowerCase() === name.trim().toLowerCase()
+        );
+        if (duplicate) {
+            return res.status(409).json({ success: false, error: "A custom role with this name already exists" });
+        }
+
+        if (community.customRoles.length >= 10) {
+            return res.status(400).json({ success: false, error: "Maximum 10 custom roles allowed" });
+        }
+
+        const newRole = { name: name.trim(), priority: Number(priority), color: color || "#64748b" };
+        community.customRoles.push(newRole);
+        await community.save();
+
+        res.status(201).json({ success: true, message: "Custom role created", data: community.customRoles });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+/**
+ * @desc    Delete a custom role from a community (creator only)
+ * @route   DELETE /api/communities/:id/custom-roles/:roleName
+ * @access  Protected (Creator only)
+ */
+export const deleteCustomRole = async (req, res) => {
+    try {
+        const roleName = decodeURIComponent(req.params.roleName);
+
+        const community = await Community.findOne({ _id: req.params.id, creator: req.user._id });
+        if (!community) {
+            return res.status(403).json({ success: false, error: "Not authorized or community not found" });
+        }
+
+        const beforeLen = community.customRoles.length;
+        community.customRoles = community.customRoles.filter(
+            r => r.name.toLowerCase() !== roleName.toLowerCase()
+        );
+
+        if (community.customRoles.length === beforeLen) {
+            return res.status(404).json({ success: false, error: "Custom role not found" });
+        }
+
+        await community.save();
+
+        // Demote all members with this custom role back to Member
+        await CommunityMember.updateMany(
+            { communityId: req.params.id, role: "Custom", customRole: roleName },
+            { $set: { role: "Member", customRole: null } }
+        );
+
+        res.status(200).json({ success: true, message: `Custom role "${roleName}" deleted`, data: community.customRoles });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
     }
 };
 

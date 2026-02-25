@@ -1,5 +1,6 @@
 import GroupSession from "../models/GroupSession.js";
 import Community from "../models/Community.js";
+import CommunityMember from "../models/CommunityMember.js";
 import Timer from "../models/Timer.js";
 
 /**
@@ -632,6 +633,16 @@ const createTimerRecordsForSession = async (session) => {
         }
 
         console.log(`Created ${completedParticipants.length} timer records for session ${session._id}`);
+
+        // Increment sessionCount for each completed participant (non-critical)
+        await Promise.allSettled(
+            completedParticipants.map(participant =>
+                CommunityMember.findOneAndUpdate(
+                    { communityId: session.communityId, userId: participant.userId },
+                    { $inc: { sessionCount: 1 }, $set: { lastActiveAt: new Date() } }
+                )
+            )
+        );
     } catch (error) {
         console.error("Error creating timer records:", error);
         // Non-critical — don't throw

@@ -88,6 +88,25 @@ const communitySchema = new mongoose.Schema(
                 },
             },
         ],
+        // Custom roles defined by the community creator
+        // Each entry: { name: string, priority: number, color: string }
+        // Priority: higher number = higher authority (above Member = 0)
+        // Creator = 100 (system), Admin = 50 (system), Member = 0 (system)
+        customRoles: {
+            type: [
+                {
+                    name: { type: String, required: true, trim: true, maxlength: 30 },
+                    priority: { type: Number, required: true, min: 1, max: 49 },
+                    color: { type: String, default: "#64748b" },
+                    _id: false,
+                },
+            ],
+            default: [],
+            validate: {
+                validator: function (v) { return v.length <= 10; },
+                message: "Maximum 10 custom roles allowed",
+            },
+        },
         isActive: {
             type: Boolean,
             default: true,

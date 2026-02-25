@@ -84,6 +84,12 @@ export const sendMessage = asyncHandler(async (req, res) => {
         req.io.to(communityId).emit("chat_message", newMessage);
     }
 
+    // Increment chat count for participation score (fire-and-forget, non-critical)
+    CommunityMember.findOneAndUpdate(
+        { communityId, userId: req.user._id },
+        { $inc: { chatCount: 1 }, $set: { lastActiveAt: new Date() } }
+    ).catch(err => console.error("Failed to increment chatCount:", err));
+
     res.status(201).json({
         success: true,
         data: newMessage

@@ -24,6 +24,10 @@ export const communityAPI = {
         apiCall(`/communities/${id}/members/${userId}/role`, { method: "PUT", body: JSON.stringify({ role }) }),
     removeMember: (id, userId) =>
         apiCall(`/communities/${id}/members/${userId}`, { method: "DELETE" }),
+    createCustomRole: (id, data) =>
+        apiCall(`/communities/${id}/custom-roles`, { method: "POST", body: JSON.stringify(data) }),
+    deleteCustomRole: (id, roleName) =>
+        apiCall(`/communities/${id}/custom-roles/${encodeURIComponent(roleName)}`, { method: "DELETE" }),
 };
 
 // Posts

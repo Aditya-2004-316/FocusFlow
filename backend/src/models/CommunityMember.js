@@ -14,8 +14,13 @@ const communityMemberSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ["Admin", "Moderator", "Member"],
+            enum: ["Admin", "Member", "Custom"],
             default: "Member",
+        },
+        // Name of the custom role (only used when role === "Custom")
+        customRole: {
+            type: String,
+            default: null,
         },
         joinedAt: {
             type: Date,
@@ -30,6 +35,14 @@ const communityMemberSchema = new mongoose.Schema(
             default: Date.now,
         },
         postCount: {
+            type: Number,
+            default: 0,
+        },
+        chatCount: {
+            type: Number,
+            default: 0,
+        },
+        sessionCount: {
             type: Number,
             default: 0,
         },
