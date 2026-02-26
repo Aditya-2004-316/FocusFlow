@@ -319,7 +319,7 @@ const Profile = () => {
         },
         statsGrid: {
             display: "grid",
-            gridTemplateColumns: isNarrow ? "repeat(auto-fit, minmax(120px, 1fr))" : (isMobile ? "repeat(auto-fit, minmax(140px, 1fr))" : "repeat(auto-fit, minmax(220px, 1fr))"),
+            gridTemplateColumns: isSmallMobile ? "1fr" : isNarrow ? "repeat(2, 1fr)" : isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(240px, 1fr))",
             gap: isNarrow ? "0.75rem" : (isMobile ? "1rem" : "1.25rem"),
             marginBottom: "2rem",
         },
@@ -341,6 +341,8 @@ const Profile = () => {
         statIconWrap: {
             width: "3rem",
             height: "3rem",
+            minWidth: "3rem",
+            minHeight: "3rem",
             borderRadius: "0.85rem",
             background: isDarkTheme
                 ? "rgba(56,189,248,0.12)"
@@ -396,6 +398,8 @@ const Profile = () => {
         settingIconWrap: {
             width: "2.75rem",
             height: "2.75rem",
+            minWidth: "2.75rem",
+            minHeight: "2.75rem",
             borderRadius: "0.85rem",
             background: isDarkTheme
                 ? "rgba(56,189,248,0.12)"

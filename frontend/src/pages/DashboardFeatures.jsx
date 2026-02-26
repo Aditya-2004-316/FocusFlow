@@ -293,6 +293,8 @@ const cardHeaderStyle = {
 const cardIconWrapperStyle = {
     width: "2.6rem",
     height: "2.6rem",
+    minWidth: "2.6rem",
+    minHeight: "2.6rem",
     borderRadius: "0.85rem",
     display: "flex",
     alignItems: "center",
@@ -300,6 +302,7 @@ const cardIconWrapperStyle = {
     background: "rgba(56, 189, 248, 0.12)",
     color: "var(--color-primary-600)",
     fontSize: "1.4rem",
+    flexShrink: 0,
 };
 
 const cardBadgeStyle = {

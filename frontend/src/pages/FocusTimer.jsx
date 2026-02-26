@@ -282,12 +282,15 @@ export const sharedFocusShell = (isMobile = false) => ({
     heroStatIconWrap: {
         width: "2.25rem",
         height: "2.25rem",
+        minWidth: "2.25rem",
+        minHeight: "2.25rem",
         borderRadius: "0.75rem",
         background: "rgba(56,189,248,0.12)",
         color: "var(--color-primary-600)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        flexShrink: 0,
     },
     heroStatLabel: {
         fontSize: "0.75rem",
@@ -610,12 +613,15 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
         configIconWrap: {
             width: "2rem",
             height: "2rem",
+            minWidth: "2rem",
+            minHeight: "2rem",
             borderRadius: "0.75rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             background: "rgba(56,189,248,0.18)",
             color: "var(--color-primary-300)",
+            flexShrink: 0,
         },
         configLabel: {
             fontSize: "0.85rem",
@@ -718,12 +724,15 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
         toolIcon: {
             width: "3rem",
             height: "3rem",
+            minWidth: "3rem",
+            minHeight: "3rem",
             borderRadius: "0.9rem",
             background: "var(--color-primary-100)",
             color: "var(--color-primary-600)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            flexShrink: 0,
         },
         toolTitle: {
             fontSize: "1.05rem",
@@ -752,12 +761,15 @@ const getStyles = (isMobile, isTablet, isSmallMobile, width) => {
         presetEmoji: {
             width: "2.4rem",
             height: "2.4rem",
+            minWidth: "2.4rem",
+            minHeight: "2.4rem",
             borderRadius: "0.75rem",
             background: "var(--color-primary-100)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             fontSize: "1.3rem",
+            flexShrink: 0,
         },
         presetMeta: {
             display: "inline-flex",

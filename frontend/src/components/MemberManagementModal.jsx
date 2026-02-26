@@ -19,6 +19,7 @@ const MemberManagementModal = ({
     const toast = useToast();
     const confirm = useConfirm();
     const [members, setMembers] = useState([]);
+    const [customRoles, setCustomRoles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [removingId, setRemovingId] = useState(null);
     const [roleChangingId, setRoleChangingId] = useState(null);
@@ -35,6 +36,7 @@ const MemberManagementModal = ({
         try {
             const response = await communityAPI.getMembers(communityId);
             setMembers(response.data || []);
+            setCustomRoles(response.customRoles || []);
         } catch (err) {
             toast.error(err.message || "Failed to load members");
         } finally {
@@ -303,12 +305,17 @@ const MemberManagementModal = ({
                                                     member.userId._id
                                                 }
                                             >
+                                                <option value="Administrator">
+                                                    Administrator
+                                                </option>
                                                 <option value="Member">
                                                     Member
                                                 </option>
-                                                <option value="Moderator">
-                                                    Moderator
-                                                </option>
+                                                {customRoles.map(cr => (
+                                                    <option key={cr.name} value={cr.name}>
+                                                        {cr.name}
+                                                    </option>
+                                                ))}
                                             </select>
                                             <button
                                                 style={deleteButtonStyle}

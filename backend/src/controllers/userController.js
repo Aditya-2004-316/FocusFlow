@@ -5,6 +5,76 @@ import Community from "../models/Community.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 
 /**
+ * @desc    Update current user's profile (firstName, lastName, email, username)
+ * @route   PUT /api/users/profile
+ * @access  Protected
+ */
+export const updateProfile = asyncHandler(async (req, res) => {
+    const { firstName, lastName, email, username } = req.body;
+    const userId = req.user._id;
+
+    // Check uniqueness for email / username (excluding current user)
+    if (email && email.toLowerCase() !== req.user.email) {
+        const emailTaken = await User.findOne({ email: email.toLowerCase(), _id: { $ne: userId } });
+        if (emailTaken) {
+            return res.status(409).json({ success: false, message: "Email is already in use by another account" });
+        }
+    }
+    if (username && username !== req.user.username) {
+        const usernameTaken = await User.findOne({ username, _id: { $ne: userId } });
+        if (usernameTaken) {
+            return res.status(409).json({ success: false, message: "Username is already taken" });
+        }
+    }
+
+    const updates = {};
+    if (firstName !== undefined) updates.firstName = firstName.trim();
+    if (lastName !== undefined) updates.lastName = lastName.trim();
+    if (email) updates.email = email.toLowerCase().trim();
+    if (username) updates.username = username.trim();
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        updates,
+        { new: true, runValidators: true }
+    );
+
+    res.status(200).json({ success: true, message: "Profile updated successfully", data: { user } });
+});
+
+/**
+ * @desc    Update current user's password
+ * @route   PUT /api/users/password
+ * @access  Protected
+ */
+export const updatePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ success: false, message: "Current password and new password are required" });
+    }
+    if (newPassword.length < 6) {
+        return res.status(400).json({ success: false, message: "New password must be at least 6 characters" });
+    }
+
+    // Need to select password field explicitly (it's select:false in schema)
+    const user = await User.findById(req.user._id).select("+password");
+    if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+        return res.status(401).json({ success: false, message: "Current password is incorrect" });
+    }
+
+    user.password = newPassword; // pre-save hook will hash it
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password updated successfully" });
+});
+
+/**
  * @desc    Get recent community activity
  * @route   GET /api/users/activity
  * @access  Public
@@ -59,7 +129,7 @@ export const getRecentActivity = asyncHandler(async (req, res) => {
                     avatar: session.user.avatar,
                     initials: session.user.username.substring(0, 2).toUpperCase()
                 },
-                content: `completed a ${session.duration}-minute focus session: "${session.title || 'Untitled Session'}"`,
+                content: `completed a ${session.duration}-minute focus session: "${session.title || "Untitled Session"}"`,
                 timestamp: session.completedAt,
                 id: `session-${session._id}`
             });
@@ -83,11 +153,11 @@ export const getRecentActivity = asyncHandler(async (req, res) => {
         }
     });
 
-    // Sort by timestamp
+    // Sort by timestamp descending
     activities.sort((a, b) => b.timestamp - a.timestamp);
 
     res.status(200).json({
         success: true,
-        data: activities.slice(0, 10) // Return top 10
+        data: activities.slice(0, 10)
     });
 });

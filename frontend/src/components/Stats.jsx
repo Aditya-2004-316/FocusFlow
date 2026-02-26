@@ -41,12 +41,15 @@ const styles = {
     iconWrap: {
         width: "2.2rem",
         height: "2.2rem",
+        minWidth: "2.2rem",
+        minHeight: "2.2rem",
         borderRadius: "0.6rem",
         background: "rgba(56,189,248,0.16)",
         color: "var(--color-primary-600)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        flexShrink: 0,
     },
     value: {
         fontSize: "1.55rem",

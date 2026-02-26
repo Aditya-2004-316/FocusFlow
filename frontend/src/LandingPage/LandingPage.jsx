@@ -490,6 +490,8 @@ const LandingPage = () => {
         howStepIcon: {
             width: '3.25rem',
             height: '3.25rem',
+            minWidth: '3.25rem',
+            minHeight: '3.25rem',
             borderRadius: '0.9rem',
             background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(14, 165, 233, 0.1))',
             display: 'flex',
@@ -497,6 +499,7 @@ const LandingPage = () => {
             justifyContent: 'center',
             fontSize: '1.6rem',
             color: '#38bdf8',
+            flexShrink: 0,
         },
         howStepTitle: {
             fontSize: '1.35rem',
@@ -840,6 +843,8 @@ const LandingPage = () => {
         useCaseIconWrap: {
             width: '3.25rem',
             height: '3.25rem',
+            minWidth: '3.25rem',
+            minHeight: '3.25rem',
             borderRadius: '1rem',
             background: 'linear-gradient(140deg, rgba(56, 189, 248, 0.32), rgba(129, 140, 248, 0.28))',
             display: 'flex',
@@ -847,6 +852,7 @@ const LandingPage = () => {
             justifyContent: 'center',
             fontSize: '1.9rem',
             color: '#38bdf8',
+            flexShrink: 0,
         },
         useCaseTitle: {
             fontSize: '1.45rem',
@@ -943,6 +949,8 @@ const LandingPage = () => {
         comparisonIconWrap: {
             width: '2.75rem',
             height: '2.75rem',
+            minWidth: '2.75rem',
+            minHeight: '2.75rem',
             borderRadius: '0.9rem',
             background: 'rgba(15, 23, 42, 0.85)',
             display: 'flex',
@@ -950,6 +958,7 @@ const LandingPage = () => {
             justifyContent: 'center',
             fontSize: '1.5rem',
             color: '#38bdf8',
+            flexShrink: 0,
         },
         comparisonTitle: {
             fontSize: '1.25rem',

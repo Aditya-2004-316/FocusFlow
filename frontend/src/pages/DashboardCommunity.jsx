@@ -1248,39 +1248,48 @@ const DashboardCommunity = () => {
                                                             border: "1px solid color-mix(in srgb, var(--panel-bg) 80%, black 20%)",
                                                             borderRadius: "0.85rem",
                                                             padding: isMobile ? "0.85rem" : "1rem",
-                                                            flex: 1, display: "flex", flexDirection: "column",
+                                                            flex: 1,
                                                         }}>
                                                             <h4 style={{
                                                                 fontSize: "0.7rem", fontWeight: 800,
                                                                 color: "var(--color-gray-400)", textTransform: "uppercase",
-                                                                letterSpacing: "0.08em", marginBottom: "0.75rem",
+                                                                letterSpacing: "0.08em", marginBottom: "1rem",
                                                             }}>
                                                                 Staff Permissions
                                                             </h4>
                                                             <div style={{
-                                                                display: "grid",
-                                                                gridTemplateColumns: "1fr 1fr",
-                                                                gap: "0.45rem",
+                                                                display: "flex", gap: "0.75rem", alignItems: "stretch",
+                                                                flexDirection: (width >= 800 && width <= 1100) || isSmallMobile ? "column" : "row",
                                                             }}>
-                                                                {[
-                                                                    { icon: "🛡️", label: "Manage Members" },
-                                                                    { icon: "📌", label: "Pin Discussions" },
-                                                                    { icon: "✅", label: "Approve Requests" },
-                                                                    { icon: "🚫", label: "Mute Members" },
-                                                                ].map(({ icon, label }) => (
-                                                                    <div key={label} style={{
-                                                                        display: "flex", alignItems: "center", gap: "0.4rem",
-                                                                        padding: "0.35rem 0.6rem", borderRadius: "0.5rem",
-                                                                        background: "rgba(139,92,246,0.07)",
-                                                                        border: "1px solid rgba(139,92,246,0.12)",
-                                                                        fontSize: "0.68rem", fontWeight: 600,
-                                                                        color: "var(--color-gray-700)",
-                                                                        whiteSpace: "nowrap", overflow: "hidden",
-                                                                    }}>
-                                                                        <span style={{ fontSize: "0.8rem", flexShrink: 0 }}>{icon}</span>
-                                                                        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
-                                                                    </div>
-                                                                ))}
+                                                                <button
+                                                                    onClick={(e) => { e.stopPropagation(); handleOpenMemberModal(community); }}
+                                                                    style={{
+                                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                                        gap: "0.6rem", flex: 1, padding: "0.7rem 1.15rem",
+                                                                        borderRadius: "0.6rem",
+                                                                        background: "color-mix(in srgb, var(--panel-bg) 85%, var(--color-gray-100) 15%)",
+                                                                        color: "var(--color-gray-900)", border: "1px solid var(--color-gray-300)",
+                                                                        fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", transition: "all 0.2s ease",
+                                                                    }}
+                                                                >
+                                                                    <UserGroupIcon style={{ width: "1.15rem", height: "1.15rem", color: "#8b5cf6", flexShrink: 0 }} />
+                                                                    Members
+                                                                </button>
+                                                                <button
+                                                                    onClick={(e) => { e.stopPropagation(); handleViewCommunity(community); }}
+                                                                    title="Open community discussion"
+                                                                    style={{
+                                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                                        gap: "0.6rem", flex: 1, padding: "0.7rem 1.15rem",
+                                                                        borderRadius: "0.6rem",
+                                                                        background: "rgba(139,92,246,0.06)",
+                                                                        color: "#8b5cf6", border: "1px solid rgba(139,92,246,0.22)",
+                                                                        fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", transition: "all 0.2s ease",
+                                                                    }}
+                                                                >
+                                                                    <ClipboardDocumentIcon style={{ width: "1.15rem", height: "1.15rem", flexShrink: 0 }} />
+                                                                    Discussions
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     ) : isMember ? (
