@@ -64,9 +64,9 @@ FocusFlow is a comprehensive productivity suite designed to help users manage ta
 
 3. **Run the App**:
    - Backend: `cd backend ;
-               npm run dev`
-   - Frontend: `cd frontend :
-                npm run dev`
+               npm run dev ;`
+   - Frontend: `cd frontend ;
+                npm run dev ;`
 
 ---
 
