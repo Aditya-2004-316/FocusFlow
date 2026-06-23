@@ -63,8 +63,10 @@ FocusFlow is a comprehensive productivity suite designed to help users manage ta
    - Ensure `MONGODB_URI` and `JWT_SECRET` are set.
 
 3. **Run the App**:
-   - Backend: `cd backend && npm run dev`
-   - Frontend: `cd frontend && npm run dev`
+   - Backend: `cd backend ;
+               npm run dev`
+   - Frontend: `cd frontend :
+                npm run dev`
 
 ---
 
